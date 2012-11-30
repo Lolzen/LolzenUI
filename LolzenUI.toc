@@ -1,0 +1,15 @@
+## Interface: 50100
+## Author: Lolzen
+## Title: Lolzen User interface
+## Version: 1.0
+## Notes: Buffs, Chat, Clock, DevSlashcCommands, Minimap, StateWorldFrame, WorldMap, XPbar
+## x-Credits: haste, Neal
+
+buff.lua
+dev.lua
+chat.lua
+clock.lua
+minimap.lua
+state.lua
+worldmap.lua
+xp.lua
