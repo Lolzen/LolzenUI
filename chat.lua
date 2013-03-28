@@ -157,7 +157,7 @@ ChatTypeInfo['GUILD'].sticky = 1
 ChatTypeInfo['OFFICER'].sticky = 1
 ChatTypeInfo['RAID'].sticky = 1
 ChatTypeInfo['RAID_WARNING'].sticky = 1
---ChatTypeInfo['BATTLEGROUND'].sticky = 1
+--ChatTypeInfo['INSTANCE_CHAT'].sticky = 1
 ChatTypeInfo['WHISPER'].sticky = 0
 ChatTypeInfo['CHANNEL'].sticky = 1
 
@@ -194,7 +194,6 @@ local borderManipulation = function(...)
 	end
 end
 
---    link = GetFixedLink(text) 
 SetItemRef = function(link, text, button, ...)
 	if(link:sub(1, 5) ~= "oChat") then return _SetItemRef(link, text, button, ...) end
 
