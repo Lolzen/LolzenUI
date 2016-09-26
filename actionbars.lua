@@ -15,7 +15,7 @@ local BlizzArt = {
 	CharacterBag0Slot, CharacterBag1Slot, CharacterBag2Slot, CharacterBag3Slot,
 	MainMenuBarBackpackButton,
 	StanceBarFrame,
-	ReputationWatchBar, MainMenuExpBar,
+	ReputationWatchBar, MainMenuExpBar, ArtifactWatchBar,
 }
 
 for _, frame in pairs(BlizzArt) do
@@ -27,6 +27,7 @@ local MicroButtons = {
 	AchievementMicroButton, QuestLogMicroButton, GuildMicroButton, 
 	PVPMicroButton, LFDMicroButton, CompanionsMicroButton,
 	EJMicroButton, HelpMicroButton, MainMenuMicroButton,
+	StoreMicroButton, CollectionsMicroButton
 }
 
 for _, frame in pairs(MicroButtons) do
