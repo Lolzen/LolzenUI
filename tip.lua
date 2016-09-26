@@ -1,17 +1,21 @@
---based on ProTip
+--[[	based on ProTip; partially rewritten for Legion ]]
 
---locals and tables
+--locals
 local _G = getfenv(0)
 local f = CreateFrame("Frame")
 local tip = CreateFrame("Frame")
 
-local ricon = GameTooltip:CreateTexture("GameTooltipRaidIcon", "OVERLAY")
-ricon:SetHeight(18)
-ricon:SetWidth(18)
-ricon:SetPoint("TOP", "GameTooltip", "TOP", 0, 5)
+-- anchor
+hooksecurefunc("GameTooltip_SetDefaultAnchor", function(tooltip, parent)
+	tooltip:SetOwner(parent,"ANCHOR_NONE")
+	tooltip:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -13, 43)
+	tooltip:SetScale(1)
+	tooltip.default = 1
+end)
 
+-- modify backdrop, border
 local backdrop = { 
-	bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
+	bgFile = "Interface\\Buttons\\WHITE8x8",
 	edgeFile = "Interface\\AddOns\\LolzenUI\\media\\border", 
 	tile = false,
 	tileSize = 8,
@@ -25,12 +29,94 @@ local backdrop = {
 }
 
 local tooltips = {
+	-- general tooltips
 	GameTooltip,
 	ItemRefTooltip,
+	WorldMapTooltip,
+	-- shopping tooltips
 	ShoppingTooltip1,
 	ShoppingTooltip2,
 	ShoppingTooltip3,
 }
+
+-- Colors for the Tooltipborder (Classes, UnitReaction and ItemQuality)
+local function colorBorder(self)
+	local unit = select(2, GameTooltip:GetUnit())
+	local _, class = UnitClass(unit)
+	local reaction = UnitReaction(unit, "player")	
+	
+	if unit then
+		local color
+		if class and UnitIsPlayer(unit) then
+			color = RAID_CLASS_COLORS[class]
+		else
+			color = FACTION_BAR_COLORS[UnitReaction(unit, "player")] or {r = 0.2, g = 0.2, b = 0.2}
+		end
+		self:SetBackdropBorderColor(color.r, color.g, color.b)
+	else
+		self:SetBackdropBorderColor(1, 1, 1)
+	end
+end
+GameTooltip:HookScript("OnTooltipSetUnit", colorBorder)
+
+	
+local function colorItemQuality(self)
+	local tooltipName = self:GetName()
+	local _, link = self:GetItem()
+	
+	if link then
+		local quality = link and select(3, GetItemInfo(link))
+		if quality then
+			local r, g, b = GetItemQualityColor(quality)
+			self:SetBackdropBorderColor(r, g, b)
+		end
+	end
+end
+
+for i=1, #tooltips do
+	tooltips[i]:SetScript("OnShow", colorItemQuality)
+	if tooltips[i]:GetBackdrop() then
+		tooltips[i]:SetBackdrop(backdrop)
+	end
+	tooltips[i]:HookScript("OnShow", function(self)
+		if self.GetBackdropColor then
+			self:SetBackdropColor(0, 0, 0, 1)
+		end
+	end)
+end
+
+-- Color names after UnitClass and UnitReaction
+local function colorNames(unit)
+	local color
+	
+	if UnitPlayerControlled(unit) then
+		local _, class = UnitClass(unit)
+		if class and UnitIsPlayer(unit) then
+			color = RAID_CLASS_COLORS[class]
+		elseif UnitCanAttack(unit, "player") then
+			color = FACTION_BAR_COLORS[2]
+		elseif UnitCanAttack("player", unit) then
+			color = FACTION_BAR_COLORS[4]
+		elseif UnitIsPVP(unit) then
+			--color = FACTION_BAR_COLORS[6]
+			color = RAID_CLASS_COLORS[class]
+		end
+	elseif UnitIsTapDenied(unit, "player") then
+		color = {r = 0.6, g = 0.6, b = 0.6}
+	end
+	
+	if not color then
+		local reaction = UnitReaction(unit, "player")
+		color = reaction and FACTION_BAR_COLORS[reaction] or {r = 0.6, g = 0.6, b = 0.6}
+	end
+	return color.r, color.g, color.b
+end
+GameTooltip_UnitColor = colorNames
+
+local ricon = GameTooltip:CreateTexture("GameTooltipRaidIcon", "OVERLAY")
+ricon:SetHeight(18)
+ricon:SetWidth(18)
+ricon:SetPoint("TOP", "GameTooltip", "TOP", 0, 5)
 
 local mobType = {
 	["worldboss"] = "Boss",
@@ -38,77 +124,6 @@ local mobType = {
 	["rare"] = "Rare",
 	["elite"] = "+",
 }
-
---anchor
-hooksecurefunc("GameTooltip_SetDefaultAnchor", function(tooltip, parent)
-	tooltip:SetOwner(parent,"ANCHOR_NONE")
-	tooltip:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -13, 43)
-	tooltip:SetScale(1)
-	tooltip.default = 1
-end)
-
--- Color the names in Class/reactionColor
-function GameTooltip_UnitColor(unit)
-	if UnitIsPlayer(unit) then 
-		local color = RAID_CLASS_COLORS[select(2,UnitClass(unit))]
-		return color.r, color.g, color.b
-	elseif UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit) or not UnitIsConnected(unit) or UnitIsDead(unit) then
-		local color = {r = 0.6, g = 0.6, b = 0.6}
-		return color.r, color.g, color.b
-	elseif not isPlayerOrPet then
-		local color = FACTION_BAR_COLORS[UnitReaction(unit, "player")]
-		return color.r, color.g, color.b
-	end
-end
-
--- Colors the Tooltipborder and itemlvl color
-local function colorTip(self)
-	local tooltipName = self:GetName()
-	local _, link = self:GetItem()
-	local unit = select(2, GameTooltip:GetUnit())
-	if link then
-		local quality = link and select(3, GetItemInfo(link))
-		if quality then
-			local r, g, b = GetItemQualityColor(quality)
-			self:SetBackdropBorderColor(r, g, b)
-		end
-	else
-		if unit then
-			local color
-			if UnitIsPlayer(unit) then
-				color = RAID_CLASS_COLORS[select(2,UnitClass(unit))] or {r = 0.2, g = 0.2, b = 0.2}
-			else
-				color = FACTION_BAR_COLORS[UnitReaction(unit, "player")] or {r = 0.2, g = 0.2, b = 0.2}
-			end
-			self:SetBackdropBorderColor(color.r, color.g, color.b)
-		else
-			self:SetBackdropBorderColor(1, 1, 1)
-		end
-	end
-	-- modify some statcolors
-	for i = 2, self:NumLines() do
-		local line = _G[tooltipName.."TextLeft"..i]
-		local text = line:GetText()
-		local r, g, b = line:GetTextColor()
-		
-		local iLvl = string.find(text, "^Item Level")
-		
-		if iLvl then
-			line:SetTextColor(1, 0.6, 0)
-		end
-	end
-	self:SetBackdropColor(0, 0, 0)
-end
-
--- modifies our tooltips of choice
-for i=1, #tooltips do
-	tooltips[i]:SetScript("OnShow", colorTip)
-	tooltips[i]:SetBackdrop(backdrop)
-	tooltips[i]:HookScript("OnShow", function(self)
-		self:SetBackdropColor(0, 0, 0)
-	end)
-end
---tooltips = nil
 
 --talents
 local function InspectTalents(inspect)
