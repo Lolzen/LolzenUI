@@ -1,15 +1,19 @@
-## Interface: 50200
+## Interface: 70000
 ## Author: Lolzen
 ## Title: Lolzen User interface
 ## Version: 1.0
 ## Notes: Actionbars, Buffs, Chat, Clock, DevSlashcCommands, Minimap, NamePlates, StateWorldFrame, WorldMap, XPbar
+## Dependencies: oUF
 ## x-Credits: haste, Neal
 
+artifact.lua
 actionbars.lua
 buff.lua
 chat.lua
+chattabs.lua
 clock.lua
 dev.lua
+fonts.lua
 minimap.lua
 nameplates.lua
 state.lua
