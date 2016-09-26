@@ -107,6 +107,9 @@ end
 for i=1, NUM_CHAT_WINDOWS do
 	local cf = _G["ChatFrame"..i]
 	local eb = _G["ChatFrame"..i.."EditBox"]
+	local ebr = _G["ChatFrame"..i.."EditBoxRight"]
+	local ebl = _G["ChatFrame"..i.."EditBoxLeft"]
+	local ebm = _G["ChatFrame"..i.."EditBoxMid"]
 	
 	cf:SetFont("Fonts\\ARIALN.ttf", 12, "THINOUTLINE")
 	cf:SetShadowOffset(0, 0)
@@ -138,6 +141,13 @@ for i=1, NUM_CHAT_WINDOWS do
 	eb:SetPoint("BOTTOMLEFT",  ChatFrame1, "TOPLEFT", -5, 20)
 	eb:SetPoint("BOTTOMRIGHT", ChatFrame1, "TOPRIGHT", 5, 20)
 	eb:SetAltArrowKeyMode(false)
+	--hide the editbox background
+	ebl:SetAlpha(0)
+	ebm:SetAlpha(0)
+	ebr:SetAlpha(0)
+	eb.focusLeft:SetAlpha(0)
+	eb.focusRight:SetAlpha(0)
+	eb.focusMid:SetAlpha(0)
 	
 	local a, b, c = select(6, eb:GetRegions())
 	a:Hide(); b:Hide(); c:Hide()
