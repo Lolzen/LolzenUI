@@ -1,19 +1,28 @@
---[[	based on ProTip; partially rewritten for Legion ]]
+local tooltips = {
+	-- general tooltips
+	GameTooltip,
+	ItemRefTooltip,
+--	WorldMapTooltip,
+--	DropDownList1MenuBackdrop,
+--	DropDownList2MenuBackdrop,
+--	DropDownList3MenuBackdrop,
+--	AutoCompleteBox,
+--	FriendsTooltip,
+--	FloatingBattlePetTooltip,
+--	FloatingGarrisonFollowerTooltip,
+	-- shopping tooltips
+	ShoppingTooltip1,
+	ShoppingTooltip2,
+	ShoppingTooltip3,
+--	ItemRefShoppingTooltip1,
+--	ItemRefShoppingTooltip2,
+--	ItemRefShoppingTooltip3,
+--	WorldMapCompareTooltip1,
+--	WorldMapCompareTooltip2,
+--	WorldMapCompareTooltip3,
+}
 
---locals
-local _G = getfenv(0)
-local f = CreateFrame("Frame")
-local tip = CreateFrame("Frame")
-
--- anchor
-hooksecurefunc("GameTooltip_SetDefaultAnchor", function(tooltip, parent)
-	tooltip:SetOwner(parent,"ANCHOR_NONE")
-	tooltip:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -13, 43)
-	tooltip:SetScale(1)
-	tooltip.default = 1
-end)
-
--- modify backdrop, border
+-- the backdrop of our Tooltips along with a beutiful border
 local backdrop = { 
 	bgFile = "Interface\\Buttons\\WHITE8x8",
 	edgeFile = "Interface\\AddOns\\LolzenUI\\media\\border", 
@@ -28,40 +37,78 @@ local backdrop = {
 	}
 }
 
-local tooltips = {
-	-- general tooltips
-	GameTooltip,
-	ItemRefTooltip,
-	WorldMapTooltip,
-	-- shopping tooltips
-	ShoppingTooltip1,
-	ShoppingTooltip2,
-	ShoppingTooltip3,
+-- customize the mobClassification
+local mobType = {
+	["worldboss"] = "Boss",
+	["rareelite"] = "+ Rare",
+	["rare"] = "Rare",
+	["elite"] = "+",
 }
 
--- Colors for the Tooltipborder (Classes, UnitReaction and ItemQuality)
-local function colorBorder(self)
-	local unit = select(2, GameTooltip:GetUnit())
-	local _, class = UnitClass(unit)
-	local reaction = UnitReaction(unit, "player")	
-	
-	if unit then
-		local color
-		if class and UnitIsPlayer(unit) then
-			color = RAID_CLASS_COLORS[class]
-		else
-			color = FACTION_BAR_COLORS[UnitReaction(unit, "player")] or {r = 0.2, g = 0.2, b = 0.2}
-		end
-		self:SetBackdropBorderColor(color.r, color.g, color.b)
+-- raidicon on the tooltip, because why not
+local ricon = GameTooltip:CreateTexture("GameTooltipRaidIcon", "OVERLAY")
+ricon:SetSize(18, 18)
+ricon:SetPoint("TOP", "GameTooltip", "TOP", 0, 5)
+
+-- make the Healthbar sweet
+GameTooltipStatusBar:ClearAllPoints()
+GameTooltipStatusBar:SetPoint("BOTTOMLEFT", 5, 4)
+GameTooltipStatusBar:SetPoint("BOTTOMRIGHT", -5, 4)
+GameTooltipStatusBar:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
+GameTooltipStatusBar:SetStatusBarColor(0.3, 0.9, 0.3, 1)
+GameTooltipStatusBar:SetHeight(2)
+
+local bg = GameTooltipStatusBar:CreateTexture(nil, "BACKGROUND")
+bg:SetTexture("Interface\\AddOns\\ProTip\\media\\statusbar")
+bg:SetVertexColor(0, 0, 0)
+
+-- return the unitClassColor values
+local function getClassColor(unit)
+	if not unit then return end
+	local classcolor = RAID_CLASS_COLORS[select(2, UnitClass(unit))]
+	return classcolor.r, classcolor.g, classcolor.b
+end
+
+-- return the unitReactionColor values
+local function getReactionColor(unit)
+	if not unit then return end
+	local reactioncolor = FACTION_BAR_COLORS[UnitReaction(unit, "player")]
+	return reactioncolor.r, reactioncolor.g, reactioncolor.b
+end
+
+-- return hex value of color values and the unitname
+local function getColorHexUnit(unit, r, g, b)
+	return ("|cff%.2x%.2x%.2x%s"):format(r*255,g*255,b*255, UnitName(unit))
+end
+
+-- return a questdifficulty inspired colored level
+local function getColorizedLevel(unit)
+	if not UnitLevel(unit) or UnitLevel(unit) == -1 then
+		return "|cffff0000??|r "
 	else
-		self:SetBackdropBorderColor(1, 1, 1)
+		return ("|cff%02x%02x%02x%d|r"):format(GetQuestDifficultyColor(UnitLevel(unit)).r*255, GetQuestDifficultyColor(UnitLevel(unit)).g*255, GetQuestDifficultyColor(UnitLevel(unit)).b*255, UnitLevel(unit))
 	end
 end
-GameTooltip:HookScript("OnTooltipSetUnit", colorBorder)
 
+-- get the StatusFlag aka AFK, DND or offline
+local function getStatusFlag(unit)
+	local status
 	
+	if UnitIsAFK(unit) then
+		status = CHAT_FLAG_AFK
+	elseif UnitIsDND(unit) then
+		status = CHAT_FLAG_DND
+	elseif not UnitIsConnected(unit) then
+		status = "(Off) "
+	else
+		status = "" 
+	end
+	
+	return "|cffffffff"..status.."|r"
+end
+
+-- colorize tooltipBorder accordingly to itemQuality
 local function colorItemQuality(self)
-	local tooltipName = self:GetName()
 	local _, link = self:GetItem()
 	
 	if link then
@@ -73,178 +120,124 @@ local function colorItemQuality(self)
 	end
 end
 
-for i=1, #tooltips do
-	tooltips[i]:SetScript("OnShow", colorItemQuality)
-	if tooltips[i]:GetBackdrop() then
-		tooltips[i]:SetBackdrop(backdrop)
-	end
-	tooltips[i]:HookScript("OnShow", function(self)
-		if self.GetBackdropColor then
-			self:SetBackdropColor(0, 0, 0, 1)
-		end
-	end)
-end
-
--- Color names after UnitClass and UnitReaction
-local function colorNames(unit)
-	local color
-	
-	if UnitPlayerControlled(unit) then
-		local _, class = UnitClass(unit)
-		if class and UnitIsPlayer(unit) then
-			color = RAID_CLASS_COLORS[class]
-		elseif UnitCanAttack(unit, "player") then
-			color = FACTION_BAR_COLORS[2]
-		elseif UnitCanAttack("player", unit) then
-			color = FACTION_BAR_COLORS[4]
-		elseif UnitIsPVP(unit) then
-			--color = FACTION_BAR_COLORS[6]
-			color = RAID_CLASS_COLORS[class]
-		end
-	elseif UnitIsTapDenied(unit, "player") then
-		color = {r = 0.6, g = 0.6, b = 0.6}
-	end
-	
-	if not color then
-		local reaction = UnitReaction(unit, "player")
-		color = reaction and FACTION_BAR_COLORS[reaction] or {r = 0.6, g = 0.6, b = 0.6}
-	end
-	return color.r, color.g, color.b
-end
-GameTooltip_UnitColor = colorNames
-
-local ricon = GameTooltip:CreateTexture("GameTooltipRaidIcon", "OVERLAY")
-ricon:SetHeight(18)
-ricon:SetWidth(18)
-ricon:SetPoint("TOP", "GameTooltip", "TOP", 0, 5)
-
-local mobType = {
-	["worldboss"] = "Boss",
-	["rareelite"] = "+ Rare",
-	["rare"] = "Rare",
-	["elite"] = "+",
-}
-
 --talents
 local function InspectTalents(inspect)
-	local talents = {}
-	local numLines, linesNeeded = GameTooltip:NumLines()
 	local unit = select(2, GameTooltip:GetUnit())
 	if not unit then return end
-	local guild, guildRankName, guildRankIndex = GetGuildInfo(unit)
-	local pvp = UnitIsPVP(unit)
-	local isInRange = CheckInteractDistance(unit, 1)
-	local UnitIsPlayerControlled = UnitPlayerControlled(unit)
 	
-	if UnitIsPlayerControlled == false then return end
+	if UnitPlayerControlled(unit) == false then return end
 	
-	for i=1, GetNumSpecGroups(unit) do -- check for Dualspec
-		local group = GetActiveSpecGroup(unit) --check which Spec is active
-		if group == 1 then
-			activegroup = "|cffddff55<|r"
-		elseif group == 2 then
-			activegroup = "|cFFdddd55<<|r"
-		end
-	end
-		
-	local specID = GetInspectSpecialization(unit)
-	local id, name, description, icon, background, role, class = GetSpecializationInfoByID(specID)
-	
-	local customRole
-	if role == "HEALER" then
+	local role
+	if select(6, GetSpecializationInfoByID(GetInspectSpecialization(unit))) == "HEALER" then
 		role = "Heal"
-	elseif role == "DAMAGER" then
+	elseif select(6, GetSpecializationInfoByID(GetInspectSpecialization(unit))) == "DAMAGER" then
 		role = "Damage"
-	elseif role == "TANK" then
+	elseif select(6, GetSpecializationInfoByID(GetInspectSpecialization(unit))) == "TANK" then
 		role = "Tank"
 	end
-
-	if not icon then return end
-	local linetext = ((string.format("|T%s:%d:%d:0:-1|t", icon, 16, 16)).." "..name.." ("..role..")")
 	
-	if isInRange then
-		if guild then
-			_G["GameTooltipTextLeft4"]:SetText(linetext)
-			_G["GameTooltipTextLeft4"]:Show()
-		elseif not guild then
-			_G["GameTooltipTextLeft3"]:SetText(linetext)
-			_G["GameTooltipTextLeft3"]:Show()
+	if not select(4, GetSpecializationInfoByID(GetInspectSpecialization(unit))) then return end
+	
+	--by default the PvP line is hidden in the modyfyTip function, if we just add a line it would look messy as the talents displayed are halfway outside of the border,
+	--while the hidden PvP line is an empty space. So we use the PvP line and set out text there instead of adding a new one, if the target has PvP activated
+	if UnitLevel(unit) > 9 then
+		if UnitIsPVP(unit) then
+			_G["GameTooltipTextLeft"..GameTooltip:NumLines()]:SetText((string.format("|T%s:%d:%d:0:-1|t", select(4, GetSpecializationInfoByID(GetInspectSpecialization(unit))), 16, 16)).." |cFFFFFFFF"..select(2, GetSpecializationInfoByID(GetInspectSpecialization(unit))).." ("..role..")|r")
+			_G["GameTooltipTextLeft"..GameTooltip:NumLines()]:Show()
 		else
-			GameTooltip:AddLine(linetext)
+			GameTooltip:AddLine((string.format("|T%s:%d:%d:0:-1|t", select(4, GetSpecializationInfoByID(GetInspectSpecialization(unit))), 16, 16)).." |cFFFFFFFF"..select(2, GetSpecializationInfoByID(GetInspectSpecialization(unit))).." ("..role..")|r")
 		end
+	end
+	GameTooltip:AppendText("")
+end
+
+local function modifyPlayerTooltip(unit)
+	local name, realm = UnitName(unit)
+	local _, pRealm = UnitName("player")
+	
+	--display talents
+	if UnitLevel(unit) > 9 or UnitLevel(unit) ~= -1 then
+		if not InspectFrame or not InspectFrame:IsShown() then
+			if CheckInteractDistance(unit,1) and CanInspect(unit) then
+		
+				GameTooltip:RegisterEvent("INSPECT_READY")
+				NotifyInspect(unit)
+			end
+		end
+	end
+
+	
+	for i=1, GameTooltip:NumLines() do
+		if IsInGuild(unit) then
+			if _G["GameTooltipTextLeft"..i]:GetText():find("^"..GetGuildInfo("player")) then
+				_G["GameTooltipTextLeft"..i]:SetText("|cff22eeee"..GetGuildInfo(unit).."|r")
+			end
+		end
+		if _G["GameTooltipTextLeft"..i]:GetText():find("^"..LEVEL) then
+			_G["GameTooltipTextLeft"..i]:SetText(getColorizedLevel(unit).." "..UnitRace(unit).." "..UnitClass(unit))
+		end
+	end
+end
+
+local function modifyNPCTooltip(unit)
+	local mobType = mobType[UnitClassification(unit)] or ""
+	for i=1, GameTooltip:NumLines() do
+		if _G["GameTooltipTextLeft"..i]:GetText():find("^"..LEVEL) then
+			_G["GameTooltipTextLeft"..i]:SetText(getColorizedLevel(unit).." "..mobType.." "..UnitCreatureType(unit))
+		end
+	end
+end
+
+-- sets the target of the raget on the tooltip
+local function getUnitTarget(unit)
+	if not unit or not UnitExists(unit) then return end
+
+	local text
+	if UnitIsPlayer(unit.."target") and UnitName(unit.."target") == UnitName("player") then
+		text = "|cffffffff[YOU]"
+	elseif UnitPlayerControlled(unit.."target") then
+		text = getColorHexUnit(unit.."target", getClassColor(unit.."target"))
+	else
+		local ureaction = FACTION_BAR_COLORS[UnitReaction(unit.."target", "player")]
+		if ureaction then
+			text = getColorHexUnit(unit.."target", getReactionColor(unit.."target"))
+		end
+	end
+	
+	if UnitExists(unit.."target") then
+		_G["GameTooltipTextRight1"]:SetText("|cffffffff>>|r"..text)
+		_G["GameTooltipTextRight1"]:Show()
+	elseif not UnitExists(unit.."target") then
+		_G["GameTooltipTextRight1"]:Hide()
+	else
+		print("TARGETLINE ERROR")
 	end
 	
 	GameTooltip:AppendText("")
 end
 
---Scripts
-f:SetScript("OnEvent",function(self, event, guid)
-	self:UnregisterEvent("INSPECT_READY")
-	InspectTalents(1)
-end)
-
-GameTooltip:HookScript("OnHide", function(self)
-	ricon:SetTexture(nil)
-end)
-
-GameTooltip:HookScript("OnTooltipSetunit", function(self)
+local function modifyTooltip(self)
 	local unit = select(2, GameTooltip:GetUnit())
 	if not unit or not UnitExists(unit) then return end
 	
-	local name, realm = UnitName(unit)
-	local _, pRealm = UnitName("player")
-	local reaction = UnitReaction(unit, "player")
+	-- change default backdrop and border textures along with their color
+	self:SetBackdrop(backdrop)
 	
-	if UnitIsPlayer(unit) and (UnitLevel(unit) > 9 or UnitLevel(unit) == -1) then
-		if not InspectFrame or not InspectFrame:IsShown() then
-			if CheckInteractDistance(unit,1) and CanInspect(unit) then
-		
-				f:RegisterEvent("INSPECT_READY")
-				NotifyInspect(unit)
-			end
-		end
-	end
-	
-	local class, race
+	-- colorize TooltipBorder accordinglly to classColor or UnitReaction
 	if UnitIsPlayer(unit) then
-		race = UnitRace(unit)
-		class = UnitClass(unit)
-		local status
-		if UnitIsAFK(unit) then
-			status = CHAT_FLAG_AFK
-		elseif UnitIsDND(unit) then
-			status = CHAT_FLAG_DND
-		elseif not UnitIsConnected(unit) then
-			status = "(Off) "
-		else
-			status = "" 
-		end
-		if realm and not realm == pRealm then
-			name = status..name.."-"..realm
-		else
-			name = status..name
-		end
+		self:SetBackdropBorderColor(getClassColor(unit))
+		--call player modifications function
+		modifyPlayerTooltip(unit)
+	else
+		self:SetBackdropBorderColor(getReactionColor(unit))
+		--call NPC modification function
+		modifyNPCTooltip(unit)
 	end
 	
-	local creatureType = UnitCreatureType(unit) or ""
-
-	local level = UnitLevel(unit)
-	local classif = UnitClassification(unit)
-	mobType = mobType and mobType[classif] or ""
-	if not level or level == -1 then
-		level = "|cffff0000??|r "
-	else
-		local diff = GetQuestDifficultyColor(level)
-		level = ("|cff%02x%02x%02x%d|r"):format(diff.r*255, diff.g*255, diff.b*255, level)
-	end
-
-	local text
-	if UnitIsPlayer(unit) then
-		text = level.." "..race.." "..class
-	else
-		text = level.." "..classif.." "..creatureType
-	end
+	-- black background color
+	self:SetBackdropColor(0, 0, 0, 1)
 	
+	-- modify PvP color text according to friendly or enemy
 	local PvPColor
 	if UnitIsFriend("player", unit) then
 		PvPcolor = "|cff00ff00"
@@ -252,104 +245,74 @@ GameTooltip:HookScript("OnTooltipSetunit", function(self)
 		PvPcolor = "|cffff0000"
 	end
 	
-	local numLines = GameTooltip:NumLines()	
-	if UnitIsPlayer(unit) and UnitIsPVP(unit) and isInInstance ~= "pvp" and isInInstance ~= "arena" and GetZonePVPInfo() ~= "combat" then
-		_G["GameTooltipTextLeft1"]:SetText(PvPcolor.."(PvP) |r"..name)
-	else
-		_G["GameTooltipTextLeft1"]:SetText(name)
-	end
-	
-	if UnitIsPlayer(unit) and UnitIsPVP(unit) then
-		for i=2, numLines do
-			if _G["GameTooltipTextLeft"..i]:GetText():find(PVP_ENABLED) then
-				_G["GameTooltipTextLeft"..i]:Hide()
-				GameTooltip:AppendText("")
-			end
+	-- activate the custom (PvP) flag, custom unitFlags and classcolored/reactioncolored UnitNames
+	if UnitIsPVP(unit) and isInInstance ~= "pvp" and isInInstance ~= "arena" and GetZonePVPInfo() ~= "combat" then
+		if UnitIsPlayer(unit) then
+			_G["GameTooltipTextLeft1"]:SetText(PvPcolor.."(PvP) |r"..getStatusFlag(unit)..getColorHexUnit(unit, getClassColor(unit)))
+		else
+			_G["GameTooltipTextLeft1"]:SetText(PvPcolor.."(PvP) |r"..getColorHexUnit(unit, getReactionColor(unit)))
 		end
-	end
-	
-	for i=1, numLines do
-		if _G["GameTooltipTextLeft"..i]:GetText():find("^"..LEVEL) then
-			_G["GameTooltipTextLeft"..i]:SetText(text)
-		end
-	end
-
-	if UnitIsPlayer(unit) and IsInGuild() then
-		local guild, guildRankName, guildRankIndex = GetGuildInfo(unit)
-		for i=1, numLines do
-			if _G["GameTooltipTextLeft"..i]:GetText():find("^"..GetGuildInfo("player")) then
-				_G["GameTooltipTextLeft"..i]:SetText("|cff22eeee"..guild.."|r")
-			end
-		end
-	end
-	
-	GameTooltipStatusBar:ClearAllPoints()
-	GameTooltipStatusBar:SetPoint("BOTTOMLEFT", 5, 4)
-	GameTooltipStatusBar:SetPoint("BOTTOMRIGHT", -5, 4)
-	GameTooltipStatusBar:SetStatusBarTexture("Interface\\AddOns\\ProTip\\media\\statusbar")
-	GameTooltipStatusBar:SetStatusBarColor(0.3, 0.9, 0.3, 1)
-	GameTooltipStatusBar:SetHeight(2)
-	
-	--Background for our bar
-	if not GameTooltipStatusBar.bg then
-		local bg = GameTooltipStatusBar:CreateTexture(nil, "BACKGROUND")
-		bg:SetAllPoints(GameTooltipStatusBar)
-		bg:SetTexture("Interface\\AddOns\\ProTip\\media\\statusbar")
-		bg:SetVertexColor(0.4, 0.4, 0.4, 0.4)
-	end
-	
-	local raidIndex = GetRaidTargetIndex(unit)
-	if raidIndex then
-		ricon:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcon_"..raidIndex)
-	end
-end)
-
--- ClassColors
-local function ClassColors(class)
-	local unit = select(2, GameTooltip:GetUnit())
-	if not unit then return end
-	local _, class = UnitClass(unit.."target")
-	local color
-	if IsAddOnLoaded("!ClassColors") then
-		color = CUSTOM_CLASS_COLORS[class]
 	else
-		color = RAID_CLASS_COLORS[class]
-	end
-	return ("|cff%.2x%.2x%.2x"):format(color.r*255,color.g*255,color.b*255)
-end
-
-local activetl
-local updateTime = 0
-tip:SetScript("OnUpdate", function(self, elapsed)
-	local _, unit = GameTooltip:GetUnit()
-	if not unit or not UnitExists(unit) then return end
-
-	updateTime = updateTime - elapsed
-	if(updateTime > 0) then return end
-	updateTime = 0.1
-
-	unit = unit.."target"
-
-	local text, ureaction
-	if UnitIsPlayer(unit) and UnitName(unit) == UnitName("player") then
-		text = "|cffffffff[YOU]"
-	elseif UnitIsPlayer(unit) then
-		text = ClassColors()..UnitName(unit).."|r"
-	else
-		ureaction = FACTION_BAR_COLORS[UnitReaction(unit, "player")]
-		if ureaction then
-			text = ("|cff%02x%02x%02x%s|r"):format(ureaction.r*255, ureaction.g*255, ureaction.b*255, UnitName(unit))
+		if UnitIsPlayer(unit) then
+			_G["GameTooltipTextLeft1"]:SetText(getStatusFlag(unit)..getColorHexUnit(unit, getClassColor(unit)))
+		else
+			_G["GameTooltipTextLeft1"]:SetText(getColorHexUnit(unit, getReactionColor(unit)))
 		end
 	end	
 	
-	if UnitExists(unit) then
-		_G["GameTooltipTextRight1"]:SetText("|cffffffff>>|r"..text)
-		_G["GameTooltipTextRight1"]:Show()
-	elseif not UnitExists(unit) then
-		_G["GameTooltipTextRight1"]:Hide()
-	else
-		print("TARGETLINE ERROR")
+	if UnitIsPVP(unit) then
+		for i=2, GameTooltip:NumLines() do
+			if _G["GameTooltipTextLeft"..i]:GetText():find(PVP_ENABLED) then
+				_G["GameTooltipTextLeft"..i]:Hide()
+			end
+		end
 	end
 	
-	GameTooltip:AppendText("")
+	-- set the background of the tooltipstatusbar to the statusbar itself
+	bg:SetAllPoints(GameTooltipStatusBar)
+
+	-- set the raidIcon on the tooltip or hide it
+	if GetRaidTargetIndex(unit) then
+		ricon:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcon_"..GetRaidTargetIndex(unit))
+		ricon:Show()
+	else
+		ricon:Hide()
+	end
+	
+	-- call the target of target function to get the target from the mouseover unit
+	getUnitTarget(unit)
+end
+
+--hooks and scripts
+-- anchor
+hooksecurefunc("GameTooltip_SetDefaultAnchor", function(tooltip, parent)
+	tooltip:SetOwner(parent,"ANCHOR_NONE")
+	tooltip:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -13, 43)
+	tooltip:SetScale(1)
+	tooltip.default = 1
 end)
+
+--styling for units
+GameTooltip:HookScript("OnTooltipSetUnit", modifyTooltip)
+
+-- also modify more tooltip types
+for i=1, #tooltips do
+	tooltips[i]:SetScript("OnShow", colorItemQuality)
+	tooltips[i]:SetBackdrop(backdrop)
+	tooltips[i]:HookScript("OnShow", function(self)
+		self:SetBackdropColor(0, 0, 0, 1)
+	end)
+end
+
+-- update target of mouseovertarget when UNIT_TARGET was fired (the target is changed)
+function GameTooltip:UNIT_TARGET()
+	getUnitTarget(select(2, GameTooltip:GetUnit()))
+end
+
+function GameTooltip:INSPECT_READY()
+	GameTooltip:UnregisterEvent("INSPECT_READY")
+	InspectTalents(1)
+end
+
+GameTooltip:RegisterEvent("UNIT_TARGET")
+GameTooltip:SetScript("OnEvent", function(self, event, ...) self[event](self, event, ...) end)
