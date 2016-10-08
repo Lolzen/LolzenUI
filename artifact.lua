@@ -36,12 +36,13 @@ xptext:SetTextColor(1,1,1)
 
 -- get artifact power data
 function afbar:ARTIFACT_XP_UPDATE()
-	local hasArtifact = HasArtifactEquipped()
+	local hasArtifact = HasArtifactEquipped("player")
 	if hasArtifact then
-			local _, _, _, _, totalXP, pointsSpent = C_ArtifactUI.GetEquippedArtifactInfo()
+		local _, _, _, _, totalXP, pointsSpent = C_ArtifactUI.GetEquippedArtifactInfo()
 		local numPoints, artifactXP, xpForNextPoint = MainMenuBar_GetNumArtifactTraitsPurchasableFromXP(pointsSpent, totalXP)
 		afbar:SetMinMaxValues(0, xpForNextPoint)
 		afbar:SetValue(artifactXP)
+		afbar:SetAlpha(0.4)
 		xptext:SetFormattedText("%d / %d (%.0f%%)", artifactXP, xpForNextPoint, artifactXP/xpForNextPoint*100)
 	else
 		afbar:SetAlpha(0)
