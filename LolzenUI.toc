@@ -2,9 +2,9 @@
 ## Author: Lolzen
 ## Title: Lolzen User interface
 ## Version: 1.0
-## Notes: Actionbars, Buffs, Chat, Clock, DevSlashcCommands, Minimap, NamePlates, StateWorldFrame, WorldMap, XPbar
+## Notes: A simple, lightweight User Interface
 ## Dependencies: oUF
-## x-Credits: haste, Neal
+## x-Credits: haste, Neal, Seerah
 
 artifact.lua
 actionbars.lua
@@ -18,5 +18,6 @@ minimap.lua
 nameplates.lua
 state.lua
 tip.lua
+unitframes.lua
 worldmap.lua
 xp.lua
