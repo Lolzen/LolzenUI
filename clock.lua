@@ -69,9 +69,9 @@ end
 local color = {r = 0.85, g =  0.55, b = 0}
 
 local clockFrame = CreateFrame("Button", "clock", UIParent)
-clockFrame:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -40, 20)
+clockFrame:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", 0, 10)
 clockFrame:SetHeight(10)
-clockFrame:SetWidth(40)
+clockFrame:SetWidth(80)
 
 local text = clockFrame:CreateFontString(nil, "ARTWORK")
 text:SetPoint("LEFT", clockFrame)
@@ -139,18 +139,13 @@ clockFrame:SetScript("OnEnter", function()
     end
     
     table.sort(addons, Addoncompare)
-	
+
 	for _, entry in pairs(addons) do
-		if entry.memory > 200 then
-            GameTooltip:AddDoubleLine(entry.name, Memory(entry.memory), 1, 1, 1, 1, 0.1, 0.1, 1)
-		elseif entry.memory > 120 then
-            GameTooltip:AddDoubleLine(entry.name, Memory(entry.memory), 1, 1, 1, 1, 0.5, 0.1, 1)
-        elseif entry.memory > 80 then
-            GameTooltip:AddDoubleLine(entry.name, Memory(entry.memory), 1, 1, 1, 0.85, 0.85, 0, 1)
-		elseif entry.memory == 0 then
+		local gradientr, gradientg, gradientb = ColorGradient((entry.memory*10 / total), 0, 1, 0, 1, 1, 0, 1, 0, 0)
+		if entry.memory > 0 then
+			GameTooltip:AddDoubleLine(entry.name, Memory(entry.memory), 1, 1, 1, gradientr, gradientg, gradientb)
+		else
 			GameTooltip:AddDoubleLine(entry.name, entry.state, 0.55, 0.55, 0.55, 1, 1, 1, 1)
-        else
-            GameTooltip:AddDoubleLine(entry.name, Memory(entry.memory), 1, 1, 1, 73/255, 226/255, 14/255, 1)
         end
     end  
     local cr, cg, cb = ColorGradient((entry.memory / 800), 0, 1, 0, 1, 1, 0, 1, 0, 0) 
