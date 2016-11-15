@@ -144,7 +144,7 @@ local PostCreateIcon = function(Auras, button)
 	
 	local iconborder = CreateFrame("Frame")
 	iconborder:SetBackdrop({
-		edgeFile = "Interface\\AddOns\\oUF_Lolzen\\textures\\border", edgeSize = 12,
+		edgeFile = "Interface\\AddOns\\LolzenUI\\media\\border", edgeSize = 12,
 		insets = {left = 4, right = 4, top = 4, bottom = 4},
 	})
 	iconborder:SetParent(button)
@@ -209,10 +209,10 @@ local shared = function(self, unit, isSingle)
 	
 	local Border = CreateFrame("Frame", nil, self)
 	Border:SetBackdrop({
-		edgeFile = "Interface\\AddOns\\oUF_Lolzen\\textures\\border", edgeSize = 12,
+		edgeFile = "Interface\\AddOns\\LolzenUI\\media\\border", edgeSize = 12,
 		insets = {left = 4, right = 4, top = 4, bottom = 4},
 	})
-	if(unit == "targettarget") then
+	if unit == "targettarget" then
 		Border:SetPoint("TOPLEFT", self, -3, 3)
 		Border:SetPoint("BOTTOMRIGHT", self, 3, -1)
 	else
@@ -224,7 +224,7 @@ local shared = function(self, unit, isSingle)
 
 	local Glow = CreateFrame("Frame", nil, self)
 	Glow:SetBackdrop({
-		edgeFile ="Interface\\AddOns\\oUF_Lolzen\\textures\\glow", edgeSize = 5,
+		edgeFile ="Interface\\AddOns\\LolzenUI\\media\\glow", edgeSize = 5,
 		insets = {left = 4, right = 4, top = 4, bottom = 4}
 	})
 	if unit == "player" then
@@ -243,7 +243,7 @@ local shared = function(self, unit, isSingle)
 	else
 		Health:SetHeight(19)
 	end
-	Health:SetStatusBarTexture("Interface\\AddOns\\oUF_Lolzen\\textures\\statusbar")
+	Health:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
 
 	Health.frequentUpdates = true
 	Health.colorTapping = true
@@ -269,7 +269,7 @@ local shared = function(self, unit, isSingle)
 
 	local Power = CreateFrame("StatusBar", nil, self)
 	Power:SetHeight(3)
-	Power:SetStatusBarTexture("Interface\\AddOns\\oUF_Lolzen\\textures\\statusbar")
+	Power:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
 
 	Power.frequentUpdates = true
 
@@ -289,7 +289,7 @@ local shared = function(self, unit, isSingle)
 	
 	local bg = self:CreateTexture(nil, "BORDER")
 	bg:SetAllPoints(self)
-	bg:SetTexture("Interface\\AddOns\\oUF_Lolzen\\textures\\statusbar")
+	bg:SetTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
 	bg:SetVertexColor(0.3, 0.3, 0.3)
 	bg:SetAlpha(1)
 	
@@ -310,13 +310,15 @@ local shared = function(self, unit, isSingle)
 	table.insert(self.__elements, RAID_TARGET_UPDATE)
 	
 	local Castbar = CreateFrame("StatusBar", nil, self)
-	Castbar:SetStatusBarTexture("Interface\\AddOns\\oUF_Lolzen\\textures\\statusbar")
+	Castbar:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
 	Castbar:SetAllPoints(Health)
+--	Castbar:SetStatusBarColor(0.8, 0, 0)
 	self.Castbar = Castbar
 		
 	local Spark = Castbar:CreateTexture(nil, "OVERLAY")
-	Spark:SetSize(8, 21)
+	Spark:SetSize(8, 23)
 	Spark:SetBlendMode("ADD")
+	Spark:SetParent(Castbar)
 	self.Castbar.Spark = Spark
 		
 	local icon = Castbar:CreateTexture(nil, "OVERLAY")
@@ -328,7 +330,7 @@ local shared = function(self, unit, isSingle)
 		
 	local iconborder = CreateFrame("Frame")
 	iconborder:SetBackdrop({
-		edgeFile = "Interface\\AddOns\\oUF_Lolzen\\textures\\border", edgeSize = 12,
+		edgeFile = "Interface\\AddOns\\LolzenUI\\media\\border", edgeSize = 12,
 		insets = {left = 4, right = 4, top = 4, bottom = 4},
 	})
 	iconborder:SetParent(Castbar)
@@ -351,8 +353,13 @@ local shared = function(self, unit, isSingle)
 	self.Castbar.Text = cbtext
 	
 	local name = Health:CreateFontString(nil, "OVERLAY")
-	name:SetPoint("RIGHT", Health, "RIGHT", -2, -22)
-	name:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSans.ttf", 12, "THINOUTLINE")
+	if unit == "party" then
+		name:SetPoint("LEFT", Health, "LEFT", 2, -2)
+		name:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSans.ttf", 14, "THINOUTLINE")
+	else
+		name:SetPoint("RIGHT", Health, "RIGHT", -2, -22)
+		name:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSans.ttf", 12, "THINOUTLINE")
+	end
 	name:SetTextColor(1, 1, 1)
 
 	self.Name = name
@@ -361,30 +368,8 @@ local shared = function(self, unit, isSingle)
 		self:SetSize(220, 21)
 	end
 	
-	if unit == "player" or unit == "targettarget" then
-		name:Hide()
-	end
-	
 	if unit == "target" then
-		local panel = CreateFrame("Frame")
-		panel:SetBackdrop({
-			bgFile = "Interface\\AddOns\\oUF_Lolzen\\textures\\statusbar",
-			edgeFile = "Interface\\AddOns\\oUF_Lolzen\\textures\\border", edgeSize = 12,
-			insets = {left = 2, right = 2, top = 2, bottom = 2},
-		})
-		panel:SetParent(self)
-		panel:SetSize(224, 18)
-		panel:SetPoint("TOP", Health, "BOTTOM", 0, -2)
-		panel:SetBackdropBorderColor(0, 0, 0)
-		panel:SetFrameLevel(3)
-		panel:SetBackdropColor(0, 0, 0, 0.8)
-		
 		self:Tag(level, '[lolzen:level][shortclassification]')
-	end
-	
-	if unit == "targettarget" then
-		self:SetSize(120, 19)
-		Castbar:SetAlpha(0)
 	end
 	
 	self:RegisterEvent('UNIT_NAME_UPDATE', PostCastStopUpdate)
@@ -407,7 +392,7 @@ local UnitSpecific = {
 		shared(self, ...)
 		local AltPowerBar = CreateFrame("StatusBar", nil, self)
 		AltPowerBar:SetHeight(3)
-		AltPowerBar:SetStatusBarTexture("Interface\\AddOns\\oUF_Lolzen\\textures\\statusbar")
+		AltPowerBar:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
 		AltPowerBar:SetStatusBarColor(1, 1, 1)
 
 		AltPowerBar:SetPoint("LEFT")
@@ -419,6 +404,8 @@ local UnitSpecific = {
 		local Background = AltPowerBar:CreateTexture(nil, 'BORDER')
 		Background:SetTexture(0, 0, 0, .4)
 		Background:SetAllPoints()
+		
+		self.Name:Hide()
 	end,
 	
 	target = function(self, ...)
@@ -430,14 +417,45 @@ local UnitSpecific = {
 		Debuffs.PostUpdateIcon = PostUpdateIcon
 
 		self.Debuffs = Debuffs
+		
+		local panel = CreateFrame("Frame")
+		panel:SetBackdrop({
+			bgFile = "Interface\\AddOns\\LolzenUI\\media\\statusbar",
+			edgeFile = "Interface\\AddOns\\LolzenUI\\media\\border", edgeSize = 12,
+			insets = {left = 2, right = 2, top = 2, bottom = 2},
+		})
+		panel:SetParent(self)
+		panel:SetSize(224, 18)
+		panel:SetPoint("TOP", self.Health, "BOTTOM", 0, -2)
+		panel:SetBackdropBorderColor(0, 0, 0)
+		panel:SetFrameLevel(3)
+		panel:SetBackdropColor(0, 0, 0, 0.8)
 	end,
 	
---	targettarget = function(self, ...)
---		local Health = self.Health
---		local PowerPoints = self.Power.value
---		Health:SetHeight(16)
---		self.Power.value:Hide()
---	end,
+	targettarget = function(self, ...)
+		shared(self, ...)
+
+		self:SetSize(120, 19)
+		self.Castbar:SetAlpha(0)
+		self.Power:SetAlpha(0)
+		self.Name:Hide()
+	end,
+
+	party = function(self, ...)
+		shared(self, ...)
+		
+		self.Castbar:SetAlpha(0)
+		self.Power:SetAlpha(0)
+		self.Name:Hide()
+	end,
+	
+	pet = function(self, ...)
+		shared(self, ...)
+		
+		self:SetSize(120, 19)
+		self.Power:SetAlpha(0)
+		self.Name:Hide()
+	end,
 }
 
 -- A small helper to change the style into a unit specific, if it exists.
@@ -464,23 +482,51 @@ end
 oUF:Factory(function(self)
 --	local base = 100
 --	spawnHelper(self, 'focus', "BOTTOM", 0, base + (40 * 1))
---	spawnHelper(self, 'pet', 'BOTTOM', 0, base + (40 * 2))
-	spawnHelper(self, 'player', "CENTER", -250, -50)
-	spawnHelper(self, 'target', "CENTER", 250, -50)
-	spawnHelper(self, 'targettarget', "CENTER", 300, -27)
+	spawnHelper(self, 'pet', "CENTER", -300, -207)
+	spawnHelper(self, 'player', "CENTER", -250, -230)
+	spawnHelper(self, 'target', "CENTER", 250, -230)
+	spawnHelper(self, 'targettarget', "CENTER", 300, -207)
 
 --	for n=1, MAX_BOSS_FRAMES or 5 do
 --		spawnHelper(self,'boss' .. n, 'TOPRIGHT', -10, -155 - (40 * n))
 --	end
 
---	self:SetActiveStyle'Lolzen - Party'
---	local party = self:SpawnHeader(
---		nil, nil, 'raid,party,solo',
---		'showParty', true, 'showPlayer', true, 'showSolo', true, 'yOffset', -20,
---		'oUF-initialConfigFunction', [[
---			self:SetHeight(23)
---			self:SetWidth(220)
---		]]
+	self:SetActiveStyle("Lolzen - Party")
+	
+	local party = self:SpawnHeader(
+		nil, nil, 'party,solo', 
+		'showParty', true, 
+		'showPlayer', true,
+		'showSolo', false,
+		'xOffset', 7,
+		'yoffset', 0,
+		'oUF-initialConfigFunction', [[
+			self:SetHeight(19)
+			self:SetWidth(70)
+		]],
+		'maxColumns', 5, 
+		'unitsperColumn', 1, 
+		'columnSpacing', 7, 
+		'columnAnchorPoint', "RIGHT"
+	)
+	party:SetPoint("BOTTOM", UIParent, 0, 140)
+	--party:SetPoint("CENTER", 280, -70)
+	
+--		local raid = self:SpawnHeader(nil, nil, 'raid,party,solo',
+--		'showPlayer', true,
+--		'showSolo', false,
+--		'showParty', true,
+--		'showRaid', true,
+--		'xoffset', 5,
+--		'yOffset', -4,
+--		'point', "TOP",
+--		'groupFilter', '1,2,3,4,5,6,7,8',
+--		'groupingOrder', '1,2,3,4,5,6,7,8',
+--		'groupBy', 'GROUP',
+--		'maxColumns', 7,
+--		'unitsPerColumn', 5,
+--		'columnSpacing', 5,
+--		'columnAnchorPoint', "LEFT"
 --	)
---	party:SetPoint("TOPLEFT", 30, -30)
+--	raid:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 40, -40)
 end)
