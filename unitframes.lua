@@ -216,7 +216,7 @@ local shared = function(self, unit, isSingle)
 		Border:SetPoint("TOPLEFT", self, -3, 3)
 		Border:SetPoint("BOTTOMRIGHT", self, 3, -1)
 	else
-		Border:SetPoint("TOPLEFT", self, -2, 3)
+		Border:SetPoint("TOPLEFT", self, -3, 3)
 		Border:SetPoint("BOTTOMRIGHT", self, 3, -2)
 	end
 	Border:SetBackdropBorderColor(0, 0, 0)
@@ -294,7 +294,7 @@ local shared = function(self, unit, isSingle)
 	bg:SetAlpha(1)
 	
 	local level = Health:CreateFontString(nil, "OVERLAY")
-	level:SetPoint("LEFT", Health, "LEFT", 2, -22) 
+	level:SetPoint("LEFT", Health, "LEFT", 2, -21) 
 	level:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSans.ttf", 12, "THINOUTLINE")
 	
 	self.Level = level
@@ -357,7 +357,7 @@ local shared = function(self, unit, isSingle)
 		name:SetPoint("LEFT", Health, "LEFT", 2, -2)
 		name:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSans.ttf", 14, "THINOUTLINE")
 	else
-		name:SetPoint("RIGHT", Health, "RIGHT", -2, -22)
+		name:SetPoint("RIGHT", Health, "RIGHT", -2, -21)
 		name:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSans.ttf", 12, "THINOUTLINE")
 	end
 	name:SetTextColor(1, 1, 1)
@@ -414,9 +414,12 @@ local UnitSpecific = {
 		local Debuffs = CreateAura(self, 8)
 		Debuffs:SetPoint("TOP", self, "BOTTOM", 0, -30)
 		Debuffs.showDebuffType = true
+		Debuffs.onlyShowPlayer = true
 		Debuffs.PostUpdateIcon = PostUpdateIcon
 
 		self.Debuffs = Debuffs
+		
+		--local dcounter = 
 		
 		local panel = CreateFrame("Frame")
 		panel:SetBackdrop({
@@ -482,10 +485,10 @@ end
 oUF:Factory(function(self)
 --	local base = 100
 --	spawnHelper(self, 'focus', "BOTTOM", 0, base + (40 * 1))
-	spawnHelper(self, 'pet', "CENTER", -300, -207)
-	spawnHelper(self, 'player', "CENTER", -250, -230)
-	spawnHelper(self, 'target', "CENTER", 250, -230)
-	spawnHelper(self, 'targettarget', "CENTER", 300, -207)
+	spawnHelper(self, 'pet', "CENTER", -300, -177)
+	spawnHelper(self, 'player', "CENTER", -250, -200)
+	spawnHelper(self, 'target', "CENTER", 250, -200)
+	spawnHelper(self, 'targettarget', "CENTER", 300, -177)
 
 --	for n=1, MAX_BOSS_FRAMES or 5 do
 --		spawnHelper(self,'boss' .. n, 'TOPRIGHT', -10, -155 - (40 * n))
