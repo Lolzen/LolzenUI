@@ -48,7 +48,7 @@ hooksecurefunc("AuraButton_Update", function(buttonName, index, filter)
 	if duration then
 		duration:ClearAllPoints()
 		duration:SetPoint("CENTER", button, "BOTTOM", 0, 3)
-		duration:SetFont("Fonts\\ARIALN.ttf", 10, "OUTLINE")
+		duration:SetFont("Fonts\\ARIALN.ttf", 12, "OUTLINE")
 		duration:SetDrawLayer("OVERLAY")
 	end
 
@@ -74,7 +74,7 @@ for i = 1, 2 do
 	local duration = _G["TempEnchant"..i.."Duration"]
 	duration:ClearAllPoints()
 	duration:SetPoint("CENTER", button, "BOTTOM", 0, 3)
-	duration:SetFont("Fonts\\ARIALN.ttf", 10, "OUTLINE")
+	duration:SetFont("Fonts\\ARIALN.ttf", 14, "OUTLINE")
 	duration:SetDrawLayer("OVERLAY")
 
 	local border = _G["TempEnchant"..i.."Border"]
@@ -98,7 +98,7 @@ SecondsToTimeAbbrev = function(time)
 	elseif time < 60 then
 		m = floor(time / 60)
 		s = mod(time, 60)
-		text = (m == 0 and format("|cffff0000%d", s))
+		text = (m == 0 and format("|cffffff00%d", s))
 	else
 		hr = floor(time / 3600)
 		m = floor(mod(time, 3600) / 60)
