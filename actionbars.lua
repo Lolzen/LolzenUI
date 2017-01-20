@@ -3,6 +3,7 @@ local size = 26
 local spacing = 6
 
 local invisible = CreateFrame("Frame", nil)
+invisible:RegisterEvent("PLAYER_ENTERING_WORLD")
 invisible:EnableMouse(false)
 invisible:Hide()
 
@@ -15,8 +16,15 @@ local BlizzArt = {
 	CharacterBag0Slot, CharacterBag1Slot, CharacterBag2Slot, CharacterBag3Slot,
 	MainMenuBarBackpackButton,
 	StanceBarFrame,
-	ReputationWatchBar, MainMenuExpBar, ArtifactWatchBar,
+	ReputationWatchBar, MainMenuExpBar, ArtifactWatchBar, HonorWatchBar,
 }
+
+for _, frame in pairs(BlizzArt) do
+	frame:SetParent(invisible)
+end
+
+-- Make the MainMenuBar clickthrough, so it doesn't interfere with other frames placed on the bottom
+MainMenuBar:EnableMouse(false)
 
 for _, frame in pairs(BlizzArt) do
 	frame:SetParent(invisible)
@@ -27,13 +35,28 @@ local MicroButtons = {
 	AchievementMicroButton, QuestLogMicroButton, GuildMicroButton, 
 	PVPMicroButton, LFDMicroButton, CompanionsMicroButton,
 	EJMicroButton, HelpMicroButton, MainMenuMicroButton,
-	StoreMicroButton, CollectionsMicroButton
+	CollectionsMicroButton, StoreMicroButton,
 }
 
-for _, frame in pairs(MicroButtons) do
-	frame:SetParent(invisible)
-	frame:SetScale(0.0000001)
+--fix a blizz bug; thx tuller
+if not _G['AchievementMicroButton_Update'] then
+	_G['AchievementMicroButton_Update'] = function() end
 end
+
+function invisible.PLAYER_ENTERING_WORLD()
+	for _, frame in pairs(MicroButtons) do
+		frame:SetParent(invisible)
+		frame:Hide()
+	end
+end
+
+invisible:SetScript("OnEvent", function(self, event, ...)  
+	if(self[event]) then
+		self[event](self, event, ...)
+	else
+		print("LolzenUI - actionbars debug: "..event)
+	end 
+end)
 
 --###Forming Blizz' bars###--
 --Set our bars in place
@@ -53,13 +76,13 @@ MultiBarBottomRightButton1:ClearAllPoints()
 MultiBarBottomRightButton1:SetPoint("BOTTOMLEFT", MultiBarBottomLeftButton1, "TOPLEFT", 0, 6)
 
 MultiBarLeftButton1:ClearAllPoints()
-MultiBarLeftButton1:SetPoint("TOPLEFT", MultiBarRightButton1, "TOPLEFT", -43, 0)
+MultiBarLeftButton1:SetPoint("TOPLEFT", MultiBarRightButton1, "TOPLEFT", -33, 0)
 
 MultiBarRightButton1:ClearAllPoints()
 MultiBarRightButton1:SetPoint("RIGHT", UIParent, "RIGHT", -2, 150)
 
 PetActionButton1:ClearAllPoints()
-PetActionButton1:SetPoint("BOTTOMLEFT", MultiBarBottomRightButton1, "TOPLEFT", 25, 55)
+PetActionButton1:SetPoint("BOTTOMLEFT", MultiBarBottomRightButton1, "TOPLEFT", 25, 35)
 PetActionBarFrame:SetFrameStrata('HIGH')
 
 PossessButton1:ClearAllPoints()
