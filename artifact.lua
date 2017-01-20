@@ -29,9 +29,9 @@ line2:SetTexture(0, 0, 0, 1)
 
 -- fontsrting
 local xptext = afbar:CreateFontString(nil, "OVERLAY")
-xptext:SetPoint("BOTTOM", afbar, "TOP", 0, 2)
+xptext:SetPoint("BOTTOM", afbar, "TOP", 0, -2)
 xptext:SetParent(UIParent)
-xptext:SetFont("Interface\\AddOns\\LolzenUI\\media\\SEMPRG.TTF", 8, "THINOUTLINE")
+xptext:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 10, "THINOUTLINE")
 xptext:SetTextColor(1,1,1)
 
 -- get artifact power data
