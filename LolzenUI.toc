@@ -1,23 +1,76 @@
-## Interface: 70000
+## Interface: 70200
 ## Author: Lolzen
 ## Title: Lolzen User interface
-## Version: 1.0
-## Notes: A simple, lightweight User Interface
+## Version: 7.2.5_rework
+## Notes: Restyle the whole WoW UI
 ## Dependencies: oUF
-## x-Credits: haste, Neal, Seerah
+## x-Credits: haste, Neal
+## SavedVariables: LolzenUIcfg
 
-artifact.lua
-actionbars.lua
-buff.lua
-chat.lua
-chattabs.lua
-clock.lua
-dev.lua
-fonts.lua
-minimap.lua
-nameplates.lua
-state.lua
-tip.lua
-unitframes.lua
-worldmap.lua
-xp.lua
+defaultconfig.lua
+common.lua
+optionpanel.lua
+
+modules/actionbars/HideBlizzArt.lua
+modules/actionbars/SkinActionbars.lua
+modules/actionbars/SkinPetBar.lua
+modules/actionbars/MainMenuBar.lua
+modules/actionbars/MultiBarBottomLeft.lua
+modules/actionbars/MultiBarBottomRight.lua
+modules/actionbars/MultiBarLeft.lua
+modules/actionbars/MultiBarRight.lua
+modules/actionbars/PetBar.lua
+modules/actionbars/PossessBar.lua
+modules/actionbars/options.lua
+
+modules/artifactbar/artifact.lua
+modules/artifactbar/options.lua
+
+modules/buffs/buffs.lua
+modules/buffs/options.lua
+
+modules/buffwatcher/buffwatcher.lua
+modules/buffwatcher/options.lua
+
+modules/chat/chat.lua
+modules/chat/chattabs.lua
+modules/chat/options.lua
+
+modules/clock/clock.lua
+modules/clock/options.lua
+
+modules/fonts/fonts.lua
+modules/fonts/options.lua
+
+modules/interruptannouncer/interrupt.lua
+modules/interruptannouncer/options.lua
+
+modules/minimap/minimap.lua
+modules/minimap/options.lua
+
+modules/objectivetrackerframe/objective.lua
+modules/objectivetrackerframe/options.lua
+
+modules/orderhallbar/panel.lua
+modules/orderhallbar/options.lua
+
+modules/pullcount/pull.lua
+modules/pullcount/options.lua
+
+modules/slashcommands/slashcmds.lua
+modules/slashcommands/options.lua
+
+modules/tooltip/tip.lua
+modules/tooltip/options.lua
+
+modules/unitframes/unitframes.lua
+modules/unitframes/options.lua
+
+modules/versioncheck/versioncheck.lua
+modules/versioncheck/options.lua
+
+modules/worldmap/worldmap.lua
+modules/worldmap/options.lua
+
+modules/xpbar/xp.lua
+modules/xpbar/options.lua
