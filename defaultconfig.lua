@@ -35,9 +35,15 @@ local defaultconfig = {
 	["buffwatch_pos_y"] = -140,
 	["buffwatch_icon_size"] = 52,
 	["buffwatch_icon_spacing"] = 5,
+	["objectivetracker_anchor"] = "TOPLEFT",
+	["objectivetracker_posx"] = 30,
+	["objectivetracker_posy"] = -30,
+	["objectivetracker_combatcollapse"] = true,
+	["objectivetracker_logincollapse"] = true,
 }
 
 -- check default config and update if necessary
+--ToDO: booleans throw an error
 local f = CreateFrame("Frame")
 f:SetScript("OnEvent", function(self, event, addon)
 	if addon == "LolzenUI" then
@@ -45,14 +51,14 @@ f:SetScript("OnEvent", function(self, event, addon)
 		if LolzenUIcfg == nil then
 			LolzenUIcfg = defaultconfig
 			print("|cff5599ffLolzenUI:|r first login detected! n\default values written to saved vars")
-		else
+--		else
 			-- if new variables are discovered, write them into the saved vars db
-			for k, v in pairs(defaultconfig) do
-				if not LolzenUIcfg[k] then
-					LolzenUIcfg[k] = v
-					print("|cff5599ffLolzenUI:|r new default variable(|cffff8888"..k.." = "..v.."|r) written do db")
-				end
-			end
+--			for k, v in pairs(defaultconfig) do
+--				if not LolzenUIcfg[k] then
+--					LolzenUIcfg[k] = v
+--					print("|cff5599ffLolzenUI:|r new default variable(|cffff8888"..k.." = "..v.."|r) written do db")
+--				end
+--			end
 		end
 	end
 end)
