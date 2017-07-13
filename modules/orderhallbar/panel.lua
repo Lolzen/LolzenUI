@@ -18,34 +18,45 @@ local function getAreaText()
 	end
 end
 
+local currency = {}
 local function getCurrencies()
-	local currency = {}
 	for i=1, #currencies do
 		local name, amount, icon = GetCurrencyInfo(currencies[i])
 		if amount > 0 then
 			if not currency[i] then
 				currency[i] = OrderHallCommandBar:CreateTexture("currency"..i)
 				currency[i]:SetTexture(icon)
-				currency[i]:SetSize(16, 16)
+				currency[i]:SetSize(18, 18)
 				currency[i]:SetTexCoord(.04, .94, .04, .94)
-		--		currency[i]:SetScript("OnEnter", function(self) 
-		--			GameTooltip_SetDefaultAnchor(GameTooltip, UIParent)
-		--			GameTooltip:SetText( "This text shows up when you mouse over\nthe MyFrame frame" )
-		--			GameTooltip:Show()
-		--		end)
 
 				if not currency[i].text then
 					currency[i].text = OrderHallCommandBar:CreateFontString(nil, "OVERLAY")
 					currency[i].text:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 12 ,"OUTLINE")
 					currency[i].text:SetTextColor(1, 1, 1)
+					currency[i].text:SetText(amount)
 				end
-				currency[i].text:SetText(amount)
+
+				if not currency[i].frame then
+					currency[i].frame = CreateFrame("Frame", nil, OrderHallCommandBar)
+					currency[i].frame:SetAllPoints(currency[i])
+					currency[i].frame:SetScript("OnEnter", function(self) 
+						GameTooltip:SetOwner(currency[i], "ANCHOR_BOTTOMRIGHT")
+						GameTooltip:SetCurrencyByID(currencies[i])
+						GameTooltip:Show()
+					end)
+					currency[i].frame:SetScript("OnLeave", function(self)
+						GameTooltip:Hide()
+					end)
+				end
+
 				currency[i].text:SetPoint("LEFT", currency[i], "RIGHT", 5, 0)
 				if i == 1 then
 					currency[i]:SetPoint("LEFT", OrderHallCommandBar.Currency, "RIGHT", 10, 0)
 				else
 					currency[i]:SetPoint("LEFT", currency[i-1].text, "RIGHT", 10, 0)
 				end
+			else
+				currency[i].text:SetText(amount)
 			end
 		end
 	end
@@ -54,33 +65,41 @@ end
 local function modifyOHB()
 	if OrderHallCommandBar.modded == true then return end
 	OrderHallCommandBar.AreaName:SetTextColor(51/255, 181/255, 229/225)
-	
+
 	OrderHallCommandBar.Background:SetTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
 	OrderHallCommandBar.Background:SetVertexColor(0, 0, 0, 0.5)
-		
+
 	OrderHallCommandBar.WorldMapButton:Hide()
-		
+
 	OrderHallCommandBar.CurrencyIcon:ClearAllPoints()
 	OrderHallCommandBar.CurrencyIcon:SetPoint("LEFT", OrderHallCommandBar.ClassIcon, "RIGHT", 5, 0)
+
 	OrderHallCommandBar.Currency:ClearAllPoints()
-	OrderHallCommandBar.Currency:SetPoint("LEFT", OrderHallCommandBar.CurrencyIcon, "RIGHT", 5, 0)
+	OrderHallCommandBar.Currency:SetPoint("LEFT", OrderHallCommandBar.CurrencyIcon, "RIGHT", 0, 0)
 	OrderHallCommandBar.Currency:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 12 ,"OUTLINE")
 	OrderHallCommandBar.Currency:SetTextColor(1, 1, 1)
 	OrderHallCommandBar.Currency:SetShadowOffset(0, 0)
---	OrderHallCommandBar.Currency:SetScript("OnEnter", function() return end)
-		
+
+	-- as the mouseover tooltip isn't available anymore, since we overlap it with the currency info
+	-- create our own and mimic the original's behaviour
+	cF = CreateFrame("Frame", nil, OrderHallCommandBar)
+	cF:SetAllPoints(OrderHallCommandBar.CurrencyIcon)
+	cF:SetScript("OnEnter", function(self) 
+		GameTooltip:SetOwner(OrderHallCommandBar.CurrencyIcon, "ANCHOR_BOTTOMRIGHT")
+		GameTooltip:SetCurrencyByID(1220)
+		GameTooltip:Show()
+	end)
+	cF:SetScript("OnLeave", function(self)
+		GameTooltip:Hide()
+	end)
+
 	local ohbframe = CreateFrame("Frame")
 	ohbframe:SetAllPoints(OrderHallCommandBar.ClassIcon)
 	ohbframe:EnableMouse(true)
 	ohbframe:SetFrameStrata("HIGH")
 
 	ohbframe:SetScript("OnMouseDown", GarrisonLandingPage_Toggle)
-		
-	--ohbframe:SetScript("OnEnter", function(self) 
-		--Do some stuff here within a tooltip (infos)
---	end)
 
-	
 	OrderHallCommandBar.modded = true
 end
 
