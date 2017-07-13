@@ -13,7 +13,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		local about = ns["buffwatcher"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 		about:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8)
-		about:SetText("Displayes nice icons along with the duration if up")
+		about:SetText("Displays nice icons along with the duration if up")
 		
 		local list = ns["buffwatcher"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 		list:SetPoint("TOPLEFT", about, "BOTTOMLEFT", 0, -20)
