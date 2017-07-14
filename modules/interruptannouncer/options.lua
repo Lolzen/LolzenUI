@@ -58,8 +58,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 		msg:SetCursorPosition(0)
 		
 		local msg_desc = ns["interruptannouncer"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-		msg_desc:SetPoint("TOPLEFT", msg, "BOTTOMLEFT", 0, -8)
-		msg_desc:SetText("use !spell for the interrupted spell and !name for the name of the unit's interrupted name")
+		msg_desc:SetPoint("TOPLEFT", msg_text, "BOTTOMLEFT", 0, -8)
+		msg_desc:SetText("use |cff5599ff!spell|r for the interrupted spell and |cff5599ff!name|r for the name of the unit's name which was interrupted")
 		
 		ns["interruptannouncer"].okay = function(self)
 			if cb1:GetChecked(true) then
