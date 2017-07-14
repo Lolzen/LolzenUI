@@ -73,8 +73,7 @@ local defaultconfig = {
 	["actionbar_pb_anchor2"] = "TOPLEFT",
 	["actionbar_pb_posx"] = 25,
 	["actionbar_pb_posy"] = 30,
-	-- others (not in order yet)
-	["worldmap_scale"] = 1,
+	-- [buffwatcher]
 	["buffwatchlist"] = {
 		225142, --Nefarious Pact
 		225776, --Devil's Due
@@ -84,12 +83,19 @@ local defaultconfig = {
 	["buffwatch_pos_y"] = -140,
 	["buffwatch_icon_size"] = 52,
 	["buffwatch_icon_spacing"] = 5,
+	-- [interruptannouncer]
+	["interruptannoucer_say"] = true,
+	["interruptannoucer_party"] = true,
+	["interruptannoucer_instance"] = true,
+	["interruptannouncer_msg"] = "Unterbrochen: !spell von >>!name<<",
+	-- [objectivetracker]
 	["objectivetracker_anchor"] = "TOPLEFT",
 	["objectivetracker_posx"] = 30,
 	["objectivetracker_posy"] = -30,
 	["objectivetracker_combatcollapse"] = true,
 	["objectivetracker_logincollapse"] = true,
-
+	-- [worlmap]
+	["worldmap_scale"] = 1,
 }
 
 -- check default config and update if necessary
