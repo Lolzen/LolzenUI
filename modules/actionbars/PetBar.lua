@@ -11,13 +11,13 @@ f:SetScript("OnEvent", function(self, event, addon)
 		if modded == true then return end
 
 		PetActionButton1:ClearAllPoints()
-		PetActionButton1:SetPoint("BOTTOMLEFT", MultiBarBottomRightButton1, "TOPLEFT", 25, 60)
+		PetActionButton1:SetPoint(LolzenUIcfg["actionbar_petb_anchor1"], LolzenUIcfg["actionbar_petb_parent"], LolzenUIcfg["actionbar_petb_anchor2"], LolzenUIcfg["actionbar_petb_posx"], LolzenUIcfg["actionbar_petb_posy"])
 		PetActionBarFrame:SetFrameStrata('HIGH')
 
 		for i = 1, NUM_ACTIONBAR_BUTTONS do
 			local pab = _G["PetActionButton"..i]
 			if pab then
-				pab:SetSize(LolzenUIcfg["actiobar_button_size"], LolzenUIcfg["actiobar_button_size"])
+				pab:SetSize(LolzenUIcfg["actionbar_button_size"], LolzenUIcfg["actionbar_button_size"])
 			end
 		end
 		modded = true
