@@ -22,9 +22,58 @@ local defaultconfig = {
 	["versioncheck"] = true,
 	["worldmap"] = true,
 	["xpbar"] = true,
-	-- panel variables
+	-- // panel variables //
+	-- [actionbar]
 	["actionbar_button_spacing"] = 6,
-	["actiobar_button_size"] = 26,
+	["actionbar_button_size"] = 26,
+	["actionbar_normal_texture"] = "gloss",
+	["actionbar_flash_texture"] = "flash",
+	["actionbar_checked_texture"] = "checked",
+	["actionbar_hover_texture"] = "hover",
+	["actionbar_pushed_texture"] = "pushed",
+	-- mainmenubar
+	["actionbar_mmb_anchor1"] = "BOTTOM",
+	["actionbar_mmb_parent"] = "UIParent",
+	["actionbar_mmb_anchor2"] = "BOTTOM",
+	["actionbar_mmb_posx"] = 0,
+	["actionbar_mmb_posy"] = 22,
+	-- multibar bottom left
+	["actionbar_mbbl_anchor1"] = "BOTTOMLEFT",
+	["actionbar_mbbl_parent"] = "ActionButton1",
+	["actionbar_mbbl_anchor2"] = "TOPLEFT",
+	["actionbar_mbbl_posx"] = 0,
+	["actionbar_mbbl_posy"] = 5,
+	-- multibar bottom right
+	["actionbar_mbbr_anchor1"] = "BOTTOMLEFT",
+	["actionbar_mbbr_parent"] = "MultiBarBottomLeftButton1",
+	["actionbar_mbbr_anchor2"] = "TOPLEFT",
+	["actionbar_mbbr_posx"] = 0,
+	["actionbar_mbbr_posy"] = 5,
+	-- multi bar left
+	["actionbar_mbl_anchor1"] = "TOPLEFT",
+	["actionbar_mbl_parent"] = "MultiBarRightButton1",
+	["actionbar_mbl_anchor2"] = "TOPLEFT",
+	["actionbar_mbl_posx"] = -33,
+	["actionbar_mbl_posy"] = 0,
+	-- multi bar right
+	["actionbar_mbr_anchor1"] = "RIGHT",
+	["actionbar_mbr_parent"] = "UIParent",
+	["actionbar_mbr_anchor2"] = "RIGHT",
+	["actionbar_mbr_posx"] = -2,
+	["actionbar_mbr_posy"] = 150,
+	-- pet bar
+	["actionbar_petb_anchor1"] = "BOTTOMLEFT",
+	["actionbar_petb_parent"] = "MultiBarBottomRightButton1",
+	["actionbar_petb_anchor2"] = "TOPLEFT",
+	["actionbar_petb_posx"] = 15,
+	["actionbar_petb_posy"] = 60,
+	-- possess bar
+	["actionbar_pb_anchor1"] = "BOTTOMLEFT",
+	["actionbar_pb_parent"] = "MultiBarBottomRightButton1",
+	["actionbar_pb_anchor2"] = "TOPLEFT",
+	["actionbar_pb_posx"] = 25,
+	["actionbar_pb_posy"] = 30,
+	-- others (not in order yet)
 	["worldmap_scale"] = 1,
 	["buffwatchlist"] = {
 		225142, --Nefarious Pact
@@ -40,6 +89,7 @@ local defaultconfig = {
 	["objectivetracker_posy"] = -30,
 	["objectivetracker_combatcollapse"] = true,
 	["objectivetracker_logincollapse"] = true,
+
 }
 
 -- check default config and update if necessary
