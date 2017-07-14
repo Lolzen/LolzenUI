@@ -83,6 +83,11 @@ local defaultconfig = {
 	["buffwatch_pos_y"] = -140,
 	["buffwatch_icon_size"] = 52,
 	["buffwatch_icon_spacing"] = 5,
+	-- [fonts]
+	["fonts_DAMAGE_TEXT_FONT"] = "DroidSansBold.ttf",
+	["fonts_UNIT_NAME_FONT"] = "DroidSans.ttf",
+	["fonts_NAMEPLATE_FONT"] = "DroidSans.ttf",
+	["fonts_STANDARD_TEXT_FONT"] = "DroidSans.ttf",
 	-- [interruptannouncer]
 	["interruptannoucer_say"] = true,
 	["interruptannoucer_party"] = true,
