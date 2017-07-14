@@ -14,13 +14,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 		local about = ns["interruptannouncer"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 		about:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8)
 		about:SetText("Announces interrupts")
-
-		local notice = ns["interruptannouncer"]:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-		notice:SetPoint("TOPLEFT", about, "BOTTOMLEFT", 0, -20)
-		notice:SetText("|cff5599ffWiP|r")
 		
 		local cb1 = CreateFrame("CheckButton", "instanceannounce", ns["interruptannouncer"], "ChatConfigCheckButtonTemplate")
-		cb1:SetPoint("TOPLEFT", notice, "BOTTOMLEFT", 0, -20)
+		cb1:SetPoint("TOPLEFT", about, "BOTTOMLEFT", 0, -20)
 		instanceannounceText:SetText("|cff5599ffannounce interrupts in instance chat|r")
 
 		if LolzenUIcfg["interruptannoucer_instance"] == true then
