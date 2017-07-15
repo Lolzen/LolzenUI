@@ -22,42 +22,40 @@ local currency = {}
 local function getCurrencies()
 	for i=1, #currencies do
 		local name, amount, icon = GetCurrencyInfo(currencies[i])
-		if amount > 0 then
-			if not currency[i] then
-				currency[i] = OrderHallCommandBar:CreateTexture("currency"..i)
-				currency[i]:SetTexture(icon)
-				currency[i]:SetSize(18, 18)
-				currency[i]:SetTexCoord(.04, .94, .04, .94)
+		if not currency[i] then
+			currency[i] = OrderHallCommandBar:CreateTexture("currency"..i)
+			currency[i]:SetTexture(icon)
+			currency[i]:SetSize(18, 18)
+			currency[i]:SetTexCoord(.04, .94, .04, .94)
 
-				if not currency[i].text then
-					currency[i].text = OrderHallCommandBar:CreateFontString(nil, "OVERLAY")
-					currency[i].text:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 12 ,"OUTLINE")
-					currency[i].text:SetTextColor(1, 1, 1)
-					currency[i].text:SetText(amount)
-				end
-
-				if not currency[i].frame then
-					currency[i].frame = CreateFrame("Frame", nil, OrderHallCommandBar)
-					currency[i].frame:SetAllPoints(currency[i])
-					currency[i].frame:SetScript("OnEnter", function(self) 
-						GameTooltip:SetOwner(currency[i], "ANCHOR_BOTTOMRIGHT")
-						GameTooltip:SetCurrencyByID(currencies[i])
-						GameTooltip:Show()
-					end)
-					currency[i].frame:SetScript("OnLeave", function(self)
-						GameTooltip:Hide()
-					end)
-				end
-
-				currency[i].text:SetPoint("LEFT", currency[i], "RIGHT", 5, 0)
-				if i == 1 then
-					currency[i]:SetPoint("LEFT", OrderHallCommandBar.Currency, "RIGHT", 10, 0)
-				else
-					currency[i]:SetPoint("LEFT", currency[i-1].text, "RIGHT", 10, 0)
-				end
-			else
+			if not currency[i].text then
+				currency[i].text = OrderHallCommandBar:CreateFontString(nil, "OVERLAY")
+				currency[i].text:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 12 ,"OUTLINE")
+				currency[i].text:SetTextColor(1, 1, 1)
 				currency[i].text:SetText(amount)
 			end
+
+			if not currency[i].frame then
+				currency[i].frame = CreateFrame("Frame", nil, OrderHallCommandBar)
+				currency[i].frame:SetAllPoints(currency[i])
+				currency[i].frame:SetScript("OnEnter", function(self) 
+					GameTooltip:SetOwner(currency[i], "ANCHOR_BOTTOMRIGHT")
+					GameTooltip:SetCurrencyByID(currencies[i])
+					GameTooltip:Show()
+				end)
+				currency[i].frame:SetScript("OnLeave", function(self)
+					GameTooltip:Hide()
+				end)
+			end
+
+			currency[i].text:SetPoint("LEFT", currency[i], "RIGHT", 5, 0)
+			if i == 1 then
+				currency[i]:SetPoint("LEFT", OrderHallCommandBar.Currency, "RIGHT", 10, 0)
+			else
+				currency[i]:SetPoint("LEFT", currency[i-1].text, "RIGHT", 10, 0)
+			end
+		else
+			currency[i].text:SetText(amount)
 		end
 	end
 end
