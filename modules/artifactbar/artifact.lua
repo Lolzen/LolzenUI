@@ -16,6 +16,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		afbar:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
 		afbar:SetAlpha(0.4)
 		afbar:SetStatusBarColor(1, 1, 0.7)
+		afbar:SetFrameStrata("BACKGROUND")
 
 		--Background for our bar
 		local bg = afbar:CreateTexture(nil, "BACKGROUND")
@@ -23,17 +24,32 @@ f:SetScript("OnEvent", function(self, event, addon)
 		bg:SetTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
 		bg:SetVertexColor(0, 0, 0, 0.5)
 
-		local line = afbar:CreateTexture(nil, "OVERLAY")
-		line:SetPoint("TOPLEFT", afbar, 0, 1)
-		line:SetPoint("TOPRIGHT", afbar, 0, 1)
-		line:SetHeight(1)
-		line:SetTexture(0, 0, 0, 1)
-
-		local line2 = afbar:CreateTexture(nil, "OVERLAY")
-		line2:SetPoint("BOTTOMLEFT", afbar, 0, -1)
-		line2:SetPoint("BOTTOMRIGHT", afbar, 0, -1)
-		line2:SetHeight(1)
-		line2:SetTexture(0, 0, 0, 1)
+		--1px "border"
+		local lines = {}
+		for i = 1, 4 do
+			if not lines[i] then
+				lines[i] = afbar:CreateTexture(nil, "OVERLAY")
+				lines[i]:SetTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
+				lines[i]:SetVertexColor(0, 0, 0, 1)
+			end
+			if i == 1 then
+				lines[i]:SetHeight(1)
+				lines[i]:SetPoint("TOPLEFT", afbar, 0, 1)
+				lines[i]:SetPoint("TOPRIGHT", afbar, 0, 1)
+			elseif i == 2 then
+				lines[i]:SetHeight(1)
+				lines[i]:SetPoint("BOTTOMLEFT", afbar, 0, -1)
+				lines[i]:SetPoint("BOTTOMRIGHT", afbar, 0, -1)
+			elseif i == 3 then
+				lines[i]:SetWidth(1)
+				lines[i]:SetPoint("TOPLEFT", afbar, -1, 0)
+				lines[i]:SetPoint("BOTTOMLEFT", afbar, -1, 0)
+			elseif i == 4 then
+				lines[i]:SetWidth(1)
+				lines[i]:SetPoint("TOPRIGHT", afbar, 1, 0)
+				lines[i]:SetPoint("BOTTOMRIGHT", afbar, 1, 0)
+			end
+		end
 
 		-- fontstring
 		local xptext = afbar:CreateFontString(nil, "OVERLAY")
