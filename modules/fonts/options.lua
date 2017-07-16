@@ -15,12 +15,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 		about:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8)
 		about:SetText("Changes the fonts used in WoW")
 
-		local notice = ns["fonts"]:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-		notice:SetPoint("TOPLEFT", about, "BOTTOMLEFT", 0, -20)
-		notice:SetText("|cff5599ffWiP|r")
-
 		local dmg_text = ns["fonts"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-		dmg_text:SetPoint("TOPLEFT", notice, "BOTTOMLEFT", 0, -8)
+		dmg_text:SetPoint("TOPLEFT", about, "BOTTOMLEFT", 0, -20)
 		dmg_text:SetText("|cff5599ffDAMAGE_TEXT_FONT:|r Interface\\AddOns\\LolzenUI\\fonts\\")
 
 		local dmg = CreateFrame("EditBox", nil, ns["fonts"], "InputBoxTemplate")
@@ -67,17 +63,23 @@ f:SetScript("OnEvent", function(self, event, addon)
 		standard:SetText(LolzenUIcfg["fonts_STANDARD_TEXT_FONT"])
 		standard:SetCursorPosition(0)
 
+		local tip = ns["fonts"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+		tip:SetPoint("TOPLEFT", standard_text, "BOTTOMLEFT", 0, -20)
+		tip:SetText("|cff5599ffPROTIP:|r The fonts have to have been in the folder BEFORE the WoW client was started.")
 
---		local v3 = ns["fonts"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
---		v3:SetPoint("TOPLEFT", v2, "BOTTOMLEFT", 0, 0)
---		v3:SetText("|cff5599ffWoW TOC verion:|r "..tocversion)
+		ns["fonts"].okay = function(self)
+			LolzenUIcfg["fonts_DAMAGE_TEXT_FONT"] = dmg:GetText()
+			LolzenUIcfg["fonts_UNIT_NAME_FONT"] = unit:GetText()
+			LolzenUIcfg["fonts_NAMEPLATE_FONT"] = np:GetText()
+			LolzenUIcfg["fonts_STANDARD_TEXT_FONT"] = standard:GetText()
+		end
 
---		local v4 = ns["fonts"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
---		v4:SetPoint("TOPLEFT", v3, "BOTTOMLEFT", 0, 0)
---		v4:SetText("|cff5599ffWoW build:|r "..build)
-
---		local v5 = ns["fonts"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
---		v5:SetPoint("TOPLEFT", v4, "BOTTOMLEFT", 0, 0)
---		v4:SetText("|cff5599ffWoW build date: |r"..date)
+		ns["fonts"].default = function(self)
+			LolzenUIcfg["fonts_DAMAGE_TEXT_FONT"] = "DroidSansBold.ttf"
+			LolzenUIcfg["fonts_UNIT_NAME_FONT"] = "DroidSans.ttf"
+			LolzenUIcfg["fonts_NAMEPLATE_FONT"] = "DroidSans.ttf"
+			LolzenUIcfg["fonts_STANDARD_TEXT_FONT"] = "DroidSans.ttf"
+			ReloadUI()
+		end
 	end
 end)
