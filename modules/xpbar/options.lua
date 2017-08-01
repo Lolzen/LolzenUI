@@ -2,6 +2,10 @@
 
 local addon, ns = ...
 
+if not ns.modules["actionabars"] then
+	tinsert(ns.modules, "xpbar")
+end
+
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)

@@ -8,7 +8,7 @@
 ## SavedVariables: LolzenUIcfg
 
 defaultconfig.lua
-common.lua
+core.lua
 optionpanel.lua
 
 modules/actionbars/HideBlizzArt.lua
@@ -41,6 +41,9 @@ modules/clock/options.lua
 
 modules/fonts/fonts.lua
 modules/fonts/options.lua
+
+modules/gambler/gamble.lua
+modules/gambler/options.lua
 
 modules/interruptannouncer/interrupt.lua
 modules/interruptannouncer/options.lua
