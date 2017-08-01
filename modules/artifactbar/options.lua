@@ -303,7 +303,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		text_pos_y:SetCursorPosition(0)
 
 		local text_anchor_text = ns["artifactbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-		text_anchor_text:SetPoint("TOPLEFT", text_pos_x_text, "BOTTOMLEFT", 0, -10)
+		text_anchor_text:SetPoint("LEFT", text_pos_y, "RIGHT", 10, 0)
 		text_anchor_text:SetText("Text Anchor1:")
 
 		local text_anchor = CreateFrame("EditBox", nil, ns["artifactbar"], "InputBoxTemplate")
@@ -313,18 +313,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 		text_anchor:ClearFocus()
 		text_anchor:SetText(LolzenUIcfg["artifactbar_text_anchor1"])
 		text_anchor:SetCursorPosition(0)
-
---		local text_parent_text = ns["artifactbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
---		text_parent_text:SetPoint("LEFT", text_anchor, "RIGHT", 5, 0)
---		text_parent_text:SetText("Text Parent:")
-
---		local text_parent = CreateFrame("EditBox", nil, ns["artifactbar"], "InputBoxTemplate")
---		text_parent:SetPoint("LEFT", text_parent_text, "RIGHT", 10, 0)
---		text_parent:SetSize(100, 20)
---		text_parent:SetAutoFocus(false)
---		text_parent:ClearFocus()
---		text_parent:SetText(LolzenUIcfg["artifactbar_text_parent"])
---		text_parent:SetCursorPosition(0)
 
 		local text_anchor2_text = ns["artifactbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 		text_anchor2_text:SetPoint("LEFT", text_anchor, "RIGHT", 5, 0)
@@ -366,7 +354,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 			LolzenUIcfg["artifactbar_text_posx"] = tonumber(text_pos_x:GetText())
 			LolzenUIcfg["artifactbar_text_posy"] = tonumber(text_pos_y:GetText())
 			LolzenUIcfg["artifactbar_text_anchor1"] = text_anchor:GetText()
---			LolzenUIcfg["artifactbar_text_parent"] = text_parent:GetText()
 			LolzenUIcfg["artifactbar_text_anchor2"] = text_anchor2:GetText()
 		end
 
@@ -390,7 +377,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 			LolzenUIcfg["artifactbar_text_posx"] = 0
 			LolzenUIcfg["artifactbar_text_posy"] = -2
 			LolzenUIcfg["artifactbar_text_anchor1"] = "BOTTOM"
---			LolzenUIcfg["artifactbar_text_parent"] = "afbar"
 			LolzenUIcfg["artifactbar_text_anchor2"] = "TOP"
 			ReloadUI()
 		end
