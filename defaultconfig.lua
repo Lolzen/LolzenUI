@@ -123,6 +123,29 @@ local defaultconfig = {
 	["objectivetracker_logincollapse"] = true,
 	-- [worlmap]
 	["worldmap_scale"] = 1,
+	-- [xpbar]
+	["xpbar_height"] = 4,
+	["xpbar_width"] = 378,
+	["xpbar_anchor"] = "BOTTOM",
+	["xpbar_parent"] = "UIParent",
+	["xpbar_posx"] = 0,
+	["xpbar_posy"] = 5,
+	["xpbar_texture"] = "statusbar.tga",
+	["xpbar_alpha"] = 0.4,
+	["xpbar_bg_alpha"] = 0.5,
+	["xpbar_bg_color"] = {1, 0.4, 0},
+	["xpbar_xp_color"] = {0.6, 0, 0.6},
+	["xpbar_xp_rested_color"] = {46/255, 103/255, 208/255},
+	["xpbar_1px_border"] = true,
+	["xpbar_1px_border_round"] = true,
+	["xpbar_font"] = "DroidSansBold.ttf",
+	["xpbar_font_size"] = 10,
+	["xpbar_font_flag"] = "THINOUTLINE",
+	["xpbar_font_color"] = {1, 1, 1},
+	["xpbar_text_anchor1"] = "BOTTOM",
+	["xpbar_text_anchor2"] = "TOP",
+	["xpbar_text_posx"] = 0,
+	["xpbar_text_posy"] = -2,
 }
 
 -- check default config and update if necessary
@@ -140,8 +163,23 @@ f:SetScript("OnEvent", function(self, event, addon)
 				-- don't try to write saved vars for disabled modules
 				if LolzenUIcfg[k] == false then return end
 				if not LolzenUIcfg[k] then
-					LolzenUIcfg[k] = v
-					print("|cff5599ffLolzenUI:|r new default variable(|cffff8888"..k.." = "..v.."|r) written do db")
+					if type(v) == "table" then
+						LolzenUIcfg[k] = {unpack(v)}
+						print("|cff5599ffLolzenUI:|r new default variable(|cffff8888"..k.." = "..unpack(v).."|r) written do db")
+					elseif type(v) == "boolean" then
+						local bool
+						if v == true then
+							bool = "true"
+							LolzenUIcfg[k] = true
+						else
+							bool = "false"
+							LolzenUIcfg[k] = false
+						end
+						print("|cff5599ffLolzenUI:|r new default variable(|cffff8888"..k.." = "..bool.."|r) written do db")
+					else
+						LolzenUIcfg[k] = v
+						print("|cff5599ffLolzenUI:|r new default variable(|cffff8888"..k.." = "..v.."|r) written do db")
+					end
 				end
 			end
 		end
