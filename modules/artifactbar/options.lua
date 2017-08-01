@@ -2,10 +2,6 @@
 
 local addon, ns = ...
 
---// options for artifactbar //--
-
-local addon, ns = ...
-
 if not ns.modules["actionabars"] then
 	tinsert(ns.modules, "artifactbar")
 end
