@@ -23,12 +23,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 		about:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8)
 		about:SetText("A bar which shows artifact power progress")
 
-		local notice = ns["artifactbar"]:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-		notice:SetPoint("TOPLEFT", about, "BOTTOMLEFT", 0, -20)
-		notice:SetText("|cff5599ffWiP|r")
-
 		local height_text = ns["artifactbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-		height_text:SetPoint("TOPLEFT", notice, "BOTTOMLEFT", 0, -8)
+		height_text:SetPoint("TOPLEFT", about, "BOTTOMLEFT", 0, -20)
 		height_text:SetText("Height:")
 
 		local height = CreateFrame("EditBox", nil, ns["artifactbar"], "InputBoxTemplate")
