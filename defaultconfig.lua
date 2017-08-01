@@ -10,6 +10,7 @@ local defaultconfig = {
 	["chat"] = true,
 	["clock"] = true,
 	["fonts"] = true,
+	["gambler"] = true,
 	["interruptannouncer"] = true,
 	["minimap"] = true,
 --	["nameplates"] = true,
@@ -73,6 +74,28 @@ local defaultconfig = {
 	["actionbar_pb_anchor2"] = "TOPLEFT",
 	["actionbar_pb_posx"] = 25,
 	["actionbar_pb_posy"] = 30,
+	-- [artifactbar]
+	["artifactbar_height"] = 4,
+	["artifactbar_width"] = 378,
+	["artifactbar_anchor"] = "BOTTOM",
+	["artifactbar_parent"] = "UIParent",
+	["artifactbar_posx"] = 0,
+	["artifactbar_posy"] = 120,
+	["artifactbar_texture"] = "statusbar.tga",
+	["artifactbar_alpha"] = 0.4,
+	["artifactbar_bg_alpha"] = 0.5,
+	["artifactbar_color"] = {1, 1, 0.7},
+	["artifactbar_1px_border"] = true,
+	["artifactbar_1px_border_round"] = true,
+	["artifactbar_font"] = "DroidSansBold.ttf",
+	["artifactbar_font_size"] = 10,
+	["artifactbar_font_flag"] = "THINOUTLINE",
+	["artifactbar_font_color"] = {1, 1, 1},
+	["artifactbar_text_anchor1"] = "BOTTOM",
+--	["artifactbar_text_parent"] = "afbar",
+	["artifactbar_text_anchor2"] = "TOP",
+	["artifactbar_text_posx"] = 0,
+	["artifactbar_text_posy"] = -2,
 	-- [buffwatcher]
 	["buffwatchlist"] = {
 		225142, --Nefarious Pact
@@ -112,14 +135,16 @@ f:SetScript("OnEvent", function(self, event, addon)
 		if LolzenUIcfg == nil then
 			LolzenUIcfg = defaultconfig
 			print("|cff5599ffLolzenUI:|r first login detected! n\default values written to saved vars")
---		else
+		else
 			-- if new variables are discovered, write them into the saved vars db
---			for k, v in pairs(defaultconfig) do
---				if not LolzenUIcfg[k] then
---					LolzenUIcfg[k] = v
---					print("|cff5599ffLolzenUI:|r new default variable(|cffff8888"..k.." = "..v.."|r) written do db")
---				end
---			end
+			for k, v in pairs(defaultconfig) do
+				-- don't try to write saved vars for disabled modules
+				if LolzenUIcfg[k] == false then return end
+				if not LolzenUIcfg[k] then
+					LolzenUIcfg[k] = v
+					print("|cff5599ffLolzenUI:|r new default variable(|cffff8888"..k.." = "..v.."|r) written do db")
+				end
+			end
 		end
 	end
 end)
