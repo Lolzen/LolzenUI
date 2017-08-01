@@ -64,29 +64,9 @@ local function createButtons()
 			button[i]:SetChecked(false)
 			button[i].text:SetTextColor(1, 1, 1)
 		end
-
-		-- write to saved vars if a module is checked/unchecked
---		button[i]:SetScript("OnClick", function(self, button, isDown)
---			if self:GetChecked() then 
---				print(ns.modules[i].." activated")
-			--	LolzenUIcfg[ns.modules[i]] = true
---			else 
---				print(ns.modules[i].." disabled")
-			--	LolzenUIcfg[ns.modules[i]] = false
---			end 
---		end)
 	end
 end
 
---[[
--- Make a child panel
- MyAddon.childpanel = CreateFrame( "Frame", "MyAddonChild", MyAddon.panel);
- MyAddon.childpanel.name = "MyChild";
- -- Specify childness of this panel (this puts it under the little red [+], instead of giving it a normal AddOn category)
- MyAddon.childpanel.parent = MyAddon.panel.name;
- -- Add the child to the Interface Options
- InterfaceOptions_AddCategory(MyAddon.childpanel);
- ]]
 ns.panel.okay = function(self)
 	for i=1, #ns.modules do
 		if button[i]:GetChecked() then
