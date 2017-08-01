@@ -10,53 +10,65 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		-- first let us create our bar
 		local afbar = CreateFrame("StatusBar", "bar4artifactpower", UIParent)
-		afbar:SetPoint("BOTTOM", UIParent, 0, 120)
-		afbar:SetHeight(4)
-		afbar:SetWidth(378)
-		afbar:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
-		afbar:SetAlpha(0.4)
-		afbar:SetStatusBarColor(1, 1, 0.7)
+		afbar:SetPoint(LolzenUIcfg["artifactbar_anchor"], LolzenUIcfg["artifactbar_parent"], LolzenUIcfg["artifactbar_posx"], LolzenUIcfg["artifactbar_posy"])
+		afbar:SetHeight(LolzenUIcfg["artifactbar_height"])
+		afbar:SetWidth(LolzenUIcfg["artifactbar_width"])
+		afbar:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg["artifactbar_texture"])
+		afbar:SetAlpha(LolzenUIcfg["artifactbar_alpha"])
+		afbar:SetStatusBarColor(unpack(LolzenUIcfg["artifactbar_color"]))
 		afbar:SetFrameStrata("BACKGROUND")
 
 		--Background for our bar
 		local bg = afbar:CreateTexture(nil, "BACKGROUND")
 		bg:SetAllPoints(afbar)
-		bg:SetTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
-		bg:SetVertexColor(0, 0, 0, 0.5)
+		bg:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg["artifactbar_texture"])
+		bg:SetVertexColor(0, 0, 0, LolzenUIcfg["artifactbar_bg_alpha"])
 
 		--1px "border"
-		local lines = {}
-		for i = 1, 4 do
-			if not lines[i] then
-				lines[i] = afbar:CreateTexture(nil, "OVERLAY")
-				lines[i]:SetTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
-				lines[i]:SetVertexColor(0, 0, 0, 1)
-			end
-			if i == 1 then
-				lines[i]:SetHeight(1)
-				lines[i]:SetPoint("TOPLEFT", afbar, 0, 1)
-				lines[i]:SetPoint("TOPRIGHT", afbar, 0, 1)
-			elseif i == 2 then
-				lines[i]:SetHeight(1)
-				lines[i]:SetPoint("BOTTOMLEFT", afbar, 0, -1)
-				lines[i]:SetPoint("BOTTOMRIGHT", afbar, 0, -1)
-			elseif i == 3 then
-				lines[i]:SetWidth(1)
-				lines[i]:SetPoint("TOPLEFT", afbar, -1, 0)
-				lines[i]:SetPoint("BOTTOMLEFT", afbar, -1, 0)
-			elseif i == 4 then
-				lines[i]:SetWidth(1)
-				lines[i]:SetPoint("TOPRIGHT", afbar, 1, 0)
-				lines[i]:SetPoint("BOTTOMRIGHT", afbar, 1, 0)
+		if LolzenUIcfg["artifactbar_1px_border"] == true then
+			local lines = {}
+			for i = 1, 4 do
+				if not lines[i] then
+					lines[i] = afbar:CreateTexture(nil, "OVERLAY")
+					lines[i]:SetTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
+					lines[i]:SetVertexColor(0, 0, 0, 1)
+				end
+				if i == 1 then
+					lines[i]:SetHeight(1)
+					lines[i]:SetPoint("TOPLEFT", afbar, 0, 1)
+					lines[i]:SetPoint("TOPRIGHT", afbar, 0, 1)
+				elseif i == 2 then
+					lines[i]:SetHeight(1)
+					lines[i]:SetPoint("BOTTOMLEFT", afbar, 0, -1)
+					lines[i]:SetPoint("BOTTOMRIGHT", afbar, 0, -1)
+				elseif i == 3 then
+					lines[i]:SetWidth(1)
+					if LolzenUIcfg["artifactbar_1px_border_round"] == true then
+						lines[i]:SetPoint("TOPLEFT", afbar, -1, 0)
+						lines[i]:SetPoint("BOTTOMLEFT", afbar, -1, 0)
+					else
+						lines[i]:SetPoint("TOPLEFT", afbar, 0, 0)
+						lines[i]:SetPoint("BOTTOMLEFT", afbar, 0, 0)
+					end
+				elseif i == 4 then
+					lines[i]:SetWidth(1)
+					if LolzenUIcfg["artifactbar_1px_border_round"] == true then
+						lines[i]:SetPoint("TOPRIGHT", afbar, 1, 0)
+						lines[i]:SetPoint("BOTTOMRIGHT", afbar, 1, 0)
+					else
+						lines[i]:SetPoint("TOPRIGHT", afbar, 0, 0)
+						lines[i]:SetPoint("BOTTOMRIGHT", afbar, 0, 0)
+					end
+				end
 			end
 		end
 
 		-- fontstring
 		local xptext = afbar:CreateFontString(nil, "OVERLAY")
-		xptext:SetPoint("BOTTOM", afbar, "TOP", 0, -2)
+		xptext:SetPoint(LolzenUIcfg["artifactbar_text_anchor1"], afbar, LolzenUIcfg["artifactbar_text_anchor2"], LolzenUIcfg["artifactbar_text_posx"], LolzenUIcfg["artifactbar_text_posy"])
 		xptext:SetParent(UIParent)
-		xptext:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 10, "THINOUTLINE")
-		xptext:SetTextColor(1,1,1)
+		xptext:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\"..LolzenUIcfg["artifactbar_font"], LolzenUIcfg["artifactbar_font_size"], LolzenUIcfg["artifactbar_font_flag"])
+		xptext:SetTextColor(unpack(LolzenUIcfg["artifactbar_font_color"]))
 
 		-- get artifact power data
 		function afbar:ARTIFACT_XP_UPDATE()
