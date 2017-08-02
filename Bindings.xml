@@ -1,0 +1,9 @@
+<Bindings>
+	<Binding name="INSPECT" runOnUp="true" header="INSPECT">
+		if not UnitExists("target") then
+			InspectUnit("mouseover")
+		else
+			InspectUnit("target")
+		end
+	</Binding>
+</Bindings>
