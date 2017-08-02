@@ -22,36 +22,64 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		-- first let us create our bar
 		local xpbar = CreateFrame("StatusBar", "bar4xpbar", UIParent)
-		xpbar:SetPoint("BOTTOM", UIParent, 0, 5)
-		xpbar:SetHeight(4)
-		xpbar:SetWidth(378)
-		xpbar:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
-		xpbar:SetAlpha(0.4)
-		
-		--Background for our bar
+		xpbar:SetPoint(LolzenUIcfg["xpbar_anchor"], LolzenUIcfg["xpbar_parent"], LolzenUIcfg["xpbar_posx"], LolzenUIcfg["xpbar_posy"])
+		xpbar:SetHeight(LolzenUIcfg["xpbar_height"])
+		xpbar:SetWidth(LolzenUIcfg["xpbar_width"])
+		xpbar:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg["xpbar_texture"])
+		xpbar:SetAlpha(LolzenUIcfg["xpbar_alpha"])
+		xpbar:SetFrameStrata("BACKGROUND")
+
+		-- Background for our bar
 		local bg = xpbar:CreateTexture(nil, "BACKGROUND")
 		bg:SetAllPoints(xpbar)
 		bg:SetTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
-		bg:SetVertexColor(0, 0, 0, 0.5)
+		bg:SetVertexColor(0, 0, 0, LolzenUIcfg["xpbar_bg_alpha"])
 
-		local line = xpbar:CreateTexture(nil, "OVERLAY")
-		line:SetPoint("TOPLEFT", xpbar, 0, 1)
-		line:SetPoint("TOPRIGHT", xpbar, 0, 1)
-		line:SetHeight(1)
-		line:SetTexture(0, 0, 0, 1)
-
-		local line2 = xpbar:CreateTexture(nil, "OVERLAY")
-		line2:SetPoint("BOTTOMLEFT", xpbar, 0, -1)
-		line2:SetPoint("BOTTOMRIGHT", xpbar, 0, -1)
-		line2:SetHeight(1)
-		line2:SetTexture(0, 0, 0, 1)
+		--1px "border"
+		if LolzenUIcfg["xpbar_1px_border"] == true then
+			local lines = {}
+			for i = 1, 4 do
+				if not lines[i] then
+					lines[i] = xpbar:CreateTexture(nil, "OVERLAY")
+					lines[i]:SetTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
+					lines[i]:SetVertexColor(0, 0, 0, 1)
+				end
+				if i == 1 then
+					lines[i]:SetHeight(1)
+					lines[i]:SetPoint("TOPLEFT", xpbar, 0, 1)
+					lines[i]:SetPoint("TOPRIGHT", xpbar, 0, 1)
+				elseif i == 2 then
+					lines[i]:SetHeight(1)
+					lines[i]:SetPoint("BOTTOMLEFT", xpbar, 0, -1)
+					lines[i]:SetPoint("BOTTOMRIGHT", xpbar, 0, -1)
+				elseif i == 3 then
+					lines[i]:SetWidth(1)
+					if LolzenUIcfg["xpbar_1px_border_round"] == true then
+						lines[i]:SetPoint("TOPLEFT", xpbar, -1, 0)
+						lines[i]:SetPoint("BOTTOMLEFT", xpbar, -1, 0)
+					else
+						lines[i]:SetPoint("TOPLEFT", xpbar, 0, 0)
+						lines[i]:SetPoint("BOTTOMLEFT", xpbar, 0, 0)
+					end
+				elseif i == 4 then
+					lines[i]:SetWidth(1)
+					if LolzenUIcfg["xpbar_1px_border_round"] == true then
+						lines[i]:SetPoint("TOPRIGHT", xpbar, 1, 0)
+						lines[i]:SetPoint("BOTTOMRIGHT", xpbar, 1, 0)
+					else
+						lines[i]:SetPoint("TOPRIGHT", xpbar, 0, 0)
+						lines[i]:SetPoint("BOTTOMRIGHT", xpbar, 0, 0)
+					end
+				end
+			end
+		end
 
 		-- fontstring
 		local xptext = xpbar:CreateFontString(nil, "OVERLAY")
-		xptext:SetPoint("BOTTOM", xpbar, "TOP", 0, -2)
+		xptext:SetPoint(LolzenUIcfg["xpbar_text_anchor1"], xpbar, LolzenUIcfg["xpbar_text_anchor2"], LolzenUIcfg["xpbar_text_posx"], LolzenUIcfg["xpbar_text_posy"])
 		xptext:SetParent(UIParent)
-		xptext:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 10, "THINOUTLINE")
-		xptext:SetTextColor(1,1,1)
+		xptext:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\"..LolzenUIcfg["xpbar_font"], LolzenUIcfg["xpbar_font_size"], LolzenUIcfg["xpbar_font_flag"])
+		xptext:SetTextColor(unpack(LolzenUIcfg["xpbar_font_color"]))
 
 		function xpbar:Update()
 			-- Proprity #1: If in BGs show the HonorXP
@@ -64,42 +92,57 @@ f:SetScript("OnEvent", function(self, event, addon)
 				local max = UnitHonorMax("player")
 				xpbar:SetMinMaxValues(0, max)
 				xpbar:SetValue(current)
-				xpbar:SetStatusBarColor(1, 0.4, 0)
+				xpbar:SetStatusBarColor(unpack(LolzenUIcfg["xpbar_pvp_color"]))
 				xptext:SetFormattedText("%s (%.0f%%)", "[P:"..prestige.."L:"..level.."] "..current.."/"..max, current/max*100)
-			else
-				-- Reputation
-				local name, standing, min, max, value = GetWatchedFactionInfo()
-				max, min = (max-min), (value-min)
-				local baseColor = FACTION_BAR_COLORS[standing]
-				local color = {}
-				if name then
-					for key, value in pairs(baseColor) do 
-						color[key] = math.min(1, value * 1.25)
-					end
-					xpbar:SetMinMaxValues(0, max)
-					xpbar:SetValue(min)
-					xpbar:SetStatusBarColor(color.r, color.g, color.b)
-					xptext:SetText("("..name..") "..min.." / "..max)
-				else
-					-- XP
-					local xp = UnitXP("player")
-					local maxxp = UnitXPMax("player")
-					xpbar:SetMinMaxValues(0, maxxp)
-					xpbar:SetValue(xp)
-					-- colorize the statusbar
-					if GetXPExhaustion() then
-						xpbar:SetStatusBarColor(0.6, 0, 0.6)
-						xptext:SetFormattedText("%.0f%% (%.0f%%)", xp/maxxp*100, GetXPExhaustion()/maxxp*100)
-					else
-						xpbar:SetStatusBarColor(46/255, 103/255, 208/255)
-						xptext:SetFormattedText("%.0f%%", xp/maxxp*100)
-					end
-
-					if UnitLevel("player") == MAX_PLAYER_LEVEL then
-						xptext:SetText(nil)
+			elseif GetWatchedFactionInfo() ~= nil then
+				-- Reputation (including Paragon)
+				for i = 1, GetNumFactions() do
+					local paraName, _, _, _, _, _, _, _, _, _, _, isWatched, _, factionID = GetFactionInfo(i)
+					if isWatched and factionID then
+						if C_Reputation.IsFactionParagon(factionID) then
+							local currentValue, threshold, rewardQuestID, hasRewardPending = C_Reputation.GetFactionParagonInfo(factionID)
+							local value = mod(currentValue, threshold)
+							if paraRewardPending then
+								value = value + threshold
+							end
+							xpbar:SetMinMaxValues(0, threshold)
+							xpbar:SetValue(value)
+							xpbar:SetStatusBarColor(unpack(LolzenUIcfg["xpbar_paragon_color"]))
+							xptext:SetText("("..paraName..") "..value.." / "..threshold)
+						else
+							local name, standing, min, max, value = GetWatchedFactionInfo()
+							max, min = (max-min), (value-min)
+							local baseColor = FACTION_BAR_COLORS[standing]
+							local color = {}
+							for key, value in pairs(baseColor) do 
+								color[key] = math.min(1, value * 1.25)
+							end
+							xpbar:SetMinMaxValues(0, max)
+							xpbar:SetValue(min)
+							xpbar:SetStatusBarColor(color.r, color.g, color.b)
+							xptext:SetText("("..name..") "..min.." / "..max)
+						end
 					end
 				end
+			else
+				-- XP
+				local xp = UnitXP("player")
+				local maxxp = UnitXPMax("player")
+				xpbar:SetMinMaxValues(0, maxxp)
+				xpbar:SetValue(xp)
+				-- colorize the statusbar
+				if GetXPExhaustion() then
+					xpbar:SetStatusBarColor(unpack(LolzenUIcfg["xpbar_xp_color"]))
+					xptext:SetFormattedText("%.0f%% (%.0f%%)", xp/maxxp*100, GetXPExhaustion()/maxxp*100)
+				else
+					xpbar:SetStatusBarColor(unpack(LolzenUIcfg["xpbar_xp_restedcolor"]))
+					xptext:SetFormattedText("%.0f%%", xp/maxxp*100)
+				end
+				if UnitLevel("player") == MAX_PLAYER_LEVEL then
+					xptext:SetText(nil)
+				end
 			end
+		--	end
 		end
 		xpbar.PLAYER_ENTERING_WORLD = xpbar.Update
 		xpbar.PLAYER_LEVEL_UP = xpbar.Update
