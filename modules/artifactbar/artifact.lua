@@ -78,7 +78,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				local numPoints, artifactXP, xpForNextPoint = MainMenuBar_GetNumArtifactTraitsPurchasableFromXP(pointsSpent, totalXP, artifactTier)
 				afbar:SetMinMaxValues(0, xpForNextPoint)
 				afbar:SetValue(artifactXP)
-				afbar:SetAlpha(0.4)
+				afbar:SetAlpha(LolzenUIcfg["artifactbar_alpha"])
 				-- use tostring to prevent integer overflow
 				xptext:SetFormattedText("%s / %s (%.0f%%)", tostring(artifactXP), tostring(xpForNextPoint), tostring(artifactXP/xpForNextPoint*100) )
 			else
