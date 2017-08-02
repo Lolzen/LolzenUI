@@ -115,6 +115,8 @@ local defaultconfig = {
 	["interruptannoucer_party"] = true,
 	["interruptannoucer_instance"] = true,
 	["interruptannouncer_msg"] = "Unterbrochen: !spell von >>!name<<",
+	-- [minimap]
+	["minimap_square"] = true,
 	-- [objectivetracker]
 	["objectivetracker_anchor"] = "TOPLEFT",
 	["objectivetracker_posx"] = 30,
@@ -150,7 +152,6 @@ local defaultconfig = {
 }
 
 -- check default config and update if necessary
---ToDO: booleans throw an error
 local f = CreateFrame("Frame")
 f:SetScript("OnEvent", function(self, event, addon)
 	if addon == "LolzenUI" then
