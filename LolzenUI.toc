@@ -42,8 +42,8 @@ modules/clock/options.lua
 modules/fonts/fonts.lua
 modules/fonts/options.lua
 
-modules/gambler/gamble.lua
-modules/gambler/options.lua
+modules/inspect/inspect.lua
+modules/inspect/options.lua
 
 modules/interruptannouncer/interrupt.lua
 modules/interruptannouncer/options.lua
