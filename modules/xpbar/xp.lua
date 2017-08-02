@@ -142,7 +142,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 					xptext:SetText(nil)
 				end
 			end
-		--	end
 		end
 		xpbar.PLAYER_ENTERING_WORLD = xpbar.Update
 		xpbar.PLAYER_LEVEL_UP = xpbar.Update
