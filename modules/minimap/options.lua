@@ -17,26 +17,29 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		local about = ns["minimap"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 		about:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8)
-		about:SetText("A Square, clean Minimap")
+		about:SetText("A clean Minimap")
 
-		local notice = ns["minimap"]:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-		notice:SetPoint("TOPLEFT", about, "BOTTOMLEFT", 0, -20)
-		notice:SetText("|cff5599ffTO BE DONE|r")
+		local cb1 = CreateFrame("CheckButton", "squareMinimap", ns["minimap"], "ChatConfigCheckButtonTemplate")
+		cb1:SetPoint("TOPLEFT", about, "BOTTOMLEFT", 0, -20)
+		squareMinimapText:SetText("|cff5599ffsquare Minimap|r")
 
---		local v2 = ns["minimap"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
---		v2:SetPoint("TOPLEFT", v1, "BOTTOMLEFT", 0, -8)
---		v2:SetText("|cff5599ffWoW Patch verion:|r "..version)
+		if LolzenUIcfg["minimap_square"] == true then
+			cb1:SetChecked(true)
+		else
+			cb1:SetChecked(false)
+		end
 
---		local v3 = ns["minimap"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
---		v3:SetPoint("TOPLEFT", v2, "BOTTOMLEFT", 0, 0)
---		v3:SetText("|cff5599ffWoW TOC verion:|r "..tocversion)
+		ns["minimap"].okay = function(self)
+			if cb1:GetChecked(true) then
+				LolzenUIcfg["minimap_square"] = true
+			else
+				LolzenUIcfg["minimap_square"] = false
+			end
+		end
 
---		local v4 = ns["minimap"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
---		v4:SetPoint("TOPLEFT", v3, "BOTTOMLEFT", 0, 0)
---		v4:SetText("|cff5599ffWoW build:|r "..build)
-
---		local v5 = ns["minimap"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
---		v5:SetPoint("TOPLEFT", v4, "BOTTOMLEFT", 0, 0)
---		v4:SetText("|cff5599ffWoW build date: |r"..date)
+		ns["minimap"].default = function(self)
+			LolzenUIcfg["minimap_square"] = true
+			ReloadUI()
+		end
 	end
 end)
