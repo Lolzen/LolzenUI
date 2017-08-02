@@ -10,7 +10,7 @@ local defaultconfig = {
 	["chat"] = true,
 	["clock"] = true,
 	["fonts"] = true,
-	["gambler"] = true,
+	["inspect"] = true,
 	["interruptannouncer"] = true,
 	["minimap"] = true,
 --	["nameplates"] = true,
@@ -95,6 +95,14 @@ local defaultconfig = {
 	["artifactbar_text_anchor2"] = "TOP",
 	["artifactbar_text_posx"] = 0,
 	["artifactbar_text_posy"] = -2,
+	-- [buffs]
+	["buff_anchor1"] = "TOPRIGHT",
+	["buff_parent"] = "Minimap",
+	["buff_anchor2"] = "TOPLEFT",
+	["buff_posx"] = -15,
+	["buff_posy"] = 2,
+	["buff_aura_texture"] = "auraborder.tga",
+	["buff_debuff_texture"] = "debuffborder.tga",
 	-- [buffwatcher]
 	["buffwatchlist"] = {
 		225142, --Nefarious Pact
