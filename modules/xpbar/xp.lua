@@ -32,7 +32,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		-- Background for our bar
 		local bg = xpbar:CreateTexture(nil, "BACKGROUND")
 		bg:SetAllPoints(xpbar)
-		bg:SetTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
+		bg:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg["xpbar_texture"])
 		bg:SetVertexColor(0, 0, 0, LolzenUIcfg["xpbar_bg_alpha"])
 
 		--1px "border"
