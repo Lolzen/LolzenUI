@@ -3,7 +3,6 @@
 
 --[[ bugs:
 * portrait icon îs borked (pvp_upate?)
-* talent speccicon & info doesn't show on mouseover
 ]]
 
 
@@ -17,15 +16,12 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		local frame = CreateFrame("Frame")
 		
-		--InspectFrame:RegisterEvent("INSPECT_HONOR_UPDATE")
-		
 		local cache = {}
 --		UnitPopupButtons.INSPECT.dist = 0  -- enables "Inspect" option in dropdown
 		
 		local function updateFrames()
 			InspectPaperDollFrame_OnShow()
 			InspectPVPFrame_OnShow()
-		--	InspectPVPFrame_Update()
 			InspectFrame_UpdateTabs()
 		end
 		
@@ -35,17 +31,17 @@ f:SetScript("OnEvent", function(self, event, addon)
 			updateFrames()
 		end
 		
-		InspectFrame_OnEvent = function(self, event, a1)
+		InspectFrame_OnEvent = function(self, event, unitGUID, ...)
 			if not InspectFrame:IsShown() then return end
 			local unit = InspectFrame.unit
 			if (event == "PLAYER_TARGET_CHANGED" and unit == "target") or (event == "PARTY_MEMBERS_CHANGED" and unit ~= "target") then
 				if UnitExists(unit) then
 					UpdateUnit(unit)
 				end
-			elseif event == "UNIT_PORTRAIT_UPDATE" and unit == a1 then
+			elseif event == "UNIT_PORTRAIT_UPDATE" then
 				SetPortraitTexture(InspectFramePortrait, unit)
 				UpdateUnit(unit)
-			elseif event == "UNIT_NAME_UPDATE" and unit == a1 then
+			elseif event == "UNIT_NAME_UPDATE" then
 				InspectFrameTitleText:SetText(UnitPVPName(unit))
 			elseif event == "INSPECT_READY" then
 				UpdateUnit(unit)
@@ -119,6 +115,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 			if UnitExists(unit) then
 				oTalentFrame_Update(self, unit)
 			end
+		end
+		
+		-- override this function to NOT clear any variables; fixes empty specIcon
+		function InspectTalentFrameSpec_OnClear()
 		end
 	end
 end)
