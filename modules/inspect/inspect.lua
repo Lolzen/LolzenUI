@@ -31,17 +31,17 @@ f:SetScript("OnEvent", function(self, event, addon)
 			updateFrames()
 		end
 		
-		InspectFrame_OnEvent = function(self, event, unitGUID, ...)
+		InspectFrame_OnEvent = function(self, event, a1)
 			if not InspectFrame:IsShown() then return end
 			local unit = InspectFrame.unit
 			if (event == "PLAYER_TARGET_CHANGED" and unit == "target") or (event == "PARTY_MEMBERS_CHANGED" and unit ~= "target") then
 				if UnitExists(unit) then
 					UpdateUnit(unit)
 				end
-			elseif event == "UNIT_PORTRAIT_UPDATE" then
+			elseif event == "UNIT_PORTRAIT_UPDATE" and unit == a1 then
 				SetPortraitTexture(InspectFramePortrait, unit)
 				UpdateUnit(unit)
-			elseif event == "UNIT_NAME_UPDATE" then
+			elseif event == "UNIT_NAME_UPDATE" and unit == a1 then
 				InspectFrameTitleText:SetText(UnitPVPName(unit))
 			elseif event == "INSPECT_READY" then
 				UpdateUnit(unit)
