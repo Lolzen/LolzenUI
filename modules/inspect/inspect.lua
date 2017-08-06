@@ -2,7 +2,7 @@
 -- this module is based on Snoopy Inspect by TotalPackage
 
 --[[ bugs:
-* cached items are lost after mouseover from another unit
+* model disappears when not in range anymore
 ]]
 
 
@@ -47,6 +47,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				UpdateUnit(unit)
 			end
 		end
+		InspectFrame:SetScript("OnEvent", InspectFrame_OnEvent)
 		
 		local oInspectPaperDollItemSlotButton_Update = InspectPaperDollItemSlotButton_Update
 		InspectPaperDollItemSlotButton_Update = function(self, ...)
@@ -59,7 +60,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 		end
 		
-		local InspectPaperDollItemSlotButton_OnEnter = function(self)
+		InspectPaperDollItemSlotButton_OnEnter = function(self)
 			local unit, id = InspectFrame.unit, self:GetID()
 			GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
 			if UnitExists(unit) and CheckInteractDistance(unit, 1) and GameTooltip:SetInventoryItem(unit, id) then
@@ -114,6 +115,13 @@ f:SetScript("OnEvent", function(self, event, addon)
 		TalentFrame_Update = function(self, unit)
 			if UnitExists(unit) then
 				oTalentFrame_Update(self, unit)
+			end
+		end
+		
+		local oInspectGuildFrame_Update = InspectGuildFrame_Update
+		InspectGuildFrame_Update = function(...)
+			if UnitExists(InspectFrame.unit) then
+				oInspectGuildFrame_Update(...)
 			end
 		end
 
