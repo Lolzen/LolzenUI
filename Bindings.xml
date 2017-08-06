@@ -2,8 +2,10 @@
 	<Binding name="INSPECT" runOnUp="true" header="INSPECT">
 		if not UnitExists("target") then
 			InspectUnit("mouseover")
+			ShowUIPanel(InspectFrame)
 		else
 			InspectUnit("target")
+			ShowUIPanel(InspectFrame)
 		end
 	</Binding>
 </Bindings>
