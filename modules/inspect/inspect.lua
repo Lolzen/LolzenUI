@@ -2,7 +2,7 @@
 -- this module is based on Snoopy Inspect by TotalPackage
 
 --[[ bugs:
-* portrait icon îs borked (pvp_upate?)
+* cached items are lost after mouseover from another unit
 ]]
 
 
@@ -104,9 +104,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 		
 		local oInspectPVPFrame_Update = InspectPVPFrame_Update
-		InspectPVPFrame_Update = function()
+		InspectPVPFrame_Update = function(...)
 			if UnitExists(InspectFrame.unit) then
-				oInspectPVPFrame_Update()
+				modInspectPVPFrame_Update(...)
 			end
 		end
 
@@ -116,7 +116,48 @@ f:SetScript("OnEvent", function(self, event, addon)
 				oTalentFrame_Update(self, unit)
 			end
 		end
+
+		-- don't set a portraittexture like InspectPVPFrame_Update()
+		function modInspectPVPFrame_Update()
+			local unit = InspectFrame.unit
+			local factionGroup = UnitFactionGroup(unit)
+			local prestigeLevel = UnitPrestige(unit)
+			local _, _, _, _, lifetimeHKs, _ = GetInspectHonorData()
+			local level = UnitLevel(unit)
+			local arenaFrames = {InspectPVPFrame.Arena2v2, InspectPVPFrame.Arena3v3}
 		
+			InspectPVPFrame.HKs:SetFormattedText(INSPECT_HONORABLE_KILLS, lifetimeHKs)
+
+			if (level < MAX_PLAYER_LEVEL_TABLE[LE_EXPANSION_LEVEL_CURRENT]) then
+				InspectPVPFrame.SmallWreath:Hide()
+				InspectPVPFrame.HonorLevel:Hide()
+				InspectPVPFrame.RatedBG:Hide()
+				for i = 1, MAX_ARENA_TEAMS do
+					arenaFrames[i]:Hide()
+				end
+				InspectPVPFrame.Talents:Hide()
+			else
+				InspectPVPFrame.SmallWreath:SetShown(prestigeLevel > 0)
+
+				InspectPVPFrame.HonorLevel:SetFormattedText(HONOR_LEVEL_LABEL, UnitHonorLevel(unit))
+				InspectPVPFrame.HonorLevel:Show()
+				local rating, played, won = GetInspectRatedBGData()
+				InspectPVPFrame.RatedBG.Rating:SetText(rating)
+				InspectPVPFrame.RatedBG.Record:SetFormattedText(PVP_RECORD_DESCRIPTION, won, (played - won))
+				InspectPVPFrame.RatedBG:Show()
+				for i=1, MAX_ARENA_TEAMS do
+					local arenarating, seasonPlayed, seasonWon, weeklyPlayed, weeklyWon = GetInspectArenaData(i)
+					local frame = arenaFrames[i]
+					frame.Rating:SetText(arenarating)
+					frame.Record:SetFormattedText(PVP_RECORD_DESCRIPTION, seasonWon, (seasonPlayed - seasonWon))
+					frame:Show()
+				end
+				InspectPVPFrame.talentGroup = GetActiveSpecGroup(true)
+				PVPTalentFrame_Update(InspectPVPFrame, unit)
+				InspectPVPFrame.Talents:Show()
+			end
+		end
+
 		-- override this function to NOT clear any variables; fixes empty specIcon
 		function InspectTalentFrameSpec_OnClear()
 		end
