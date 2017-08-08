@@ -112,6 +112,12 @@ local defaultconfig = {
 	["buff_duration_font"] = "DroidSans.ttf",
 	["buff_duration_font_size"] = 11,
 	["buff_duration_font_flag"] = "OUTLINE",
+	["buff_counter_anchor"] = "TOPRIGHT",
+	["buff_counter_posx"] = 0,
+	["buff_counter_posy"] = 0,
+	["buff_counter_font"] = "DroidSans.ttf",
+	["buff_counter_size"] = 16,
+	["buff_counter_font_flag"] = "OUTLINE",
 	["buff_aura_texture"] = "auraborder",
 	["buff_debuff_texture"] = "debuffborder",
 	-- [buffwatcher]
