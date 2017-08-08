@@ -10,22 +10,22 @@ f:SetScript("OnEvent", function(self, event, addon)
 		if LolzenUIcfg["inspect"] == false then return end
 
 		local frame = CreateFrame("Frame")
-		
+
 		local cache = {}
 		UnitPopupButtons.INSPECT.dist = 0  -- enables "Inspect" option in dropdown
-		
+
 		local function updateFrames()
 			InspectPaperDollFrame_OnShow()
 			InspectPVPFrame_OnShow()
 			InspectFrame_UpdateTabs()
 		end
-		
+
 		local function UpdateUnit(unit)
 			InspectFrame.unit = unit
 			ShowUIPanel(InspectFrame)
 			updateFrames()
 		end
-		
+
 		InspectFrame_OnEvent = function(self, event, a1)
 			if not InspectFrame:IsShown() then return end
 			local unit = InspectFrame.unit
@@ -43,7 +43,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 		end
 		InspectFrame:SetScript("OnEvent", InspectFrame_OnEvent)
-		
+
 		local oInspectPaperDollItemSlotButton_Update = InspectPaperDollItemSlotButton_Update
 		InspectPaperDollItemSlotButton_Update = function(self, ...)
 			oInspectPaperDollItemSlotButton_Update(self, ...)
@@ -54,7 +54,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				cache[id] = link
 			end
 		end
-		
+
 		InspectPaperDollItemSlotButton_OnEnter = function(self)
 			local unit, id = InspectFrame.unit, self:GetID()
 			GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
@@ -67,7 +67,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 			CursorUpdate(self)
 		end
-		
+
 		local function onclick(self, button)
 			local unit, id = InspectFrame.unit, self:GetID()
 			if UnitExists(unit) and CheckInteractDistance(unit, 1) then
@@ -76,7 +76,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				HandleModifiedItemClick(cache[id])
 			end
 		end
-		
+
 		local GetFrameType = frame.GetFrameType or frame.GetObjectType
 		for _, frame in ipairs({ InspectPaperDollFrame:GetChildren() }) do
 			if GetFrameType(frame) == "Button" and strmatch(frame:GetName() or "", "Inspect(.+)Slot") then
@@ -84,7 +84,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				frame:SetScript("OnEnter", InspectPaperDollItemSlotButton_OnEnter)
 			end
 		end
-		
+
 		local oInspectPaperDollFrame_OnShow = InspectPaperDollFrame_OnShow
 		InspectPaperDollFrame_OnShow = function(...)
 			if not UnitIsPlayer(InspectFrame.unit) then return end
@@ -98,7 +98,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				oInspectPaperDollFrame_SetLevel(...)
 			end
 		end
-		
+
 		local oInspectPVPFrame_Update = InspectPVPFrame_Update
 		InspectPVPFrame_Update = function(...)
 			if UnitExists(InspectFrame.unit) then
@@ -112,7 +112,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				oTalentFrame_Update(self, unit)
 			end
 		end
-		
+
 		local oInspectGuildFrame_Update = InspectGuildFrame_Update
 		InspectGuildFrame_Update = function(...)
 			if UnitExists(InspectFrame.unit) then
@@ -128,7 +128,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			local _, _, _, _, lifetimeHKs, _ = GetInspectHonorData()
 			local level = UnitLevel(unit)
 			local arenaFrames = {InspectPVPFrame.Arena2v2, InspectPVPFrame.Arena3v3}
-		
+
 			InspectPVPFrame.HKs:SetFormattedText(INSPECT_HONORABLE_KILLS, lifetimeHKs)
 
 			if (level < MAX_PLAYER_LEVEL_TABLE[LE_EXPANSION_LEVEL_CURRENT]) then
