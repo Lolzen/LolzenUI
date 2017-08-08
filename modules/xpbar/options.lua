@@ -467,7 +467,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			LolzenUIcfg["xpbar_parent"] = "UIParent"
 			LolzenUIcfg["xpbar_posx"] = 0
 			LolzenUIcfg["xpbar_posy"] = 5
-			LolzenUIcfg["xpbar_texture"] = "statusbar.tga"
+			LolzenUIcfg["xpbar_texture"] = "statusbar"
 			LolzenUIcfg["xpbar_alpha"] = 0.4
 			LolzenUIcfg["xpbar_bg_alpha"] = 0.5
 			LolzenUIcfg["xpbar_xp_color"] = {0.6, 0, 0.6}
