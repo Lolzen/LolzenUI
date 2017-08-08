@@ -356,7 +356,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			LolzenUIcfg["artifactbar_parent"] = "UIParent"
 			LolzenUIcfg["artifactbar_posx"] = 0
 			LolzenUIcfg["artifactbar_posy"] = 120
-			LolzenUIcfg["artifactbar_texture"] = "statusbar.tga"
+			LolzenUIcfg["artifactbar_texture"] = "statusbar"
 			LolzenUIcfg["artifactbar_alpha"] = 0.4
 			LolzenUIcfg["artifactbar_bg_alpha"] = 0.5
 			LolzenUIcfg["artifactbar_color"] = {1, 1, 0.7}
