@@ -59,8 +59,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 				-- Reposition buffcounters
 				button.count:ClearAllPoints()
-				button.count:SetPoint("TOPRIGHT", button)
-				button.count:SetFont("Fonts\\ARIALN.ttf", 17, "OUTLINE")
+				button.count:SetPoint(LolzenUIcfg["buff_counter_anchor"], button, LolzenUIcfg["buff_counter_posx"], LolzenUIcfg["buff_counter_posy"])
+				button.count:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\"..LolzenUIcfg["buff_counter_font"], LolzenUIcfg["buff_counter_size"], LolzenUIcfg["buff_counter_font_flag"])
 				button.count:SetDrawLayer("OVERLAY")
 				
 				button.modded = true
