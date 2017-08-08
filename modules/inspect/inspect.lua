@@ -1,11 +1,6 @@
 --// inspect // --
 -- this module is based on Snoopy Inspect by TotalPackage
 
---[[ bugs:
-* model disappears when not in range anymore
-]]
-
-
 local addon, ns = ...
 
 local f = CreateFrame("Frame")
@@ -17,7 +12,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		local frame = CreateFrame("Frame")
 		
 		local cache = {}
---		UnitPopupButtons.INSPECT.dist = 0  -- enables "Inspect" option in dropdown
+		UnitPopupButtons.INSPECT.dist = 0  -- enables "Inspect" option in dropdown
 		
 		local function updateFrames()
 			InspectPaperDollFrame_OnShow()
