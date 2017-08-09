@@ -51,8 +51,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		local factionbg = GameTooltip:CreateTexture("GameTooltFactionBackground", "BACKGROUND")
 		factionbg:SetSize(64, 64)
 		factionbg:SetPoint("RIGHT", GameTooltip, "TOPLEFT", 32, -4)
-		--factionbg:SetFrameStrata("BACKGROUND")
-		--factionbg:SetAlpha(0.8)
+		factionbg:SetDrawLayer("BACKGROUND", -8)
 
 		-- raidicon on the tooltip, because why not
 		local ricon = GameTooltip:CreateTexture("GameTooltipRaidIcon", "OVERLAY")
@@ -175,7 +174,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 					end
 				end
 			end
-	
+
 			for i=1, GameTooltip:NumLines() do
 				if IsInGuild(unit) then
 					if _G["GameTooltipTextLeft"..i]:GetText():find("^"..GetGuildInfo("player")) then
@@ -233,9 +232,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 			--if not GameTooltip:IsUnit(unit) then return end
 			if not unit or not UnitExists(unit) then return end
 
-			-- change default backdrop and border textures along with their color
-			self:SetBackdrop(backdrop)
-
 			-- colorize TooltipBorder accordinglly to classColor or UnitReaction
 			if UnitIsPlayer(unit) then
 				self:SetBackdropBorderColor(getClassColor(unit))
@@ -279,6 +275,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 						_G["GameTooltipTextLeft"..i]:Hide()
 					end
 				end
+				GameTooltip:AppendText("")
 			end
 
 			-- set the background of the tooltipstatusbar to the statusbar itself
@@ -301,24 +298,14 @@ f:SetScript("OnEvent", function(self, event, addon)
 		--hooks and scripts
 		-- anchor
 		hooksecurefunc("GameTooltip_SetDefaultAnchor", function(tooltip, parent)
-		--	if type(tooltip) == "table" then
-				tooltip:ClearAllPoints()
-				tooltip:SetOwner(parent,"ANCHOR_NONE")
-				tooltip:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -13, 43)
-				tooltip:SetScale(1)
-				tooltip.default = 1
-		--	end
+			if parent == nil then return end
+			tooltip:ClearAllPoints()
+			tooltip:SetOwner(parent,"ANCHOR_NONE")
+			tooltip:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -13, 43)
+			tooltip:SetScale(1)
+			tooltip.default = 1
 		end)
---[[
-	local function tooltipPosition(tootltip, parent)
-		tooltip:ClearAllPoints()
-		tooltip:SetOwner(parent,"ANCHOR_NONE")
-		tooltip:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -13, 43)
-		tooltip:SetScale(1)
-		tooltip.default = 1
-	end)
-	hooksecurefunc("GameTooltip_SetDefaultAnchor", tooltipPosition)
-]]
+
 		--styling for units
 		GameTooltip:HookScript("OnTooltipSetUnit", modifyTooltip)
 
@@ -329,15 +316,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		-- also modify more tooltip types
 		for i=1, #tooltips do
-			tooltips[i]:HookScript("OnShow", colorItemQuality)
+			tooltips[i]:HookScript("OnTooltipSetItem", colorItemQuality)
 			tooltips[i]:SetBackdrop(backdrop)
 
 			-- we really don't like the gradient, blue background color!!
 			tooltips[i]:HookScript("OnUpdate", function(self, elapsed)
-				--if not GameTooltip:IsUnit(unit) then
-				--	ricon:SetTexture(nil)
-				--	factionbg:SetTexture(nil)
-				--end
 				self:SetBackdropColor(0, 0, 0, 1)
 			end)
 		end
