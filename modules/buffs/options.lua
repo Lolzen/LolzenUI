@@ -317,7 +317,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		local count_anchor_text = ns["buffs"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 		count_anchor_text:SetPoint("LEFT", count_pos_y, "RIGHT", 5, 0)
-		count_anchor_text:SetText("Anchor1:")
+		count_anchor_text:SetText("Anchor:")
 
 		local count_anchor = CreateFrame("EditBox", nil, ns["buffs"], "InputBoxTemplate")
 		count_anchor:SetPoint("LEFT", count_anchor_text, "RIGHT", 10, 0)
