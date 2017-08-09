@@ -19,16 +19,12 @@ f:SetScript("OnEvent", function(self, event, addon)
 		about:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8)
 		about:SetText("Options for the Actionbars")
 
-		local notice = ns["actionbars"]:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-		notice:SetPoint("TOPLEFT", about, "BOTTOMLEFT", 0, -20)
-		notice:SetText("|cff5599ffWiP; ToDo: overhaul textures|r")
-
 		-- // normaltexture buttonpreview // --
 
 		local button = ns["actionbars"]:CreateTexture(nil, "TEXTURE")
 		button:SetTexture(select(3, GetSpellInfo(214815)))
 		button:SetSize(LolzenUIcfg.actionbar["actionbar_button_size"], LolzenUIcfg.actionbar["actionbar_button_size"])
-		button:SetPoint("TOPLEFT", notice, "BOTTOMLEFT", 0, -20)
+		button:SetPoint("TOPLEFT", about, "BOTTOMLEFT", 0, -20)
 		button:SetTexCoord(.04, .94, .04, .94)
 
 		local normaltex = ns["actionbars"]:CreateTexture(nil, "OVERLAY")
