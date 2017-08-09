@@ -182,12 +182,6 @@ defaultconfig.objectivetracker = {
 }
 
 defaultconfig.orderhallbar = {
-	["objectivetracker_anchor"] = "TOPLEFT",
-	["objectivetracker_posx"] = 30,
-	["objectivetracker_posy"] = -30,
-	["objectivetracker_combatcollapse"] = true,
-	["objectivetracker_logincollapse"] = true,
-	-- [orderhallbar]
 	["ohb_currencies"] = {},
 	["ohb_currency_icon_size"] = 18,
 	["ohb_currency_font"] = "DroidSansBold.ttf",
@@ -196,7 +190,7 @@ defaultconfig.orderhallbar = {
 	["ohb_zone_color"] = {51/255, 181/255, 229/225},
 	["ohb_background"] = "statusbar",
 	["ohb_background_color"] = {0, 0, 0},
---	["ohb_background_alpha"] = 0.5,
+	["ohb_background_alpha"] = 0.5,
 	["ohb_always_show"] = true,
 }
 
@@ -220,6 +214,22 @@ defaultconfig.pullcount = {
 	["pull_filter_instance"] = true,
 	["pull_filter_say"] = false,
 	["pull_filter_channel"] = true,
+}
+
+defaultconfig.slashcommands = {
+
+}
+
+defaultconfig.tooltip = {
+
+}
+
+defaultconfig.unitframes = {
+
+}
+
+defaultconfig.versioncheck = {
+
 }
 
 defaultconfig.worldmap = {
@@ -260,38 +270,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 		if LolzenUIcfg == nil then
 			LolzenUIcfg = defaultconfig
 			print("|cff5599ffLolzenUI:|r first login detected! n\default values written to saved vars")
-		else
-			-- if new variables are discovered, write them into the saved vars db
-			for k, v in pairs(defaultconfig) do
-				--print(k)
-				if not LolzenUIcfg[k] then
-					LolzenUIcfg[k] = v
-					print("|cff5599ffLolzenUI:|r new default variables for (|cff88ff88"..k.." written do db")
-				else
-					for a, b in pairs(defaultconfig[k]) do
-						if not LolzenUIcfg[k][a] then
-							if type(b) == "table" then
-								LolzenUIcfg[k][a] = {unpack(b)}
-								print("|cff5599ffLolzenUI:|r new default variable in "..k.." (|cffff8888"..a.." = "..unpack(b).."|r) written do db")
-							elseif type(b) == "boolean" then
-								local bool
-								if b == true then
-									bool = "true"
-									LolzenUIcfg[k][a] = true
-								elseif b == false then
-									if LolzenUIcfg[k][a] == false then return end -- don't always write just because the boolean is set to false
-									bool = "false"
-									LolzenUIcfg[k][a] = false
-								end
-								print("|cff5599ffLolzenUI:|r new default variable in "..k.." (|cffff8888"..a.." = "..bool.."|r) written do db")
-							else
-								LolzenUIcfg[k][a] = b
-								print("|cff5599ffLolzenUI:|r new default variable in "..k.." (|cffff8888"..a.." = "..b.."|r) written do db")
-							end
-						end
-					end
-				end
-			end
 		end
 	end
 end)
