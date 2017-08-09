@@ -158,10 +158,6 @@ defaultconfig.fonts = {
 	["fonts_STANDARD_TEXT_FONT"] = "DroidSans.ttf",
 }
 
-defaultconfig.inspect = {
-
-}
-
 defaultconfig.interruptannouncer = {
 	["interruptannoucer_say"] = true,
 	["interruptannoucer_party"] = true,
