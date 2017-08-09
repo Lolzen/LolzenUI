@@ -65,7 +65,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			if i == 1 then
 				pull_sound_count[i]:SetPoint("TOPLEFT", pull_count_range_text, "BOTTOMLEFT", 0, -20)
 			else
-				pull_sound_count[i]:SetPoint("TOPLEFT", pull_sound_count[i-1], "BOTTOMLEFT", 0, -8)
+				pull_sound_count[i]:SetPoint("TOPLEFT", pull_sound_count[i-1], "BOTTOMLEFT", 0, -10)
 			end
 			pull_sound_count[i]:SetText("|cff5599ffSoundfile for count "..i..":|r Interface\\AddOns\\LolzenUI\\sounds\\")
 			
