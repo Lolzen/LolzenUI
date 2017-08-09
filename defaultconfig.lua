@@ -127,11 +127,7 @@ local defaultconfig = {
 	["buff_aura_texture"] = "auraborder",
 	["buff_debuff_texture"] = "debuffborder",
 	-- [buffwatcher]
-	["buffwatchlist"] = {
-		225142, --Nefarious Pact
-		225776, --Devil's Due
-		225719, --Accelererando
-	},
+	["buffwatchlist"] = {},
 	["buffwatch_pos_x"] = -250,
 	["buffwatch_pos_y"] = -140,
 	["buffwatch_icon_size"] = 52,
