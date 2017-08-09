@@ -2,12 +2,6 @@
 
 local addon, ns = ...
 
-local currencies = {
-	1226, --Nethershards
-	1273, --Seal of Broken Fate
-	1501, --Writhing Essence
-}
-
 local function getAreaText()
 	if not OrderHallCommandBar then return end
 	if GetRealZoneText() == GetMinimapZoneText() then
@@ -20,17 +14,17 @@ end
 local currency = {}
 local function getCurrencies()
 	if not OrderHallCommandBar then return end
-	for i=1, #currencies do
-		local name, amount, icon = GetCurrencyInfo(currencies[i])
+	for i=1, #LolzenUIcfg.orderhallbar["ohb_currencies"] do
+		local name, amount, icon = GetCurrencyInfo(LolzenUIcfg.orderhallbar["ohb_currencies"][i])
 		if not currency[i] then
 			currency[i] = OrderHallCommandBar:CreateTexture("currency"..i)
 			currency[i]:SetTexture(icon)
-			currency[i]:SetSize(18, 18)
+			currency[i]:SetSize(LolzenUIcfg.orderhallbar["ohb_currency_icon_size"], LolzenUIcfg.orderhallbar["ohb_currency_icon_size"])
 			currency[i]:SetTexCoord(.04, .94, .04, .94)
 
 			if not currency[i].text then
 				currency[i].text = OrderHallCommandBar:CreateFontString(nil, "OVERLAY")
-				currency[i].text:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 12 ,"OUTLINE")
+				currency[i].text:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\"..LolzenUIcfg.orderhallbar["ohb_currency_font"], LolzenUIcfg.orderhallbar["ohb_currency_font_size"] ,LolzenUIcfg.orderhallbar["ohb_currency_font_flag"])
 				currency[i].text:SetTextColor(1, 1, 1)
 				currency[i].text:SetText(amount)
 			end
@@ -40,7 +34,7 @@ local function getCurrencies()
 				currency[i].frame:SetAllPoints(currency[i])
 				currency[i].frame:SetScript("OnEnter", function(self) 
 					GameTooltip:SetOwner(currency[i], "ANCHOR_BOTTOMRIGHT")
-					GameTooltip:SetCurrencyByID(currencies[i])
+					GameTooltip:SetCurrencyByID(LolzenUIcfg.orderhallbar["ohb_currencies"][i])
 					GameTooltip:Show()
 				end)
 				currency[i].frame:SetScript("OnLeave", function(self)
@@ -62,10 +56,11 @@ end
 
 local function modifyOHB()
 	if OrderHallCommandBar.modded == true then return end
-	OrderHallCommandBar.AreaName:SetTextColor(51/255, 181/255, 229/225)
+	OrderHallCommandBar.AreaName:SetTextColor(unpack(LolzenUIcfg.orderhallbar["ohb_zone_color"]))
 
-	OrderHallCommandBar.Background:SetTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
-	OrderHallCommandBar.Background:SetVertexColor(0, 0, 0, 0.5)
+	OrderHallCommandBar.Background:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.orderhallbar["ohb_background"])
+	OrderHallCommandBar.Background:SetVertexColor(unpack(LolzenUIcfg.orderhallbar["ohb_background_color"]))
+	OrderHallCommandBar.Background:SetAlpha(LolzenUIcfg.orderhallbar["ohb_background_alpha"])
 
 	OrderHallCommandBar.WorldMapButton:Hide()
 
@@ -74,7 +69,7 @@ local function modifyOHB()
 
 	OrderHallCommandBar.Currency:ClearAllPoints()
 	OrderHallCommandBar.Currency:SetPoint("LEFT", OrderHallCommandBar.CurrencyIcon, "RIGHT", 0, 0)
-	OrderHallCommandBar.Currency:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 12 ,"OUTLINE")
+	OrderHallCommandBar.Currency:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\"..LolzenUIcfg.orderhallbar["ohb_currency_font"], LolzenUIcfg.orderhallbar["ohb_currency_font_size"] ,LolzenUIcfg.orderhallbar["ohb_currency_font_flag"])
 	OrderHallCommandBar.Currency:SetTextColor(1, 1, 1)
 	OrderHallCommandBar.Currency:SetShadowOffset(0, 0)
 
@@ -111,12 +106,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 			if OrderHallCommandBar and OrderHallCommandBar.modded == true then return end
 			
 			if addon == "Blizzard_OrderHallUI" then
-				if LolzenUIcfg.orderhallbar["orderhallbar"] == false then return end
 				modifyOHB()
 				getAreaText()
 				getCurrencies()
 			else
-				if LolzenUIcfg.orderhallbar["orderhallbar"] == false then return end
 				if LolzenUIcfg.orderhallbar["ohb_always_show"] == true then
 					LoadAddOn("Blizzard_OrderHallUI")
 				end
