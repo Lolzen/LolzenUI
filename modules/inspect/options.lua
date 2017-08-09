@@ -17,5 +17,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 		local about = ns["inspect"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 		about:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8)
 		about:SetText("Fixes unit inspection on Mouseover targets (with keybind)")
+		
+		local bignotice = ns["inspect"]:CreateFontString(nil, "ARTWORK")
+		bignotice:SetPoint("CENTER", ns["inspect"], "CENTER", 0, -8)
+		bignotice:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 28, "OUTLINE")
+		bignotice:SetText("No options, because this is a utility module")
+		bignotice:SetTextColor(1, 1, 1, 0.2)
 	end
 end)
