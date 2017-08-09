@@ -282,6 +282,14 @@ f:SetScript("OnEvent", function(self, event, addon)
 		help:SetPoint("TOPLEFT", tip, "BOTTOMLEFT", 0, -8)
 		
 		ns["orderhallbar"].okay = function(self)
+			LolzenUIcfg.orderhallbar["ohb_currency_icon_size"] = tonumber(icon_size:GetText())
+			LolzenUIcfg.orderhallbar["ohb_currency_font"] = font:GetText()
+			LolzenUIcfg.orderhallbar["ohb_currency_font_size"] = tonumber(font_size:GetText())
+			LolzenUIcfg.orderhallbar["ohb_currency_font_flag"] = font_flag:GetText()
+			LolzenUIcfg.orderhallbar["ohb_zone_color"] = {zone_color:GetVertexColor()}
+			LolzenUIcfg.orderhallbar["ohb_background"] = ohb_bg:GetText()
+			LolzenUIcfg.orderhallbar["ohb_background_color"] = {color:GetVertexColor()}
+			LolzenUIcfg.orderhallbar["ohb_background_alpha"] = tonumber(alpha:GetText())
 			if cb1:GetChecked(true) then
 				LolzenUIcfg.orderhallbar["ohb_always_show"] = true
 			else
@@ -290,6 +298,15 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 
 		ns["orderhallbar"].default = function(self)
+			LolzenUIcfg.orderhallbar["ohb_currencies"] = {}
+			LolzenUIcfg.orderhallbar["ohb_currency_icon_size"] = 18
+			LolzenUIcfg.orderhallbar["ohb_currency_font"] = "DroidSansBold.ttf"
+			LolzenUIcfg.orderhallbar["ohb_currency_font_size"] = 12
+			LolzenUIcfg.orderhallbar["ohb_currency_font_flag"] = "OUTLINE"
+			LolzenUIcfg.orderhallbar["ohb_zone_color"] = {51/255, 181/255, 229/225}
+			LolzenUIcfg.orderhallbar["ohb_background"] = "statusbar"
+			LolzenUIcfg.orderhallbar["ohb_background_color"] = {0, 0, 0}
+			LolzenUIcfg.orderhallbar["ohb_background_alpha"] = 0.5
 			LolzenUIcfg.orderhallbar["ohb_always_show"] = true
 			ReloadUI()
 		end
