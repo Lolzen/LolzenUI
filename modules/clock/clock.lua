@@ -74,26 +74,23 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 		end
 
-		local color = {r = 0.85, g =  0.55, b = 0}
-
 		local clockFrame = CreateFrame("Button", "clock", UIParent)
-		--clockFrame:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", 0, 10)
-		clockFrame:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", -5, -7)
+		clockFrame:SetPoint(LolzenUIcfg.clock["clock_anchor1"], UIParent, LolzenUIcfg.clock["clock_anchor2"], LolzenUIcfg.clock["clock_posx"], LolzenUIcfg.clock["clock_posy"])
 		clockFrame:SetHeight(10)
 		clockFrame:SetWidth(80)
 		clockFrame:SetFrameStrata("HIGH")
 
 		local text = clockFrame:CreateFontString(nil, "ARTWORK")
 		text:SetPoint("LEFT", clockFrame)
-		text:SetFont("Fonts\\FRIZQT__.TTF", 20, "THINOUTLINE")
+		text:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\"..LolzenUIcfg.clock["clock_font"], LolzenUIcfg.clock["clock_font_size"], LolzenUIcfg.clock["clock_font_flag"])
 		text:SetShadowOffset(1, -1)
-		text:SetTextColor(color.r, color.g, color.b)
+		text:SetTextColor(unpack(LolzenUIcfg.clock["clock_color"]))
 
 		local seconds = clockFrame:CreateFontString(nil, "ARTWORK")
 		seconds:SetPoint("TOPLEFT", text, "TOPRIGHT", -2, 0)
-		seconds:SetFont("Fonts\\FRIZQT__.TTF", 14, "THINOUTLINE")
+		seconds:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\"..LolzenUIcfg.clock["clock_font_seconds"], LolzenUIcfg.clock["clock_seconds_font_size"], LolzenUIcfg.clock["clock_seconds_font_flag"])
 		seconds:SetShadowOffset(1, -1)
-		seconds:SetTextColor(1, 1, 1)
+		seconds:SetTextColor(unpack(LolzenUIcfg.clock["clock_seconds_color"]))
 
 		local lastUpdate = 0
 		local updateDelay = 1
@@ -118,10 +115,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 			GameTooltip:AddLine(date("%A, %d %B, %Y"), 1, 1, 1)
 			GameTooltip:AddLine(" ") 
-			GameTooltip:AddDoubleLine("Framerate:", format("%.1f fps", GetFramerate()), color.r, color.g, color.b, fpscolor.r, fpscolor.g, fpscolor.b)
-			GameTooltip:AddDoubleLine("Latency:", format("%d ms", select(3, GetNetStats())), color.r, color.g, color.b, latencycolor.r, latencycolor.g, latencycolor.b)
+			GameTooltip:AddDoubleLine("Framerate:", format("%.1f fps", GetFramerate()), LolzenUIcfg.clock["clock_color"].r, LolzenUIcfg.clock["clock_color"].g, LolzenUIcfg.clock["clock_color"].b, fpscolor.r, fpscolor.g, fpscolor.b)
+			GameTooltip:AddDoubleLine("Latency:", format("%d ms", select(3, GetNetStats())), LolzenUIcfg.clock["clock_color"].r, LolzenUIcfg.clock["clock_color"].g, LolzenUIcfg.clock["clock_color"].b, latencycolor.r, latencycolor.g, latencycolor.b)
 			GameTooltip:AddLine(" ")
-			GameTooltip:AddLine("AddOns:", color.r, color.g, color.b)
+			GameTooltip:AddLine("AddOns:", unpack(LolzenUIcfg.clock["clock_color"]))
 
 			addons = {}
 			total = 0
@@ -160,7 +157,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end  
 			local cr, cg, cb = ColorGradient((entry.memory / 800), 0, 1, 0, 1, 1, 0, 1, 0, 0) 
 			GameTooltip:AddLine(" ")
-			GameTooltip:AddDoubleLine("Total", Memory(total), color.r, color.g, color.b, cr, cg, cb)
+			GameTooltip:AddDoubleLine("Total", Memory(total), LolzenUIcfg.clock["clock_color"].r, LolzenUIcfg.clock["clock_color"].g, LolzenUIcfg.clock["clock_color"].b, cr, cg, cb)
 			--GameTooltip:AppendText("")
 			GameTooltip:Show()
 		end)
