@@ -135,7 +135,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 					xpbar:SetStatusBarColor(unpack(LolzenUIcfg["xpbar_xp_color"]))
 					xptext:SetFormattedText("%.0f%% (%.0f%%)", xp/maxxp*100, GetXPExhaustion()/maxxp*100)
 				else
-					xpbar:SetStatusBarColor(unpack(LolzenUIcfg["xpbar_xp_restedcolor"]))
+					xpbar:SetStatusBarColor(unpack(LolzenUIcfg["xpbar_xp_rested_color"]))
 					xptext:SetFormattedText("%.0f%%", xp/maxxp*100)
 				end
 				if UnitLevel("player") == MAX_PLAYER_LEVEL then
