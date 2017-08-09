@@ -102,9 +102,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 	if event == "ADDON_LOADED" then
 		if addon == "LolzenUI" then
 			if LolzenUIcfg.modules["orderhallbar"] == false then return end
-			
+
 			if OrderHallCommandBar and OrderHallCommandBar.modded == true then return end
-			
+
 			if addon == "Blizzard_OrderHallUI" then
 				modifyOHB()
 				getAreaText()
