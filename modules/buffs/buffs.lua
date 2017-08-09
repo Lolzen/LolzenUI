@@ -11,7 +11,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 		-- Change the position
 		BuffFrame:ClearAllPoints()
 		BuffFrame:SetPoint(LolzenUIcfg["buff_anchor1"], LolzenUIcfg["buff_parent"], LolzenUIcfg["buff_anchor2"], LolzenUIcfg["buff_posx"], LolzenUIcfg["buff_posy"])
-
+		BuffFrame.SetPoint = function() end
+		
 		local function StyleBuffs(buttonName, index)
 			local button = _G[buttonName..index]
 			if button and not button.modded then
@@ -70,6 +71,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 		local function UpdateAura()
 			for i = 1, BUFF_ACTUAL_DISPLAY do
 				StyleBuffs("BuffButton", i)
+			--		if i == 1 then
+			--			_G["BuffButton"..i]:SetPoint(LolzenUIcfg["buff_anchor1"], LolzenUIcfg["buff_parent"], LolzenUIcfg["buff_anchor2"], LolzenUIcfg["buff_posx"], LolzenUIcfg["buff_posy"])
+				--	else
+				--		_G["BuffButton"..i]:SetPoint("RIGHT", _G["BuffButton"..i-1], "LEFT", LolzenUIcfg["buff_spacing_horizontal"], 0)
+				--	end
 			end
 			for i = 1, DEBUFF_MAX_DISPLAY do
 				StyleBuffs("DebuffButton", i)
