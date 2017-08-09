@@ -15,7 +15,7 @@ local frames = {
 local function modifyMinimap()
 	Minimap:SetPoint("TOPRIGHT", OrderHallClassBar, -15, -40)
 
-	if LolzenUIcfg["minimap_square"] == true then
+	if LolzenUIcfg.minimap["minimap_square"] == true then
 		local overlay = Minimap:CreateTexture(nil,"OVERLAY")
 		overlay:SetTexture("Interface\\AddOns\\LolzenUI\\media\\overlay")
 		overlay:SetPoint("TOPLEFT", Minimap, "TOPLEFT", -1, 1)
@@ -48,7 +48,7 @@ local function modifyMinimap()
 	MiniMapTracking:SetParent(Minimap)
 	MiniMapTracking:ClearAllPoints()
 	MiniMapTrackingIcon:SetTexCoord(0.065,0.935,0.065,0.935)
-	if LolzenUIcfg["minimap_square"] == true then
+	if LolzenUIcfg.minimap["minimap_square"] == true then
 		MiniMapTracking:SetPoint("BOTTOMRIGHT", -5, 0)
 	else
 		MiniMapTracking:SetPoint("BOTTOMRIGHT", -5, 0)
@@ -57,7 +57,7 @@ local function modifyMinimap()
 	MiniMapMailBorder:Hide()
 	MiniMapMailFrame:SetParent(Minimap)
 	MiniMapMailFrame:ClearAllPoints()
-	if LolzenUIcfg["minimap_square"] == true then
+	if LolzenUIcfg.minimap["minimap_square"] == true then
 		MiniMapMailFrame:SetPoint("TOPLEFT", 5, -5)
 	else
 		MiniMapMailFrame:SetPoint("TOP", 0, -5)
@@ -68,7 +68,7 @@ local function modifyMinimap()
 	QueueStatusMinimapButton:SetParent(Minimap)
 	QueueStatusMinimapButton:ClearAllPoints()
 	QueueStatusMinimapButton:SetPoint("TOPRIGHT", -5, -5)
-	if LolzenUIcfg["minimap_square"] == false then
+	if LolzenUIcfg.minimap["minimap_square"] == false then
 		QueueStatusMinimapButton:SetFrameStrata("HIGH")
 	end
 
@@ -76,7 +76,7 @@ local function modifyMinimap()
 	local _, _, day, _ = CalendarGetDate()
 
 	local CalFrame = CreateFrame("Button", "CalFrame", Minimap)
-	if LolzenUIcfg["minimap_square"] == true then
+	if LolzenUIcfg.minimap["minimap_square"] == true then
 		CalFrame:SetPoint("BOTTOMLEFT", Minimap, 15, 5)
 	else
 		CalFrame:SetPoint("BOTTOM", Minimap, 0, 5)
@@ -120,7 +120,7 @@ end
 local f = CreateFrame("Frame")
 f:RegisterEvent("PLAYER_LOGIN")
 f:SetScript("OnEvent", function(self, event, addon)
-	if LolzenUIcfg["minimap"] == false then return end
+	if LolzenUIcfg.modules["minimap"] == false then return end
 
 	modifyMinimap()
 end)

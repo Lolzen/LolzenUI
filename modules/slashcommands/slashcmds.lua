@@ -16,7 +16,7 @@ local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)
 	if addon == "LolzenUI" then
-		if LolzenUIcfg["slashcommands"] == false then return end
+		if LolzenUIcfg.modules["slashcommands"] == false then return end
 
 		-- Reloading faster
 		SLASH_RELOAD1 = "/rl"

@@ -6,26 +6,26 @@ local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)
 	if addon == "LolzenUI" then
-		if LolzenUIcfg["artifactbar"] == false then return end
+		if LolzenUIcfg.modules["artifactbar"] == false then return end
 
 		-- first let us create our bar
 		local afbar = CreateFrame("StatusBar", "bar4artifactpower", UIParent)
-		afbar:SetPoint(LolzenUIcfg["artifactbar_anchor"], LolzenUIcfg["artifactbar_parent"], LolzenUIcfg["artifactbar_posx"], LolzenUIcfg["artifactbar_posy"])
-		afbar:SetHeight(LolzenUIcfg["artifactbar_height"])
-		afbar:SetWidth(LolzenUIcfg["artifactbar_width"])
-		afbar:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg["artifactbar_texture"])
-		afbar:SetAlpha(LolzenUIcfg["artifactbar_alpha"])
-		afbar:SetStatusBarColor(unpack(LolzenUIcfg["artifactbar_color"]))
+		afbar:SetPoint(LolzenUIcfg.artifactbar["artifactbar_anchor"], LolzenUIcfg.artifactbar["artifactbar_parent"], LolzenUIcfg.artifactbar["artifactbar_posx"], LolzenUIcfg.artifactbar["artifactbar_posy"])
+		afbar:SetHeight(LolzenUIcfg.artifactbar["artifactbar_height"])
+		afbar:SetWidth(LolzenUIcfg.artifactbar["artifactbar_width"])
+		afbar:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.artifactbar["artifactbar_texture"])
+		afbar:SetAlpha(LolzenUIcfg.artifactbar["artifactbar_alpha"])
+		afbar:SetStatusBarColor(unpack(LolzenUIcfg.artifactbar["artifactbar_color"]))
 		afbar:SetFrameStrata("BACKGROUND")
 
 		--Background for our bar
 		local bg = afbar:CreateTexture(nil, "BACKGROUND")
 		bg:SetAllPoints(afbar)
-		bg:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg["artifactbar_texture"])
-		bg:SetVertexColor(0, 0, 0, LolzenUIcfg["artifactbar_bg_alpha"])
+		bg:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.artifactbar["artifactbar_texture"])
+		bg:SetVertexColor(0, 0, 0, LolzenUIcfg.artifactbar["artifactbar_bg_alpha"])
 
 		--1px "border"
-		if LolzenUIcfg["artifactbar_1px_border"] == true then
+		if LolzenUIcfg.artifactbar["artifactbar_1px_border"] == true then
 			local lines = {}
 			for i = 1, 4 do
 				if not lines[i] then
@@ -43,7 +43,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 					lines[i]:SetPoint("BOTTOMRIGHT", afbar, 0, -1)
 				elseif i == 3 then
 					lines[i]:SetWidth(1)
-					if LolzenUIcfg["artifactbar_1px_border_round"] == true then
+					if LolzenUIcfg.artifactbar["artifactbar_1px_border_round"] == true then
 						lines[i]:SetPoint("TOPLEFT", afbar, -1, 0)
 						lines[i]:SetPoint("BOTTOMLEFT", afbar, -1, 0)
 					else
@@ -52,7 +52,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 					end
 				elseif i == 4 then
 					lines[i]:SetWidth(1)
-					if LolzenUIcfg["artifactbar_1px_border_round"] == true then
+					if LolzenUIcfg.artifactbar["artifactbar_1px_border_round"] == true then
 						lines[i]:SetPoint("TOPRIGHT", afbar, 1, 0)
 						lines[i]:SetPoint("BOTTOMRIGHT", afbar, 1, 0)
 					else
@@ -65,10 +65,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		-- fontstring
 		local xptext = afbar:CreateFontString(nil, "OVERLAY")
-		xptext:SetPoint(LolzenUIcfg["artifactbar_text_anchor1"], afbar, LolzenUIcfg["artifactbar_text_anchor2"], LolzenUIcfg["artifactbar_text_posx"], LolzenUIcfg["artifactbar_text_posy"])
+		xptext:SetPoint(LolzenUIcfg.artifactbar["artifactbar_text_anchor1"], afbar, LolzenUIcfg.artifactbar["artifactbar_text_anchor2"], LolzenUIcfg.artifactbar["artifactbar_text_posx"], LolzenUIcfg.artifactbar["artifactbar_text_posy"])
 		xptext:SetParent(UIParent)
-		xptext:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\"..LolzenUIcfg["artifactbar_font"], LolzenUIcfg["artifactbar_font_size"], LolzenUIcfg["artifactbar_font_flag"])
-		xptext:SetTextColor(unpack(LolzenUIcfg["artifactbar_font_color"]))
+		xptext:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\"..LolzenUIcfg.artifactbar["artifactbar_font"], LolzenUIcfg.artifactbar["artifactbar_font_size"], LolzenUIcfg.artifactbar["artifactbar_font_flag"])
+		xptext:SetTextColor(unpack(LolzenUIcfg.artifactbar["artifactbar_font_color"]))
 
 		-- get artifact power data
 		function afbar:ARTIFACT_XP_UPDATE()
@@ -78,7 +78,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				local numPoints, artifactXP, xpForNextPoint = MainMenuBar_GetNumArtifactTraitsPurchasableFromXP(pointsSpent, totalXP, artifactTier)
 				afbar:SetMinMaxValues(0, xpForNextPoint)
 				afbar:SetValue(artifactXP)
-				afbar:SetAlpha(LolzenUIcfg["artifactbar_alpha"])
+				afbar:SetAlpha(LolzenUIcfg.artifactbar["artifactbar_alpha"])
 				-- use tostring to prevent integer overflow
 				xptext:SetFormattedText("%s / %s (%.0f%%)", tostring(artifactXP), tostring(xpForNextPoint), tostring(artifactXP/xpForNextPoint*100) )
 			else

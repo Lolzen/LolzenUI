@@ -6,11 +6,11 @@ local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)
 	if addon == "LolzenUI" then
-		if LolzenUIcfg["buffs"] == false then return end
+		if LolzenUIcfg.modules["buffs"] == false then return end
 
 		-- Change the position
 		BuffFrame:ClearAllPoints()
-		BuffFrame:SetPoint(LolzenUIcfg["buff_anchor1"], LolzenUIcfg["buff_parent"], LolzenUIcfg["buff_anchor2"], LolzenUIcfg["buff_posx"], LolzenUIcfg["buff_posy"])
+		BuffFrame:SetPoint(LolzenUIcfg.buffs["buff_anchor1"], LolzenUIcfg.buffs["buff_parent"], LolzenUIcfg.buffs["buff_anchor2"], LolzenUIcfg.buffs["buff_posx"], LolzenUIcfg.buffs["buff_posy"])
 		BuffFrame.SetPoint = function() end
 		
 		local function StyleBuffs(buttonName, index)
@@ -19,11 +19,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 				-- Size
 				if buttonName == "BuffButton" then
-					button:SetSize(LolzenUIcfg["buff_size"], LolzenUIcfg["buff_size"])
+					button:SetSize(LolzenUIcfg.buffs["buff_size"], LolzenUIcfg.buffs["buff_size"])
 				elseif buttonName == "DebuffButton" then
-					button:SetSize(LolzenUIcfg["buff_debuff_size"], LolzenUIcfg["buff_debuff_size"])
+					button:SetSize(LolzenUIcfg.buffs["buff_debuff_size"], LolzenUIcfg.buffs["buff_debuff_size"])
 				elseif buttonName == "TempEnchant" then
-					button:SetSize(LolzenUIcfg["buff_tempenchant_size"], LolzenUIcfg["buff_tempenchant_size"])
+					button:SetSize(LolzenUIcfg.buffs["buff_tempenchant_size"], LolzenUIcfg.buffs["buff_tempenchant_size"])
 				end
 
 				-- Border
@@ -31,14 +31,14 @@ f:SetScript("OnEvent", function(self, event, addon)
 				if border then
 					-- Debuffborder
 					border:SetParent(button)
-					border:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg["buff_debuff_texture"])
+					border:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.buffs["buff_debuff_texture"])
 					border:SetAllPoints(button)
 					border:SetTexCoord(0, 1, 0, 1)
 				else
 					-- Auraborder
 					if not button.border then
 						button.border = button:CreateTexture(nil, "BORDER")
-						button.border:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg["buff_aura_texture"])
+						button.border:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.buffs["buff_aura_texture"])
 						button.border:SetAllPoints(button)
 						button.border:SetVertexColor(0, 0, 0)
 					end
@@ -54,14 +54,14 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 				-- Reposition BuffTimeduration
 				button.duration:ClearAllPoints()
-				button.duration:SetPoint(LolzenUIcfg["buff_duration_anchor1"], button, LolzenUIcfg["buff_duration_anchor2"], LolzenUIcfg["buff_duration_posx"], LolzenUIcfg["buff_duration_posy"])
-				button.duration:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\"..LolzenUIcfg["buff_duration_font"], LolzenUIcfg["buff_duration_font_size"], LolzenUIcfg["buff_duration_font_flag"])
+				button.duration:SetPoint(LolzenUIcfg.buffs["buff_duration_anchor1"], button, LolzenUIcfg.buffs["buff_duration_anchor2"], LolzenUIcfg.buffs["buff_duration_posx"], LolzenUIcfg.buffs["buff_duration_posy"])
+				button.duration:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\"..LolzenUIcfg.buffs["buff_duration_font"], LolzenUIcfg.buffs["buff_duration_font_size"], LolzenUIcfg.buffs["buff_duration_font_flag"])
 				button.duration:SetDrawLayer("OVERLAY")
 
 				-- Reposition buffcounters
 				button.count:ClearAllPoints()
-				button.count:SetPoint(LolzenUIcfg["buff_counter_anchor"], button, LolzenUIcfg["buff_counter_posx"], LolzenUIcfg["buff_counter_posy"])
-				button.count:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\"..LolzenUIcfg["buff_counter_font"], LolzenUIcfg["buff_counter_size"], LolzenUIcfg["buff_counter_font_flag"])
+				button.count:SetPoint(LolzenUIcfg.buffs["buff_counter_anchor"], button, LolzenUIcfg.buffs["buff_counter_posx"], LolzenUIcfg.buffs["buff_counter_posy"])
+				button.count:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\"..LolzenUIcfg.buffs["buff_counter_font"], LolzenUIcfg.buffs["buff_counter_size"], LolzenUIcfg.buffs["buff_counter_font_flag"])
 				button.count:SetDrawLayer("OVERLAY")
 				
 				button.modded = true
@@ -72,9 +72,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 			for i = 1, BUFF_ACTUAL_DISPLAY do
 				StyleBuffs("BuffButton", i)
 			--		if i == 1 then
-			--			_G["BuffButton"..i]:SetPoint(LolzenUIcfg["buff_anchor1"], LolzenUIcfg["buff_parent"], LolzenUIcfg["buff_anchor2"], LolzenUIcfg["buff_posx"], LolzenUIcfg["buff_posy"])
+			--			_G["BuffButton"..i]:SetPoint(LolzenUIcfg.buffs["buff_anchor1"], LolzenUIcfg.buffs["buff_parent"], LolzenUIcfg.buffs["buff_anchor2"], LolzenUIcfg.buffs["buff_posx"], LolzenUIcfg.buffs["buff_posy"])
 				--	else
-				--		_G["BuffButton"..i]:SetPoint("RIGHT", _G["BuffButton"..i-1], "LEFT", LolzenUIcfg["buff_spacing_horizontal"], 0)
+				--		_G["BuffButton"..i]:SetPoint("RIGHT", _G["BuffButton"..i-1], "LEFT", LolzenUIcfg.buffs["buff_spacing_horizontal"], 0)
 				--	end
 			end
 			for i = 1, DEBUFF_MAX_DISPLAY do
@@ -88,7 +88,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		hooksecurefunc("BuffFrame_UpdateAllBuffAnchors", UpdateAura)
 		hooksecurefunc("DebuffButton_UpdateAnchors", UpdateAura)
 
-		if LolzenUIcfg["buff_duration_detailed"] == true then
+		if LolzenUIcfg.buffs["buff_duration_detailed"] == true then
 			-- Change the timer
 			SecondsToTimeAbbrev = function(time)
 				local hr, m, s, text

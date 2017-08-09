@@ -9,7 +9,7 @@ end
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)
-	if addon == "LolzenUI" and LolzenUIcfg["buffs"] == true then
+	if addon == "LolzenUI" and LolzenUIcfg.modules["buffs"] == true then
 
 		local title = ns["buffs"]:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
 		title:SetPoint("TOPLEFT", ns["buffs"], 16, -16)
@@ -21,20 +21,20 @@ f:SetScript("OnEvent", function(self, event, addon)
 		
 		local button = ns["buffs"]:CreateTexture(nil, "TEXTURE")
 		button:SetTexture(select(3, GetSpellInfo(546)))
-		button:SetSize(LolzenUIcfg["buff_size"], LolzenUIcfg["buff_size"])
+		button:SetSize(LolzenUIcfg.buffs["buff_size"], LolzenUIcfg.buffs["buff_size"])
 		button:SetPoint("TOPLEFT", about, "BOTTOMLEFT", 0, -20)
 		button:SetTexCoord(0.1, 0.9, 0.1, 0.9)
 
 		local bufftex = ns["buffs"]:CreateTexture(nil, "OVERLAY")
-		bufftex:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg["buff_aura_texture"])
+		bufftex:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.buffs["buff_aura_texture"])
 		bufftex:SetPoint("TOPLEFT", button, "TOPLEFT", -2, 2)
 		bufftex:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 2, -2)
 		bufftex:SetVertexColor(0, 0, 0)
 		
 		local buttondur = ns["buffs"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-		buttondur:SetPoint(LolzenUIcfg["buff_duration_anchor1"], button, LolzenUIcfg["buff_duration_anchor2"], LolzenUIcfg["buff_duration_posx"], LolzenUIcfg["buff_duration_posy"])
-		buttondur:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\"..LolzenUIcfg["buff_duration_font"], LolzenUIcfg["buff_duration_font_size"], LolzenUIcfg["buff_duration_font_flag"])
-		if LolzenUIcfg["buff_duration_detailed"] == true then
+		buttondur:SetPoint(LolzenUIcfg.buffs["buff_duration_anchor1"], button, LolzenUIcfg.buffs["buff_duration_anchor2"], LolzenUIcfg.buffs["buff_duration_posx"], LolzenUIcfg.buffs["buff_duration_posy"])
+		buttondur:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\"..LolzenUIcfg.buffs["buff_duration_font"], LolzenUIcfg.buffs["buff_duration_font_size"], LolzenUIcfg.buffs["buff_duration_font_flag"])
+		if LolzenUIcfg.buffs["buff_duration_detailed"] == true then
 			buttondur:SetText("7:46")
 		else
 			buttondur:SetText("|c2200ff2m|r")
@@ -42,31 +42,31 @@ f:SetScript("OnEvent", function(self, event, addon)
 		buttondur:SetDrawLayer("OVERLAY")
 		
 		local buttoncount = ns["buffs"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-		buttoncount:SetPoint(LolzenUIcfg["buff_counter_anchor"], button, LolzenUIcfg["buff_counter_posx"], LolzenUIcfg["buff_counter_posy"])
-		buttoncount:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\"..LolzenUIcfg["buff_counter_font"], LolzenUIcfg["buff_counter_size"], LolzenUIcfg["buff_counter_font_flag"])
+		buttoncount:SetPoint(LolzenUIcfg.buffs["buff_counter_anchor"], button, LolzenUIcfg.buffs["buff_counter_posx"], LolzenUIcfg.buffs["buff_counter_posy"])
+		buttoncount:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\"..LolzenUIcfg.buffs["buff_counter_font"], LolzenUIcfg.buffs["buff_counter_size"], LolzenUIcfg.buffs["buff_counter_font_flag"])
 		buttoncount:SetText("2")
 		buttoncount:SetDrawLayer("OVERLAY")
 		
 		local button2 = ns["buffs"]:CreateTexture(nil, "TEXTURE")
 		button2:SetTexture(select(3, GetSpellInfo(192423)))
-		button2:SetSize(LolzenUIcfg["buff_debuff_size"], LolzenUIcfg["buff_debuff_size"])
+		button2:SetSize(LolzenUIcfg.buffs["buff_debuff_size"], LolzenUIcfg.buffs["buff_debuff_size"])
 		button2:SetPoint("LEFT", button, "RIGHT", 5, 0)
 		button2:SetTexCoord(0.1, 0.9, 0.1, 0.9)
 		
 		local debufftex = ns["buffs"]:CreateTexture(nil, "OVERLAY")
-		debufftex:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg["buff_debuff_texture"])
+		debufftex:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.buffs["buff_debuff_texture"])
 		debufftex:SetPoint("TOPLEFT", button2, "TOPLEFT", -2, 2)
 		debufftex:SetPoint("BOTTOMRIGHT", button2, "BOTTOMRIGHT", 2, -2)
 		debufftex:SetVertexColor(1, 0, 0)
 		
 --		local button3 = ns["buffs"]:CreateTexture(nil, "TEXTURE")
 --		button3:SetTexture(select(3, GetSpellInfo(53343)))
---		button3:SetSize(LolzenUIcfg["buff_tempenchant_size"], LolzenUIcfg["buff_tempenchant_size"])
+--		button3:SetSize(LolzenUIcfg.buffs["buff_tempenchant_size"], LolzenUIcfg.buffs["buff_tempenchant_size"])
 --		button3:SetPoint("LEFT", button2, "RIGHT", 5, 0)
 --		button3:SetTexCoord(0.1, 0.9, 0.1, 0.9)
 		
 --		local tempenchtex = ns["buffs"]:CreateTexture(nil, "OVERLAY")
---		tempenchtex:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg["buff_aura_texture"])
+--		tempenchtex:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.buffs["buff_aura_texture"])
 --		tempenchtex:SetPoint("TOPLEFT", button3, "TOPLEFT", -2, 2)
 --		tempenchtex:SetPoint("BOTTOMRIGHT", button3, "BOTTOMRIGHT", 2, -2)
 --		tempenchtex:SetVertexColor(0, 0, 0)
@@ -84,7 +84,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		buff_size:SetSize(30, 20)
 		buff_size:SetAutoFocus(false)
 		buff_size:ClearFocus()
-		buff_size:SetNumber(LolzenUIcfg["buff_size"])
+		buff_size:SetNumber(LolzenUIcfg.buffs["buff_size"])
 		buff_size:SetCursorPosition(0)
 		
 		local debuff_size_text = ns["buffs"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -96,7 +96,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		debuff_size:SetSize(30, 20)
 		debuff_size:SetAutoFocus(false)
 		debuff_size:ClearFocus()
-		debuff_size:SetNumber(LolzenUIcfg["buff_debuff_size"])
+		debuff_size:SetNumber(LolzenUIcfg.buffs["buff_debuff_size"])
 		debuff_size:SetCursorPosition(0)
 		
 		local tempenchant_size_text = ns["buffs"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -108,7 +108,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		tempenchant_size:SetSize(30, 20)
 		tempenchant_size:SetAutoFocus(false)
 		tempenchant_size:ClearFocus()
-		tempenchant_size:SetNumber(LolzenUIcfg["buff_tempenchant_size"])
+		tempenchant_size:SetNumber(LolzenUIcfg.buffs["buff_tempenchant_size"])
 		tempenchant_size:SetCursorPosition(0)
 
 		local pos_x_text = ns["buffs"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -120,7 +120,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		pos_x:SetSize(30, 20)
 		pos_x:SetAutoFocus(false)
 		pos_x:ClearFocus()
-		pos_x:SetNumber(LolzenUIcfg["buff_posx"])
+		pos_x:SetNumber(LolzenUIcfg.buffs["buff_posx"])
 		pos_x:SetCursorPosition(0)
 
 		local pos_y_text = ns["buffs"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -132,7 +132,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		pos_y:SetSize(30, 20)
 		pos_y:SetAutoFocus(false)
 		pos_y:ClearFocus()
-		pos_y:SetNumber(LolzenUIcfg["buff_posy"])
+		pos_y:SetNumber(LolzenUIcfg.buffs["buff_posy"])
 		pos_y:SetCursorPosition(0)
 
 		local anchor_text = ns["buffs"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -144,7 +144,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		anchor:SetSize(100, 20)
 		anchor:SetAutoFocus(false)
 		anchor:ClearFocus()
-		anchor:SetText(LolzenUIcfg["buff_anchor1"])
+		anchor:SetText(LolzenUIcfg.buffs["buff_anchor1"])
 		anchor:SetCursorPosition(0)
 
 		local parent_text = ns["buffs"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -156,7 +156,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		parent:SetSize(80, 20)
 		parent:SetAutoFocus(false)
 		parent:ClearFocus()
-		parent:SetText(LolzenUIcfg["buff_parent"])
+		parent:SetText(LolzenUIcfg.buffs["buff_parent"])
 		parent:SetCursorPosition(0)
 
 		local anchor2_text = ns["buffs"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -168,7 +168,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		anchor2:SetSize(100, 20)
 		anchor2:SetAutoFocus(false)
 		anchor2:ClearFocus()
-		anchor2:SetText(LolzenUIcfg["buff_anchor2"])
+		anchor2:SetText(LolzenUIcfg.buffs["buff_anchor2"])
 		anchor2:SetCursorPosition(0)
 		
 		local bufftex_path_text = ns["buffs"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -180,7 +180,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		bufftex_path:SetSize(80, 20)
 		bufftex_path:SetAutoFocus(false)
 		bufftex_path:ClearFocus()
-		bufftex_path:SetText(LolzenUIcfg["buff_aura_texture"])
+		bufftex_path:SetText(LolzenUIcfg.buffs["buff_aura_texture"])
 		bufftex_path:SetCursorPosition(0)
 		
 		local debufftex_path_text = ns["buffs"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -192,7 +192,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		debufftex_path:SetSize(80, 20)
 		debufftex_path:SetAutoFocus(false)
 		debufftex_path:ClearFocus()
-		debufftex_path:SetText(LolzenUIcfg["buff_debuff_texture"])
+		debufftex_path:SetText(LolzenUIcfg.buffs["buff_debuff_texture"])
 		debufftex_path:SetCursorPosition(0)
 
 		local dur_text = ns["buffs"]:CreateFontString(nil, "ARTWORK", "GameFontNormal")
@@ -208,7 +208,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		dur_pos_x:SetSize(30, 20)
 		dur_pos_x:SetAutoFocus(false)
 		dur_pos_x:ClearFocus()
-		dur_pos_x:SetNumber(LolzenUIcfg["buff_duration_posx"])
+		dur_pos_x:SetNumber(LolzenUIcfg.buffs["buff_duration_posx"])
 		dur_pos_x:SetCursorPosition(0)
 
 		local dur_pos_y_text = ns["buffs"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -220,7 +220,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		dur_pos_y:SetSize(30, 20)
 		dur_pos_y:SetAutoFocus(false)
 		dur_pos_y:ClearFocus()
-		dur_pos_y:SetNumber(LolzenUIcfg["buff_duration_posy"])
+		dur_pos_y:SetNumber(LolzenUIcfg.buffs["buff_duration_posy"])
 		dur_pos_y:SetCursorPosition(0)
 
 		local dur_anchor_text = ns["buffs"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -232,7 +232,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		dur_anchor:SetSize(100, 20)
 		dur_anchor:SetAutoFocus(false)
 		dur_anchor:ClearFocus()
-		dur_anchor:SetText(LolzenUIcfg["buff_duration_anchor1"])
+		dur_anchor:SetText(LolzenUIcfg.buffs["buff_duration_anchor1"])
 		dur_anchor:SetCursorPosition(0)
 
 		local dur_anchor2_text = ns["buffs"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -244,7 +244,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		dur_anchor2:SetSize(100, 20)
 		dur_anchor2:SetAutoFocus(false)
 		dur_anchor2:ClearFocus()
-		dur_anchor2:SetText(LolzenUIcfg["buff_duration_anchor2"])
+		dur_anchor2:SetText(LolzenUIcfg.buffs["buff_duration_anchor2"])
 		dur_anchor2:SetCursorPosition(0)
 		
 		local dur_font_text = ns["buffs"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -256,7 +256,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		dur_font:SetSize(100, 20)
 		dur_font:SetAutoFocus(false)
 		dur_font:ClearFocus()
-		dur_font:SetText(LolzenUIcfg["buff_duration_font"])
+		dur_font:SetText(LolzenUIcfg.buffs["buff_duration_font"])
 		dur_font:SetCursorPosition(0)
 		
 		local dur_font_size_text = ns["buffs"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -268,7 +268,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		dur_font_size:SetSize(30, 20)
 		dur_font_size:SetAutoFocus(false)
 		dur_font_size:ClearFocus()
-		dur_font_size:SetNumber(LolzenUIcfg["buff_duration_font_size"])
+		dur_font_size:SetNumber(LolzenUIcfg.buffs["buff_duration_font_size"])
 		dur_font_size:SetCursorPosition(0)
 		
 		local dur_font_flag_text = ns["buffs"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -280,7 +280,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		dur_font_flag:SetSize(100, 20)
 		dur_font_flag:SetAutoFocus(false)
 		dur_font_flag:ClearFocus()
-		dur_font_flag:SetText(LolzenUIcfg["buff_duration_font_flag"])
+		dur_font_flag:SetText(LolzenUIcfg.buffs["buff_duration_font_flag"])
 		dur_font_flag:SetCursorPosition(0)
 		
 		local cb1 = CreateFrame("CheckButton", "detailedduration", ns["buffs"], "ChatConfigCheckButtonTemplate")
@@ -300,7 +300,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		count_pos_x:SetSize(30, 20)
 		count_pos_x:SetAutoFocus(false)
 		count_pos_x:ClearFocus()
-		count_pos_x:SetNumber(LolzenUIcfg["buff_counter_posx"])
+		count_pos_x:SetNumber(LolzenUIcfg.buffs["buff_counter_posx"])
 		count_pos_x:SetCursorPosition(0)
 
 		local count_pos_y_text = ns["buffs"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -312,7 +312,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		count_pos_y:SetSize(30, 20)
 		count_pos_y:SetAutoFocus(false)
 		count_pos_y:ClearFocus()
-		count_pos_y:SetNumber(LolzenUIcfg["buff_counter_posy"])
+		count_pos_y:SetNumber(LolzenUIcfg.buffs["buff_counter_posy"])
 		count_pos_y:SetCursorPosition(0)
 
 		local count_anchor_text = ns["buffs"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -324,7 +324,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		count_anchor:SetSize(100, 20)
 		count_anchor:SetAutoFocus(false)
 		count_anchor:ClearFocus()
-		count_anchor:SetText(LolzenUIcfg["buff_counter_anchor"])
+		count_anchor:SetText(LolzenUIcfg.buffs["buff_counter_anchor"])
 		count_anchor:SetCursorPosition(0)
 
 --		local count_anchor2_text = ns["buffs"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -336,7 +336,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 --		count_anchor2:SetSize(100, 20)
 --		count_anchor2:SetAutoFocus(false)
 --		count_anchor2:ClearFocus()
---		count_anchor2:SetText(LolzenUIcfg["buff_duration_anchor2"])
+--		count_anchor2:SetText(LolzenUIcfg.buffs["buff_duration_anchor2"])
 --		count_anchor2:SetCursorPosition(0)
 		
 		local count_font_text = ns["buffs"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -348,7 +348,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		count_font:SetSize(100, 20)
 		count_font:SetAutoFocus(false)
 		count_font:ClearFocus()
-		count_font:SetText(LolzenUIcfg["buff_counter_font"])
+		count_font:SetText(LolzenUIcfg.buffs["buff_counter_font"])
 		count_font:SetCursorPosition(0)
 		
 		local count_font_size_text = ns["buffs"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -360,7 +360,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		count_font_size:SetSize(30, 20)
 		count_font_size:SetAutoFocus(false)
 		count_font_size:ClearFocus()
-		count_font_size:SetNumber(LolzenUIcfg["buff_counter_size"])
+		count_font_size:SetNumber(LolzenUIcfg.buffs["buff_counter_size"])
 		count_font_size:SetCursorPosition(0)
 		
 		local count_font_flag_text = ns["buffs"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -372,71 +372,71 @@ f:SetScript("OnEvent", function(self, event, addon)
 		count_font_flag:SetSize(100, 20)
 		count_font_flag:SetAutoFocus(false)
 		count_font_flag:ClearFocus()
-		count_font_flag:SetText(LolzenUIcfg["buff_counter_font_flag"])
+		count_font_flag:SetText(LolzenUIcfg.buffs["buff_counter_font_flag"])
 		count_font_flag:SetCursorPosition(0)
 
-		if LolzenUIcfg["buff_duration_detailed"] == true then
+		if LolzenUIcfg.buffs["buff_duration_detailed"] == true then
 			cb1:SetChecked(true)
 		else
 			cb1:SetChecked(false)
 		end
 		
 		ns["buffs"].okay = function(self)
-			LolzenUIcfg["buff_size"] = tonumber(buff_size:GetText())
-			LolzenUIcfg["buff_debuff_size"] = tonumber(debuff_size:GetText())
-			LolzenUIcfg["buff_tempenchant_size"] = tonumber(tempenchant_size:GetText())
-			LolzenUIcfg["buff_anchor1"] = anchor:GetText()
-			LolzenUIcfg["buff_parent"] = parent:GetText()
-			LolzenUIcfg["buff_anchor2"] = anchor2:GetText()
-			LolzenUIcfg["buff_posx"] = tonumber(pos_x:GetText())
-			LolzenUIcfg["buff_posy"] = tonumber(pos_y:GetText())
-			LolzenUIcfg["buff_duration_anchor1"] = dur_anchor:GetText()
-			LolzenUIcfg["buff_duration_anchor2"] = dur_anchor2:GetText()
-			LolzenUIcfg["buff_duration_posx"] = tonumber(dur_pos_x:GetText())
-			LolzenUIcfg["buff_duration_posy"] = tonumber(dur_pos_y:GetText())
+			LolzenUIcfg.buffs["buff_size"] = tonumber(buff_size:GetText())
+			LolzenUIcfg.buffs["buff_debuff_size"] = tonumber(debuff_size:GetText())
+			LolzenUIcfg.buffs["buff_tempenchant_size"] = tonumber(tempenchant_size:GetText())
+			LolzenUIcfg.buffs["buff_anchor1"] = anchor:GetText()
+			LolzenUIcfg.buffs["buff_parent"] = parent:GetText()
+			LolzenUIcfg.buffs["buff_anchor2"] = anchor2:GetText()
+			LolzenUIcfg.buffs["buff_posx"] = tonumber(pos_x:GetText())
+			LolzenUIcfg.buffs["buff_posy"] = tonumber(pos_y:GetText())
+			LolzenUIcfg.buffs["buff_duration_anchor1"] = dur_anchor:GetText()
+			LolzenUIcfg.buffs["buff_duration_anchor2"] = dur_anchor2:GetText()
+			LolzenUIcfg.buffs["buff_duration_posx"] = tonumber(dur_pos_x:GetText())
+			LolzenUIcfg.buffs["buff_duration_posy"] = tonumber(dur_pos_y:GetText())
 			if cb1:GetChecked(true) then
-				LolzenUIcfg["buff_duration_detailed"] = true
+				LolzenUIcfg.buffs["buff_duration_detailed"] = true
 			else
-				LolzenUIcfg["buff_duration_detailed"] = false
+				LolzenUIcfg.buffs["buff_duration_detailed"] = false
 			end
-			LolzenUIcfg["buff_duration_font"] = dur_font:GetText()
-			LolzenUIcfg["buff_duration_font_size"] = tonumber(dur_font_size:GetText())
-			LolzenUIcfg["buff_duration_font_flag"] = dur_font_flag:GetText()
-			LolzenUIcfg["buff_counter_anchor"] = count_anchor:GetText()
-			LolzenUIcfg["buff_counter_posx"] = tonumber(count_pos_x:GetText())
-			LolzenUIcfg["buff_counter_posy"] = tonumber(count_pos_y:GetText())
-			LolzenUIcfg["buff_counter_font"] = count_font:GetText()
-			LolzenUIcfg["buff_counter_size"] = tonumber(count_font_size:GetText())
-			LolzenUIcfg["buff_counter_font_flag"] = count_font_flag:GetText()
-			LolzenUIcfg["buff_aura_texture"] = bufftex_path:GetText()
-			LolzenUIcfg["buff_debuff_texture"] = debufftex_path:GetText()
+			LolzenUIcfg.buffs["buff_duration_font"] = dur_font:GetText()
+			LolzenUIcfg.buffs["buff_duration_font_size"] = tonumber(dur_font_size:GetText())
+			LolzenUIcfg.buffs["buff_duration_font_flag"] = dur_font_flag:GetText()
+			LolzenUIcfg.buffs["buff_counter_anchor"] = count_anchor:GetText()
+			LolzenUIcfg.buffs["buff_counter_posx"] = tonumber(count_pos_x:GetText())
+			LolzenUIcfg.buffs["buff_counter_posy"] = tonumber(count_pos_y:GetText())
+			LolzenUIcfg.buffs["buff_counter_font"] = count_font:GetText()
+			LolzenUIcfg.buffs["buff_counter_size"] = tonumber(count_font_size:GetText())
+			LolzenUIcfg.buffs["buff_counter_font_flag"] = count_font_flag:GetText()
+			LolzenUIcfg.buffs["buff_aura_texture"] = bufftex_path:GetText()
+			LolzenUIcfg.buffs["buff_debuff_texture"] = debufftex_path:GetText()
 		end
 		
 		ns["buffs"].default = function(self)
-			LolzenUIcfg["buff_size"] = 30
-			LolzenUIcfg["buff_debuff_size"] = 30
-			LolzenUIcfg["buff_tempenchant_size"] = 30
-			LolzenUIcfg["buff_anchor1"] = "TOPRIGHT"
-			LolzenUIcfg["buff_parent"] = "Minimap"
-			LolzenUIcfg["buff_anchor2"] = "TOPLEFT"
-			LolzenUIcfg["buff_posx"] = -15
-			LolzenUIcfg["buff_posy"] = 2
-			LolzenUIcfg["buff_duration_anchor1"] = "CENTER"
-			LolzenUIcfg["buff_duration_anchor2"] = "BOTTOM"
-			LolzenUIcfg["buff_duration_posx"] = 0
-			LolzenUIcfg["buff_duration_posy"] = 3
-			LolzenUIcfg["buff_duration_detailed"] = true
-			LolzenUIcfg["buff_duration_font"] = "DroidSans.ttf"
-			LolzenUIcfg["buff_duration_font_size"] = 11
-			LolzenUIcfg["buff_duration_font_flag"] = "OUTLINE"
-			LolzenUIcfg["buff_counter_anchor"] = "TOPRIGHT"
-			LolzenUIcfg["buff_counter_posx"] = 0
-			LolzenUIcfg["buff_counter_posy"] = 0
-			LolzenUIcfg["buff_counter_font"] = "DroidSans.ttf"
-			LolzenUIcfg["buff_counter_size"] = 16
-			LolzenUIcfg["buff_counter_font_flag"] = "OUTLINE"
-			LolzenUIcfg["buff_aura_texture"] = "auraborder"
-			LolzenUIcfg["buff_debuff_texture"] = "debuffborder"
+			LolzenUIcfg.buffs["buff_size"] = 30
+			LolzenUIcfg.buffs["buff_debuff_size"] = 30
+			LolzenUIcfg.buffs["buff_tempenchant_size"] = 30
+			LolzenUIcfg.buffs["buff_anchor1"] = "TOPRIGHT"
+			LolzenUIcfg.buffs["buff_parent"] = "Minimap"
+			LolzenUIcfg.buffs["buff_anchor2"] = "TOPLEFT"
+			LolzenUIcfg.buffs["buff_posx"] = -15
+			LolzenUIcfg.buffs["buff_posy"] = 2
+			LolzenUIcfg.buffs["buff_duration_anchor1"] = "CENTER"
+			LolzenUIcfg.buffs["buff_duration_anchor2"] = "BOTTOM"
+			LolzenUIcfg.buffs["buff_duration_posx"] = 0
+			LolzenUIcfg.buffs["buff_duration_posy"] = 3
+			LolzenUIcfg.buffs["buff_duration_detailed"] = true
+			LolzenUIcfg.buffs["buff_duration_font"] = "DroidSans.ttf"
+			LolzenUIcfg.buffs["buff_duration_font_size"] = 11
+			LolzenUIcfg.buffs["buff_duration_font_flag"] = "OUTLINE"
+			LolzenUIcfg.buffs["buff_counter_anchor"] = "TOPRIGHT"
+			LolzenUIcfg.buffs["buff_counter_posx"] = 0
+			LolzenUIcfg.buffs["buff_counter_posy"] = 0
+			LolzenUIcfg.buffs["buff_counter_font"] = "DroidSans.ttf"
+			LolzenUIcfg.buffs["buff_counter_size"] = 16
+			LolzenUIcfg.buffs["buff_counter_font_flag"] = "OUTLINE"
+			LolzenUIcfg.buffs["buff_aura_texture"] = "auraborder"
+			LolzenUIcfg.buffs["buff_debuff_texture"] = "debuffborder"
 			ReloadUI()
 		end
 	end

@@ -9,7 +9,7 @@ end
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)
-	if addon == "LolzenUI" and LolzenUIcfg["artifactbar"] == true then
+	if addon == "LolzenUI" and LolzenUIcfg.modules["artifactbar"] == true then
 
 		local title = ns["artifactbar"]:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
 		title:SetPoint("TOPLEFT", ns["artifactbar"], 16, -16)
@@ -28,7 +28,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		height:SetSize(30, 20)
 		height:SetAutoFocus(false)
 		height:ClearFocus()
-		height:SetNumber(LolzenUIcfg["artifactbar_height"])
+		height:SetNumber(LolzenUIcfg.artifactbar["artifactbar_height"])
 		height:SetCursorPosition(0)
 
 		local width_text = ns["artifactbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -40,7 +40,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		width:SetSize(40, 20)
 		width:SetAutoFocus(false)
 		width:ClearFocus()
-		width:SetNumber(LolzenUIcfg["artifactbar_width"])
+		width:SetNumber(LolzenUIcfg.artifactbar["artifactbar_width"])
 		width:SetCursorPosition(0)
 
 		local alpha_text = ns["artifactbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -52,7 +52,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		alpha:SetSize(30, 20)
 		alpha:SetAutoFocus(false)
 		alpha:ClearFocus()
-		alpha:SetText(LolzenUIcfg["artifactbar_alpha"])
+		alpha:SetText(LolzenUIcfg.artifactbar["artifactbar_alpha"])
 		alpha:SetCursorPosition(0)
 
 		local bg_alpha_text = ns["artifactbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -64,7 +64,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		bg_alpha:SetSize(30, 20)
 		bg_alpha:SetAutoFocus(false)
 		bg_alpha:ClearFocus()
-		bg_alpha:SetText(LolzenUIcfg["artifactbar_bg_alpha"])
+		bg_alpha:SetText(LolzenUIcfg.artifactbar["artifactbar_bg_alpha"])
 		bg_alpha:SetCursorPosition(0)
 
 		local pos_x_text = ns["artifactbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -76,7 +76,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		pos_x:SetSize(30, 20)
 		pos_x:SetAutoFocus(false)
 		pos_x:ClearFocus()
-		pos_x:SetNumber(LolzenUIcfg["artifactbar_posx"])
+		pos_x:SetNumber(LolzenUIcfg.artifactbar["artifactbar_posx"])
 		pos_x:SetCursorPosition(0)
 
 		local pos_y_text = ns["artifactbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -88,7 +88,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		pos_y:SetSize(30, 20)
 		pos_y:SetAutoFocus(false)
 		pos_y:ClearFocus()
-		pos_y:SetNumber(LolzenUIcfg["artifactbar_posy"])
+		pos_y:SetNumber(LolzenUIcfg.artifactbar["artifactbar_posy"])
 		pos_y:SetCursorPosition(0)
 
 		local anchor_text = ns["artifactbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -100,7 +100,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		anchor:SetSize(100, 20)
 		anchor:SetAutoFocus(false)
 		anchor:ClearFocus()
-		anchor:SetText(LolzenUIcfg["artifactbar_anchor"])
+		anchor:SetText(LolzenUIcfg.artifactbar["artifactbar_anchor"])
 		anchor:SetCursorPosition(0)
 
 		local parent_text = ns["artifactbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -112,7 +112,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		parent:SetSize(100, 20)
 		parent:SetAutoFocus(false)
 		parent:ClearFocus()
-		parent:SetText(LolzenUIcfg["artifactbar_parent"])
+		parent:SetText(LolzenUIcfg.artifactbar["artifactbar_parent"])
 		parent:SetCursorPosition(0)
 
 		local texture_text = ns["artifactbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -124,7 +124,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		texture:SetSize(100, 20)
 		texture:SetAutoFocus(false)
 		texture:ClearFocus()
-		texture:SetText(LolzenUIcfg["artifactbar_texture"])
+		texture:SetText(LolzenUIcfg.artifactbar["artifactbar_texture"])
 		texture:SetCursorPosition(0)
 
 		local color_text = ns["artifactbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -133,9 +133,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		local color = ns["artifactbar"]:CreateTexture(nil, "ARTWORK")
 		color:SetSize(16, 16)
-		color:SetVertexColor(unpack(LolzenUIcfg["artifactbar_color"]))
+		color:SetVertexColor(unpack(LolzenUIcfg.artifactbar["artifactbar_color"]))
 		color:SetPoint("LEFT", color_text, "RIGHT", 10, 0)
-		color:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg["artifactbar_texture"])
+		color:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.artifactbar["artifactbar_texture"])
 
 		local function afbarSetNewColor()
 			r, g, b = ColorPickerFrame:GetColorRGB()
@@ -156,8 +156,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 			ColorPickerFrame.cancelFunc = nil
 			ColorPickerFrame.func = nil
 			-- and fill with the relevant ones
-			ColorPickerFrame.previousValues = LolzenUIcfg["artifactbar_color"]
-			ColorPickerFrame:SetColorRGB(unpack(LolzenUIcfg["artifactbar_color"]))
+			ColorPickerFrame.previousValues = LolzenUIcfg.artifactbar["artifactbar_color"]
+			ColorPickerFrame:SetColorRGB(unpack(LolzenUIcfg.artifactbar["artifactbar_color"]))
 			ColorPickerFrame.cancelFunc = restorePreviousColor
 			ColorPickerFrame.func = afbarSetNewColor
 			ColorPickerFrame:Show()
@@ -167,7 +167,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		cb1:SetPoint("TOPLEFT", color_text, "BOTTOMLEFT", 0, -8)
 		pxborderText:SetText("|cff5599ffdraw a 1px border around the artifactbar|r")
 
-		if LolzenUIcfg["artifactbar_1px_border"] == true then
+		if LolzenUIcfg.artifactbar["artifactbar_1px_border"] == true then
 			cb1:SetChecked(true)
 		else
 			cb1:SetChecked(false)
@@ -191,7 +191,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			cb2:Disable()
 			pxborder_roundText:SetText("|cff555555rounded 1px border|r |cffff5555enable 1px border for this option|r")
 		else
-			if LolzenUIcfg["artifactbar_1px_border_round"] == true then
+			if LolzenUIcfg.artifactbar["artifactbar_1px_border_round"] == true then
 				cb2:SetChecked(true)
 			else
 				cb2:SetChecked(false)
@@ -207,7 +207,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		font:SetSize(200, 20)
 		font:SetAutoFocus(false)
 		font:ClearFocus()
-		font:SetText(LolzenUIcfg["artifactbar_font"])
+		font:SetText(LolzenUIcfg.artifactbar["artifactbar_font"])
 		font:SetCursorPosition(0)
 
 		local font_size_text = ns["artifactbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -219,7 +219,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		font_size:SetSize(30, 20)
 		font_size:SetAutoFocus(false)
 		font_size:ClearFocus()
-		font_size:SetNumber(LolzenUIcfg["artifactbar_font_size"])
+		font_size:SetNumber(LolzenUIcfg.artifactbar["artifactbar_font_size"])
 		font_size:SetCursorPosition(0)
 
 		local font_flag_text = ns["artifactbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -231,7 +231,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		font_flag:SetSize(100, 20)
 		font_flag:SetAutoFocus(false)
 		font_flag:ClearFocus()
-		font_flag:SetText(LolzenUIcfg["artifactbar_font_flag"])
+		font_flag:SetText(LolzenUIcfg.artifactbar["artifactbar_font_flag"])
 		font_flag:SetCursorPosition(0)
 
 		local font_color_text = ns["artifactbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -240,9 +240,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		local text_color = ns["artifactbar"]:CreateTexture(nil, "ARTWORK")
 		text_color:SetSize(16, 16)
-		text_color:SetVertexColor(unpack(LolzenUIcfg["artifactbar_font_color"]))
+		text_color:SetVertexColor(unpack(LolzenUIcfg.artifactbar["artifactbar_font_color"]))
 		text_color:SetPoint("LEFT", font_color_text, "RIGHT", 10, 0)
-		text_color:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg["artifactbar_texture"])
+		text_color:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.artifactbar["artifactbar_texture"])
 
 		local function afbarTextSetNewColor()
 			r, g, b = ColorPickerFrame:GetColorRGB()
@@ -263,8 +263,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 			ColorPickerFrame.cancelFunc = nil
 			ColorPickerFrame.func = nil
 			-- and fill with the relevant ones
-			ColorPickerFrame.previousValues = LolzenUIcfg["artifactbar_font_color"]
-			ColorPickerFrame:SetColorRGB(unpack(LolzenUIcfg["artifactbar_font_color"]))
+			ColorPickerFrame.previousValues = LolzenUIcfg.artifactbar["artifactbar_font_color"]
+			ColorPickerFrame:SetColorRGB(unpack(LolzenUIcfg.artifactbar["artifactbar_font_color"]))
 			ColorPickerFrame.cancelFunc = restoreTextPreviousColor
 			ColorPickerFrame.func = afbarTextSetNewColor
 			ColorPickerFrame:Show()
@@ -279,7 +279,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		text_pos_x:SetSize(30, 20)
 		text_pos_x:SetAutoFocus(false)
 		text_pos_x:ClearFocus()
-		text_pos_x:SetNumber(LolzenUIcfg["artifactbar_text_posx"])
+		text_pos_x:SetNumber(LolzenUIcfg.artifactbar["artifactbar_text_posx"])
 		text_pos_x:SetCursorPosition(0)
 
 		local text_pos_y_text = ns["artifactbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -291,7 +291,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		text_pos_y:SetSize(30, 20)
 		text_pos_y:SetAutoFocus(false)
 		text_pos_y:ClearFocus()
-		text_pos_y:SetNumber(LolzenUIcfg["artifactbar_text_posy"])
+		text_pos_y:SetNumber(LolzenUIcfg.artifactbar["artifactbar_text_posy"])
 		text_pos_y:SetCursorPosition(0)
 
 		local text_anchor_text = ns["artifactbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -303,7 +303,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		text_anchor:SetSize(100, 20)
 		text_anchor:SetAutoFocus(false)
 		text_anchor:ClearFocus()
-		text_anchor:SetText(LolzenUIcfg["artifactbar_text_anchor1"])
+		text_anchor:SetText(LolzenUIcfg.artifactbar["artifactbar_text_anchor1"])
 		text_anchor:SetCursorPosition(0)
 
 		local text_anchor2_text = ns["artifactbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -315,61 +315,61 @@ f:SetScript("OnEvent", function(self, event, addon)
 		text_anchor2:SetSize(100, 20)
 		text_anchor2:SetAutoFocus(false)
 		text_anchor2:ClearFocus()
-		text_anchor2:SetText(LolzenUIcfg["artifactbar_text_anchor2"])
+		text_anchor2:SetText(LolzenUIcfg.artifactbar["artifactbar_text_anchor2"])
 		text_anchor2:SetCursorPosition(0)
 		
 		ns["artifactbar"].okay = function(self)
-			LolzenUIcfg["artifactbar_height"] = tonumber(height:GetText())
-			LolzenUIcfg["artifactbar_width"] = tonumber(width:GetText())
-			LolzenUIcfg["artifactbar_anchor"] = anchor:GetText()
-			LolzenUIcfg["artifactbar_parent"] = parent:GetText()
-			LolzenUIcfg["artifactbar_posx"] = tonumber(pos_x:GetText())
-			LolzenUIcfg["artifactbar_posy"] = tonumber(pos_y:GetText())
-			LolzenUIcfg["artifactbar_texture"] = texture:GetText()
-			LolzenUIcfg["artifactbar_alpha"] = tonumber(alpha:GetText())
-			LolzenUIcfg["artifactbar_bg_alpha"] = tonumber(bg_alpha:GetText())
-			LolzenUIcfg["artifactbar_color"] = {color:GetVertexColor()}
+			LolzenUIcfg.artifactbar["artifactbar_height"] = tonumber(height:GetText())
+			LolzenUIcfg.artifactbar["artifactbar_width"] = tonumber(width:GetText())
+			LolzenUIcfg.artifactbar["artifactbar_anchor"] = anchor:GetText()
+			LolzenUIcfg.artifactbar["artifactbar_parent"] = parent:GetText()
+			LolzenUIcfg.artifactbar["artifactbar_posx"] = tonumber(pos_x:GetText())
+			LolzenUIcfg.artifactbar["artifactbar_posy"] = tonumber(pos_y:GetText())
+			LolzenUIcfg.artifactbar["artifactbar_texture"] = texture:GetText()
+			LolzenUIcfg.artifactbar["artifactbar_alpha"] = tonumber(alpha:GetText())
+			LolzenUIcfg.artifactbar["artifactbar_bg_alpha"] = tonumber(bg_alpha:GetText())
+			LolzenUIcfg.artifactbar["artifactbar_color"] = {color:GetVertexColor()}
 			if cb1:GetChecked(true) then
-				LolzenUIcfg["artifactbar_1px_border"] = true
+				LolzenUIcfg.artifactbar["artifactbar_1px_border"] = true
 			else
-				LolzenUIcfg["artifactbar_1px_border"] = false
+				LolzenUIcfg.artifactbar["artifactbar_1px_border"] = false
 			end
 			if cb2:GetChecked(true) then
-				LolzenUIcfg["artifactbar_1px_border_round"] = true
+				LolzenUIcfg.artifactbar["artifactbar_1px_border_round"] = true
 			else
-				LolzenUIcfg["artifactbar_1px_border_round"] = false
+				LolzenUIcfg.artifactbar["artifactbar_1px_border_round"] = false
 			end
-			LolzenUIcfg["artifactbar_font"] = font:GetText()
-			LolzenUIcfg["artifactbar_font_size"] = tonumber(font_size:GetText())
-			LolzenUIcfg["artifactbar_font_flag"] = font_flag:GetText()
-			LolzenUIcfg["artifactbar_font_color"] = {text_color:GetVertexColor()}
-			LolzenUIcfg["artifactbar_text_posx"] = tonumber(text_pos_x:GetText())
-			LolzenUIcfg["artifactbar_text_posy"] = tonumber(text_pos_y:GetText())
-			LolzenUIcfg["artifactbar_text_anchor1"] = text_anchor:GetText()
-			LolzenUIcfg["artifactbar_text_anchor2"] = text_anchor2:GetText()
+			LolzenUIcfg.artifactbar["artifactbar_font"] = font:GetText()
+			LolzenUIcfg.artifactbar["artifactbar_font_size"] = tonumber(font_size:GetText())
+			LolzenUIcfg.artifactbar["artifactbar_font_flag"] = font_flag:GetText()
+			LolzenUIcfg.artifactbar["artifactbar_font_color"] = {text_color:GetVertexColor()}
+			LolzenUIcfg.artifactbar["artifactbar_text_posx"] = tonumber(text_pos_x:GetText())
+			LolzenUIcfg.artifactbar["artifactbar_text_posy"] = tonumber(text_pos_y:GetText())
+			LolzenUIcfg.artifactbar["artifactbar_text_anchor1"] = text_anchor:GetText()
+			LolzenUIcfg.artifactbar["artifactbar_text_anchor2"] = text_anchor2:GetText()
 		end
 
 		ns["artifactbar"].default = function(self)
-			LolzenUIcfg["artifactbar_height"] = 4
-			LolzenUIcfg["artifactbar_width"] = 378
-			LolzenUIcfg["artifactbar_anchor"] = "BOTTOM"
-			LolzenUIcfg["artifactbar_parent"] = "UIParent"
-			LolzenUIcfg["artifactbar_posx"] = 0
-			LolzenUIcfg["artifactbar_posy"] = 120
-			LolzenUIcfg["artifactbar_texture"] = "statusbar"
-			LolzenUIcfg["artifactbar_alpha"] = 0.4
-			LolzenUIcfg["artifactbar_bg_alpha"] = 0.5
-			LolzenUIcfg["artifactbar_color"] = {1, 1, 0.7}
-			LolzenUIcfg["artifactbar_1px_border"] = true
-			LolzenUIcfg["artifactbar_1px_border_round"] = true
-			LolzenUIcfg["artifactbar_font"] = "DroidSansBold.ttf"
-			LolzenUIcfg["artifactbar_font_size"] = 10
-			LolzenUIcfg["artifactbar_font_flag"] = "THINOUTLINE"
-			LolzenUIcfg["artifactbar_font_color"] = {1, 1, 1}
-			LolzenUIcfg["artifactbar_text_posx"] = 0
-			LolzenUIcfg["artifactbar_text_posy"] = -2
-			LolzenUIcfg["artifactbar_text_anchor1"] = "BOTTOM"
-			LolzenUIcfg["artifactbar_text_anchor2"] = "TOP"
+			LolzenUIcfg.artifactbar["artifactbar_height"] = 4
+			LolzenUIcfg.artifactbar["artifactbar_width"] = 378
+			LolzenUIcfg.artifactbar["artifactbar_anchor"] = "BOTTOM"
+			LolzenUIcfg.artifactbar["artifactbar_parent"] = "UIParent"
+			LolzenUIcfg.artifactbar["artifactbar_posx"] = 0
+			LolzenUIcfg.artifactbar["artifactbar_posy"] = 120
+			LolzenUIcfg.artifactbar["artifactbar_texture"] = "statusbar"
+			LolzenUIcfg.artifactbar["artifactbar_alpha"] = 0.4
+			LolzenUIcfg.artifactbar["artifactbar_bg_alpha"] = 0.5
+			LolzenUIcfg.artifactbar["artifactbar_color"] = {1, 1, 0.7}
+			LolzenUIcfg.artifactbar["artifactbar_1px_border"] = true
+			LolzenUIcfg.artifactbar["artifactbar_1px_border_round"] = true
+			LolzenUIcfg.artifactbar["artifactbar_font"] = "DroidSansBold.ttf"
+			LolzenUIcfg.artifactbar["artifactbar_font_size"] = 10
+			LolzenUIcfg.artifactbar["artifactbar_font_flag"] = "THINOUTLINE"
+			LolzenUIcfg.artifactbar["artifactbar_font_color"] = {1, 1, 1}
+			LolzenUIcfg.artifactbar["artifactbar_text_posx"] = 0
+			LolzenUIcfg.artifactbar["artifactbar_text_posy"] = -2
+			LolzenUIcfg.artifactbar["artifactbar_text_anchor1"] = "BOTTOM"
+			LolzenUIcfg.artifactbar["artifactbar_text_anchor2"] = "TOP"
 			ReloadUI()
 		end
 	end

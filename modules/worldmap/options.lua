@@ -9,7 +9,7 @@ end
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)
-	if addon == "LolzenUI" and LolzenUIcfg["worldmap"] == true then
+	if addon == "LolzenUI" and LolzenUIcfg.modules["worldmap"] == true then
 
 		local title = ns["worldmap"]:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
 		title:SetPoint("TOPLEFT", ns["worldmap"], 16, -16)
@@ -28,15 +28,15 @@ f:SetScript("OnEvent", function(self, event, addon)
 		eb:SetSize(30, 50)
 		eb:SetAutoFocus(false)
 		eb:ClearFocus()
-		eb:SetNumber(LolzenUIcfg["worldmap_scale"])
+		eb:SetNumber(LolzenUIcfg.worldmap["worldmap_scale"])
 		eb:SetCursorPosition(0)
 
 		ns["worldmap"].okay = function(self)
-			LolzenUIcfg["worldmap_scale"] = tonumber(eb:GetText())
+			LolzenUIcfg.worldmap["worldmap_scale"] = tonumber(eb:GetText())
 		end
 
 		ns["worldmap"].default = function(self)
-			LolzenUIcfg["worldmap_scale"] = 1
+			LolzenUIcfg.worldmap["worldmap_scale"] = 1
 			ReloadUI()
 		end
 

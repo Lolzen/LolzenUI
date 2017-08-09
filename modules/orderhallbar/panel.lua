@@ -9,17 +9,17 @@ local currencies = {
 }
 
 local function getAreaText()
-	if OrderHallCommandBar then
-		if GetRealZoneText() == GetMinimapZoneText() then
-			OrderHallCommandBar.AreaName:SetText(GetZoneText())
-		else
-			OrderHallCommandBar.AreaName:SetText(GetZoneText().." ("..GetMinimapZoneText()..")")
-		end
+	if not OrderHallCommandBar then return end
+	if GetRealZoneText() == GetMinimapZoneText() then
+		OrderHallCommandBar.AreaName:SetText(GetZoneText())
+	else
+		OrderHallCommandBar.AreaName:SetText(GetZoneText().." ("..GetMinimapZoneText()..")")
 	end
 end
 
 local currency = {}
 local function getCurrencies()
+	if not OrderHallCommandBar then return end
 	for i=1, #currencies do
 		local name, amount, icon = GetCurrencyInfo(currencies[i])
 		if not currency[i] then
@@ -106,27 +106,33 @@ f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)
 	if event == "ADDON_LOADED" then
 		if addon == "LolzenUI" then
-			if LolzenUIcfg["orderhallbar"] == false then return end
+			if LolzenUIcfg.modules["orderhallbar"] == false then return end
 			
 			if OrderHallCommandBar and OrderHallCommandBar.modded == true then return end
 			
 			if addon == "Blizzard_OrderHallUI" then
-				if LolzenUIcfg["orderhallbar"] == false then return end
+				if LolzenUIcfg.orderhallbar["orderhallbar"] == false then return end
 				modifyOHB()
 				getAreaText()
 				getCurrencies()
 			else
-				if LolzenUIcfg["orderhallbar"] == false then return end
-				LoadAddOn("Blizzard_OrderHallUI")
+				if LolzenUIcfg.orderhallbar["orderhallbar"] == false then return end
+				if LolzenUIcfg.orderhallbar["ohb_always_show"] == true then
+					LoadAddOn("Blizzard_OrderHallUI")
+				end
 				if OrderHallCommandBar then
-					-- prevent hiding the bar, show it everywhere
-					OrderHallCommandBar:SetScript("OnHide", OrderHallCommandBar.Show)
+					if LolzenUIcfg.orderhallbar["ohb_always_show"] == true then
+						-- prevent hiding the bar, show it everywhere
+						OrderHallCommandBar:SetScript("OnHide", OrderHallCommandBar.Show)
+					end
 					-- hide troop info
 					OrderHallCommandBar.RefreshCategories = function() end
 					OrderHallCommandBar.RequestCategoryInfo = function() end
-					-- show the bar on login too
-					if not OrderHallCommandBar:IsShown() then
-						OrderHallCommandBar:Show()
+					if LolzenUIcfg.orderhallbar["ohb_always_show"] == true then
+						-- show the bar on login too
+						if not OrderHallCommandBar:IsShown() then
+							OrderHallCommandBar:Show()
+						end
 					end
 					-- modify the look
 					modifyOHB()
@@ -146,10 +152,10 @@ f2:RegisterEvent("CHAT_MSG_CURRENCY")
 f2:RegisterEvent("CURRENCY_DISPLAY_UPDATE")
 f2:SetScript("OnEvent", function(self, event, addon)
 	if event == "ZONE_CHANGED" or event == "ZONE_CHANGED_INDOORS" or event == "ZONE_CHANGED_NEW_AREA" then
-		if LolzenUIcfg["orderhallbar"] == false then return end
+		if LolzenUIcfg.modules["orderhallbar"] == false then return end
 		getAreaText()
 	elseif event == "CHAT_MSG_CURRENCY" or event == "CURRENCY_DISPLAY_UPDATE" then
-		if LolzenUIcfg["orderhallbar"] == false then return end
+		if LolzenUIcfg.modules["orderhallbar"] == false then return end
 		getCurrencies()
 	end
 end)

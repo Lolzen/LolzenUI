@@ -52,7 +52,7 @@ local function createButtons()
 		button[i].text:SetText(ns.modules[i])
 		
 		-- get status from saved vars
-		if LolzenUIcfg[ns.modules[i]] == true then
+		if LolzenUIcfg.modules[ns.modules[i]] == true then
 			button[i]:SetChecked(true)
 			button[i].text:SetTextColor(51/255, 181/255, 229/225)
 			-- create the module specific options
@@ -70,9 +70,9 @@ end
 ns.panel.okay = function(self)
 	for i=1, #ns.modules do
 		if button[i]:GetChecked() then
-			LolzenUIcfg[ns.modules[i]] = true
+			LolzenUIcfg.modules[ns.modules[i]] = true
 		else
-			LolzenUIcfg[ns.modules[i]] = false
+			LolzenUIcfg.modules[ns.modules[i]] = false
 		end
 	end
 	ReloadUI()
@@ -80,7 +80,7 @@ end
 
 ns.panel.default = function(self)
 	--for i=1, #ns.modules do
-	--	LolzenUIcfg[ns.modules[i]] = true
+	--	LolzenUIcfg.modules[ns.modules[i]] = true
 	--end
 --	ReloadUI()
 end

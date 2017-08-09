@@ -9,7 +9,7 @@ end
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)
-	if addon == "LolzenUI" and LolzenUIcfg["clock"] == true then
+	if addon == "LolzenUI" and LolzenUIcfg.modules["clock"] == true then
 
 		local title = ns["clock"]:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
 		title:SetPoint("TOPLEFT", ns["clock"], 16, -16)

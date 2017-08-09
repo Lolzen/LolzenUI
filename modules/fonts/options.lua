@@ -9,7 +9,7 @@ end
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)
-	if addon == "LolzenUI" and LolzenUIcfg["fonts"] == true then
+	if addon == "LolzenUI" and LolzenUIcfg.modules["fonts"] == true then
 
 		local title = ns["fonts"]:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
 		title:SetPoint("TOPLEFT", ns["fonts"], 16, -16)
@@ -28,7 +28,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		dmg:SetSize(200, 20)
 		dmg:SetAutoFocus(false)
 		dmg:ClearFocus()
-		dmg:SetText(LolzenUIcfg["fonts_DAMAGE_TEXT_FONT"])
+		dmg:SetText(LolzenUIcfg.fonts["fonts_DAMAGE_TEXT_FONT"])
 		dmg:SetCursorPosition(0)
 
 		local unit_text = ns["fonts"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -40,7 +40,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		unit:SetSize(200, 20)
 		unit:SetAutoFocus(false)
 		unit:ClearFocus()
-		unit:SetText(LolzenUIcfg["fonts_UNIT_NAME_FONT"])
+		unit:SetText(LolzenUIcfg.fonts["fonts_UNIT_NAME_FONT"])
 		unit:SetCursorPosition(0)
 
 		local np_text = ns["fonts"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -52,7 +52,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		np:SetSize(200, 20)
 		np:SetAutoFocus(false)
 		np:ClearFocus()
-		np:SetText(LolzenUIcfg["fonts_NAMEPLATE_FONT"])
+		np:SetText(LolzenUIcfg.fonts["fonts_NAMEPLATE_FONT"])
 		np:SetCursorPosition(0)
 
 		local standard_text = ns["fonts"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -64,7 +64,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		standard:SetSize(200, 20)
 		standard:SetAutoFocus(false)
 		standard:ClearFocus()
-		standard:SetText(LolzenUIcfg["fonts_STANDARD_TEXT_FONT"])
+		standard:SetText(LolzenUIcfg.fonts["fonts_STANDARD_TEXT_FONT"])
 		standard:SetCursorPosition(0)
 
 		local tip = ns["fonts"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -72,17 +72,17 @@ f:SetScript("OnEvent", function(self, event, addon)
 		tip:SetText("|cff5599ffPROTIP:|r The fonts have to have been in the folder BEFORE the WoW client was started.")
 
 		ns["fonts"].okay = function(self)
-			LolzenUIcfg["fonts_DAMAGE_TEXT_FONT"] = dmg:GetText()
-			LolzenUIcfg["fonts_UNIT_NAME_FONT"] = unit:GetText()
-			LolzenUIcfg["fonts_NAMEPLATE_FONT"] = np:GetText()
-			LolzenUIcfg["fonts_STANDARD_TEXT_FONT"] = standard:GetText()
+			LolzenUIcfg.fonts["fonts_DAMAGE_TEXT_FONT"] = dmg:GetText()
+			LolzenUIcfg.fonts["fonts_UNIT_NAME_FONT"] = unit:GetText()
+			LolzenUIcfg.fonts["fonts_NAMEPLATE_FONT"] = np:GetText()
+			LolzenUIcfg.fonts["fonts_STANDARD_TEXT_FONT"] = standard:GetText()
 		end
 
 		ns["fonts"].default = function(self)
-			LolzenUIcfg["fonts_DAMAGE_TEXT_FONT"] = "DroidSansBold.ttf"
-			LolzenUIcfg["fonts_UNIT_NAME_FONT"] = "DroidSans.ttf"
-			LolzenUIcfg["fonts_NAMEPLATE_FONT"] = "DroidSans.ttf"
-			LolzenUIcfg["fonts_STANDARD_TEXT_FONT"] = "DroidSans.ttf"
+			LolzenUIcfg.fonts["fonts_DAMAGE_TEXT_FONT"] = "DroidSansBold.ttf"
+			LolzenUIcfg.fonts["fonts_UNIT_NAME_FONT"] = "DroidSans.ttf"
+			LolzenUIcfg.fonts["fonts_NAMEPLATE_FONT"] = "DroidSans.ttf"
+			LolzenUIcfg.fonts["fonts_STANDARD_TEXT_FONT"] = "DroidSans.ttf"
 			ReloadUI()
 		end
 	end

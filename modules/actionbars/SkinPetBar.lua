@@ -7,7 +7,7 @@ local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)
 	if addon == "LolzenUI" then
-		if LolzenUIcfg["actionbars"] == false then return end
+		if LolzenUIcfg.modules["actionbars"] == false then return end
 		if skinned == true then return end
 
 		local function applyPetBarTheme(self, i)
@@ -17,11 +17,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 			_G[button.."Icon"]:SetPoint("TOPLEFT", button, "TOPLEFT", 2, -2)
 			_G[button.."Icon"]:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -2, 2)
 
-			_G[button.."Flash"]:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg["actionbar_flash_texture"])
-			_G[button]:SetNormalTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg["actionbar_normal_texture"])
-			_G[button]:SetCheckedTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg["actionbar_checked_texture"])
-			_G[button]:SetHighlightTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg["actionbar_hover_texture"])
-			_G[button]:SetPushedTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg["actionbar_pushed_texture"])
+			_G[button.."Flash"]:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.actionbar["actionbar_flash_texture"])
+			_G[button]:SetNormalTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.actionbar["actionbar_normal_texture"])
+			_G[button]:SetCheckedTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.actionbar["actionbar_checked_texture"])
+			_G[button]:SetHighlightTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.actionbar["actionbar_hover_texture"])
+			_G[button]:SetPushedTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.actionbar["actionbar_pushed_texture"])
 
 			_G[button.."Cooldown"]:SetPoint("TOPLEFT", button, "TOPLEFT", 2, -2)
 			_G[button.."Cooldown"]:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -2, 2)

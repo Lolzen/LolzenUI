@@ -6,7 +6,7 @@ local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)
 	if addon == "LolzenUI" then
-		if LolzenUIcfg["tooltip"] == false then return end
+		if LolzenUIcfg.modules["tooltip"] == false then return end
 
 		local tooltips = {
 			-- general tooltips
@@ -301,15 +301,24 @@ f:SetScript("OnEvent", function(self, event, addon)
 		--hooks and scripts
 		-- anchor
 		hooksecurefunc("GameTooltip_SetDefaultAnchor", function(tooltip, parent)
-			if type(tooltip) == "table" then
+		--	if type(tooltip) == "table" then
 				tooltip:ClearAllPoints()
 				tooltip:SetOwner(parent,"ANCHOR_NONE")
 				tooltip:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -13, 43)
 				tooltip:SetScale(1)
 				tooltip.default = 1
-			end
+		--	end
 		end)
-
+--[[
+	local function tooltipPosition(tootltip, parent)
+		tooltip:ClearAllPoints()
+		tooltip:SetOwner(parent,"ANCHOR_NONE")
+		tooltip:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -13, 43)
+		tooltip:SetScale(1)
+		tooltip.default = 1
+	end)
+	hooksecurefunc("GameTooltip_SetDefaultAnchor", tooltipPosition)
+]]
 		--styling for units
 		GameTooltip:HookScript("OnTooltipSetUnit", modifyTooltip)
 

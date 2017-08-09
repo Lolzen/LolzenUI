@@ -9,7 +9,7 @@ end
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)
-	if addon == "LolzenUI" and LolzenUIcfg["buffwatcher"] == true then
+	if addon == "LolzenUI" and LolzenUIcfg.modules["buffwatcher"] == true then
 
 		local title = ns["buffwatcher"]:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
 		title:SetPoint("TOPLEFT", ns["buffwatcher"], 16, -16)
@@ -33,10 +33,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 		
 		local icon = {}
-		for i=1, #LolzenUIcfg["buffwatchlist"] do
+		for i=1, #LolzenUIcfg.buffwatcher["buffwatchlist"] do
 			icon[i] = ns["buffwatcher"]:CreateTexture(nil, "OVERLAY")
 			icon[i]:SetTexCoord(.04, .94, .04, .94)
-			icon[i]:SetTexture(select(2, getInfo(LolzenUIcfg["buffwatchlist"][i])))
+			icon[i]:SetTexture(select(2, getInfo(LolzenUIcfg.buffwatcher["buffwatchlist"][i])))
 			icon[i]:SetSize(26, 26)
 			if i == 1 then
 				icon[i]:SetPoint("TOPLEFT", list, "BOTTOMLEFT", 0, -20)
@@ -48,7 +48,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				icon[i].text:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSans.ttf", 12 ,"OUTLINE")
 				icon[i].text:SetTextColor(1, 1, 1)
 				icon[i].text:SetPoint("LEFT", icon[i], "RIGHT", 10, 0)
-				icon[i].text:SetText(getInfo(LolzenUIcfg["buffwatchlist"][i]).." (spellid: "..LolzenUIcfg["buffwatchlist"][i]..")")
+				icon[i].text:SetText(getInfo(LolzenUIcfg.buffwatcher["buffwatchlist"][i]).." (spellid: "..LolzenUIcfg.buffwatcher["buffwatchlist"][i]..")")
 			end
 		end
 		
@@ -84,15 +84,15 @@ f:SetScript("OnEvent", function(self, event, addon)
 		b:SetPoint("TOPLEFT", eb, "BOTTOMLEFT", -7, -8)
 		b:SetScript("OnClick", function()
 			local isduplicate = false
-			for k, v in pairs(LolzenUIcfg["buffwatchlist"]) do
+			for k, v in pairs(LolzenUIcfg.buffwatcher["buffwatchlist"]) do
 				if v == eb:GetText() then
 					isduplicate = true
 				end
 			end
 			if isduplicate == true then
-				print("duplicate id detexted!")
+				print("duplicate id detected!")
 			else
-				table.insert(LolzenUIcfg["buffwatchlist"], eb:GetText())
+				table.insert(LolzenUIcfg.buffwatcher["buffwatchlist"], eb:GetText())
 				print("Hit Okay reload the list")
 			end
 		end)
@@ -102,9 +102,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 		b2:SetText("delete")
 		b2:SetPoint("LEFT", b, "RIGHT", 10, 0)
 		b2:SetScript("OnClick", function()
-			for k, v in pairs(LolzenUIcfg["buffwatchlist"]) do
+			for k, v in pairs(LolzenUIcfg.buffwatcher["buffwatchlist"]) do
 				if v == eb:GetText() then
-					table.remove(LolzenUIcfg["buffwatchlist"], k)
+					table.remove(LolzenUIcfg.buffwatcher["buffwatchlist"], k)
 				end
 			end
 			print("Hit Okay to reload the list")
@@ -128,7 +128,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		pos_x:SetSize(30, 50)
 		pos_x:SetAutoFocus(false)
 		pos_x:ClearFocus()
-		pos_x:SetNumber(LolzenUIcfg["buffwatch_pos_x"])
+		pos_x:SetNumber(LolzenUIcfg.buffwatcher["buffwatch_pos_x"])
 		pos_x:SetCursorPosition(0)
 		
 		local pos_y_text = ns["buffwatcher"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -140,7 +140,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		pos_y:SetSize(30, 50)
 		pos_y:SetAutoFocus(false)
 		pos_y:ClearFocus()
-		pos_y:SetNumber(LolzenUIcfg["buffwatch_pos_y"])
+		pos_y:SetNumber(LolzenUIcfg.buffwatcher["buffwatch_pos_y"])
 		pos_y:SetCursorPosition(0)
 		
 		local pos_desc = ns["buffwatcher"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -157,7 +157,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		icon_size:SetAutoFocus(false)
 		icon_size:SetNumeric(true)
 		icon_size:ClearFocus()
-		icon_size:SetNumber(LolzenUIcfg["buffwatch_icon_size"])
+		icon_size:SetNumber(LolzenUIcfg.buffwatcher["buffwatch_icon_size"])
 		icon_size:SetCursorPosition(0)
 		
 		local icon_spacing_text = ns["buffwatcher"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -170,26 +170,22 @@ f:SetScript("OnEvent", function(self, event, addon)
 		icon_spacing:SetAutoFocus(false)
 		icon_spacing:SetNumeric(true)
 		icon_spacing:ClearFocus()
-		icon_spacing:SetNumber(LolzenUIcfg["buffwatch_icon_spacing"])
+		icon_spacing:SetNumber(LolzenUIcfg.buffwatcher["buffwatch_icon_spacing"])
 		icon_spacing:SetCursorPosition(0)
 
 		ns["buffwatcher"].okay = function(self)
-			LolzenUIcfg["buffwatch_pos_x"] = tonumber(pos_x:GetText())
-			LolzenUIcfg["buffwatch_pos_y"] = tonumber(pos_y:GetText())
-			LolzenUIcfg["buffwatch_icon_size"] = tonumber(icon_size:GetText())
-			LolzenUIcfg["buffwatch_icon_spacing"] = tonumber(icon_spacing:GetText())
+			LolzenUIcfg.buffwatcher["buffwatch_pos_x"] = tonumber(pos_x:GetText())
+			LolzenUIcfg.buffwatcher["buffwatch_pos_y"] = tonumber(pos_y:GetText())
+			LolzenUIcfg.buffwatcher["buffwatch_icon_size"] = tonumber(icon_size:GetText())
+			LolzenUIcfg.buffwatcher["buffwatch_icon_spacing"] = tonumber(icon_spacing:GetText())
 		end
 		
 		ns["buffwatcher"].default = function(self)
-			LolzenUIcfg["buffwatchlist"] = {
-				225142, --Nefarious Pact
-				225776, --Devil's Due
-				225719, --Accelererando
-			}
-			LolzenUIcfg["buffwatch_pos_x"] = -250
-			LolzenUIcfg["buffwatch_pos_y"] = -140
-			LolzenUIcfg["buffwatch_icon_size"] = 52
-			LolzenUIcfg["buffwatch_icon_spacing"] = 5
+			LolzenUIcfg.buffwatcher["buffwatchlist"] = {}
+			LolzenUIcfg.buffwatcher["buffwatch_pos_x"] = -250
+			LolzenUIcfg.buffwatcher["buffwatch_pos_y"] = -140
+			LolzenUIcfg.buffwatcher["buffwatch_icon_size"] = 52
+			LolzenUIcfg.buffwatcher["buffwatch_icon_spacing"] = 5
 			ReloadUI()
 		end
 	end

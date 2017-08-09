@@ -7,7 +7,7 @@ local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)
 	if addon == "LolzenUI" then
-		if LolzenUIcfg["actionbars"] == false then return end
+		if LolzenUIcfg.modules["actionbars"] == false then return end
 		if blizzarthidden == true then return end
 		
 		local invisible = CreateFrame("Frame", nil)

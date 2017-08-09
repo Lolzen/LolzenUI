@@ -6,7 +6,7 @@ local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)
 	if addon == "LolzenUI" then
-		if LolzenUIcfg["versioncheck"] == false then return end
+		if LolzenUIcfg.modules["chat"] == false then return end
 
 		local updateFS = function(self, inc, flags, ...)
 			local fstring = self:GetFontString()

@@ -7,7 +7,7 @@ local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)
 	if addon == "Blizzard_InspectUI" then
-		if LolzenUIcfg["inspect"] == false then return end
+		if LolzenUIcfg.modules["inspect"] == false then return end
 
 		local frame = CreateFrame("Frame")
 

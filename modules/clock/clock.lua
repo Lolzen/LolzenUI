@@ -6,7 +6,7 @@ local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)
 	if addon == "LolzenUI" then
-		if LolzenUIcfg["clock"] == false then return end
+		if LolzenUIcfg.modules["clock"] == false then return end
 
 		local function Addoncompare(a, b)
 			return a.memory > b.memory

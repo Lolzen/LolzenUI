@@ -6,7 +6,7 @@ local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)
 	if addon == "LolzenUI" then
-		if LolzenUIcfg["xpbar"] == false then return end
+		if LolzenUIcfg.modules["xpbar"] == false then return end
 
 		-- Change the rep colors slightly
 		FACTION_BAR_COLORS = {
@@ -22,21 +22,21 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		-- first let us create our bar
 		local xpbar = CreateFrame("StatusBar", "bar4xpbar", UIParent)
-		xpbar:SetPoint(LolzenUIcfg["xpbar_anchor"], LolzenUIcfg["xpbar_parent"], LolzenUIcfg["xpbar_posx"], LolzenUIcfg["xpbar_posy"])
-		xpbar:SetHeight(LolzenUIcfg["xpbar_height"])
-		xpbar:SetWidth(LolzenUIcfg["xpbar_width"])
-		xpbar:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg["xpbar_texture"])
-		xpbar:SetAlpha(LolzenUIcfg["xpbar_alpha"])
+		xpbar:SetPoint(LolzenUIcfg.xpbar["xpbar_anchor"], LolzenUIcfg.xpbar["xpbar_parent"], LolzenUIcfg.xpbar["xpbar_posx"], LolzenUIcfg.xpbar["xpbar_posy"])
+		xpbar:SetHeight(LolzenUIcfg.xpbar["xpbar_height"])
+		xpbar:SetWidth(LolzenUIcfg.xpbar["xpbar_width"])
+		xpbar:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.xpbar["xpbar_texture"])
+		xpbar:SetAlpha(LolzenUIcfg.xpbar["xpbar_alpha"])
 		xpbar:SetFrameStrata("BACKGROUND")
 
 		-- Background for our bar
 		local bg = xpbar:CreateTexture(nil, "BACKGROUND")
 		bg:SetAllPoints(xpbar)
-		bg:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg["xpbar_texture"])
-		bg:SetVertexColor(0, 0, 0, LolzenUIcfg["xpbar_bg_alpha"])
+		bg:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.xpbar["xpbar_texture"])
+		bg:SetVertexColor(0, 0, 0, LolzenUIcfg.xpbar["xpbar_bg_alpha"])
 
 		--1px "border"
-		if LolzenUIcfg["xpbar_1px_border"] == true then
+		if LolzenUIcfg.xpbar["xpbar_1px_border"] == true then
 			local lines = {}
 			for i = 1, 4 do
 				if not lines[i] then
@@ -54,7 +54,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 					lines[i]:SetPoint("BOTTOMRIGHT", xpbar, 0, -1)
 				elseif i == 3 then
 					lines[i]:SetWidth(1)
-					if LolzenUIcfg["xpbar_1px_border_round"] == true then
+					if LolzenUIcfg.xpbar["xpbar_1px_border_round"] == true then
 						lines[i]:SetPoint("TOPLEFT", xpbar, -1, 0)
 						lines[i]:SetPoint("BOTTOMLEFT", xpbar, -1, 0)
 					else
@@ -63,7 +63,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 					end
 				elseif i == 4 then
 					lines[i]:SetWidth(1)
-					if LolzenUIcfg["xpbar_1px_border_round"] == true then
+					if LolzenUIcfg.xpbar["xpbar_1px_border_round"] == true then
 						lines[i]:SetPoint("TOPRIGHT", xpbar, 1, 0)
 						lines[i]:SetPoint("BOTTOMRIGHT", xpbar, 1, 0)
 					else
@@ -76,10 +76,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		-- fontstring
 		local xptext = xpbar:CreateFontString(nil, "OVERLAY")
-		xptext:SetPoint(LolzenUIcfg["xpbar_text_anchor1"], xpbar, LolzenUIcfg["xpbar_text_anchor2"], LolzenUIcfg["xpbar_text_posx"], LolzenUIcfg["xpbar_text_posy"])
+		xptext:SetPoint(LolzenUIcfg.xpbar["xpbar_text_anchor1"], xpbar, LolzenUIcfg.xpbar["xpbar_text_anchor2"], LolzenUIcfg.xpbar["xpbar_text_posx"], LolzenUIcfg.xpbar["xpbar_text_posy"])
 		xptext:SetParent(UIParent)
-		xptext:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\"..LolzenUIcfg["xpbar_font"], LolzenUIcfg["xpbar_font_size"], LolzenUIcfg["xpbar_font_flag"])
-		xptext:SetTextColor(unpack(LolzenUIcfg["xpbar_font_color"]))
+		xptext:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\"..LolzenUIcfg.xpbar["xpbar_font"], LolzenUIcfg.xpbar["xpbar_font_size"], LolzenUIcfg.xpbar["xpbar_font_flag"])
+		xptext:SetTextColor(unpack(LolzenUIcfg.xpbar["xpbar_font_color"]))
 
 		function xpbar:Update()
 			-- Proprity #1: If in BGs show the HonorXP
@@ -92,7 +92,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				local max = UnitHonorMax("player")
 				xpbar:SetMinMaxValues(0, max)
 				xpbar:SetValue(current)
-				xpbar:SetStatusBarColor(unpack(LolzenUIcfg["xpbar_pvp_color"]))
+				xpbar:SetStatusBarColor(unpack(LolzenUIcfg.xpbar["xpbar_pvp_color"]))
 				xptext:SetFormattedText("%s (%.0f%%)", "[P:"..prestige.."L:"..level.."] "..current.."/"..max, current/max*100)
 			elseif GetWatchedFactionInfo() ~= nil then
 				-- Reputation (including Paragon)
@@ -107,7 +107,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 							end
 							xpbar:SetMinMaxValues(0, threshold)
 							xpbar:SetValue(value)
-							xpbar:SetStatusBarColor(unpack(LolzenUIcfg["xpbar_paragon_color"]))
+							xpbar:SetStatusBarColor(unpack(LolzenUIcfg.xpbar["xpbar_paragon_color"]))
 							xptext:SetText("("..paraName..") "..value.." / "..threshold)
 						else
 							local name, standing, min, max, value = GetWatchedFactionInfo()
@@ -132,10 +132,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 				xpbar:SetValue(xp)
 				-- colorize the statusbar
 				if GetXPExhaustion() then
-					xpbar:SetStatusBarColor(unpack(LolzenUIcfg["xpbar_xp_color"]))
+					xpbar:SetStatusBarColor(unpack(LolzenUIcfg.xpbar["xpbar_xp_color"]))
 					xptext:SetFormattedText("%.0f%% (%.0f%%)", xp/maxxp*100, GetXPExhaustion()/maxxp*100)
 				else
-					xpbar:SetStatusBarColor(unpack(LolzenUIcfg["xpbar_xp_rested_color"]))
+					xpbar:SetStatusBarColor(unpack(LolzenUIcfg.xpbar["xpbar_xp_rested_color"]))
 					xptext:SetFormattedText("%.0f%%", xp/maxxp*100)
 				end
 				if UnitLevel("player") == MAX_PLAYER_LEVEL then

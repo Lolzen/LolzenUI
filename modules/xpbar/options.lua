@@ -9,7 +9,7 @@ end
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)
-	if addon == "LolzenUI" and LolzenUIcfg["xpbar"] == true then
+	if addon == "LolzenUI" and LolzenUIcfg.modules["xpbar"] == true then
 
 		local title = ns["xpbar"]:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
 		title:SetPoint("TOPLEFT", ns["xpbar"], 16, -16)
@@ -28,7 +28,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		height:SetSize(30, 20)
 		height:SetAutoFocus(false)
 		height:ClearFocus()
-		height:SetNumber(LolzenUIcfg["xpbar_height"])
+		height:SetNumber(LolzenUIcfg.xpbar["xpbar_height"])
 		height:SetCursorPosition(0)
 
 		local width_text = ns["xpbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -40,7 +40,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		width:SetSize(40, 20)
 		width:SetAutoFocus(false)
 		width:ClearFocus()
-		width:SetNumber(LolzenUIcfg["xpbar_width"])
+		width:SetNumber(LolzenUIcfg.xpbar["xpbar_width"])
 		width:SetCursorPosition(0)
 
 		local alpha_text = ns["xpbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -52,7 +52,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		alpha:SetSize(30, 20)
 		alpha:SetAutoFocus(false)
 		alpha:ClearFocus()
-		alpha:SetText(LolzenUIcfg["xpbar_alpha"])
+		alpha:SetText(LolzenUIcfg.xpbar["xpbar_alpha"])
 		alpha:SetCursorPosition(0)
 
 		local bg_alpha_text = ns["xpbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -64,7 +64,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		bg_alpha:SetSize(30, 20)
 		bg_alpha:SetAutoFocus(false)
 		bg_alpha:ClearFocus()
-		bg_alpha:SetText(LolzenUIcfg["xpbar_bg_alpha"])
+		bg_alpha:SetText(LolzenUIcfg.xpbar["xpbar_bg_alpha"])
 		bg_alpha:SetCursorPosition(0)
 
 		local pos_x_text = ns["xpbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -76,7 +76,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		pos_x:SetSize(30, 20)
 		pos_x:SetAutoFocus(false)
 		pos_x:ClearFocus()
-		pos_x:SetNumber(LolzenUIcfg["xpbar_posx"])
+		pos_x:SetNumber(LolzenUIcfg.xpbar["xpbar_posx"])
 		pos_x:SetCursorPosition(0)
 
 		local pos_y_text = ns["xpbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -88,7 +88,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		pos_y:SetSize(30, 20)
 		pos_y:SetAutoFocus(false)
 		pos_y:ClearFocus()
-		pos_y:SetNumber(LolzenUIcfg["xpbar_posy"])
+		pos_y:SetNumber(LolzenUIcfg.xpbar["xpbar_posy"])
 		pos_y:SetCursorPosition(0)
 
 		local anchor_text = ns["xpbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -100,7 +100,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		anchor:SetSize(100, 20)
 		anchor:SetAutoFocus(false)
 		anchor:ClearFocus()
-		anchor:SetText(LolzenUIcfg["xpbar_anchor"])
+		anchor:SetText(LolzenUIcfg.xpbar["xpbar_anchor"])
 		anchor:SetCursorPosition(0)
 
 		local parent_text = ns["xpbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -112,7 +112,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		parent:SetSize(100, 20)
 		parent:SetAutoFocus(false)
 		parent:ClearFocus()
-		parent:SetText(LolzenUIcfg["xpbar_parent"])
+		parent:SetText(LolzenUIcfg.xpbar["xpbar_parent"])
 		parent:SetCursorPosition(0)
 
 		local texture_text = ns["xpbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -124,7 +124,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		texture:SetSize(100, 20)
 		texture:SetAutoFocus(false)
 		texture:ClearFocus()
-		texture:SetText(LolzenUIcfg["xpbar_texture"])
+		texture:SetText(LolzenUIcfg.xpbar["xpbar_texture"])
 		texture:SetCursorPosition(0)
 
 		local color_text = ns["xpbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -133,9 +133,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		local color = ns["xpbar"]:CreateTexture(nil, "ARTWORK")
 		color:SetSize(16, 16)
-		color:SetVertexColor(unpack(LolzenUIcfg["xpbar_xp_color"]))
+		color:SetVertexColor(unpack(LolzenUIcfg.xpbar["xpbar_xp_color"]))
 		color:SetPoint("LEFT", color_text, "RIGHT", 10, 0)
-		color:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg["xpbar_texture"])
+		color:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.xpbar["xpbar_texture"])
 
 		local function afbarSetNewColor()
 			r, g, b = ColorPickerFrame:GetColorRGB()
@@ -156,8 +156,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 			ColorPickerFrame.cancelFunc = nil
 			ColorPickerFrame.func = nil
 			-- and fill with the relevant ones
-			ColorPickerFrame.previousValues = LolzenUIcfg["xpbar_xp_color"]
-			ColorPickerFrame:SetColorRGB(unpack(LolzenUIcfg["xpbar_xp_color"]))
+			ColorPickerFrame.previousValues = LolzenUIcfg.xpbar["xpbar_xp_color"]
+			ColorPickerFrame:SetColorRGB(unpack(LolzenUIcfg.xpbar["xpbar_xp_color"]))
 			ColorPickerFrame.cancelFunc = restorePreviousColor
 			ColorPickerFrame.func = afbarSetNewColor
 			ColorPickerFrame:Show()
@@ -169,9 +169,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		local color2 = ns["xpbar"]:CreateTexture(nil, "ARTWORK")
 		color2:SetSize(16, 16)
-		color2:SetVertexColor(unpack(LolzenUIcfg["xpbar_xp_rested_color"]))
+		color2:SetVertexColor(unpack(LolzenUIcfg.xpbar["xpbar_xp_rested_color"]))
 		color2:SetPoint("LEFT", color_text2, "RIGHT", 10, 0)
-		color2:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg["xpbar_texture"])
+		color2:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.xpbar["xpbar_texture"])
 
 		local function afbarSetNewColor()
 			r, g, b = ColorPickerFrame:GetColorRGB()
@@ -192,8 +192,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 			ColorPickerFrame.cancelFunc = nil
 			ColorPickerFrame.func = nil
 			-- and fill with the relevant ones
-			ColorPickerFrame.previousValues = LolzenUIcfg["xpbar_xp_rested_color"]
-			ColorPickerFrame:SetColorRGB(unpack(LolzenUIcfg["xpbar_xp_rested_color"]))
+			ColorPickerFrame.previousValues = LolzenUIcfg.xpbar["xpbar_xp_rested_color"]
+			ColorPickerFrame:SetColorRGB(unpack(LolzenUIcfg.xpbar["xpbar_xp_rested_color"]))
 			ColorPickerFrame.cancelFunc = restorePreviousColor
 			ColorPickerFrame.func = afbarSetNewColor
 			ColorPickerFrame:Show()
@@ -205,9 +205,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		local color3 = ns["xpbar"]:CreateTexture(nil, "ARTWORK")
 		color3:SetSize(16, 16)
-		color3:SetVertexColor(unpack(LolzenUIcfg["xpbar_pvp_color"]))
+		color3:SetVertexColor(unpack(LolzenUIcfg.xpbar["xpbar_pvp_color"]))
 		color3:SetPoint("LEFT", color_text3, "RIGHT", 10, 0)
-		color3:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg["xpbar_texture"])
+		color3:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.xpbar["xpbar_texture"])
 
 		local function afbarSetNewColor()
 			r, g, b = ColorPickerFrame:GetColorRGB()
@@ -228,8 +228,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 			ColorPickerFrame.cancelFunc = nil
 			ColorPickerFrame.func = nil
 			-- and fill with the relevant ones
-			ColorPickerFrame.previousValues = LolzenUIcfg["xpbar_pvp_color"]
-			ColorPickerFrame:SetColorRGB(unpack(LolzenUIcfg["xpbar_pvp_color"]))
+			ColorPickerFrame.previousValues = LolzenUIcfg.xpbar["xpbar_pvp_color"]
+			ColorPickerFrame:SetColorRGB(unpack(LolzenUIcfg.xpbar["xpbar_pvp_color"]))
 			ColorPickerFrame.cancelFunc = restorePreviousColor
 			ColorPickerFrame.func = afbarSetNewColor
 			ColorPickerFrame:Show()
@@ -241,9 +241,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		local color4 = ns["xpbar"]:CreateTexture(nil, "ARTWORK")
 		color4:SetSize(16, 16)
-		color4:SetVertexColor(unpack(LolzenUIcfg["xpbar_paragon_color"]))
+		color4:SetVertexColor(unpack(LolzenUIcfg.xpbar["xpbar_paragon_color"]))
 		color4:SetPoint("LEFT", color_text4, "RIGHT", 10, 0)
-		color4:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg["xpbar_texture"])
+		color4:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.xpbar["xpbar_texture"])
 
 		local function afbarSetNewColor()
 			r, g, b = ColorPickerFrame:GetColorRGB()
@@ -264,8 +264,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 			ColorPickerFrame.cancelFunc = nil
 			ColorPickerFrame.func = nil
 			-- and fill with the relevant ones
-			ColorPickerFrame.previousValues = LolzenUIcfg["xpbar_paragon_color"]
-			ColorPickerFrame:SetColorRGB(unpack(LolzenUIcfg["xpbar_paragon_color"]))
+			ColorPickerFrame.previousValues = LolzenUIcfg.xpbar["xpbar_paragon_color"]
+			ColorPickerFrame:SetColorRGB(unpack(LolzenUIcfg.xpbar["xpbar_paragon_color"]))
 			ColorPickerFrame.cancelFunc = restorePreviousColor
 			ColorPickerFrame.func = afbarSetNewColor
 			ColorPickerFrame:Show()
@@ -275,7 +275,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		cb1:SetPoint("TOPLEFT", color_text, "BOTTOMLEFT", 0, -8)
 		pxborder_xpText:SetText("|cff5599ffdraw a 1px border around the xpbar|r")
 
-		if LolzenUIcfg["xpbar_1px_border"] == true then
+		if LolzenUIcfg.xpbar["xpbar_1px_border"] == true then
 			cb1:SetChecked(true)
 		else
 			cb1:SetChecked(false)
@@ -299,7 +299,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			cb2:Disable()
 			pxborder_round_xpText:SetText("|cff555555rounded 1px border|r |cffff5555enable 1px border for this option|r")
 		else
-			if LolzenUIcfg["xpbar_1px_border_round"] == true then
+			if LolzenUIcfg.xpbar["xpbar_1px_border_round"] == true then
 				cb2:SetChecked(true)
 			else
 				cb2:SetChecked(false)
@@ -315,7 +315,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		font:SetSize(200, 20)
 		font:SetAutoFocus(false)
 		font:ClearFocus()
-		font:SetText(LolzenUIcfg["xpbar_font"])
+		font:SetText(LolzenUIcfg.xpbar["xpbar_font"])
 		font:SetCursorPosition(0)
 
 		local font_size_text = ns["xpbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -327,7 +327,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		font_size:SetSize(30, 20)
 		font_size:SetAutoFocus(false)
 		font_size:ClearFocus()
-		font_size:SetNumber(LolzenUIcfg["xpbar_font_size"])
+		font_size:SetNumber(LolzenUIcfg.xpbar["xpbar_font_size"])
 		font_size:SetCursorPosition(0)
 
 		local font_flag_text = ns["xpbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -339,7 +339,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		font_flag:SetSize(100, 20)
 		font_flag:SetAutoFocus(false)
 		font_flag:ClearFocus()
-		font_flag:SetText(LolzenUIcfg["xpbar_font_flag"])
+		font_flag:SetText(LolzenUIcfg.xpbar["xpbar_font_flag"])
 		font_flag:SetCursorPosition(0)
 
 		local font_color_text = ns["xpbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -348,9 +348,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		local text_color = ns["xpbar"]:CreateTexture(nil, "ARTWORK")
 		text_color:SetSize(16, 16)
-		text_color:SetVertexColor(unpack(LolzenUIcfg["xpbar_font_color"]))
+		text_color:SetVertexColor(unpack(LolzenUIcfg.xpbar["xpbar_font_color"]))
 		text_color:SetPoint("LEFT", font_color_text, "RIGHT", 10, 0)
-		text_color:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg["xpbar_texture"])
+		text_color:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.xpbar["xpbar_texture"])
 
 		local function afbarTextSetNewColor()
 			r, g, b = ColorPickerFrame:GetColorRGB()
@@ -371,8 +371,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 			ColorPickerFrame.cancelFunc = nil
 			ColorPickerFrame.func = nil
 			-- and fill with the relevant ones
-			ColorPickerFrame.previousValues = LolzenUIcfg["xpbar_font_color"]
-			ColorPickerFrame:SetColorRGB(unpack(LolzenUIcfg["xpbar_font_color"]))
+			ColorPickerFrame.previousValues = LolzenUIcfg.xpbar["xpbar_font_color"]
+			ColorPickerFrame:SetColorRGB(unpack(LolzenUIcfg.xpbar["xpbar_font_color"]))
 			ColorPickerFrame.cancelFunc = restoreTextPreviousColor
 			ColorPickerFrame.func = afbarTextSetNewColor
 			ColorPickerFrame:Show()
@@ -387,7 +387,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		text_pos_x:SetSize(30, 20)
 		text_pos_x:SetAutoFocus(false)
 		text_pos_x:ClearFocus()
-		text_pos_x:SetNumber(LolzenUIcfg["xpbar_text_posx"])
+		text_pos_x:SetNumber(LolzenUIcfg.xpbar["xpbar_text_posx"])
 		text_pos_x:SetCursorPosition(0)
 
 		local text_pos_y_text = ns["xpbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -399,7 +399,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		text_pos_y:SetSize(30, 20)
 		text_pos_y:SetAutoFocus(false)
 		text_pos_y:ClearFocus()
-		text_pos_y:SetNumber(LolzenUIcfg["xpbar_text_posy"])
+		text_pos_y:SetNumber(LolzenUIcfg.xpbar["xpbar_text_posy"])
 		text_pos_y:SetCursorPosition(0)
 
 		local text_anchor_text = ns["xpbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -411,7 +411,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		text_anchor:SetSize(100, 20)
 		text_anchor:SetAutoFocus(false)
 		text_anchor:ClearFocus()
-		text_anchor:SetText(LolzenUIcfg["xpbar_text_anchor1"])
+		text_anchor:SetText(LolzenUIcfg.xpbar["xpbar_text_anchor1"])
 		text_anchor:SetCursorPosition(0)
 
 		local text_anchor2_text = ns["xpbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -423,67 +423,67 @@ f:SetScript("OnEvent", function(self, event, addon)
 		text_anchor2:SetSize(100, 20)
 		text_anchor2:SetAutoFocus(false)
 		text_anchor2:ClearFocus()
-		text_anchor2:SetText(LolzenUIcfg["xpbar_text_anchor2"])
+		text_anchor2:SetText(LolzenUIcfg.xpbar["xpbar_text_anchor2"])
 		text_anchor2:SetCursorPosition(0)
 
 		ns["xpbar"].okay = function(self)
-			LolzenUIcfg["xpbar_height"] = tonumber(height:GetText())
-			LolzenUIcfg["xpbar_width"] = tonumber(width:GetText())
-			LolzenUIcfg["xpbar_anchor"] = anchor:GetText()
-			LolzenUIcfg["xpbar_parent"] = parent:GetText()
-			LolzenUIcfg["xpbar_posx"] = tonumber(pos_x:GetText())
-			LolzenUIcfg["xpbar_posy"] = tonumber(pos_y:GetText())
-			LolzenUIcfg["xpbar_texture"] = texture:GetText()
-			LolzenUIcfg["xpbar_alpha"] = tonumber(alpha:GetText())
-			LolzenUIcfg["xpbar_bg_alpha"] = tonumber(bg_alpha:GetText())
-			LolzenUIcfg["xpbar_xp_color"] = {color:GetVertexColor()}
-			LolzenUIcfg["xpbar_xp_restedcolor"] = {color2:GetVertexColor()}
-			LolzenUIcfg["xpbar_pvp_color"] = {color3:GetVertexColor()}
-			LolzenUIcfg["xpbar_paragon_color"] = {color4:GetVertexColor()}
+			LolzenUIcfg.xpbar["xpbar_height"] = tonumber(height:GetText())
+			LolzenUIcfg.xpbar["xpbar_width"] = tonumber(width:GetText())
+			LolzenUIcfg.xpbar["xpbar_anchor"] = anchor:GetText()
+			LolzenUIcfg.xpbar["xpbar_parent"] = parent:GetText()
+			LolzenUIcfg.xpbar["xpbar_posx"] = tonumber(pos_x:GetText())
+			LolzenUIcfg.xpbar["xpbar_posy"] = tonumber(pos_y:GetText())
+			LolzenUIcfg.xpbar["xpbar_texture"] = texture:GetText()
+			LolzenUIcfg.xpbar["xpbar_alpha"] = tonumber(alpha:GetText())
+			LolzenUIcfg.xpbar["xpbar_bg_alpha"] = tonumber(bg_alpha:GetText())
+			LolzenUIcfg.xpbar["xpbar_xp_color"] = {color:GetVertexColor()}
+			LolzenUIcfg.xpbar["xpbar_xp_restedcolor"] = {color2:GetVertexColor()}
+			LolzenUIcfg.xpbar["xpbar_pvp_color"] = {color3:GetVertexColor()}
+			LolzenUIcfg.xpbar["xpbar_paragon_color"] = {color4:GetVertexColor()}
 			if cb1:GetChecked(true) then
-				LolzenUIcfg["xpbar_1px_border"] = true
+				LolzenUIcfg.xpbar["xpbar_1px_border"] = true
 			else
-				LolzenUIcfg["xpbar_1px_border"] = false
+				LolzenUIcfg.xpbar["xpbar_1px_border"] = false
 			end
 			if cb2:GetChecked(true) then
-				LolzenUIcfg["xpbar_1px_border_round"] = true
+				LolzenUIcfg.xpbar["xpbar_1px_border_round"] = true
 			else
-				LolzenUIcfg["xpbar_1px_border_round"] = false
+				LolzenUIcfg.xpbar["xpbar_1px_border_round"] = false
 			end
-			LolzenUIcfg["xpbar_font"] = font:GetText()
-			LolzenUIcfg["xpbar_font_size"] = tonumber(font_size:GetText())
-			LolzenUIcfg["xpbar_font_flag"] = font_flag:GetText()
-			LolzenUIcfg["xpbar_font_color"] = {text_color:GetVertexColor()}
-			LolzenUIcfg["xpbar_text_posx"] = tonumber(text_pos_x:GetText())
-			LolzenUIcfg["xpbar_text_posy"] = tonumber(text_pos_y:GetText())
-			LolzenUIcfg["xpbar_text_anchor1"] = text_anchor:GetText()
-			LolzenUIcfg["xpbar_text_anchor2"] = text_anchor2:GetText()
+			LolzenUIcfg.xpbar["xpbar_font"] = font:GetText()
+			LolzenUIcfg.xpbar["xpbar_font_size"] = tonumber(font_size:GetText())
+			LolzenUIcfg.xpbar["xpbar_font_flag"] = font_flag:GetText()
+			LolzenUIcfg.xpbar["xpbar_font_color"] = {text_color:GetVertexColor()}
+			LolzenUIcfg.xpbar["xpbar_text_posx"] = tonumber(text_pos_x:GetText())
+			LolzenUIcfg.xpbar["xpbar_text_posy"] = tonumber(text_pos_y:GetText())
+			LolzenUIcfg.xpbar["xpbar_text_anchor1"] = text_anchor:GetText()
+			LolzenUIcfg.xpbar["xpbar_text_anchor2"] = text_anchor2:GetText()
 		end
 
 		ns["xpbar"].default = function(self)
-			LolzenUIcfg["xpbar_height"] = 4
-			LolzenUIcfg["xpbar_width"] = 378
-			LolzenUIcfg["xpbar_anchor"] = "BOTTOM"
-			LolzenUIcfg["xpbar_parent"] = "UIParent"
-			LolzenUIcfg["xpbar_posx"] = 0
-			LolzenUIcfg["xpbar_posy"] = 5
-			LolzenUIcfg["xpbar_texture"] = "statusbar"
-			LolzenUIcfg["xpbar_alpha"] = 0.4
-			LolzenUIcfg["xpbar_bg_alpha"] = 0.5
-			LolzenUIcfg["xpbar_xp_color"] = {0.6, 0, 0.6}
-			LolzenUIcfg["xpbar_xp_restedcolor"] = {46/255, 103/255, 208/255}
-			LolzenUIcfg["xpbar_pvp_color"] = {1, 0.4, 0}
-			LolzenUIcfg["xpbar_paragon_color"] = {0, 187/255, 255/255}
-			LolzenUIcfg["xpbar_1px_border"] = true
-			LolzenUIcfg["xpbar_1px_border_round"] = true
-			LolzenUIcfg["xpbar_font"] = "DroidSansBold.ttf"
-			LolzenUIcfg["xpbar_font_size"] = 10
-			LolzenUIcfg["xpbar_font_flag"] = "THINOUTLINE"
-			LolzenUIcfg["xpbar_font_color"] = {1, 1, 1}
-			LolzenUIcfg["xpbar_text_posx"] = 0
-			LolzenUIcfg["xpbar_text_posy"] = -2
-			LolzenUIcfg["xpbar_text_anchor1"] = "BOTTOM"
-			LolzenUIcfg["xpbar_text_anchor2"] = "TOP"
+			LolzenUIcfg.xpbar["xpbar_height"] = 4
+			LolzenUIcfg.xpbar["xpbar_width"] = 378
+			LolzenUIcfg.xpbar["xpbar_anchor"] = "BOTTOM"
+			LolzenUIcfg.xpbar["xpbar_parent"] = "UIParent"
+			LolzenUIcfg.xpbar["xpbar_posx"] = 0
+			LolzenUIcfg.xpbar["xpbar_posy"] = 5
+			LolzenUIcfg.xpbar["xpbar_texture"] = "statusbar"
+			LolzenUIcfg.xpbar["xpbar_alpha"] = 0.4
+			LolzenUIcfg.xpbar["xpbar_bg_alpha"] = 0.5
+			LolzenUIcfg.xpbar["xpbar_xp_color"] = {0.6, 0, 0.6}
+			LolzenUIcfg.xpbar["xpbar_xp_restedcolor"] = {46/255, 103/255, 208/255}
+			LolzenUIcfg.xpbar["xpbar_pvp_color"] = {1, 0.4, 0}
+			LolzenUIcfg.xpbar["xpbar_paragon_color"] = {0, 187/255, 255/255}
+			LolzenUIcfg.xpbar["xpbar_1px_border"] = true
+			LolzenUIcfg.xpbar["xpbar_1px_border_round"] = true
+			LolzenUIcfg.xpbar["xpbar_font"] = "DroidSansBold.ttf"
+			LolzenUIcfg.xpbar["xpbar_font_size"] = 10
+			LolzenUIcfg.xpbar["xpbar_font_flag"] = "THINOUTLINE"
+			LolzenUIcfg.xpbar["xpbar_font_color"] = {1, 1, 1}
+			LolzenUIcfg.xpbar["xpbar_text_posx"] = 0
+			LolzenUIcfg.xpbar["xpbar_text_posy"] = -2
+			LolzenUIcfg.xpbar["xpbar_text_anchor1"] = "BOTTOM"
+			LolzenUIcfg.xpbar["xpbar_text_anchor2"] = "TOP"
 			ReloadUI()
 		end
 	end

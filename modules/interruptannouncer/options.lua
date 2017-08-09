@@ -9,7 +9,7 @@ end
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)
-	if addon == "LolzenUI" and LolzenUIcfg["interruptannouncer"] == true then
+	if addon == "LolzenUI" and LolzenUIcfg.modules["interruptannouncer"] == true then
 
 		local title = ns["interruptannouncer"]:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
 		title:SetPoint("TOPLEFT", ns["interruptannouncer"], 16, -16)
@@ -23,7 +23,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		cb1:SetPoint("TOPLEFT", about, "BOTTOMLEFT", 0, -20)
 		instanceannounceText:SetText("|cff5599ffannounce interrupts in instance chat|r")
 
-		if LolzenUIcfg["interruptannoucer_instance"] == true then
+		if LolzenUIcfg.interruptannouncer["interruptannoucer_instance"] == true then
 			cb1:SetChecked(true)
 		else
 			cb1:SetChecked(false)
@@ -33,7 +33,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		cb2:SetPoint("TOPLEFT", cb1, "BOTTOMLEFT", 0, 0)
 		partyannounceText:SetText("|cff5599ffannounce interrupts in party chat|r")
 
-		if LolzenUIcfg["interruptannoucer_party"] == true then
+		if LolzenUIcfg.interruptannouncer["interruptannoucer_party"] == true then
 			cb2:SetChecked(true)
 		else
 			cb2:SetChecked(false)
@@ -43,7 +43,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		cb3:SetPoint("TOPLEFT", cb2, "BOTTOMLEFT", 0, 0)
 		sayannounceText:SetText("|cff5599ffannounce interrupts in say chat|r")
 
-		if LolzenUIcfg["interruptannoucer_say"] == true then
+		if LolzenUIcfg.interruptannouncer["interruptannoucer_say"] == true then
 			cb3:SetChecked(true)
 		else
 			cb3:SetChecked(false)
@@ -58,7 +58,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		msg:SetSize(400, 20)
 		msg:SetAutoFocus(false)
 		msg:ClearFocus()
-		msg:SetText(LolzenUIcfg["interruptannouncer_msg"])
+		msg:SetText(LolzenUIcfg.interruptannouncer["interruptannouncer_msg"])
 		msg:SetCursorPosition(0)
 		
 		local msg_desc = ns["interruptannouncer"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -67,28 +67,28 @@ f:SetScript("OnEvent", function(self, event, addon)
 		
 		ns["interruptannouncer"].okay = function(self)
 			if cb1:GetChecked(true) then
-				LolzenUIcfg["interruptannoucer_instance"] = true
+				LolzenUIcfg.interruptannouncer["interruptannoucer_instance"] = true
 			else
-				LolzenUIcfg["interruptannoucer_instance"] = false
+				LolzenUIcfg.interruptannouncer["interruptannoucer_instance"] = false
 			end
 			if cb2:GetChecked(true) then
-				LolzenUIcfg["interruptannoucer_party"] = true
+				LolzenUIcfg.interruptannouncer["interruptannoucer_party"] = true
 			else
-				LolzenUIcfg["interruptannoucer_party"] = false
+				LolzenUIcfg.interruptannouncer["interruptannoucer_party"] = false
 			end
 			if cb3:GetChecked(true) then
-				LolzenUIcfg["interruptannoucer_say"] = true
+				LolzenUIcfg.interruptannouncer["interruptannoucer_say"] = true
 			else
-				LolzenUIcfg["interruptannoucer_say"] = false
+				LolzenUIcfg.interruptannouncer["interruptannoucer_say"] = false
 			end
-			LolzenUIcfg["interruptannouncer_msg"] = msg:GetText()
+			LolzenUIcfg.interruptannouncer["interruptannouncer_msg"] = msg:GetText()
 		end
 
 		ns["interruptannouncer"].default = function(self)
-			LolzenUIcfg["interruptannoucer_instance"] = true
-			LolzenUIcfg["interruptannoucer_party"] = true
-			LolzenUIcfg["interruptannoucer_say"] = true
-			LolzenUIcfg["interruptannouncer_msg"] = "Unterbrochen: !spell von >>!name<<"
+			LolzenUIcfg.interruptannouncer["interruptannoucer_instance"] = true
+			LolzenUIcfg.interruptannouncer["interruptannoucer_party"] = true
+			LolzenUIcfg.interruptannouncer["interruptannoucer_say"] = true
+			LolzenUIcfg.interruptannouncer["interruptannouncer_msg"] = "Unterbrochen: !spell von >>!name<<"
 			ReloadUI()
 		end
 	end

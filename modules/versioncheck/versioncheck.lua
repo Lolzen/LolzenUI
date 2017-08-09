@@ -6,7 +6,7 @@ local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)
 	if addon == "LolzenUI" then
-		if LolzenUIcfg["versioncheck"] == false then return end
+		if LolzenUIcfg.modules["versioncheck"] == false then return end
 
 		local version, build, date, tocversion = GetBuildInfo()
 		local addonversion = GetAddOnMetadata(addon, "Version")

@@ -9,7 +9,7 @@ end
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)
-	if addon == "LolzenUI" and LolzenUIcfg["objectivetracker"] == true then
+	if addon == "LolzenUI" and LolzenUIcfg.modules["objectivetracker"] == true then
 
 		local title = ns["objectivetracker"]:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
 		title:SetPoint("TOPLEFT", ns["objectivetracker"], 16, -16)
@@ -23,7 +23,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		cb1:SetPoint("TOPLEFT", about, "BOTTOMLEFT", 0, -20)
 		combatcollapseText:SetText("|cff5599ffcombat auto collapse|r")
 
-		if LolzenUIcfg["objectivetracker_combatcollapse"] == true then
+		if LolzenUIcfg.objectivetracker["objectivetracker_combatcollapse"] == true then
 			cb1:SetChecked(true)
 		else
 			cb1:SetChecked(false)
@@ -37,7 +37,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		cb2:SetPoint("TOPLEFT", cb1_desc, "BOTTOMLEFT", 0, -8)
 		logincollapseText:SetText("|cff5599ffauto login collapse|r")
 
-		if LolzenUIcfg["objectivetracker_logincollapse"] == true then
+		if LolzenUIcfg.objectivetracker["objectivetracker_logincollapse"] == true then
 			cb2:SetChecked(true)
 		else
 			cb2:SetChecked(false)
@@ -56,7 +56,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		pos_x:SetSize(30, 20)
 		pos_x:SetAutoFocus(false)
 		pos_x:ClearFocus()
-		pos_x:SetNumber(LolzenUIcfg["objectivetracker_posx"])
+		pos_x:SetNumber(LolzenUIcfg.objectivetracker["objectivetracker_posx"])
 		pos_x:SetCursorPosition(0)
 
 		local pos_y_text = ns["objectivetracker"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -68,7 +68,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		pos_y:SetSize(30, 20)
 		pos_y:SetAutoFocus(false)
 		pos_y:ClearFocus()
-		pos_y:SetNumber(LolzenUIcfg["objectivetracker_posy"])
+		pos_y:SetNumber(LolzenUIcfg.objectivetracker["objectivetracker_posy"])
 		pos_y:SetCursorPosition(0)
 
 		local anchor_text = ns["objectivetracker"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -80,37 +80,37 @@ f:SetScript("OnEvent", function(self, event, addon)
 		anchor_point:SetSize(100, 20)
 		anchor_point:SetAutoFocus(false)
 		anchor_point:ClearFocus()
-		anchor_point:SetText(LolzenUIcfg["objectivetracker_anchor"])
+		anchor_point:SetText(LolzenUIcfg.objectivetracker["objectivetracker_anchor"])
 		anchor_point:SetCursorPosition(0)
 
 		local pos_desc = ns["objectivetracker"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 		pos_desc:SetPoint("TOPLEFT", pos_x_text, "BOTTOMLEFT", 0, -8)
-		pos_desc:SetText("|cffffffffThe startingpoint is the anchor set ("..LolzenUIcfg["objectivetracker_anchor"].." 0/0)")
+		pos_desc:SetText("|cffffffffThe startingpoint is the anchor set ("..LolzenUIcfg.objectivetracker["objectivetracker_anchor"].." 0/0)")
 
 		ns["objectivetracker"].okay = function(self)
 			if cb1:GetChecked(true) then
-				LolzenUIcfg["objectivetracker_combatcollapse"] = true
+				LolzenUIcfg.objectivetracker["objectivetracker_combatcollapse"] = true
 			else
-				LolzenUIcfg["objectivetracker_combatcollapse"] = false
+				LolzenUIcfg.objectivetracker["objectivetracker_combatcollapse"] = false
 			end
 			if cb2:GetChecked(true) then
-				LolzenUIcfg["objectivetracker_logincollapse"] = true
+				LolzenUIcfg.objectivetracker["objectivetracker_logincollapse"] = true
 			else
-				LolzenUIcfg["objectivetracker_logincollapse"] = false
+				LolzenUIcfg.objectivetracker["objectivetracker_logincollapse"] = false
 			end
-			LolzenUIcfg["objectivetracker_posx"] = tonumber(pos_x:GetText())
-			LolzenUIcfg["objectivetracker_posy"] = tonumber(pos_y:GetText())
-			LolzenUIcfg["objectivetracker_anchor"] = anchor_point:GetText()
-			LolzenUIcfg["objectivetracker_scale"] = tonumber(anchor_point:GetText())
+			LolzenUIcfg.objectivetracker["objectivetracker_posx"] = tonumber(pos_x:GetText())
+			LolzenUIcfg.objectivetracker["objectivetracker_posy"] = tonumber(pos_y:GetText())
+			LolzenUIcfg.objectivetracker["objectivetracker_anchor"] = anchor_point:GetText()
+			LolzenUIcfg.objectivetracker["objectivetracker_scale"] = tonumber(anchor_point:GetText())
 		end
 
 		ns["objectivetracker"].default = function(self)
-			LolzenUIcfg["objectivetracker_combatcollapse"] = true
-			LolzenUIcfg["objectivetracker_logincollapse"] = true
-			LolzenUIcfg["objectivetracker_posx"] = 30
-			LolzenUIcfg["objectivetracker_posy"] = -30
-			LolzenUIcfg["objectivetracker_anchor"] = "TOPLEFT"
-			LolzenUIcfg["objectivetracker_scale"] = 1
+			LolzenUIcfg.objectivetracker["objectivetracker_combatcollapse"] = true
+			LolzenUIcfg.objectivetracker["objectivetracker_logincollapse"] = true
+			LolzenUIcfg.objectivetracker["objectivetracker_posx"] = 30
+			LolzenUIcfg.objectivetracker["objectivetracker_posy"] = -30
+			LolzenUIcfg.objectivetracker["objectivetracker_anchor"] = "TOPLEFT"
+			LolzenUIcfg.objectivetracker["objectivetracker_scale"] = 1
 			ReloadUI()
 		end
 	end

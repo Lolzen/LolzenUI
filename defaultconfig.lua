@@ -2,7 +2,9 @@
 
 local addon, ns = ...
 
-local defaultconfig = {
+local defaultconfig = {}
+
+defaultconfig.modules = {
 	["actionbars"] = true,
 	["artifactbar"] = true,
 	["buffs"] = true,
@@ -23,8 +25,9 @@ local defaultconfig = {
 	["versioncheck"] = true,
 	["worldmap"] = true,
 	["xpbar"] = true,
-	-- // panel variables //
-	-- [actionbar]
+}
+
+defaultconfig.actionbar = {
 	["actionbar_button_spacing"] = 6,
 	["actionbar_button_size"] = 26,
 	["actionbar_normal_texture"] = "gloss",
@@ -74,7 +77,9 @@ local defaultconfig = {
 	["actionbar_pb_anchor2"] = "TOPLEFT",
 	["actionbar_pb_posx"] = 25,
 	["actionbar_pb_posy"] = 30,
-	-- [artifactbar]
+}
+
+defaultconfig.artifactbar = {
 	["artifactbar_height"] = 4,
 	["artifactbar_width"] = 378,
 	["artifactbar_anchor"] = "BOTTOM",
@@ -95,7 +100,9 @@ local defaultconfig = {
 	["artifactbar_text_anchor2"] = "TOP",
 	["artifactbar_text_posx"] = 0,
 	["artifactbar_text_posy"] = -2,
-	-- [buffs]
+}
+
+defaultconfig.buffs = {
 	["buff_size"] = 30,
 --	["buff_spacing_horizontal"] = -3,
 --	["buff_spacing_vertical"] = 0,
@@ -126,31 +133,74 @@ local defaultconfig = {
 	["buff_counter_font_flag"] = "OUTLINE",
 	["buff_aura_texture"] = "auraborder",
 	["buff_debuff_texture"] = "debuffborder",
-	-- [buffwatcher]
+}
+
+defaultconfig.buffwatcher ={
 	["buffwatchlist"] = {},
 	["buffwatch_pos_x"] = -250,
 	["buffwatch_pos_y"] = -140,
 	["buffwatch_icon_size"] = 52,
 	["buffwatch_icon_spacing"] = 5,
-	-- [fonts]
+}
+
+defaultconfig.chat = {
+
+}
+
+defaultconfig.clock = {
+
+}
+
+defaultconfig.fonts = {
 	["fonts_DAMAGE_TEXT_FONT"] = "DroidSansBold.ttf",
 	["fonts_UNIT_NAME_FONT"] = "DroidSans.ttf",
 	["fonts_NAMEPLATE_FONT"] = "DroidSans.ttf",
 	["fonts_STANDARD_TEXT_FONT"] = "DroidSans.ttf",
-	-- [interruptannouncer]
+}
+
+defaultconfig.inspect = {
+
+}
+
+defaultconfig.interruptannouncer = {
 	["interruptannoucer_say"] = true,
 	["interruptannoucer_party"] = true,
 	["interruptannoucer_instance"] = true,
 	["interruptannouncer_msg"] = "Unterbrochen: !spell von >>!name<<",
-	-- [minimap]
+}
+
+defaultconfig.minimap = {
 	["minimap_square"] = true,
-	-- [objectivetracker]
+}
+
+defaultconfig.objectivetracker = {
 	["objectivetracker_anchor"] = "TOPLEFT",
 	["objectivetracker_posx"] = 30,
 	["objectivetracker_posy"] = -30,
 	["objectivetracker_combatcollapse"] = true,
 	["objectivetracker_logincollapse"] = true,
-	-- [pullcount]
+}
+
+defaultconfig.orderhallbar = {
+	["objectivetracker_anchor"] = "TOPLEFT",
+	["objectivetracker_posx"] = 30,
+	["objectivetracker_posy"] = -30,
+	["objectivetracker_combatcollapse"] = true,
+	["objectivetracker_logincollapse"] = true,
+	-- [orderhallbar]
+	["ohb_currencies"] = {},
+	["ohb_currency_icon_size"] = 18,
+	["ohb_currency_font"] = "DroidSansBold.ttf",
+	["ohb_currency_font_size"] = 12,
+	["ohb_currency_font_flag"] = "OUTLINE",
+	["ohb_zone_color"] = {51/255, 181/255, 229/225},
+	["ohb_background"] = "statusbar",
+	["ohb_background_color"] = {0, 0, 0},
+--	["ohb_background_alpha"] = 0.5,
+	["ohb_always_show"] = true,
+}
+
+defaultconfig.pullcount = {
 	["pull_count_range"] = 3,
 	["pull_msg_count"] = "Pull in !n",
 	["pull_msg_now"] = ">> Pull Now <<",
@@ -170,9 +220,13 @@ local defaultconfig = {
 	["pull_filter_instance"] = true,
 	["pull_filter_say"] = false,
 	["pull_filter_channel"] = true,
-	-- [worlmap]
+}
+
+defaultconfig.worldmap = {
 	["worldmap_scale"] = 1,
-	-- [xpbar]
+}
+
+defaultconfig.xpbar = {
 	["xpbar_height"] = 4,
 	["xpbar_width"] = 378,
 	["xpbar_anchor"] = "BOTTOM",
@@ -209,25 +263,32 @@ f:SetScript("OnEvent", function(self, event, addon)
 		else
 			-- if new variables are discovered, write them into the saved vars db
 			for k, v in pairs(defaultconfig) do
-				-- don't try to write saved vars for disabled modules
-				if LolzenUIcfg[k] == false then return end
+				--print(k)
 				if not LolzenUIcfg[k] then
-					if type(v) == "table" then
-						LolzenUIcfg[k] = {unpack(v)}
-						print("|cff5599ffLolzenUI:|r new default variable(|cffff8888"..k.." = "..unpack(v).."|r) written do db")
-					elseif type(v) == "boolean" then
-						local bool
-						if v == true then
-							bool = "true"
-							LolzenUIcfg[k] = true
-						else
-							bool = "false"
-							LolzenUIcfg[k] = false
+					LolzenUIcfg[k] = v
+					print("|cff5599ffLolzenUI:|r new default variables for (|cff88ff88"..k.." written do db")
+				else
+					for a, b in pairs(defaultconfig[k]) do
+						if not LolzenUIcfg[k][a] then
+							if type(b) == "table" then
+								LolzenUIcfg[k][a] = {unpack(b)}
+								print("|cff5599ffLolzenUI:|r new default variable in "..k.." (|cffff8888"..a.." = "..unpack(b).."|r) written do db")
+							elseif type(b) == "boolean" then
+								local bool
+								if b == true then
+									bool = "true"
+									LolzenUIcfg[k][a] = true
+								elseif b == false then
+									if LolzenUIcfg[k][a] == false then return end -- don't always write just because the boolean is set to false
+									bool = "false"
+									LolzenUIcfg[k][a] = false
+								end
+								print("|cff5599ffLolzenUI:|r new default variable in "..k.." (|cffff8888"..a.." = "..bool.."|r) written do db")
+							else
+								LolzenUIcfg[k][a] = b
+								print("|cff5599ffLolzenUI:|r new default variable in "..k.." (|cffff8888"..a.." = "..b.."|r) written do db")
+							end
 						end
-						print("|cff5599ffLolzenUI:|r new default variable(|cffff8888"..k.." = "..bool.."|r) written do db")
-					else
-						LolzenUIcfg[k] = v
-						print("|cff5599ffLolzenUI:|r new default variable(|cffff8888"..k.." = "..v.."|r) written do db")
 					end
 				end
 			end
