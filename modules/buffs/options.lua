@@ -18,7 +18,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		local about = ns["buffs"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 		about:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8)
 		about:SetText("Skins the buffs/debuffs along with a more detailed timer")
-		
+
 		local button = ns["buffs"]:CreateTexture(nil, "TEXTURE")
 		button:SetTexture(select(3, GetSpellInfo(546)))
 		button:SetSize(LolzenUIcfg.buffs["buff_size"], LolzenUIcfg.buffs["buff_size"])
@@ -30,7 +30,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		bufftex:SetPoint("TOPLEFT", button, "TOPLEFT", -2, 2)
 		bufftex:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 2, -2)
 		bufftex:SetVertexColor(0, 0, 0)
-		
+
 		local buttondur = ns["buffs"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 		buttondur:SetPoint(LolzenUIcfg.buffs["buff_duration_anchor1"], button, LolzenUIcfg.buffs["buff_duration_anchor2"], LolzenUIcfg.buffs["buff_duration_posx"], LolzenUIcfg.buffs["buff_duration_posy"])
 		buttondur:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\"..LolzenUIcfg.buffs["buff_duration_font"], LolzenUIcfg.buffs["buff_duration_font_size"], LolzenUIcfg.buffs["buff_duration_font_flag"])
@@ -40,13 +40,13 @@ f:SetScript("OnEvent", function(self, event, addon)
 			buttondur:SetText("|c2200ff2m|r")
 		end
 		buttondur:SetDrawLayer("OVERLAY")
-		
+
 		local buttoncount = ns["buffs"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 		buttoncount:SetPoint(LolzenUIcfg.buffs["buff_counter_anchor"], button, LolzenUIcfg.buffs["buff_counter_posx"], LolzenUIcfg.buffs["buff_counter_posy"])
 		buttoncount:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\"..LolzenUIcfg.buffs["buff_counter_font"], LolzenUIcfg.buffs["buff_counter_size"], LolzenUIcfg.buffs["buff_counter_font_flag"])
 		buttoncount:SetText("2")
 		buttoncount:SetDrawLayer("OVERLAY")
-		
+
 		local button2 = ns["buffs"]:CreateTexture(nil, "TEXTURE")
 		button2:SetTexture(select(3, GetSpellInfo(192423)))
 		button2:SetSize(LolzenUIcfg.buffs["buff_debuff_size"], LolzenUIcfg.buffs["buff_debuff_size"])
@@ -58,13 +58,13 @@ f:SetScript("OnEvent", function(self, event, addon)
 		debufftex:SetPoint("TOPLEFT", button2, "TOPLEFT", -2, 2)
 		debufftex:SetPoint("BOTTOMRIGHT", button2, "BOTTOMRIGHT", 2, -2)
 		debufftex:SetVertexColor(1, 0, 0)
-		
+
 --		local button3 = ns["buffs"]:CreateTexture(nil, "TEXTURE")
 --		button3:SetTexture(select(3, GetSpellInfo(53343)))
 --		button3:SetSize(LolzenUIcfg.buffs["buff_tempenchant_size"], LolzenUIcfg.buffs["buff_tempenchant_size"])
 --		button3:SetPoint("LEFT", button2, "RIGHT", 5, 0)
 --		button3:SetTexCoord(0.1, 0.9, 0.1, 0.9)
-		
+
 --		local tempenchtex = ns["buffs"]:CreateTexture(nil, "OVERLAY")
 --		tempenchtex:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.buffs["buff_aura_texture"])
 --		tempenchtex:SetPoint("TOPLEFT", button3, "TOPLEFT", -2, 2)
@@ -74,11 +74,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 		local buffs_text = ns["buffs"]:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 		buffs_text:SetPoint("TOPLEFT", button, "BOTTOMLEFT", 0, -8)
 		buffs_text:SetText("|cff5599ffBuffs:|r")
-		
+
 		local buff_size_text = ns["buffs"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 		buff_size_text:SetPoint("TOPLEFT", buffs_text, "BOTTOMLEFT", 0, -10)
 		buff_size_text:SetText("Buff size:")
-		
+
 		local buff_size = CreateFrame("EditBox", nil, ns["buffs"], "InputBoxTemplate")
 		buff_size:SetPoint("LEFT", buff_size_text, "RIGHT", 10, 0)
 		buff_size:SetSize(30, 20)
@@ -86,11 +86,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 		buff_size:ClearFocus()
 		buff_size:SetNumber(LolzenUIcfg.buffs["buff_size"])
 		buff_size:SetCursorPosition(0)
-		
+
 		local debuff_size_text = ns["buffs"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 		debuff_size_text:SetPoint("LEFT", buff_size, "RIGHT", 5, 0)
 		debuff_size_text:SetText("Debuff size:")
-		
+
 		local debuff_size = CreateFrame("EditBox", nil, ns["buffs"], "InputBoxTemplate")
 		debuff_size:SetPoint("LEFT", debuff_size_text, "RIGHT", 10, 0)
 		debuff_size:SetSize(30, 20)
@@ -98,11 +98,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 		debuff_size:ClearFocus()
 		debuff_size:SetNumber(LolzenUIcfg.buffs["buff_debuff_size"])
 		debuff_size:SetCursorPosition(0)
-		
+
 		local tempenchant_size_text = ns["buffs"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 		tempenchant_size_text:SetPoint("LEFT", debuff_size, "RIGHT", 5, 0)
 		tempenchant_size_text:SetText("Tempenchant size:")
-		
+
 		local tempenchant_size = CreateFrame("EditBox", nil, ns["buffs"], "InputBoxTemplate")
 		tempenchant_size:SetPoint("LEFT", tempenchant_size_text, "RIGHT", 10, 0)
 		tempenchant_size:SetSize(30, 20)
@@ -170,7 +170,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		anchor2:ClearFocus()
 		anchor2:SetText(LolzenUIcfg.buffs["buff_anchor2"])
 		anchor2:SetCursorPosition(0)
-		
+
 		local bufftex_path_text = ns["buffs"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 		bufftex_path_text:SetPoint("TOPLEFT", pos_x_text, "BOTTOMLEFT", 0, -10)
 		bufftex_path_text:SetText("|cff5599ffbuff/tempenchant texture:|r Interface/AddOns/LolzenUI/media/")
@@ -182,7 +182,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		bufftex_path:ClearFocus()
 		bufftex_path:SetText(LolzenUIcfg.buffs["buff_aura_texture"])
 		bufftex_path:SetCursorPosition(0)
-		
+
 		local debufftex_path_text = ns["buffs"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 		debufftex_path_text:SetPoint("TOPLEFT", bufftex_path_text, "BOTTOMLEFT", 0, -10)
 		debufftex_path_text:SetText("|cff5599ffdebuff texture:|r Interface/AddOns/LolzenUI/media/")
@@ -246,7 +246,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		dur_anchor2:ClearFocus()
 		dur_anchor2:SetText(LolzenUIcfg.buffs["buff_duration_anchor2"])
 		dur_anchor2:SetCursorPosition(0)
-		
+
 		local dur_font_text = ns["buffs"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 		dur_font_text:SetPoint("TOPLEFT", dur_pos_x_text, "BOTTOMLEFT", 0, -10)
 		dur_font_text:SetText("|cff5599ffFont:|r Interface\\AddOns\\LolzenUI\\fonts\\")
@@ -258,11 +258,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 		dur_font:ClearFocus()
 		dur_font:SetText(LolzenUIcfg.buffs["buff_duration_font"])
 		dur_font:SetCursorPosition(0)
-		
+
 		local dur_font_size_text = ns["buffs"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 		dur_font_size_text:SetPoint("LEFT", dur_font, "RIGHT", 5, 0)
 		dur_font_size_text:SetText("Size:")
-		
+
 		local dur_font_size = CreateFrame("EditBox", nil, ns["buffs"], "InputBoxTemplate")
 		dur_font_size:SetPoint("LEFT", dur_font_size_text, "RIGHT", 10, 0)
 		dur_font_size:SetSize(30, 20)
@@ -270,11 +270,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 		dur_font_size:ClearFocus()
 		dur_font_size:SetNumber(LolzenUIcfg.buffs["buff_duration_font_size"])
 		dur_font_size:SetCursorPosition(0)
-		
+
 		local dur_font_flag_text = ns["buffs"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 		dur_font_flag_text:SetPoint("LEFT", dur_font_size, "RIGHT", 5, 0)
 		dur_font_flag_text:SetText("Flag:")
-		
+
 		local dur_font_flag = CreateFrame("EditBox", nil, ns["buffs"], "InputBoxTemplate")
 		dur_font_flag:SetPoint("LEFT", dur_font_flag_text, "RIGHT", 10, 0)
 		dur_font_flag:SetSize(100, 20)
@@ -282,11 +282,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 		dur_font_flag:ClearFocus()
 		dur_font_flag:SetText(LolzenUIcfg.buffs["buff_duration_font_flag"])
 		dur_font_flag:SetCursorPosition(0)
-		
+
 		local cb1 = CreateFrame("CheckButton", "detailedduration", ns["buffs"], "ChatConfigCheckButtonTemplate")
 		cb1:SetPoint("TOPLEFT", dur_font_text, "BOTTOMLEFT", 0, -8)
 		detaileddurationText:SetText("|cff5599ffmore detailed duration text (uses more cpu cycles)|r")
-		
+
 		local count_text = ns["buffs"]:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 		count_text:SetPoint("TOPLEFT", cb1, "BOTTOMLEFT", 0, -20)
 		count_text:SetText("|cff5599ffCounter text:|r")
@@ -338,7 +338,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 --		count_anchor2:ClearFocus()
 --		count_anchor2:SetText(LolzenUIcfg.buffs["buff_duration_anchor2"])
 --		count_anchor2:SetCursorPosition(0)
-		
+
 		local count_font_text = ns["buffs"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 		count_font_text:SetPoint("TOPLEFT", count_pos_x_text, "BOTTOMLEFT", 0, -10)
 		count_font_text:SetText("|cff5599ffFont:|r Interface\\AddOns\\LolzenUI\\fonts\\")
@@ -350,11 +350,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 		count_font:ClearFocus()
 		count_font:SetText(LolzenUIcfg.buffs["buff_counter_font"])
 		count_font:SetCursorPosition(0)
-		
+
 		local count_font_size_text = ns["buffs"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 		count_font_size_text:SetPoint("LEFT", count_font, "RIGHT", 5, 0)
 		count_font_size_text:SetText("Size:")
-		
+
 		local count_font_size = CreateFrame("EditBox", nil, ns["buffs"], "InputBoxTemplate")
 		count_font_size:SetPoint("LEFT", count_font_size_text, "RIGHT", 10, 0)
 		count_font_size:SetSize(30, 20)
@@ -362,11 +362,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 		count_font_size:ClearFocus()
 		count_font_size:SetNumber(LolzenUIcfg.buffs["buff_counter_size"])
 		count_font_size:SetCursorPosition(0)
-		
+
 		local count_font_flag_text = ns["buffs"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 		count_font_flag_text:SetPoint("LEFT", count_font_size, "RIGHT", 5, 0)
 		count_font_flag_text:SetText("Flag:")
-		
+
 		local count_font_flag = CreateFrame("EditBox", nil, ns["buffs"], "InputBoxTemplate")
 		count_font_flag:SetPoint("LEFT", count_font_flag_text, "RIGHT", 10, 0)
 		count_font_flag:SetSize(100, 20)
@@ -380,7 +380,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		else
 			cb1:SetChecked(false)
 		end
-		
+
 		ns["buffs"].okay = function(self)
 			LolzenUIcfg.buffs["buff_size"] = tonumber(buff_size:GetText())
 			LolzenUIcfg.buffs["buff_debuff_size"] = tonumber(debuff_size:GetText())
@@ -411,7 +411,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			LolzenUIcfg.buffs["buff_aura_texture"] = bufftex_path:GetText()
 			LolzenUIcfg.buffs["buff_debuff_texture"] = debufftex_path:GetText()
 		end
-		
+
 		ns["buffs"].default = function(self)
 			LolzenUIcfg.buffs["buff_size"] = 30
 			LolzenUIcfg.buffs["buff_debuff_size"] = 30

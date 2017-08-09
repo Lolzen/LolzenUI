@@ -63,7 +63,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				button.count:SetPoint(LolzenUIcfg.buffs["buff_counter_anchor"], button, LolzenUIcfg.buffs["buff_counter_posx"], LolzenUIcfg.buffs["buff_counter_posy"])
 				button.count:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\"..LolzenUIcfg.buffs["buff_counter_font"], LolzenUIcfg.buffs["buff_counter_size"], LolzenUIcfg.buffs["buff_counter_font_flag"])
 				button.count:SetDrawLayer("OVERLAY")
-				
+
 				button.modded = true
 			end
 		end
