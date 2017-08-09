@@ -148,7 +148,18 @@ defaultconfig.chat = {
 }
 
 defaultconfig.clock = {
-
+	["clock_color"] = {0.85, 0.55, 0},
+	["clock_seconds_color"] = {1, 1, 1},
+	["clock_font"] = "DroidSansBold.ttf",
+	["clock_font_seconds"] = "DroidSans.ttf",
+	["clock_font_size"] = 20,
+	["clock_seconds_font_size"] = 14,
+	["clock_font_flag"] = "OUTLINE",
+	["clock_seconds_font_flag"] = "THINOUTLINE",
+	["clock_anchor1"] = "TOPRIGHT",
+	["clock_anchor2"] = "TOPRIGHT",
+	["clock_posx"] = -5,
+	["clock_posy"] = -9,
 }
 
 defaultconfig.fonts = {
