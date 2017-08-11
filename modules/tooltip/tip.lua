@@ -91,15 +91,13 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 
 		-- return a questdifficulty inspired colored level
-		local function getColorizedLevel(unit)
-			local level = UnitLevel(unit)
-			if level ~= nil then
+		local function getColorizedLevel(unit, level)
+			--local level = UnitLevel(unit)
+			if level == nil or level == -1 then
+				return "|cffff0000??|r "
+			else
 				local diff = GetQuestDifficultyColor(level)
-				if not level or level == -1 then
-					return "|cffff0000??|r "
-				else
-					return ("|cff%02x%02x%02x%d|r"):format(diff.r*255, diff.g*255, diff.b*255, level)
-				end
+				return ("|cff%02x%02x%02x%d|r"):format(diff.r*255, diff.g*255, diff.b*255, level)
 			end
 		end
 
@@ -148,9 +146,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 
 		-- player tooltip modifications
-		local function modifyPlayerTooltip(unit)
+		local function modifyPlayerTooltip(unit, level)
 			-- display talents
-			if UnitLevel(unit) > 9 or UnitLevel(unit) ~= -1 then
+			if level > 9 then
 				if not InspectFrame or not InspectFrame:IsShown() then
 					if CheckInteractDistance(unit,1) and CanInspect(unit) then
 						GameTooltip:RegisterEvent("INSPECT_READY")
@@ -167,17 +165,17 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 			for i=1, GameTooltip:NumLines(), 1 do
 				if _G["GameTooltipTextLeft"..i]:GetText():find("^"..LEVEL) then
-					_G["GameTooltipTextLeft"..i]:SetText(getColorizedLevel(unit).." "..UnitRace(unit).." "..UnitClass(unit))
+					_G["GameTooltipTextLeft"..i]:SetText(getColorizedLevel(unit, level).." "..UnitRace(unit).." "..UnitClass(unit))
 				end
 			end
 		end
 
 		-- NPC/Pet tooltip modifications
-		local function modifyNPCTooltip(unit)
+		local function modifyNPCTooltip(unit, level)
 			local mobType = mobType[UnitClassification(unit)] or ""
 			for i=1, GameTooltip:NumLines(), 1 do
 				if _G["GameTooltipTextLeft"..i]:GetText():find("^"..LEVEL) then
-					_G["GameTooltipTextLeft"..i]:SetText(getColorizedLevel(unit).." "..mobType.." "..UnitCreatureType(unit) or "")
+					_G["GameTooltipTextLeft"..i]:SetText(getColorizedLevel(unit, level).." "..mobType.." "..UnitCreatureType(unit) or "")
 				end
 			end
 		end
@@ -210,17 +208,18 @@ f:SetScript("OnEvent", function(self, event, addon)
 		-- general tooltip modifications
 		local function modifyTooltip(self)
 			local unit = getUnit()
+			local level = UnitLevel(unit)
 			local unitType = select(1, strsplit("-", UnitGUID(unit)))
 
 			-- colorize TooltipBorder accordinglly to classColor or UnitReaction
 			if unitType == "Player" then
 				self:SetBackdropBorderColor(getClassColor(unit))
 				--call player modifications function
-				modifyPlayerTooltip(unit)
+				modifyPlayerTooltip(unit, level)
 			elseif unitType == "Creature" or unitType == "Pet" then
 				self:SetBackdropBorderColor(getReactionColor(unit))
 				--call NPC modification function
-				modifyNPCTooltip(unit)
+				modifyNPCTooltip(unit, level)
 			end
 
 			-- black background color
