@@ -195,7 +195,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		-- function which can be called to show/hide the unit's target
 		local function showUT(unit)
-			if UnitExists(unit.."target") then
+			if unit and UnitExists(unit.."target") then
 				_G["GameTooltipTextRight1"]:SetText(">>"..getUnitTarget(unit))
 				_G["GameTooltipTextRight1"]:Show()
 				GameTooltip:AppendText("")
