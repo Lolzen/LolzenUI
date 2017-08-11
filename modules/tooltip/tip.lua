@@ -13,17 +13,12 @@ f:SetScript("OnEvent", function(self, event, addon)
 			GameTooltip,
 			ItemRefTooltip,
 			WorldMapTooltip,
-			--WorldMapCompareTooltip1,
-			--WorldMapCompareTooltip2,
+			WorldMapCompareTooltip1,
+			WorldMapCompareTooltip2,
 			-- shopping tooltips
 			ShoppingTooltip1,
 			ShoppingTooltip2,
 			ShoppingTooltip3,
-			--ItemRefShoppingTooltip1,
-			--ItemRefShoppingTooltip2,
-			--ItemRefShoppingTooltip3,
-			--FriendsTooltip,
-			--PartyMemberBuffTooltip,
 		}
 
 		-- the backdrop of our Tooltips along with a beautiful border
@@ -87,9 +82,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		-- return the unitReactionColor values
 		local function getReactionColor(unit)
 			local reactioncolor = FACTION_BAR_COLORS[UnitReaction(unit, "player")]
-			if reactioncolor then
-				return reactioncolor.r, reactioncolor.g, reactioncolor.b
-			end
+			return reactioncolor.r, reactioncolor.g, reactioncolor.b
 		end
 
 		-- return hex value of color values and the unitname
@@ -100,7 +93,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		-- return a questdifficulty inspired colored level
 		local function getColorizedLevel(unit)
 			local level = UnitLevel(unit)
-			if UnitLevel(unit) ~= nil then
+			if level ~= nil then
 				local diff = GetQuestDifficultyColor(level)
 				if not level or level == -1 then
 					return "|cffff0000??|r "
@@ -112,18 +105,15 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		-- return the StatusFlag aka AFK, DND or offline
 		local function getStatusFlag(unit)
-			local status
 			if UnitIsAFK(unit) then
-				status = "AFK| "
+				return "AFK| "
 			elseif UnitIsDND(unit) then
-				status = "DND| "
+				return "DND| "
 			elseif not UnitIsConnected(unit) then
-				status = "(Off) "
+				return "(Off) "
 			else
-				status = "" 
+				return "" 
 			end
-
-			return "|cffffffff"..status.."|r"
 		end
 
 		-- colorize tooltipBorder accordingly to itemQuality
@@ -141,25 +131,23 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		-- talents
 		local function InspectTalents(inspect, unit)
-			local _, name, _, icon, role, _ = GetSpecializationInfoByID(GetInspectSpecialization(unit))
-			if not icon then return end
-
-			--by default the PvP line is hidden in the modyfyTip function, if we just add a line it would look messy as the talents displayed are halfway outside of the border,
-			--while the hidden PvP line is an empty space. So we use the PvP line and set out text there instead of adding a new one, if the target has PvP activated
-			if UnitLevel(unit) > 9 then
+			-- by default the PvP line is hidden in the modyfyTip function, if we just add a line it would look messy as the talents displayed are halfway outside of the border,
+			-- while the hidden PvP line is an empty space. So we use the PvP line and set our text there instead of adding a new one, if the target has PvP activated
+			if UnitIsPlayer(unit) and UnitLevel(unit) > 9 then
+				local _, name, _, icon, role, _ = GetSpecializationInfoByID(GetInspectSpecialization(unit))
 				if UnitIsPVP(unit) then
 					_G["GameTooltipTextLeft"..GameTooltip:NumLines()]:SetText((string.format("|T%s:%d:%d:0:-1|t", icon, 16, 16)).." |cFFFFFFFF"..name.." ("..role..")|r")
 					_G["GameTooltipTextLeft"..GameTooltip:NumLines()]:Show()
 				else
 					GameTooltip:AddLine((string.format("|T%s:%d:%d:0:-1|t", icon, 16, 16)).." |cFFFFFFFF"..name.." ("..string.sub(role, 1, 1)..string.lower(string.sub(role, 2))..")|r")
+					GameTooltip:AppendText("")
 				end
 			end
-			GameTooltip:AppendText("")
 		end
 
 		-- player tooltip modifications
 		local function modifyPlayerTooltip(unit)
-			--display talents
+			-- display talents
 			if UnitLevel(unit) > 9 or UnitLevel(unit) ~= -1 then
 				if not InspectFrame or not InspectFrame:IsShown() then
 					if CheckInteractDistance(unit,1) and CanInspect(unit) then
@@ -170,8 +158,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 
 			if IsInGuild(unit) then
-				if _G["GameTooltipTextLeft2"]:GetText():find("^"..GetGuildInfo("player")) then
-					_G["GameTooltipTextLeft2"]:SetText("|cff22eeee"..GetGuildInfo("player").."|r")
+				local guild = GetGuildInfo("player")
+				if _G["GameTooltipTextLeft2"]:GetText():find("^"..guild) then
+					_G["GameTooltipTextLeft2"]:SetText("|cff22eeee"..guild.."|r")
 				end
 			end
 			for i=1, GameTooltip:NumLines(), 1 do
@@ -263,9 +252,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 				for i=2, GameTooltip:NumLines(), 1 do
 					if _G["GameTooltipTextLeft"..i]:GetText():find(PVP_ENABLED) then
 						_G["GameTooltipTextLeft"..i]:Hide()
+						GameTooltip:AppendText("")
 					end
 				end
-				GameTooltip:AppendText("")
 			end
 
 			-- set the raidIcon on the tooltip or hide it
