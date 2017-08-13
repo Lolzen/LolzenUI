@@ -150,15 +150,14 @@ f2:RegisterEvent("ZONE_CHANGED_INDOORS")
 f2:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 f2:RegisterEvent("CHAT_MSG_CURRENCY")
 f2:RegisterEvent("CURRENCY_DISPLAY_UPDATE")
-f2:RegisterEvent("PLAYER_ENTERING_WORDLD")
+f2:RegisterEvent("CINEMATIC_STOP")
 f2:SetScript("OnEvent", function(self, event, addon)
+	if LolzenUIcfg.modules["orderhallbar"] == false then return end
 	if event == "ZONE_CHANGED" or event == "ZONE_CHANGED_INDOORS" or event == "ZONE_CHANGED_NEW_AREA" then
-		if LolzenUIcfg.modules["orderhallbar"] == false then return end
 		getAreaText()
 	elseif event == "CHAT_MSG_CURRENCY" or event == "CURRENCY_DISPLAY_UPDATE" then
-		if LolzenUIcfg.modules["orderhallbar"] == false then return end
 		getCurrencies()
-	elseif event == "PLAYER_ENTERING_WORDLD" then
+	elseif event == "CINEMATIC_STOP" then
 		if LolzenUIcfg.orderhallbar["ohb_always_show"] == true then
 			if not OrderHallCommandBar:IsShown() then
 				OrderHallCommandBar:Show()
