@@ -91,14 +91,20 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 
 		-- return a questdifficulty inspired colored level
-		local function getColorizedLevel(unit, level)
-			--local level = UnitLevel(unit)
-			if level == nil or level == -1 then
+		local function getColorizedLevel(unit)
+			local level = UnitLevel(unit)
+			if level == nil then
+				return level
+			elseif level == -1 then
 				return "|cffff0000??|r "
 			else
 				local diff = GetQuestDifficultyColor(level)
 				return ("|cff%02x%02x%02x%d|r"):format(diff.r*255, diff.g*255, diff.b*255, level)
 			end
+		end
+
+		local function getMobType(unit)
+			return mobType[UnitClassification(unit)] or ""
 		end
 
 		-- return the StatusFlag aka AFK, DND or offline
@@ -135,7 +141,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				local _, name, _, icon, role, _ = GetSpecializationInfoByID(GetInspectSpecialization(unit))
 				if icon then
 					if UnitIsPVP(unit) then
-						_G["GameTooltipTextLeft"..GameTooltip:NumLines()]:SetText((string.format("|T%s:%d:%d:0:-1|t", icon, 16, 16)).." |cFFFFFFFF"..name.." ("..role..")|r")
+						_G["GameTooltipTextLeft"..GameTooltip:NumLines()]:SetText((string.format("|T%s:%d:%d:0:-1|t", icon, 16, 16)).." |cFFFFFFFF"..name.." ("..string.sub(role, 1, 1)..string.lower(string.sub(role, 2))..")|r")
 						_G["GameTooltipTextLeft"..GameTooltip:NumLines()]:Show()
 					else
 						GameTooltip:AddLine((string.format("|T%s:%d:%d:0:-1|t", icon, 16, 16)).." |cFFFFFFFF"..name.." ("..string.sub(role, 1, 1)..string.lower(string.sub(role, 2))..")|r")
@@ -145,10 +151,25 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 		end
 
+		local function getPvPflag(unit)
+			if UnitIsPVP(unit) then
+				if isInInstance ~= "pvp" and isInInstance ~= "arena" and GetZonePVPInfo() ~= "combat" then
+					if UnitIsFriend("player", unit) then
+						return "|cff00ff00(PvP) |r"
+					else
+						return "|cff00ff00(PvP) |r"
+					end
+				end
+			else
+				return ""
+			end
+		end
+
 		-- player tooltip modifications
-		local function modifyPlayerTooltip(unit, level)
+		local function modifyPlayerTooltip(unit)
+			_G["GameTooltipTextLeft1"]:SetText(getPvPflag(unit)..getStatusFlag(unit)..getColorHexUnit(unit, getClassColor(unit)))
 			-- display talents
-			if level > 9 then
+			if UnitLevel(unit) > 9 then
 				if not InspectFrame or not InspectFrame:IsShown() then
 					if CheckInteractDistance(unit,1) and CanInspect(unit) then
 						GameTooltip:RegisterEvent("INSPECT_READY")
@@ -158,24 +179,24 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 
 			if IsInGuild(unit) then
-				local guild = GetGuildInfo("player")
-				if _G["GameTooltipTextLeft2"]:GetText():find("^"..guild) then
-					_G["GameTooltipTextLeft2"]:SetText("|cff22eeee"..guild.."|r")
+				if _G["GameTooltipTextLeft2"]:GetText():find("^"..GetGuildInfo("player")) then
+					_G["GameTooltipTextLeft2"]:SetTextColor(0, 5, 1)
 				end
 			end
 			for i=1, GameTooltip:NumLines(), 1 do
 				if _G["GameTooltipTextLeft"..i]:GetText():find("^"..LEVEL) then
-					_G["GameTooltipTextLeft"..i]:SetText(getColorizedLevel(unit, level).." "..UnitRace(unit).." "..UnitClass(unit))
+					_G["GameTooltipTextLeft"..i]:SetText(getColorizedLevel(unit).." "..UnitRace(unit).." "..UnitClass(unit))
 				end
 			end
 		end
 
 		-- NPC/Pet tooltip modifications
-		local function modifyNPCTooltip(unit, level)
-			local mobType = mobType[UnitClassification(unit)] or ""
+		local function modifyNPCTooltip(unit)
+			_G["GameTooltipTextLeft1"]:SetText(getPvPflag(unit)..getColorHexUnit(unit, getReactionColor(unit)))
+			--local mobType = mobType[UnitClassification(unit)] or ""
 			for i=1, GameTooltip:NumLines(), 1 do
 				if _G["GameTooltipTextLeft"..i]:GetText():find("^"..LEVEL) then
-					_G["GameTooltipTextLeft"..i]:SetText(getColorizedLevel(unit, level).." "..mobType.." "..UnitCreatureType(unit) or "")
+					_G["GameTooltipTextLeft"..i]:SetText(getColorizedLevel(unit).." "..getMobType(unit).." "..UnitCreatureType(unit) or "")
 				end
 			end
 		end
@@ -208,45 +229,21 @@ f:SetScript("OnEvent", function(self, event, addon)
 		-- general tooltip modifications
 		local function modifyTooltip(self)
 			local unit = getUnit()
-			local level = UnitLevel(unit)
-			local unitType = select(1, strsplit("-", UnitGUID(unit)))
+			local unitType = strsplit("-", UnitGUID(unit))
 
 			-- colorize TooltipBorder accordinglly to classColor or UnitReaction
 			if unitType == "Player" then
 				self:SetBackdropBorderColor(getClassColor(unit))
 				--call player modifications function
-				modifyPlayerTooltip(unit, level)
+				modifyPlayerTooltip(unit)
 			elseif unitType == "Creature" or unitType == "Pet" then
 				self:SetBackdropBorderColor(getReactionColor(unit))
 				--call NPC modification function
-				modifyNPCTooltip(unit, level)
+				modifyNPCTooltip(unit)
 			end
 
 			-- black background color
 			self:SetBackdropColor(0, 0, 0, 1)
-
-			-- activate the custom (PvP) flag, custom unitFlags and classcolored/reactioncolored UnitNames
-			if UnitIsPVP(unit) and isInInstance ~= "pvp" and isInInstance ~= "arena" and GetZonePVPInfo() ~= "combat" then
-				if UnitIsFriend("player", unit) then	
-					if UnitIsPlayer(unit) then
-						_G["GameTooltipTextLeft1"]:SetText("|cff00ff00(PvP) |r"..getStatusFlag(unit)..getColorHexUnit(unit, getClassColor(unit)))
-					else
-						_G["GameTooltipTextLeft1"]:SetText("|cff00ff00(PvP) |r"..getColorHexUnit(unit, getReactionColor(unit)))
-					end
-				else
-					if UnitIsPlayer(unit) then
-						_G["GameTooltipTextLeft1"]:SetText("|cffff0000(PvP) |r"..getStatusFlag(unit)..getColorHexUnit(unit, getClassColor(unit)))
-					else
-						_G["GameTooltipTextLeft1"]:SetText("|cffff0000(PvP) |r"..getColorHexUnit(unit, getReactionColor(unit)))
-					end
-				end
-			else
-				if UnitIsPlayer(unit) then
-					_G["GameTooltipTextLeft1"]:SetText(getStatusFlag(unit)..getColorHexUnit(unit, getClassColor(unit)))
-				else
-					_G["GameTooltipTextLeft1"]:SetText(getColorHexUnit(unit, getReactionColor(unit)))
-				end
-			end	
 
 			-- hide the PvP line
 			if UnitIsPVP(unit) then
@@ -301,7 +298,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 		for i=1, #tooltips, 1 do
 			tooltips[i]:HookScript("OnTooltipSetItem", colorItemQuality)
 			tooltips[i]:SetBackdrop(backdrop)
-
 			tooltips[i]:HookScript("OnShow", colorBG)
 		end
 
