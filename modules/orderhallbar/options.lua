@@ -17,11 +17,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		local about = ns["orderhallbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 		about:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8)
-		about:SetText("Show the OrderHallBar everywhere. Also modify it")
-
---		local notice = ns["orderhallbar"]:CreateFontString(nil, "ARTWORK", "GameFontNormal")
---		notice:SetPoint("TOPLEFT", about, "BOTTOMLEFT", 0, -20)
---		notice:SetText("|cff5599ffTO BE DONE|r")
+		about:SetText("Modify the OrderHallBar and show currencies marked as \"Show in Backpack\"")
 
 		local cb1 = CreateFrame("CheckButton", "alwaysshow", ns["orderhallbar"], "ChatConfigCheckButtonTemplate")
 		cb1:SetPoint("TOPLEFT", about, "BOTTOMLEFT", 0, -20)
@@ -181,106 +177,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 		icon_size:SetNumber(LolzenUIcfg.orderhallbar["ohb_currency_icon_size"])
 		icon_size:SetCursorPosition(0)
 
-		local list = ns["orderhallbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-		list:SetPoint("TOPLEFT", icon_size_text, "BOTTOMLEFT", 0, -20)
-		list:SetText("|cff5599ffCurrencies which are being displayed:|r")
-
-		local function getInfo(id)
-			local name, _, icon = GetCurrencyInfo(id)
-			if icon ~= nil then
-				return name, icon
-			else
-				return GetSpellInfo(212812), select(3, GetSpellInfo(212812))
-			end
-		end
-
-		local icon = {}
-		for i=1, #LolzenUIcfg.orderhallbar["ohb_currencies"] do
-			icon[i] = ns["orderhallbar"]:CreateTexture(nil, "OVERLAY")
-			icon[i]:SetTexCoord(.04, .94, .04, .94)
-			icon[i]:SetTexture(select(2, getInfo(LolzenUIcfg.orderhallbar["ohb_currencies"][i])))
-			icon[i]:SetSize(26, 26)
-			if i == 1 then
-				icon[i]:SetPoint("TOPLEFT", list, "BOTTOMLEFT", 0, -20)
-			else
-				icon[i]:SetPoint("TOPLEFT", icon[i-1], "BOTTOMLEFT", 0, -5)
-			end
-			if not icon[i].text then
-				icon[i].text = ns["orderhallbar"]:CreateFontString(nil, "OVERLAY")
-				icon[i].text:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSans.ttf", 12 ,"OUTLINE")
-				icon[i].text:SetTextColor(1, 1, 1)
-				icon[i].text:SetPoint("LEFT", icon[i], "RIGHT", 10, 0)
-				icon[i].text:SetText(getInfo(LolzenUIcfg.orderhallbar["ohb_currencies"][i]).." (currencyid: "..LolzenUIcfg.orderhallbar["ohb_currencies"][i]..")")
-			end
-		end
-
-		local add = ns["orderhallbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-		add:SetPoint("LEFT", list, "RIGHT", 110, 0)
-		add:SetText("|cffffffffadd or delete currencies to be displayed (per currencyid):|r")
-
-		local eb = CreateFrame("EditBox", nil, ns["orderhallbar"], "InputBoxTemplate")
-		eb:SetPoint("TOPLEFT", add, "BOTTOMLEFT", 5, -8)
-		eb:SetSize(50, 20)
-		eb:SetAutoFocus(false)
-		eb:ClearFocus()
-		eb:SetCursorPosition(0)
-
-		local previewicon = ns["orderhallbar"]:CreateTexture(nil, "OVERLAY")
-		previewicon:SetTexCoord(.04, .94, .04, .94)
-		previewicon:SetTexture(select(3, GetSpellInfo(212812)))
-		previewicon:SetSize(16, 16)
-		previewicon:SetPoint("LEFT", eb, "RIGHT", 5, 0)
-
-		local prevname = ns["orderhallbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-		prevname:SetPoint("LEFT", previewicon, "RIGHT", 5, 0)
-		prevname:SetText(GetSpellInfo(212812))
-
-		eb:SetScript("OnTextChanged", function(self)
-			previewicon:SetTexture(select(2, getInfo(eb:GetText())))
-			prevname:SetText(getInfo(eb:GetText()))
-		end)
-
-		local b = CreateFrame("Button", "addButton", ns["orderhallbar"], "UIPanelButtonTemplate")
-		b:SetSize(80 ,22)
-		b:SetText("add")
-		b:SetPoint("TOPLEFT", eb, "BOTTOMLEFT", -7, -8)
-		b:SetScript("OnClick", function()
-			local isduplicate = false
-			for k, v in pairs(LolzenUIcfg.orderhallbar["ohb_currencies"]) do
-				if v == eb:GetText() then
-					isduplicate = true
-				end
-			end
-			if isduplicate == true then
-				print("duplicate id detected!")
-			else
-				table.insert(LolzenUIcfg.orderhallbar["ohb_currencies"], eb:GetText())
-				print("Hit Okay reload the list")
-			end
-		end)
-
-		local b2 = CreateFrame("Button", "delButton", ns["orderhallbar"], "UIPanelButtonTemplate")
-		b2:SetSize(80 ,22) -- width, height
-		b2:SetText("delete")
-		b2:SetPoint("LEFT", b, "RIGHT", 10, 0)
-		b2:SetScript("OnClick", function()
-			for k, v in pairs(LolzenUIcfg.orderhallbar["ohb_currencies"]) do
-				if v == eb:GetText() then
-					table.remove(LolzenUIcfg.orderhallbar["ohb_currencies"], k)
-				end
-			end
-			print("Hit Okay to reload the list")
-		end)
-
-		local tip = ns["orderhallbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-		tip:SetPoint("TOPLEFT", b, "BOTTOMLEFT", 0, -8)
-		tip:SetText("|cff5599ffPROTIP: |rrefer to WoWhead and search for your currency,\n the currencyid is in the URL")
-
-		local help = ns["orderhallbar"]:CreateTexture(nil, "OVERLAY")
-		help:SetSize(268, 60)
-		help:SetTexture("Interface\\AddOns\\LolzenUI\\modules\\orderhallbar\\help.tga")
-		help:SetPoint("TOPLEFT", tip, "BOTTOMLEFT", 0, -8)
-
 		ns["orderhallbar"].okay = function(self)
 			LolzenUIcfg.orderhallbar["ohb_currency_icon_size"] = tonumber(icon_size:GetText())
 			LolzenUIcfg.orderhallbar["ohb_currency_font"] = font:GetText()
@@ -298,7 +194,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 
 		ns["orderhallbar"].default = function(self)
-			LolzenUIcfg.orderhallbar["ohb_currencies"] = {}
 			LolzenUIcfg.orderhallbar["ohb_currency_icon_size"] = 18
 			LolzenUIcfg.orderhallbar["ohb_currency_font"] = "DroidSansBold.ttf"
 			LolzenUIcfg.orderhallbar["ohb_currency_font_size"] = 12

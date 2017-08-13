@@ -12,44 +12,55 @@ local function getAreaText()
 end
 
 local currency = {}
+local prevName
 local function getCurrencies()
 	if not OrderHallCommandBar then return end
-	for i=1, #LolzenUIcfg.orderhallbar["ohb_currencies"] do
-		local name, amount, icon = GetCurrencyInfo(LolzenUIcfg.orderhallbar["ohb_currencies"][i])
-		if not currency[i] then
-			currency[i] = OrderHallCommandBar:CreateTexture("currency"..i)
-			currency[i]:SetTexture(icon)
-			currency[i]:SetSize(LolzenUIcfg.orderhallbar["ohb_currency_icon_size"], LolzenUIcfg.orderhallbar["ohb_currency_icon_size"])
-			currency[i]:SetTexCoord(.04, .94, .04, .94)
+		for i=1, GetCurrencyListSize() do
+		local name, isHeader, isExpanded, isUnused, isWatched, count, extraCurrencyType = GetCurrencyListInfo(i)
+		if isWatched then
+			local link = GetCurrencyListLink(i)
+			local _, _, icon = GetCurrencyInfo(link:match("|Hcurrency:(%d+)|"))
+			if not currency[name] then
+				currency[name] = OrderHallCommandBar:CreateTexture("currency"..name)
+				currency[name]:SetTexture(icon)
+				currency[name]:SetSize(LolzenUIcfg.orderhallbar["ohb_currency_icon_size"], LolzenUIcfg.orderhallbar["ohb_currency_icon_size"])
+				currency[name]:SetTexCoord(.04, .94, .04, .94)
 
-			if not currency[i].text then
-				currency[i].text = OrderHallCommandBar:CreateFontString(nil, "OVERLAY")
-				currency[i].text:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\"..LolzenUIcfg.orderhallbar["ohb_currency_font"], LolzenUIcfg.orderhallbar["ohb_currency_font_size"] ,LolzenUIcfg.orderhallbar["ohb_currency_font_flag"])
-				currency[i].text:SetTextColor(1, 1, 1)
-				currency[i].text:SetText(amount)
-			end
+				if not currency[name].text then
+					currency[name].text = OrderHallCommandBar:CreateFontString(nil, "OVERLAY")
+					currency[name].text:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\"..LolzenUIcfg.orderhallbar["ohb_currency_font"], LolzenUIcfg.orderhallbar["ohb_currency_font_size"] ,LolzenUIcfg.orderhallbar["ohb_currency_font_flag"])
+					currency[name].text:SetTextColor(1, 1, 1)
+					currency[name].text:SetText(count)
+				end
 
-			if not currency[i].frame then
-				currency[i].frame = CreateFrame("Frame", nil, OrderHallCommandBar)
-				currency[i].frame:SetAllPoints(currency[i])
-				currency[i].frame:SetScript("OnEnter", function(self) 
-					GameTooltip:SetOwner(currency[i], "ANCHOR_BOTTOMRIGHT")
-					GameTooltip:SetCurrencyByID(LolzenUIcfg.orderhallbar["ohb_currencies"][i])
-					GameTooltip:Show()
-				end)
-				currency[i].frame:SetScript("OnLeave", function(self)
-					GameTooltip:Hide()
-				end)
-			end
+				if not currency[name].frame then
+					currency[name].frame = CreateFrame("Frame", nil, OrderHallCommandBar)
+					currency[name].frame:SetAllPoints(currency[name])
+					currency[name].frame:SetScript("OnEnter", function(self) 
+						GameTooltip:SetOwner(currency[name], "ANCHOR_BOTTOMRIGHT")
+						GameTooltip:SetCurrencyByID(link:match("|Hcurrency:(%d+)|"))
+						GameTooltip:Show()
+					end)
+					currency[name].frame:SetScript("OnLeave", function(self)
+						GameTooltip:Hide()
+					end)
+				end
 
-			currency[i].text:SetPoint("LEFT", currency[i], "RIGHT", 5, 0)
-			if i == 1 then
-				currency[i]:SetPoint("LEFT", OrderHallCommandBar.Currency, "RIGHT", 10, 0)
+				if not currency[name].num then
+					currency[name].num = countWatched
+				end
+				
+				currency[name].text:SetPoint("LEFT", currency[name], "RIGHT", 5, 0)
+				if prevName == nil then
+					currency[name]:SetPoint("LEFT", OrderHallCommandBar.Currency, "RIGHT", 10, 0)
+					prevName = name
+				else
+					currency[name]:SetPoint("LEFT", currency[prevName].text, "RIGHT", 10, 0)
+					prevName = name
+				end
 			else
-				currency[i]:SetPoint("LEFT", currency[i-1].text, "RIGHT", 10, 0)
+				currency[name].text:SetText(count)
 			end
-		else
-			currency[i].text:SetText(amount)
 		end
 	end
 end
@@ -143,6 +154,7 @@ f2:RegisterEvent("ZONE_CHANGED_INDOORS")
 f2:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 f2:RegisterEvent("CHAT_MSG_CURRENCY")
 f2:RegisterEvent("CURRENCY_DISPLAY_UPDATE")
+f2:RegisterEvent("PLAYER_ENTERING_WORDLD")
 f2:SetScript("OnEvent", function(self, event, addon)
 	if event == "ZONE_CHANGED" or event == "ZONE_CHANGED_INDOORS" or event == "ZONE_CHANGED_NEW_AREA" then
 		if LolzenUIcfg.modules["orderhallbar"] == false then return end
@@ -150,5 +162,11 @@ f2:SetScript("OnEvent", function(self, event, addon)
 	elseif event == "CHAT_MSG_CURRENCY" or event == "CURRENCY_DISPLAY_UPDATE" then
 		if LolzenUIcfg.modules["orderhallbar"] == false then return end
 		getCurrencies()
+	elseif event == "PLAYER_ENTERING_WORDLD" then
+		if LolzenUIcfg.orderhallbar["ohb_always_show"] == true then
+			if not OrderHallCommandBar:IsShown() then
+				OrderHallCommandBar:Show()
+			end
+		end
 	end
 end)

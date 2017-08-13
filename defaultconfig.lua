@@ -189,7 +189,6 @@ defaultconfig.objectivetracker = {
 }
 
 defaultconfig.orderhallbar = {
-	["ohb_currencies"] = {},
 	["ohb_currency_icon_size"] = 18,
 	["ohb_currency_font"] = "DroidSansBold.ttf",
 	["ohb_currency_font_size"] = 12,
