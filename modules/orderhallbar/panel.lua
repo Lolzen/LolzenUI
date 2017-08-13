@@ -45,10 +45,6 @@ local function getCurrencies()
 						GameTooltip:Hide()
 					end)
 				end
-
-				if not currency[name].num then
-					currency[name].num = countWatched
-				end
 				
 				currency[name].text:SetPoint("LEFT", currency[name], "RIGHT", 5, 0)
 				if prevName == nil then
