@@ -2,9 +2,7 @@
 
 local addon, ns = ...
 
-if not ns.modules["inspect"] then
-	tinsert(ns.modules, "inspect")
-end
+ns.RegisterModule("inspect")
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
