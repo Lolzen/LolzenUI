@@ -1,6 +1,5 @@
---// versioncheck // --
-
-local addon, ns = ...
+--// chattabs // --
+-- this is fane from haste
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
