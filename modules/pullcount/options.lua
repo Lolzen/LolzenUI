@@ -2,9 +2,7 @@
 
 local addon, ns = ...
 
-if not ns.modules["actionabars"] then
-	tinsert(ns.modules, "pullcount")
-end
+ns.RegisterModule("pullcount")
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
