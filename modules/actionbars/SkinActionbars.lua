@@ -1,7 +1,5 @@
 ﻿--// Skin //--
 
-local addon, ns = ...
-
 local skinned
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")

@@ -1,7 +1,5 @@
 --// hide Blizzard's Actionbar art //--
 
-local addon, ns = ...
-
 local blizzarthidden
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")

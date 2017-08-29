@@ -1,7 +1,5 @@
 ﻿--// MultiBarRight //--
 
-local addon, ns = ...
-
 local modded
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
