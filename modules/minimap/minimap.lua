@@ -1,7 +1,5 @@
 --// minimap // --
 
-local addon, ns = ...
-
 local frames = {
 	MinimapZoomIn,
 	MinimapZoomOut,
