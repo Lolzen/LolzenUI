@@ -1,7 +1,5 @@
 --// slashcommands //--
 
-local addon, ns = ...
-
 -- Open up the option panel
 SLASH_LOLZENUI1 = "/lolzen"
 SLASH_LOLZENUI2 = "/lolzenui"
