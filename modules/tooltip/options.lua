@@ -2,9 +2,7 @@
 
 local addon, ns = ...
 
-if not ns.modules["actionabars"] then
-	tinsert(ns.modules, "tooltip")
-end
+ns.RegisterModule("tooltip")
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
@@ -23,20 +21,12 @@ f:SetScript("OnEvent", function(self, event, addon)
 		notice:SetPoint("TOPLEFT", about, "BOTTOMLEFT", 0, -20)
 		notice:SetText("|cff5599ffTO BE DONE, REWORK|r")
 
---		local v2 = ns["tooltip"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
---		v2:SetPoint("TOPLEFT", v1, "BOTTOMLEFT", 0, -8)
---		v2:SetText("|cff5599ffWoW Patch verion:|r "..version)
+		ns["tooltip"].okay = function(self)
+		
+		end
 
---		local v3 = ns["tooltip"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
---		v3:SetPoint("TOPLEFT", v2, "BOTTOMLEFT", 0, 0)
---		v3:SetText("|cff5599ffWoW TOC verion:|r "..tocversion)
-
---		local v4 = ns["tooltip"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
---		v4:SetPoint("TOPLEFT", v3, "BOTTOMLEFT", 0, 0)
---		v4:SetText("|cff5599ffWoW build:|r "..build)
-
---		local v5 = ns["tooltip"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
---		v5:SetPoint("TOPLEFT", v4, "BOTTOMLEFT", 0, 0)
---		v4:SetText("|cff5599ffWoW build date: |r"..date)
+		ns["tooltip"].default = function(self)
+			ReloadUI()
+		end
 	end
 end)
