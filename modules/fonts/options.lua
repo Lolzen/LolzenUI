@@ -2,9 +2,7 @@
 
 local addon, ns = ...
 
-if not ns.modules["actionabars"] then
-	tinsert(ns.modules, "fonts")
-end
+ns.RegisterModule("fonts")
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
