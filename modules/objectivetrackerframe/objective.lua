@@ -1,11 +1,11 @@
 --// objectivetracker // --
 
-local addon, ns = ...
-
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
+f:RegisterEvent("PLAYER_REGEN_DISABLED")
+f:RegisterEvent("PLAYER_REGEN_ENABLED")
 f:SetScript("OnEvent", function(self, event, addon)
-	if addon == "LolzenUI" then
+	if event == "ADDON_LOADED" and addon == "LolzenUI" then
 		if LolzenUIcfg.modules["objectivetracker"] == false then return end
 
 		local of = ObjectiveTrackerFrame
@@ -20,14 +20,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 		-- bring the HM aesthetically in line with the button, wherever the ObjectiveTrackerFrame's position is set
 		of.HeaderMenu.Title:SetPoint("TOPLEFT", of, "TOPLEFT", -170, -5)
-	end
-end)
-
-local f2 = CreateFrame("Frame")
-f2:RegisterEvent("PLAYER_REGEN_DISABLED")
-f2:RegisterEvent("PLAYER_REGEN_ENABLED")
-f2:SetScript("OnEvent", function(self, event, addon)
-	if event == "PLAYER_REGEN_DISABLED" then
+	elseif event == "PLAYER_REGEN_DISABLED" then
 		if LolzenUIcfg.objectivetracker["objectivetracker_combatcollapse"] == false then return end
 		ObjectiveTracker_Collapse()
 	elseif event == "PLAYER_REGEN_ENABLED" then
