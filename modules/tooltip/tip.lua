@@ -1,7 +1,5 @@
 --// tooltip // --
 
-local addon, ns = ...
-
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)
@@ -38,10 +36,13 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		-- customize the mobClassification
 		local mobType = {
-			["worldboss"] = "Boss",
-			["rareelite"] = "+ Rare",
-			["rare"] = "Rare",
-			["elite"] = "+",
+			["normal"] = "",
+			["worldboss"] = " Boss",
+			["rareelite"] = " + Rare",
+			["rare"] = " Rare",
+			["elite"] = " +",
+			["trivial"] = "Trivial",
+			["minus"] = " -",
 		}
 
 		-- faction icons and a background texture
@@ -69,7 +70,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		GameTooltipStatusBar:SetHeight(2)
 		
 		-- return the unit which is mouseovered
-		local function getUnit()
+		local function getTooltipUnit()
 			return select(2, GameTooltip:GetUnit())
 		end
 
@@ -110,11 +111,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 		-- return the StatusFlag aka AFK, DND or offline
 		local function getStatusFlag(unit)
 			if UnitIsAFK(unit) then
-				return "AFK| "
+				return "|cffffffffAFK| |r"
 			elseif UnitIsDND(unit) then
-				return "DND| "
+				return "|cffffffffDND| |r"
 			elseif not UnitIsConnected(unit) then
-				return "(Off) "
+				return "|cffffffff(Off) |r"
 			else
 				return "" 
 			end
@@ -145,8 +146,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 						_G["GameTooltipTextLeft"..GameTooltip:NumLines()]:Show()
 					else
 						GameTooltip:AddLine((string.format("|T%s:%d:%d:0:-1|t", icon, 16, 16)).." |cFFFFFFFF"..name.." ("..string.sub(role, 1, 1)..string.lower(string.sub(role, 2))..")|r")
-						GameTooltip:AppendText("")
 					end
+					GameTooltip:AppendText("")
 				end
 			end
 		end
@@ -193,10 +194,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 		-- NPC/Pet tooltip modifications
 		local function modifyNPCTooltip(unit)
 			_G["GameTooltipTextLeft1"]:SetText(getPvPflag(unit)..getColorHexUnit(unit, getReactionColor(unit)))
-			--local mobType = mobType[UnitClassification(unit)] or ""
 			for i=1, GameTooltip:NumLines(), 1 do
 				if _G["GameTooltipTextLeft"..i]:GetText():find("^"..LEVEL) then
-					_G["GameTooltipTextLeft"..i]:SetText(getColorizedLevel(unit).." "..getMobType(unit).." "..UnitCreatureType(unit) or "")
+					_G["GameTooltipTextLeft"..i]:SetText(getColorizedLevel(unit)..getMobType(unit).." "..UnitCreatureType(unit) or "")
 				end
 			end
 		end
@@ -228,17 +228,14 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		-- general tooltip modifications
 		local function modifyTooltip(self)
-			local unit = getUnit()
-			local unitType = strsplit("-", UnitGUID(unit))
+			local unit = getTooltipUnit()
 
 			-- colorize TooltipBorder accordinglly to classColor or UnitReaction
-			if unitType == "Player" then
+			if UnitIsPlayer(unit) then
 				self:SetBackdropBorderColor(getClassColor(unit))
-				--call player modifications function
 				modifyPlayerTooltip(unit)
-			elseif unitType == "Creature" or unitType == "Pet" then
+			else
 				self:SetBackdropBorderColor(getReactionColor(unit))
-				--call NPC modification function
 				modifyNPCTooltip(unit)
 			end
 
@@ -250,7 +247,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 				for i=2, GameTooltip:NumLines(), 1 do
 					if _G["GameTooltipTextLeft"..i]:GetText():find(PVP_ENABLED) then
 						_G["GameTooltipTextLeft"..i]:Hide()
-						GameTooltip:AppendText("")
 					end
 				end
 			end
@@ -272,12 +268,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 		-- [hooks and scripts]
 		-- anchor
 		hooksecurefunc("GameTooltip_SetDefaultAnchor", function(tooltip, parent)
-			if parent == nil then return end
-		--	tooltip:ClearAllPoints()
-			tooltip:SetOwner(parent,"ANCHOR_NONE")
+			tooltip:SetOwner(parent, "ANCHOR_NONE")
+			tooltip:ClearAllPoints()
 			tooltip:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -13, 43)
---			tooltip:SetScale(1)
---			tooltip.default = 1
 		end)
 
 		-- styling for units
@@ -293,6 +286,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 		local function colorBG(self)
 			self:SetBackdropColor(0, 0, 0, 1)
 		end
+		
+	--	GameTooltip:HookScript("OnUpdate", colorBG)
 
 		-- also modify more tooltip types
 		for i=1, #tooltips, 1 do
@@ -303,13 +298,13 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		-- update target of mouseovertarget when UNIT_TARGET was fired (the target is changed)
 		function GameTooltip:UNIT_TARGET()
-			showUT(getUnit())
+			showUT(getTooltipUnit())
 		end
 
 		-- inspect when INSPECT_READY is fired
 		function GameTooltip:INSPECT_READY()
 			GameTooltip:UnregisterEvent("INSPECT_READY")
-			InspectTalents(1, getUnit())
+			InspectTalents(1, getTooltipUnit())
 		end
 
 		GameTooltip:RegisterEvent("UNIT_TARGET")
