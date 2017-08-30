@@ -3,7 +3,7 @@
 ## Title: Lolzen User interface
 ## Version: 7.2.5_rework
 ## Notes: Restyle the whole WoW UI
-## Dependencies: oUF
+## OptionalDeps: oUF
 ## x-Credits: haste, Neal
 ## SavedVariables: LolzenUIcfg
 
