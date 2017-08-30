@@ -9,11 +9,11 @@ f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)
 	if addon == "LolzenUI" and LolzenUIcfg.modules["nameplates"] == true then
 
-		local title = ns["nameplates"]:Createnameplatestring(nil, "ARTWORK", "GameFontNormalLarge")
+		local title = ns["nameplates"]:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
 		title:SetPoint("TOPLEFT", ns["nameplates"], 16, -16)
 		title:SetText("|cff5599ff"..ns["nameplates"].name.."|r")
 
-		local about = ns["nameplates"]:Createnameplatestring(nil, "ARTWORK", "GameFontHighlightSmall")
+		local about = ns["nameplates"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 		about:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8)
 		about:SetText("[WiP] Modifies the Nameplates. Requires oUF.")
 
