@@ -1,7 +1,7 @@
-## Interface: 70200
+## Interface: 70300
 ## Author: Lolzen
 ## Title: Lolzen User interface
-## Version: 7.2.5_rework
+## Version: 7.3.0_rework
 ## Notes: Restyle the whole WoW UI
 ## OptionalDeps: oUF
 ## x-Credits: haste, Neal
