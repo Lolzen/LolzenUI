@@ -51,6 +51,9 @@ modules/interruptannouncer/options.lua
 modules/minimap/minimap.lua
 modules/minimap/options.lua
 
+modules/nameplates/plates.lua
+modules/nameplates/options.lua
+
 modules/objectivetrackerframe/objective.lua
 modules/objectivetrackerframe/options.lua
 

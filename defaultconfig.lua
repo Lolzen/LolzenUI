@@ -15,7 +15,7 @@ defaultconfig.modules = {
 	["inspect"] = true,
 	["interruptannouncer"] = true,
 	["minimap"] = true,
---	["nameplates"] = true,
+	["nameplates"] = true,
 	["objectivetracker"] = true,
 	["orderhallbar"] = true,
 	["pullcount"] = true,
@@ -178,6 +178,10 @@ defaultconfig.interruptannouncer = {
 
 defaultconfig.minimap = {
 	["minimap_square"] = true,
+}
+
+defaultconfig.nameplates = {
+
 }
 
 defaultconfig.objectivetracker = {
