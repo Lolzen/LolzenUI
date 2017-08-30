@@ -109,6 +109,7 @@ f:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 f:RegisterEvent("CHAT_MSG_CURRENCY")
 f:RegisterEvent("CURRENCY_DISPLAY_UPDATE")
 f:RegisterEvent("CINEMATIC_STOP")
+f:RegisterEvent("PLAYER_ENTERING_WORLD")
 f:SetScript("OnEvent", function(self, event, addon)
 	if event == "ADDON_LOADED" then
 		if addon == "LolzenUI" then
@@ -151,7 +152,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 	elseif event == "CHAT_MSG_CURRENCY" or event == "CURRENCY_DISPLAY_UPDATE" then
 		if LolzenUIcfg.modules["orderhallbar"] == false then return end
 		getCurrencies()
-	elseif event == "CINEMATIC_STOP" then
+	elseif event == "CINEMATIC_STOP" or event == "PLAYER_ENTERING_WORLD" then
 		if LolzenUIcfg.modules["orderhallbar"] == false then return end
 		if LolzenUIcfg.orderhallbar["ohb_always_show"] == true then
 			if not OrderHallCommandBar:IsShown() then
