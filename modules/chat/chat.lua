@@ -37,7 +37,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				text = text:gsub("|H(.-)|h%[(.-)%]|h", "|H%1|h%2|h")
 
 				-- custom timestamp
-				text = string.format("|cff888888"..date("%H.%M").."| |r"..text)
+				text = string.format("|cff888888"..date("%H.%M").."| |r %s", text)
 			end
 
 			return origs[self](self, text, ...)
