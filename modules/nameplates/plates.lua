@@ -45,13 +45,13 @@ f:SetScript("OnEvent", function(self, event, addon)
 				return ("|cff%02x%02x%02x%d|r"):format(GetQuestDifficultyColor(UnitLevel(unit)).r*255, GetQuestDifficultyColor(UnitLevel(unit)).g*255, GetQuestDifficultyColor(UnitLevel(unit)).b*255, UnitLevel(unit))
 			end
 		end
+		
+		tags["lolzen:npname"] = function(unit)
+			return UnitName(unit)
+		end
 
 		oUF:RegisterStyle("Lolzen - Nameplates", function(frame, unit)
-			if unit == "player" then
-			-- your player-specific code here
-			elseif unit == "boss1" then
-				-- your boss1-specific code here
-			elseif unit:match("nameplate") then
+			if unit:match("nameplate") then
 				-- health bar
 				local health = CreateFrame("StatusBar", nil, frame)
 				health:SetAllPoints()
@@ -73,8 +73,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				levelname:SetPoint("CENTER", health, 0, 3) 
 				levelname:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSans.ttf", 6, "THINOUTLINE")
 				frame.Level = levelname
-				frame.Name = levelname
-				frame:Tag(levelname, '[lolzen:nplevel][shortclassification] '..UnitName(unit))
+				frame:Tag(levelname, '[lolzen:nplevel][shortclassification] [lolzen:npname]')
 
 				local Castbar = CreateFrame("StatusBar", nil, health)
 				Castbar:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
@@ -109,8 +108,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 				frame.Castbar.Text = cbtext
 
 				local Shield = Castbar:CreateTexture(nil, 'OVERLAY')
-				Shield:SetSize(10, 40)
-				Shield:SetPoint("CENTER", Icon, 2, 5)
+				Shield:SetSize(20, 20)
+				Shield:SetPoint("CENTER", icon, 2, 5)
 				frame.Castbar.Shield = Shield
 
 				local RaidTargetIndicator = health:CreateTexture(nil, 'OVERLAY')
