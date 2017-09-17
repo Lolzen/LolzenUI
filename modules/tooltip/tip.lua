@@ -165,41 +165,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 				return ""
 			end
 		end
-
-		-- player tooltip modifications
-		local function modifyPlayerTooltip(unit)
-			_G["GameTooltipTextLeft1"]:SetText(getPvPflag(unit)..getStatusFlag(unit)..getColorHexUnit(unit, getClassColor(unit)))
-			-- display talents
-			if UnitLevel(unit) > 9 then
-				if not InspectFrame or not InspectFrame:IsShown() then
-					if CheckInteractDistance(unit,1) and CanInspect(unit) then
-						GameTooltip:RegisterEvent("INSPECT_READY")
-						NotifyInspect(unit)
-					end
-				end
-			end
-
-			if IsInGuild(unit) then
-				if _G["GameTooltipTextLeft2"]:GetText():find("^"..GetGuildInfo("player")) then
-					_G["GameTooltipTextLeft2"]:SetTextColor(0, 5, 1)
-				end
-			end
-			for i=1, GameTooltip:NumLines(), 1 do
-				if _G["GameTooltipTextLeft"..i]:GetText():find("^"..LEVEL) then
-					_G["GameTooltipTextLeft"..i]:SetText(getColorizedLevel(unit).." "..UnitRace(unit).." "..UnitClass(unit))
-				end
-			end
-		end
-
-		-- NPC/Pet tooltip modifications
-		local function modifyNPCTooltip(unit)
-			_G["GameTooltipTextLeft1"]:SetText(getPvPflag(unit)..getColorHexUnit(unit, getReactionColor(unit)))
-			for i=1, GameTooltip:NumLines(), 1 do
-				if _G["GameTooltipTextLeft"..i]:GetText():find("^"..LEVEL) then
-					_G["GameTooltipTextLeft"..i]:SetText(getColorizedLevel(unit)..getMobType(unit).." "..UnitCreatureType(unit) or "")
-				end
-			end
-		end
 		
 		-- sets the target of the mouseovetarget on the tooltip
 		local function getUnitTarget(unit)
@@ -229,14 +194,39 @@ f:SetScript("OnEvent", function(self, event, addon)
 		-- general tooltip modifications
 		local function modifyTooltip(self)
 			local unit = getTooltipUnit()
+			if not unit or not UnitExists(unit) then return end
 
 			-- colorize TooltipBorder accordinglly to classColor or UnitReaction
 			if UnitIsPlayer(unit) then
 				self:SetBackdropBorderColor(getClassColor(unit))
-				modifyPlayerTooltip(unit)
+				_G["GameTooltipTextLeft1"]:SetText(getPvPflag(unit)..getStatusFlag(unit)..getColorHexUnit(unit, getClassColor(unit)))
+				-- display talents
+				if UnitLevel(unit) > 9 then
+					if not InspectFrame or not InspectFrame:IsShown() then
+						if CheckInteractDistance(unit,1) and CanInspect(unit) then
+							GameTooltip:RegisterEvent("INSPECT_READY")
+							NotifyInspect(unit)
+						end
+					end
+				end
+				if IsInGuild(unit) then
+					if _G["GameTooltipTextLeft2"]:GetText():find("^"..GetGuildInfo("player")) then
+						_G["GameTooltipTextLeft2"]:SetTextColor(0, 5, 1)
+					end
+				end
+				for i=1, GameTooltip:NumLines(), 1 do
+					if _G["GameTooltipTextLeft"..i]:GetText():find("^"..LEVEL) then
+						_G["GameTooltipTextLeft"..i]:SetText(getColorizedLevel(unit).." "..UnitRace(unit).." "..UnitClass(unit))
+					end
+				end
 			else
 				self:SetBackdropBorderColor(getReactionColor(unit))
-				modifyNPCTooltip(unit)
+				_G["GameTooltipTextLeft1"]:SetText(getPvPflag(unit)..getColorHexUnit(unit, getReactionColor(unit)))
+				for i=1, GameTooltip:NumLines(), 1 do
+					if _G["GameTooltipTextLeft"..i]:GetText():find("^"..LEVEL) then
+						_G["GameTooltipTextLeft"..i]:SetText(getColorizedLevel(unit)..getMobType(unit).." "..UnitCreatureType(unit) or "")
+					end
+				end
 			end
 
 			-- black background color
@@ -268,8 +258,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 		-- [hooks and scripts]
 		-- anchor
 		hooksecurefunc("GameTooltip_SetDefaultAnchor", function(tooltip, parent)
-			tooltip:SetOwner(parent, "ANCHOR_NONE")
-			tooltip:ClearAllPoints()
 			tooltip:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -13, 43)
 		end)
 
