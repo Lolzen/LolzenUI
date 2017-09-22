@@ -12,6 +12,7 @@ defaultconfig.modules = {
 	["chat"] = true,
 	["clock"] = true,
 	["fonts"] = true,
+	["itemlevel"] = true,
 	["inspect"] = true,
 	["interruptannouncer"] = true,
 	["minimap"] = true,
@@ -167,6 +168,11 @@ defaultconfig.fonts = {
 	["fonts_UNIT_NAME_FONT"] = "DroidSans.ttf",
 	["fonts_NAMEPLATE_FONT"] = "DroidSans.ttf",
 	["fonts_STANDARD_TEXT_FONT"] = "DroidSans.ttf",
+}
+
+defaultconfig.itemlevel = {
+	["ilvl_characterframe"] = true,
+	["ilvl_inspectframe"] = true,
 }
 
 defaultconfig.interruptannouncer = {
