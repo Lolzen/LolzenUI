@@ -125,6 +125,18 @@ f:SetScript("OnEvent", function(self, event, addon)
 				Glow:SetPoint("TOPLEFT", health, -5, 5)
 				Glow:SetPoint("BOTTOMRIGHT", health, 5, -5)
 				Glow:SetBackdropBorderColor(6, 0, 0)
+				
+				local targetindicator = health:CreateTexture(nil, 'OVERLAY')
+				targetindicator:SetPoint("LEFT", health, 20, -3)
+				targetindicator:SetTexture("Interface\\AddOns\\LolzenUI\\media\\target-glow")
+				targetindicator:SetSize(100*cvars.nameplateSelectedScale, 5*cvars.nameplateSelectedScale)
+				targetindicator:SetVertexColor(48/255, 113/255, 191/255)
+				
+				if UnitIsUnit(unit, "target") then
+					targetindicator:SetAlpha(1)
+				else
+					targetindicator:SetAlpha(0)
+				end
 
 				-- workaround so we can actually have an glow border
 				local threat = Glow:CreateTexture(nil, "OVERLAY")
