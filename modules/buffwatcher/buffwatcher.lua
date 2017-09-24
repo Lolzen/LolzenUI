@@ -5,18 +5,27 @@ f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)
 	if addon == "LolzenUI" then
 		if LolzenUIcfg.modules["buffwatcher"] == false then return end
+		
+		-- add character to buffwatchlist
+		if not LolzenUIcfg.buffwatcher["buffwatchlist"][UnitName("player")] then
+			LolzenUIcfg.buffwatcher["buffwatchlist"] = { 
+				[UnitName("player")] = {}
+			}
+			--tinsert(LolzenUIcfg.buffwatcher["buffwatchlist"], UnitName("player"))
+			print(UnitName("player").." added to buffwatchlist")
+		end
 
 		local anchor = CreateFrame("Frame", "AnchorFrame", UIParent)
-		anchor:SetSize(((#LolzenUIcfg.buffwatcher["buffwatchlist"] * LolzenUIcfg.buffwatcher["buffwatch_icon_size"]) + (#LolzenUIcfg.buffwatcher["buffwatchlist"] * LolzenUIcfg.buffwatcher["buffwatch_icon_spacing"])) - LolzenUIcfg.buffwatcher["buffwatch_icon_spacing"], 1)
+		anchor:SetSize(((#LolzenUIcfg.buffwatcher["buffwatchlist"][UnitName("player")] * LolzenUIcfg.buffwatcher["buffwatch_icon_size"]) + (#LolzenUIcfg.buffwatcher["buffwatchlist"][UnitName("player")] * LolzenUIcfg.buffwatcher["buffwatch_icon_spacing"])) - LolzenUIcfg.buffwatcher["buffwatch_icon_spacing"], 1)
 		anchor:SetPoint("CENTER", UIParent, "CENTER", LolzenUIcfg.buffwatcher["buffwatch_pos_x"], LolzenUIcfg.buffwatcher["buffwatch_pos_y"])
 
 		local icon = {}
-		for i=1, #LolzenUIcfg.buffwatcher["buffwatchlist"] do
+		for i=1, #LolzenUIcfg.buffwatcher["buffwatchlist"][UnitName("player")] do
 			-- icons
 			if not icon[i] then
 				icon[i] = anchor:CreateTexture(nil, "OVERLAY")
 				icon[i]:SetTexCoord(.04, .94, .04, .94)
-				icon[i]:SetTexture(GetSpellTexture(LolzenUIcfg.buffwatcher["buffwatchlist"][i]))
+				icon[i]:SetTexture(GetSpellTexture(LolzenUIcfg.buffwatcher["buffwatchlist"][UnitName("player")][i]))
 				icon[i]:SetSize(LolzenUIcfg.buffwatcher["buffwatch_icon_size"], LolzenUIcfg.buffwatcher["buffwatch_icon_size"])
 			end
 			if i == 1 then
@@ -52,7 +61,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 			-- identifier
 			if not icon[i].name then
-				icon[i].name = GetSpellInfo(LolzenUIcfg.buffwatcher["buffwatchlist"][i])
+				icon[i].name = GetSpellInfo(LolzenUIcfg.buffwatcher["buffwatchlist"][UnitName("player")][i])
 			end
 		end
 
@@ -60,7 +69,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		anchor:SetScript("OnUpdate", function(self, elapsed)
 			last = last + elapsed
 			if last > 0.1 then
-				for i=1, #LolzenUIcfg.buffwatcher["buffwatchlist"] do
+				for i=1, #LolzenUIcfg.buffwatcher["buffwatchlist"][UnitName("player")] do
 					local name, _, _, count, _, _, expirationTime = UnitBuff("player", icon[i].name)
 					if name then
 						if icon[i]:GetAlpha() ~= 1 then

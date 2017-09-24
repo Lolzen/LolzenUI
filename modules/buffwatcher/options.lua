@@ -31,10 +31,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 		
 		local icon = {}
-		for i=1, #LolzenUIcfg.buffwatcher["buffwatchlist"] do
+		for i=1, #LolzenUIcfg.buffwatcher["buffwatchlist"][UnitName("player")] do
 			icon[i] = ns["buffwatcher"]:CreateTexture(nil, "OVERLAY")
 			icon[i]:SetTexCoord(.04, .94, .04, .94)
-			icon[i]:SetTexture(select(2, getInfo(LolzenUIcfg.buffwatcher["buffwatchlist"][i])))
+			icon[i]:SetTexture(select(2, getInfo(LolzenUIcfg.buffwatcher["buffwatchlist"][UnitName("player")][i])))
 			icon[i]:SetSize(26, 26)
 			if i == 1 then
 				icon[i]:SetPoint("TOPLEFT", list, "BOTTOMLEFT", 0, -20)
@@ -46,7 +46,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				icon[i].text:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSans.ttf", 12 ,"OUTLINE")
 				icon[i].text:SetTextColor(1, 1, 1)
 				icon[i].text:SetPoint("LEFT", icon[i], "RIGHT", 10, 0)
-				icon[i].text:SetText(getInfo(LolzenUIcfg.buffwatcher["buffwatchlist"][i]).." (spellid: "..LolzenUIcfg.buffwatcher["buffwatchlist"][i]..")")
+				icon[i].text:SetText(getInfo(LolzenUIcfg.buffwatcher["buffwatchlist"][UnitName("player")][i]).." (spellid: "..LolzenUIcfg.buffwatcher["buffwatchlist"][UnitName("player")][i]..")")
 			end
 		end
 		
@@ -82,7 +82,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		b:SetPoint("TOPLEFT", eb, "BOTTOMLEFT", -7, -8)
 		b:SetScript("OnClick", function()
 			local isduplicate = false
-			for k, v in pairs(LolzenUIcfg.buffwatcher["buffwatchlist"]) do
+			for k, v in pairs(LolzenUIcfg.buffwatcher["buffwatchlist"][UnitName("player")]) do
 				if v == eb:GetText() then
 					isduplicate = true
 				end
@@ -90,7 +90,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			if isduplicate == true then
 				print("duplicate id detected!")
 			else
-				table.insert(LolzenUIcfg.buffwatcher["buffwatchlist"], eb:GetText())
+				table.insert(LolzenUIcfg.buffwatcher["buffwatchlist"][UnitName("player")], eb:GetText())
 				print("Hit Okay reload the list")
 			end
 		end)
@@ -100,9 +100,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 		b2:SetText("delete")
 		b2:SetPoint("LEFT", b, "RIGHT", 10, 0)
 		b2:SetScript("OnClick", function()
-			for k, v in pairs(LolzenUIcfg.buffwatcher["buffwatchlist"]) do
+			for k, v in pairs(LolzenUIcfg.buffwatcher["buffwatchlist"][UnitName("player")]) do
 				if v == eb:GetText() then
-					table.remove(LolzenUIcfg.buffwatcher["buffwatchlist"], k)
+					table.remove(LolzenUIcfg.buffwatcher["buffwatchlist"][UnitName("player")], k)
 				end
 			end
 			print("Hit Okay to reload the list")
