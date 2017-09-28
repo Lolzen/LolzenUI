@@ -19,6 +19,15 @@ f:SetScript("OnEvent", function(self, event, addon)
 			nameplateSelfScale = 1,
 		}
 
+		local PostUpdateHealth = function(health, unit, min, max)
+			frame = health:GetParent()
+			if UnitIsUnit(unit, "target") then
+				frame.Targetindicator:SetAlpha(1)
+			else
+				frame.Targetindicator:SetAlpha(0)
+			end
+		end
+
 		local PostUpdateThreat = function(Threat, unit)
 			local Glow = Threat:GetParent()
 			local status = UnitThreatSituation("player", unit)
@@ -131,12 +140,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				targetindicator:SetTexture("Interface\\AddOns\\LolzenUI\\media\\target-glow")
 				targetindicator:SetSize(100*cvars.nameplateSelectedScale, 5*cvars.nameplateSelectedScale)
 				targetindicator:SetVertexColor(48/255, 113/255, 191/255)
-				
-				if UnitIsUnit(unit, "target") then
-					targetindicator:SetAlpha(1)
-				else
-					targetindicator:SetAlpha(0)
-				end
+				frame.Targetindicator = targetindicator
 
 				-- workaround so we can actually have an glow border
 				local threat = Glow:CreateTexture(nil, "OVERLAY")
@@ -150,6 +154,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 				Castbar.PostCastStart = PostCastStart
 
 				threat.PostUpdate = PostUpdateThreat
+				
+				health.PostUpdate = PostUpdateHealth
 			end
 		end)
 		oUF:SpawnNamePlates(nil, nil, cvars)
