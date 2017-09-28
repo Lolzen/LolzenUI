@@ -15,7 +15,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		local about = ns["pullcount"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 		about:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8)
-		about:SetText("Plays sounds on a specific chat message (pull counter)")
+		about:SetText("Plays sounds on a specific chat message or BigWigs/DBM(pull counter)")
 
 		local pull_message_count_text = ns["pullcount"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 		pull_message_count_text:SetPoint("TOPLEFT", about, "BOTTOMLEFT", 0, -20)
