@@ -51,15 +51,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 		oUF.colors.power[11] = {51/255, 181/255, 229/225} --maelstrom
 		oUF.colors.power[13] = {0.84, 0.1, 0.87} --insanity (everything darker is unseeable on the powerbar)
 
-		local RAID_TARGET_UPDATE = function(self, event)
-			local index = GetRaidTargetIndex(self.unit)
-			if index then
-				self.RIcon:SetText(ICON_LIST[index].."23|t")
-			else
-				self.RIcon:SetText()
-			end
-		end
-
 		local PostCastStart = function(Castbar, unit, spell, spellrank)
 			if not unit == "targettarget" then
 				Castbar:GetParent().Name:SetText(spell)
@@ -280,15 +271,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 			self.Level = level
 
-			local RaidTargetIndicator = Health:CreateFontString(nil, "OVERLAY")
-			RaidTargetIndicator:SetPoint("CENTER", 0, 10)
-			RaidTargetIndicator:SetJustifyH("LEFT")
-			RaidTargetIndicator:SetFontObject(GameFontNormalSmall)
-			RaidTargetIndicator:SetTextColor(1, 1, 1)
-
-			self.RIcon = RaidTargetIndicator
-			self:RegisterEvent("RAID_TARGET_UPDATE", RAID_TARGET_UPDATE)
-			table.insert(self.__elements, RAID_TARGET_UPDATE)
+			local RaidTargetIndicator = Health:CreateTexture(nil, 'OVERLAY')
+			RaidTargetIndicator:SetSize(16, 16)
+			RaidTargetIndicator:SetPoint("CENTER", Health, 0, 10)
+			self.RaidTargetIndicator = RaidTargetIndicator
 
 			local Castbar = CreateFrame("StatusBar", nil, self)
 			Castbar:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
