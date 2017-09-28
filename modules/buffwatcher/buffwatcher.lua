@@ -8,10 +8,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		
 		-- add character to buffwatchlist
 		if not LolzenUIcfg.buffwatcher["buffwatchlist"][UnitName("player")] then
-			LolzenUIcfg.buffwatcher["buffwatchlist"] = { 
-				[UnitName("player")] = {}
-			}
-			--tinsert(LolzenUIcfg.buffwatcher["buffwatchlist"], UnitName("player"))
+			LolzenUIcfg.buffwatcher["buffwatchlist"][UnitName("player")] = {}
 			print(UnitName("player").." added to buffwatchlist")
 		end
 
