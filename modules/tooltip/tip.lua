@@ -105,7 +105,12 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 
 		local function getMobType(unit)
-			return mobType[UnitClassification(unit)] or ""
+			local classif = mobType[UnitClassification(unit)]
+			if classif ~= nil then
+				return classif
+			else
+				return UnitClassification(unit)
+			end
 		end
 
 		-- return the StatusFlag aka AFK, DND or offline
@@ -224,7 +229,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				_G["GameTooltipTextLeft1"]:SetText(getPvPflag(unit)..getColorHexUnit(unit, getReactionColor(unit)))
 				for i=1, GameTooltip:NumLines(), 1 do
 					if _G["GameTooltipTextLeft"..i]:GetText():find("^"..LEVEL) then
-						_G["GameTooltipTextLeft"..i]:SetText(getColorizedLevel(unit)..getMobType(unit).." "..UnitCreatureType(unit) or "")
+						_G["GameTooltipTextLeft"..i]:SetText(getColorizedLevel(unit)..getMobType(unit).." "..(UnitCreatureType(unit) or ""))
 					end
 				end
 			end
@@ -257,7 +262,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		-- [hooks and scripts]
 		-- anchor
-		hooksecurefunc("GameTooltip_SetDefaultAnchor", function(tooltip, parent)
+		hooksecurefunc("GameTooltip_SetDefaultAnchor", function(tooltip)
 			tooltip:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -13, 43)
 		end)
 
@@ -274,8 +279,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 		local function colorBG(self)
 			self:SetBackdropColor(0, 0, 0, 1)
 		end
-		
-	--	GameTooltip:HookScript("OnUpdate", colorBG)
 
 		-- also modify more tooltip types
 		for i=1, #tooltips, 1 do
