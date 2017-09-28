@@ -12,7 +12,7 @@ end
 local currency = {}
 local function getCurrencies()
 	if not OrderHallCommandBar then return end
-	for i=1, 3 do
+	for i=1, MAX_WATCHED_TOKENS do
 		if not currency[i] then
 			currency[i] = OrderHallCommandBar:CreateTexture("currencyTexture"..i)
 			currency[i]:SetSize(LolzenUIcfg.orderhallbar["ohb_currency_icon_size"], LolzenUIcfg.orderhallbar["ohb_currency_icon_size"])
