@@ -42,6 +42,9 @@ modules/clock/options.lua
 modules/fonts/fonts.lua
 modules/fonts/options.lua
 
+modules/itemlevel/ilvl.lua
+modules/itemlevel/options.lua
+
 modules/inspect/inspect.lua
 modules/inspect/options.lua
 
