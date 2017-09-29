@@ -17,7 +17,7 @@ local function getCurrencies()
 			currency[i] = OrderHallCommandBar:CreateTexture("currencyTexture"..i)
 			currency[i]:SetSize(LolzenUIcfg.orderhallbar["ohb_currency_icon_size"], LolzenUIcfg.orderhallbar["ohb_currency_icon_size"])
 			currency[i]:SetTexCoord(.04, .94, .04, .94)
-			
+
 			if not currency[i].text then
 				currency[i].text = OrderHallCommandBar:CreateFontString(nil, "OVERLAY")
 				currency[i].text:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\"..LolzenUIcfg.orderhallbar["ohb_currency_font"], LolzenUIcfg.orderhallbar["ohb_currency_font_size"] ,LolzenUIcfg.orderhallbar["ohb_currency_font_flag"])
@@ -39,8 +39,7 @@ local function getCurrencies()
 					GameTooltip:Hide()
 				end)
 			end
-		
-			
+
 			if i == 1 then
 				currency[i]:SetPoint("LEFT", OrderHallCommandBar.Currency, "RIGHT", 10, 0)
 			else
@@ -63,14 +62,12 @@ local function getCurrencies()
 				-- make the link available
 				if not currency[counter].tooltipinfo then
 					currency[counter].tooltipinfo = link:match("|Hcurrency:(%d+)|")
-				else
-					currency[counter].tooltipinfo = link:match("|Hcurrency:(%d+)|")
 				end
 				currency[counter]:Show()
 				currency[counter].text:Show()
 				counter = counter + 1
 			end
-		elseif not isWatched then
+		else
 			if currency[counter] then
 				currency[counter].text:SetText(nil)
 				currency[counter].tooltipinfo = nil
