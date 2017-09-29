@@ -45,11 +45,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 				local s = _G["Character"..slots[i].."Slot"]
 				if not s.str then
 					s.str = s:CreateFontString(nil, "OVERLAY")
-					s.str:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSans.ttf", 14, "THINOUTLINE")
-					s.str:SetPoint("TOP", s, 0, -5)
+					s.str:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\"..LolzenUIcfg.itemlevel["ilvl_font"], LolzenUIcfg.itemlevel["ilvl_font_size"], LolzenUIcfg.itemlevel["ilvl_font_flag"])
+					s.str:SetPoint(LolzenUIcfg.itemlevel["ilvl_anchor"], s, LolzenUIcfg.itemlevel["ilvl_font_posx"], LolzenUIcfg.itemlevel["ilvl_font_posy"])
 				end
 				s.str:SetText(showItemlvl("player", slots[i]))
-				s.str:SetTextColor(0, 1, 0)
+				s.str:SetTextColor(unpack(LolzenUIcfg.itemlevel["ilvl_font_color"]))
 			end
 		end
 
@@ -61,11 +61,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 				if s then 
 					if not s.str then
 						s.str = s:CreateFontString(nil, "OVERLAY")
-						s.str:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSans.ttf", 14, "THINOUTLINE")
-						s.str:SetPoint("TOP", s, 0, -5)
+						s.str:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\"..LolzenUIcfg.itemlevel["ilvl_font"], LolzenUIcfg.itemlevel["ilvl_font_size"], LolzenUIcfg.itemlevel["ilvl_font_flag"])
+						s.str:SetPoint(LolzenUIcfg.itemlevel["ilvl_anchor"], s, LolzenUIcfg.itemlevel["ilvl_font_posx"], LolzenUIcfg.itemlevel["ilvl_font_posy"])
 					else
 						s.str:SetText(showItemlvl(InspectFrame.unit, slots[i]))
-						s.str:SetTextColor(0, 1, 0)
+						s.str:SetTextColor(unpack(LolzenUIcfg.itemlevel["ilvl_font_color"]))
 					end
 				end
 			end
