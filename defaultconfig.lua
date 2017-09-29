@@ -173,6 +173,13 @@ defaultconfig.fonts = {
 defaultconfig.itemlevel = {
 	["ilvl_characterframe"] = true,
 	["ilvl_inspectframe"] = true,
+	["ilvl_font"] = "DroidSans.ttf",
+	["ilvl_font_size"] = 14,
+	["ilvl_font_flag"] = "THINOUTLINE",
+	["ilvl_font_color"] = {0, 1, 0},
+	["ilvl_anchor"] = "TOP",
+	["ilvl_font_posx"] = 0,
+	["ilvl_font_posy"] = -5,
 }
 
 defaultconfig.interruptannouncer = {
