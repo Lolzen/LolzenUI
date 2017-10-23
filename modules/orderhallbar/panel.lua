@@ -68,10 +68,12 @@ local function getCurrencies()
 				counter = counter + 1
 			end
 		else
-			if currency[counter] then
-				currency[counter].text:SetText(nil)
-				currency[counter].tooltipinfo = nil
-				currency[counter]:Hide()
+			for int=counter, #currency do
+				if currency[int] then
+					currency[int].text:SetText(nil)
+					currency[int].tooltipinfo = nil
+					currency[int]:Hide()
+				end
 			end
 		end
 	end
