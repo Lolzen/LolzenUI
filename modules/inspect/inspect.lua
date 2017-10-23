@@ -20,7 +20,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		local function UpdateUnit(unit)
 			InspectFrame.unit = unit
-			ShowUIPanel(InspectFrame)
 			updateFrames()
 		end
 
