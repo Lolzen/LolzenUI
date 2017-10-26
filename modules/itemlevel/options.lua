@@ -9,13 +9,10 @@ f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)
 	if addon == "LolzenUI" and LolzenUIcfg.modules["itemlevel"] == true then
 
-		local title = ns["itemlevel"]:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
-		title:SetPoint("TOPLEFT", ns["itemlevel"], 16, -16)
-		title:SetText("|cff5599ff"..ns["itemlevel"].name.."|r")
+		local title = ns.createTitle(self, "itemlevel")
 
-		local about = ns["itemlevel"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+		local about = ns.createDescription(self, "itemlevel", "Displays item level on equippable items")
 		about:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8)
-		about:SetText("Displays item level on items")
 
 		local cb1 = CreateFrame("CheckButton", "Character", ns["itemlevel"], "ChatConfigCheckButtonTemplate")
 		cb1:SetPoint("TOPLEFT", about, "BOTTOMLEFT", 0, -20)
@@ -37,8 +34,18 @@ f:SetScript("OnEvent", function(self, event, addon)
 			cb2:SetChecked(false)
 		end
 
+		local cb3 = CreateFrame("CheckButton", "Bags", ns["itemlevel"], "ChatConfigCheckButtonTemplate")
+		cb3:SetPoint("TOPLEFT", cb2, "BOTTOMLEFT", 0, 0)
+		BagsText:SetText("|cff5599ffShow Itemlevel in Bags|r")
+
+		if LolzenUIcfg.itemlevel["ilvl_bags"] == true then
+			cb3:SetChecked(true)
+		else
+			cb3:SetChecked(false)
+		end
+
 		local text = ns["itemlevel"]:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-		text:SetPoint("TOPLEFT", cb2, "BOTTOMLEFT", 0, -8)
+		text:SetPoint("TOPLEFT", cb3, "BOTTOMLEFT", 0, -8)
 		text:SetText("|cff5599ffiLvL text:|r")
 
 		local pos_x_text = ns["itemlevel"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -160,6 +167,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 			else
 				LolzenUIcfg.itemlevel["ilvl_inspectframe"] = false
 			end
+			if cb3:GetChecked(true) then
+				LolzenUIcfg.itemlevel["ilvl_bags"] = true
+			else
+				LolzenUIcfg.itemlevel["ilvl_bags"] = false
+			end
 			LolzenUIcfg.itemlevel["ilvl_anchor"] = anchor:GetText()
 			LolzenUIcfg.itemlevel["ilvl_font_posx"] = tonumber(pos_x:GetText())
 			LolzenUIcfg.itemlevel["ilvl_font_posy"] = tonumber(pos_y:GetText())
@@ -172,6 +184,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		ns["itemlevel"].default = function(self)
 			LolzenUIcfg.itemlevel["ilvl_characterframe"] = true
 			LolzenUIcfg.itemlevel["ilvl_inspectframe"] = true
+			LolzenUIcfg.itemlevel["ilvl_bags"] = true
 			LolzenUIcfg.itemlevel["ilvl_anchor"] = "TOP"
 			LolzenUIcfg.itemlevel["ilvl_font_posx"] = 0
 			LolzenUIcfg.itemlevel["ilvl_font_posy"] = -5
