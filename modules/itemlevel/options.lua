@@ -9,10 +9,13 @@ f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)
 	if addon == "LolzenUI" and LolzenUIcfg.modules["itemlevel"] == true then
 
-		local title = ns.createTitle(self, "itemlevel")
+		local title = ns["itemlevel"]:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
+		title:SetPoint("TOPLEFT", ns["itemlevel"], 16, -16)
+		title:SetText("|cff5599ff"..ns["itemlevel"].name.."|r")
 
-		local about = ns.createDescription(self, "itemlevel", "Displays item level on equippable items")
+		local about = ["itemlevel"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 		about:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8)
+		about:SetText("Displays item level on items")
 
 		local cb1 = CreateFrame("CheckButton", "Character", ns["itemlevel"], "ChatConfigCheckButtonTemplate")
 		cb1:SetPoint("TOPLEFT", about, "BOTTOMLEFT", 0, -20)
