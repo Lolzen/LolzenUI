@@ -15,7 +15,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		local about = ["itemlevel"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 		about:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8)
-		about:SetText("Displays item level on items")
+		about:SetText("Displays item level on equippable items")
 
 		local cb1 = CreateFrame("CheckButton", "Character", ns["itemlevel"], "ChatConfigCheckButtonTemplate")
 		cb1:SetPoint("TOPLEFT", about, "BOTTOMLEFT", 0, -20)
