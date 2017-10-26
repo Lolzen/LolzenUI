@@ -173,6 +173,7 @@ defaultconfig.fonts = {
 defaultconfig.itemlevel = {
 	["ilvl_characterframe"] = true,
 	["ilvl_inspectframe"] = true,
+	["ilvl_bags"] = true,
 	["ilvl_font"] = "DroidSans.ttf",
 	["ilvl_font_size"] = 14,
 	["ilvl_font_flag"] = "THINOUTLINE",
