@@ -4,6 +4,7 @@ local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:RegisterEvent("INSPECT_READY")
 f:RegisterEvent("UNIT_INVENTORY_CHANGED")
+f:RegisterEvent("BAG_UPDATE")
 f:SetScript("OnEvent", function(self, event, addon)
 	if addon == "LolzenUI" then
 		if LolzenUIcfg.modules["itemlevel"] == false then return end
@@ -38,6 +39,13 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 		end
 
+		local function showItemlvlBags(bagID, slotID)
+			local itemLink = GetContainerItemLink(bagID, slotID)
+			if itemLink and IsEquippableItem(itemLink) then
+				return select(4, GetItemInfo(itemLink))
+			end
+		end
+
 		-- PaperDollFrame
 		function f.updateCharacterSlotInfo()
 			for i=1, #slots do
@@ -53,7 +61,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 		end
 
-		--InspectFrame
+		-- InspectFrame
 		function f.updateInspectSlotInfo()
 			for i=1, #slots do
 				-- Create fontstrings for each slot we want
@@ -66,6 +74,40 @@ f:SetScript("OnEvent", function(self, event, addon)
 					else
 						s.str:SetText(showItemlvl(InspectFrame.unit, slots[i]))
 						s.str:SetTextColor(unpack(LolzenUIcfg.itemlevel["ilvl_font_color"]))
+					end
+				end
+			end
+		end
+
+		-- Bags
+		-- we need reverseNum and tempNum so we can assign the itemLevel to the correct slot
+		-- for some reason this would have been reversed in order otherwise, despite the slot from the corresponding bag having the correct slotID
+		local reverseNum = {}
+		local tempNum
+		function f.updateBagSlotInfo()
+			-- Cycle through all equipped bags
+			for bag = 0, NUM_BAG_SLOTS do
+				-- and get their slots
+				tempNum = GetContainerNumSlots(bag)
+				for slot = 1, GetContainerNumSlots(bag) do
+					reverseNum[slot] = tempNum
+					tempNum = tempNum -1
+					-- Create fontstrings for each slot we want
+					local s
+					if IsAddOnLoaded("BaudBag") then
+						s = _G["BaudBagSubBag"..bag.."Item"..slot]
+					else
+						s = _G["ContainerFrame"..(bag+1).."Item"..reverseNum[slot]]
+					end
+					if s then
+						if not s.str then
+							s.str = s:CreateFontString(nil, "OVERLAY")
+							s.str:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\"..LolzenUIcfg.itemlevel["ilvl_font"], LolzenUIcfg.itemlevel["ilvl_font_size"], LolzenUIcfg.itemlevel["ilvl_font_flag"])
+							s.str:SetPoint(LolzenUIcfg.itemlevel["ilvl_anchor"], s, LolzenUIcfg.itemlevel["ilvl_font_posx"], LolzenUIcfg.itemlevel["ilvl_font_posy"])
+						else
+							s.str:SetText(showItemlvlBags(bag, slot))
+							s.str:SetTextColor(unpack(LolzenUIcfg.itemlevel["ilvl_font_color"]))
+						end
 					end
 				end
 			end
@@ -88,6 +130,12 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		if LolzenUIcfg.itemlevel["ilvl_inspectframe"] == true then
 			f:updateInspectSlotInfo()
+		end
+	elseif event == "BAG_UPDATE" then
+		if LolzenUIcfg.modules["itemlevel"] == false then return end
+
+		if LolzenUIcfg.itemlevel["ilvl_bags"] == true then
+			f:updateBagSlotInfo()
 		end
 	end
 
