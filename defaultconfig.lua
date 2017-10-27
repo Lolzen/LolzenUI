@@ -97,10 +97,9 @@ defaultconfig.artifactbar = {
 	["artifactbar_font_size"] = 10,
 	["artifactbar_font_flag"] = "THINOUTLINE",
 	["artifactbar_font_color"] = {1, 1, 1},
-	["artifactbar_text_anchor1"] = "BOTTOM",
-	["artifactbar_text_anchor2"] = "TOP",
+	["artifactbar_text_anchor1"] = "TOP",
 	["artifactbar_text_posx"] = 0,
-	["artifactbar_text_posy"] = -2,
+	["artifactbar_text_posy"] = 2,
 }
 
 defaultconfig.buffs = {
