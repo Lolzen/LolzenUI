@@ -99,7 +99,7 @@ defaultconfig.artifactbar = {
 	["artifactbar_font_color"] = {1, 1, 1},
 	["artifactbar_text_anchor1"] = "TOP",
 	["artifactbar_text_posx"] = 0,
-	["artifactbar_text_posy"] = 2,
+	["artifactbar_text_posy"] = 8,
 }
 
 defaultconfig.buffs = {

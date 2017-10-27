@@ -211,7 +211,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			LolzenUIcfg.artifactbar["artifactbar_font_flag"] = "THINOUTLINE"
 			LolzenUIcfg.artifactbar["artifactbar_font_color"] = {1, 1, 1}
 			LolzenUIcfg.artifactbar["artifactbar_text_posx"] = 0
-			LolzenUIcfg.artifactbar["artifactbar_text_posy"] = 2
+			LolzenUIcfg.artifactbar["artifactbar_text_posy"] = 8
 			LolzenUIcfg.artifactbar["artifactbar_text_anchor1"] = "TOP"
 			ReloadUI()
 		end
