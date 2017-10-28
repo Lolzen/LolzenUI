@@ -279,10 +279,9 @@ defaultconfig.xpbar = {
 	["xpbar_font_size"] = 10,
 	["xpbar_font_flag"] = "THINOUTLINE",
 	["xpbar_font_color"] = {1, 1, 1},
-	["xpbar_text_anchor1"] = "BOTTOM",
-	["xpbar_text_anchor2"] = "TOP",
+	["xpbar_text_anchor1"] = "TOP",
 	["xpbar_text_posx"] = 0,
-	["xpbar_text_posy"] = -2,
+	["xpbar_text_posy"] = 8,
 }
 
 -- check default config and update if necessary
