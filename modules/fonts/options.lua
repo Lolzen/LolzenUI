@@ -42,10 +42,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 		tip:SetPoint("TOPLEFT", standard_text, "BOTTOMLEFT", 0, -20)
 
 		ns["fonts"].okay = function(self)
-			LolzenUIcfg.fonts["fonts_DAMAGE_TEXT_FONT"] = dmg:GetText()
-			LolzenUIcfg.fonts["fonts_UNIT_NAME_FONT"] = unit:GetText()
-			LolzenUIcfg.fonts["fonts_NAMEPLATE_FONT"] = np:GetText()
-			LolzenUIcfg.fonts["fonts_STANDARD_TEXT_FONT"] = standard:GetText()
+			LolzenUIcfg.fonts["fonts_DAMAGE_TEXT_FONT"] = ns.picker_fonts[UIDropDownMenu_GetSelectedID(dmg)]
+			LolzenUIcfg.fonts["fonts_UNIT_NAME_FONT"] = ns.picker_fonts[UIDropDownMenu_GetSelectedID(unit)]
+			LolzenUIcfg.fonts["fonts_NAMEPLATE_FONT"] = ns.picker_fonts[UIDropDownMenu_GetSelectedID(np)]
+			LolzenUIcfg.fonts["fonts_STANDARD_TEXT_FONT"] = ns.picker_fonts[UIDropDownMenu_GetSelectedID(standard)]
 		end
 
 		ns["fonts"].default = function(self)
