@@ -9,13 +9,10 @@ f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)
 	if addon == "LolzenUI" and LolzenUIcfg.modules["minimap"] == true then
 
-		local title = ns["minimap"]:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
-		title:SetPoint("TOPLEFT", ns["minimap"], 16, -16)
-		title:SetText("|cff5599ff"..ns["minimap"].name.."|r")
+		local title = ns.createTitle("minimap")
 
-		local about = ns["minimap"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+		local about = ns.createDescription("minimap", "A clean Minimap")
 		about:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8)
-		about:SetText("A clean Minimap")
 
 		local cb1 = CreateFrame("CheckButton", "squareMinimap", ns["minimap"], "ChatConfigCheckButtonTemplate")
 		cb1:SetPoint("TOPLEFT", about, "BOTTOMLEFT", 0, -20)
