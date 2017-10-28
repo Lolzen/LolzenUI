@@ -9,265 +9,103 @@ f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)
 	if addon == "LolzenUI" and LolzenUIcfg.modules["xpbar"] == true then
 
-		local title = ns["xpbar"]:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
-		title:SetPoint("TOPLEFT", ns["xpbar"], 16, -16)
-		title:SetText("|cff5599ff"..ns["xpbar"].name.."|r")
+		local title = ns.createTitle("xpbar")
 
-		local about = ns["xpbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+		local about = ns.createDescription("xpbar", "A bar which shows pretige/honor in bgs, rep at the watched faction or alternatively experience")
 		about:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8)
-		about:SetText("A bar which shows pretige/honor in bgs, rep at the watched faction or alternatively experience")
 
-		local height_text = ns["xpbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-		height_text:SetPoint("TOPLEFT", about, "BOTTOMLEFT", 0, -20)
-		height_text:SetText("Height:")
+		local header1 = ns.createHeader("xpbar", "Frame")
+		header1:SetPoint("TOPLEFT", about, "BOTTOMLEFT", 0, -20)
 
-		local height = CreateFrame("EditBox", nil, ns["xpbar"], "InputBoxTemplate")
+		local height_text = ns.createFonstring("xpbar", "Height:")
+		height_text:SetPoint("TOPLEFT", header1, "BOTTOMLEFT", 0, -8)
+
+		local height = ns.createInputbox("xpbar", 30, 20, LolzenUIcfg.xpbar["xpbar_height"])
 		height:SetPoint("LEFT", height_text, "RIGHT", 10, 0)
-		height:SetSize(30, 20)
-		height:SetAutoFocus(false)
-		height:ClearFocus()
-		height:SetNumber(LolzenUIcfg.xpbar["xpbar_height"])
-		height:SetCursorPosition(0)
 
-		local width_text = ns["xpbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+		local width_text = ns.createFonstring("xpbar", "Width:")
 		width_text:SetPoint("LEFT", height, "RIGHT", 10, 0)
-		width_text:SetText("Width:")
 
-		local width = CreateFrame("EditBox", nil, ns["xpbar"], "InputBoxTemplate")
+		local width = ns.createInputbox("xpbar", 40, 20, LolzenUIcfg.xpbar["xpbar_width"])
 		width:SetPoint("LEFT", width_text, "RIGHT", 10, 0)
-		width:SetSize(40, 20)
-		width:SetAutoFocus(false)
-		width:ClearFocus()
-		width:SetNumber(LolzenUIcfg.xpbar["xpbar_width"])
-		width:SetCursorPosition(0)
 
-		local alpha_text = ns["xpbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+		local alpha_text = ns.createFonstring("xpbar", "Alpha:")
 		alpha_text:SetPoint("LEFT", width, "RIGHT", 10, 0)
-		alpha_text:SetText("Alpha:")
 
-		local alpha = CreateFrame("EditBox", nil, ns["xpbar"], "InputBoxTemplate")
-		alpha:SetPoint("LEFT", alpha_text, "RIGHT", 10, 0)
-		alpha:SetSize(30, 20)
-		alpha:SetAutoFocus(false)
-		alpha:ClearFocus()
-		alpha:SetText(LolzenUIcfg.xpbar["xpbar_alpha"])
-		alpha:SetCursorPosition(0)
+		local alpha = ns.createPicker("xpbar", "alpha", "xpbar_alpha", 45, LolzenUIcfg.xpbar["xpbar_alpha"])
+		alpha:SetPoint("LEFT", alpha_text, "RIGHT", -10, -3)
 
-		local bg_alpha_text = ns["xpbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-		bg_alpha_text:SetPoint("LEFT", alpha, "RIGHT", 10, 0)
-		bg_alpha_text:SetText("Background alpha:")
+		local bg_alpha_text = ns.createFonstring("xpbar", "Background alpha:")
+		bg_alpha_text:SetPoint("LEFT", alpha, "RIGHT", -5, 3)
 
-		local bg_alpha = CreateFrame("EditBox", nil, ns["xpbar"], "InputBoxTemplate")
-		bg_alpha:SetPoint("LEFT", bg_alpha_text, "RIGHT", 10, 0)
-		bg_alpha:SetSize(30, 20)
-		bg_alpha:SetAutoFocus(false)
-		bg_alpha:ClearFocus()
-		bg_alpha:SetText(LolzenUIcfg.xpbar["xpbar_bg_alpha"])
-		bg_alpha:SetCursorPosition(0)
+		local bg_alpha = ns.createPicker("xpbar", "alpha", "xpbar_bg_alpha", 45, LolzenUIcfg.xpbar["xpbar_bg_alpha"])
+		bg_alpha:SetPoint("LEFT", bg_alpha_text, "RIGHT", -10, -3)
 
-		local pos_x_text = ns["xpbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-		pos_x_text:SetPoint("TOPLEFT", height_text, "BOTTOMLEFT", 0, -10)
-		pos_x_text:SetText("PosX:")
+		local pos_x_text = ns.createFonstring("xpbar", "PosX:")
+		pos_x_text:SetPoint("TOPLEFT", height_text, "BOTTOMLEFT", 0, -15)
 
-		local pos_x = CreateFrame("EditBox", nil, ns["xpbar"], "InputBoxTemplate")
+		local pos_x = ns.createInputbox("xpbar", 30, 20, LolzenUIcfg.xpbar["xpbar_posx"])
 		pos_x:SetPoint("LEFT", pos_x_text, "RIGHT", 10, 0)
-		pos_x:SetSize(30, 20)
-		pos_x:SetAutoFocus(false)
-		pos_x:ClearFocus()
-		pos_x:SetNumber(LolzenUIcfg.xpbar["xpbar_posx"])
-		pos_x:SetCursorPosition(0)
 
-		local pos_y_text = ns["xpbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+		local pos_y_text = ns.createFonstring("xpbar", "PosY:")
 		pos_y_text:SetPoint("LEFT", pos_x, "RIGHT", 5, 0)
-		pos_y_text:SetText("PosY:")
 
-		local pos_y = CreateFrame("EditBox", nil, ns["xpbar"], "InputBoxTemplate")
+		local pos_y = ns.createInputbox("xpbar", 30, 20, LolzenUIcfg.xpbar["xpbar_posy"])
 		pos_y:SetPoint("LEFT", pos_y_text, "RIGHT", 10, 0)
-		pos_y:SetSize(30, 20)
-		pos_y:SetAutoFocus(false)
-		pos_y:ClearFocus()
-		pos_y:SetNumber(LolzenUIcfg.xpbar["xpbar_posy"])
-		pos_y:SetCursorPosition(0)
 
-		local anchor_text = ns["xpbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+		local anchor_text = ns.createFonstring("xpbar", "Anchor:")
 		anchor_text:SetPoint("LEFT", pos_y, "RIGHT", 5, 0)
-		anchor_text:SetText("Anchor:")
 
-		local anchor = CreateFrame("EditBox", nil, ns["xpbar"], "InputBoxTemplate")
-		anchor:SetPoint("LEFT", anchor_text, "RIGHT", 10, 0)
-		anchor:SetSize(100, 20)
-		anchor:SetAutoFocus(false)
-		anchor:ClearFocus()
-		anchor:SetText(LolzenUIcfg.xpbar["xpbar_anchor"])
-		anchor:SetCursorPosition(0)
+		local anchor = ns.createPicker("xpbar", "anchor", "xpbar_anchor_bar", 110, LolzenUIcfg.xpbar["xpbar_anchor"])
+		anchor:SetPoint("LEFT", anchor_text, "RIGHT", -10, -3)
 
-		local parent_text = ns["xpbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-		parent_text:SetPoint("LEFT", anchor, "RIGHT", 5, 0)
-		parent_text:SetText("Parent:")
+		local parent_text = ns.createFonstring("xpbar", "Parent:")
+		parent_text:SetPoint("LEFT", anchor, "RIGHT", -5, 3)
 
-		local parent = CreateFrame("EditBox", nil, ns["xpbar"], "InputBoxTemplate")
+		local parent = ns.createInputbox("xpbar", 100, 20, LolzenUIcfg.xpbar["xpbar_parent"])
 		parent:SetPoint("LEFT", parent_text, "RIGHT", 10, 0)
-		parent:SetSize(100, 20)
-		parent:SetAutoFocus(false)
-		parent:ClearFocus()
-		parent:SetText(LolzenUIcfg.xpbar["xpbar_parent"])
-		parent:SetCursorPosition(0)
 
-		local texture_text = ns["xpbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-		texture_text:SetPoint("TOPLEFT", pos_x_text, "BOTTOMLEFT", 0, -10)
-		texture_text:SetText("|cff5599ffTexture:|r Interface\\AddOns\\LolzenUI\\media\\")
+		local texture_text = ns.createFonstring("xpbar", "|cff5599ffTexture:|r Interface\\AddOns\\LolzenUI\\media\\")
+		texture_text:SetPoint("TOPLEFT", pos_x_text, "BOTTOMLEFT", 0, -15)
 
-		local texture = CreateFrame("EditBox", nil, ns["xpbar"], "InputBoxTemplate")
+		local texture = ns.createInputbox("xpbar", 100, 20, LolzenUIcfg.xpbar["xpbar_texture"])
 		texture:SetPoint("LEFT", texture_text, "RIGHT", 10, 0)
-		texture:SetSize(100, 20)
-		texture:SetAutoFocus(false)
-		texture:ClearFocus()
-		texture:SetText(LolzenUIcfg.xpbar["xpbar_texture"])
-		texture:SetCursorPosition(0)
 
-		local color_text = ns["xpbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-		color_text:SetPoint("TOPLEFT", texture_text, "BOTTOMLEFT", 0, -10)
-		color_text:SetText("Regular xpbar color:")
+		local color_text = ns.createFonstring("xpbar", "Regular xpbar color:")
+		color_text:SetPoint("TOPLEFT", texture_text, "BOTTOMLEFT", 0, -15)
 
-		local color = ns["xpbar"]:CreateTexture(nil, "ARTWORK")
-		color:SetSize(16, 16)
-		color:SetVertexColor(unpack(LolzenUIcfg.xpbar["xpbar_xp_color"]))
+		local color = ns.createColorTexture("xpbar", 16, 16, LolzenUIcfg.xpbar["xpbar_xp_color"], LolzenUIcfg.xpbar["xpbar_texture"])
 		color:SetPoint("LEFT", color_text, "RIGHT", 10, 0)
-		color:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.xpbar["xpbar_texture"])
 
-		local function afbarSetNewColor()
-			r, g, b = ColorPickerFrame:GetColorRGB()
-			color:SetVertexColor(r, g, b)
-		end
-
-		local function restorePreviousColor()
-			color:SetVertexColor(unpack(ColorPickerFrame.previousValues))
-		end
-
-		local color_f = CreateFrame("Frame", nil, ns["xpbar"])
-		color_f:SetFrameStrata("HIGH")
-		color_f:EnableMouse(true)
+		local color_f = ns.createColorPicker("xpbar", color, LolzenUIcfg.xpbar["xpbar_xp_color"])
 		color_f:SetAllPoints(color)
-		color_f:SetScript("OnMouseDown", function(self)
-			-- clear previous values
-			ColorPickerFrame.previousValues = nil
-			ColorPickerFrame.cancelFunc = nil
-			ColorPickerFrame.func = nil
-			-- and fill with the relevant ones
-			ColorPickerFrame.previousValues = LolzenUIcfg.xpbar["xpbar_xp_color"]
-			ColorPickerFrame:SetColorRGB(unpack(LolzenUIcfg.xpbar["xpbar_xp_color"]))
-			ColorPickerFrame.cancelFunc = restorePreviousColor
-			ColorPickerFrame.func = afbarSetNewColor
-			ColorPickerFrame:Show()
-		end)
 
-		local color_text2 = ns["xpbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+		local color_text2 = ns.createFonstring("xpbar", "Rested xpbar color:")
 		color_text2:SetPoint("LEFT", color, "RIGHT", 15, 0)
-		color_text2:SetText("Rested xpbar color:")
 
-		local color2 = ns["xpbar"]:CreateTexture(nil, "ARTWORK")
-		color2:SetSize(16, 16)
-		color2:SetVertexColor(unpack(LolzenUIcfg.xpbar["xpbar_xp_rested_color"]))
+		local color2 = ns.createColorTexture("xpbar", 16, 16, LolzenUIcfg.xpbar["xpbar_xp_rested_color"], LolzenUIcfg.xpbar["xpbar_texture"])
 		color2:SetPoint("LEFT", color_text2, "RIGHT", 10, 0)
-		color2:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.xpbar["xpbar_texture"])
 
-		local function afbarSetNewColor()
-			r, g, b = ColorPickerFrame:GetColorRGB()
-			color2:SetVertexColor(r, g, b)
-		end
-
-		local function restorePreviousColor()
-			color2:SetVertexColor(unpack(ColorPickerFrame.previousValues))
-		end
-
-		local color_f2 = CreateFrame("Frame", nil, ns["xpbar"])
-		color_f2:SetFrameStrata("HIGH")
-		color_f2:EnableMouse(true)
+		local color_f2 = ns.createColorPicker("xpbar", color2, LolzenUIcfg.xpbar["xpbar_xp_rested_color"])
 		color_f2:SetAllPoints(color2)
-		color_f2:SetScript("OnMouseDown", function(self)
-			-- clear previous values
-			ColorPickerFrame.previousValues = nil
-			ColorPickerFrame.cancelFunc = nil
-			ColorPickerFrame.func = nil
-			-- and fill with the relevant ones
-			ColorPickerFrame.previousValues = LolzenUIcfg.xpbar["xpbar_xp_rested_color"]
-			ColorPickerFrame:SetColorRGB(unpack(LolzenUIcfg.xpbar["xpbar_xp_rested_color"]))
-			ColorPickerFrame.cancelFunc = restorePreviousColor
-			ColorPickerFrame.func = afbarSetNewColor
-			ColorPickerFrame:Show()
-		end)
 
-		local color_text3 = ns["xpbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+		local color_text3 = ns.createFonstring("xpbar", "PvP color (prestige):")
 		color_text3:SetPoint("LEFT", color2, "RIGHT", 15, 0)
-		color_text3:SetText("PvP color (prestige):")
 
-		local color3 = ns["xpbar"]:CreateTexture(nil, "ARTWORK")
-		color3:SetSize(16, 16)
-		color3:SetVertexColor(unpack(LolzenUIcfg.xpbar["xpbar_pvp_color"]))
+		local color3 = ns.createColorTexture("xpbar", 16, 16, LolzenUIcfg.xpbar["xpbar_pvp_color"], LolzenUIcfg.xpbar["xpbar_texture"])
 		color3:SetPoint("LEFT", color_text3, "RIGHT", 10, 0)
-		color3:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.xpbar["xpbar_texture"])
 
-		local function afbarSetNewColor()
-			r, g, b = ColorPickerFrame:GetColorRGB()
-			color3:SetVertexColor(r, g, b)
-		end
-
-		local function restorePreviousColor()
-			color3:SetVertexColor(unpack(ColorPickerFrame.previousValues))
-		end
-
-		local color_f3 = CreateFrame("Frame", nil, ns["xpbar"])
-		color_f3:SetFrameStrata("HIGH")
-		color_f3:EnableMouse(true)
+		local color_f3 = ns.createColorPicker("xpbar", color3, LolzenUIcfg.xpbar["xpbar_pvp_color"])
 		color_f3:SetAllPoints(color3)
-		color_f3:SetScript("OnMouseDown", function(self)
-			-- clear previous values
-			ColorPickerFrame.previousValues = nil
-			ColorPickerFrame.cancelFunc = nil
-			ColorPickerFrame.func = nil
-			-- and fill with the relevant ones
-			ColorPickerFrame.previousValues = LolzenUIcfg.xpbar["xpbar_pvp_color"]
-			ColorPickerFrame:SetColorRGB(unpack(LolzenUIcfg.xpbar["xpbar_pvp_color"]))
-			ColorPickerFrame.cancelFunc = restorePreviousColor
-			ColorPickerFrame.func = afbarSetNewColor
-			ColorPickerFrame:Show()
-		end)
 
-		local color_text4 = ns["xpbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+		local color_text4 = ns.createFonstring("xpbar", "Paragon xp color:")
 		color_text4:SetPoint("LEFT", color3, "RIGHT", 15, 0)
-		color_text4:SetText("Paragon xp color:")
 
-		local color4 = ns["xpbar"]:CreateTexture(nil, "ARTWORK")
-		color4:SetSize(16, 16)
-		color4:SetVertexColor(unpack(LolzenUIcfg.xpbar["xpbar_paragon_color"]))
+		local color4 = ns.createColorTexture("xpbar", 16, 16, LolzenUIcfg.xpbar["xpbar_paragon_color"], LolzenUIcfg.xpbar["xpbar_texture"])
 		color4:SetPoint("LEFT", color_text4, "RIGHT", 10, 0)
-		color4:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.xpbar["xpbar_texture"])
 
-		local function afbarSetNewColor()
-			r, g, b = ColorPickerFrame:GetColorRGB()
-			color4:SetVertexColor(r, g, b)
-		end
-
-		local function restorePreviousColor()
-			color4:SetVertexColor(unpack(ColorPickerFrame.previousValues))
-		end
-
-		local color_f4 = CreateFrame("Frame", nil, ns["xpbar"])
-		color_f4:SetFrameStrata("HIGH")
-		color_f4:EnableMouse(true)
+		local color_f4 = ns.createColorPicker("xpbar", color4, LolzenUIcfg.xpbar["xpbar_paragon_color"])
 		color_f4:SetAllPoints(color4)
-		color_f4:SetScript("OnMouseDown", function(self)
-			-- clear previous values
-			ColorPickerFrame.previousValues = nil
-			ColorPickerFrame.cancelFunc = nil
-			ColorPickerFrame.func = nil
-			-- and fill with the relevant ones
-			ColorPickerFrame.previousValues = LolzenUIcfg.xpbar["xpbar_paragon_color"]
-			ColorPickerFrame:SetColorRGB(unpack(LolzenUIcfg.xpbar["xpbar_paragon_color"]))
-			ColorPickerFrame.cancelFunc = restorePreviousColor
-			ColorPickerFrame.func = afbarSetNewColor
-			ColorPickerFrame:Show()
-		end)
 
 		local cb1 = CreateFrame("CheckButton", "pxborder_xp", ns["xpbar"], "ChatConfigCheckButtonTemplate")
 		cb1:SetPoint("TOPLEFT", color_text, "BOTTOMLEFT", 0, -8)
@@ -304,136 +142,64 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 		end
 
-		local font_text = ns["xpbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-		font_text:SetPoint("TOPLEFT", cb2, "BOTTOMLEFT", 0, -10)
-		font_text:SetText("Font:")
+		local header2 = ns.createHeader("xpbar", "Font")
+		header2:SetPoint("TOPLEFT", cb2, "BOTTOMLEFT", 0, -30)
 
-		local font = CreateFrame("EditBox", nil, ns["xpbar"], "InputBoxTemplate")
-		font:SetPoint("LEFT", font_text, "RIGHT", 10, 0)
-		font:SetSize(200, 20)
-		font:SetAutoFocus(false)
-		font:ClearFocus()
-		font:SetText(LolzenUIcfg.xpbar["xpbar_font"])
-		font:SetCursorPosition(0)
+		local font_text = ns.createFonstring("xpbar", "Font:")
+		font_text:SetPoint("TOPLEFT", header2, "BOTTOMLEFT", 0, -10)
 
-		local font_size_text = ns["xpbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-		font_size_text:SetPoint("TOPLEFT", font_text, "BOTTOMLEFT", 0, -10)
-		font_size_text:SetText("Font size:")
+		local font = ns.createPicker("xpbar", "font", "xpbar_font", 120, LolzenUIcfg.xpbar["xpbar_font"])
+		font:SetPoint("LEFT", font_text, "RIGHT", -10, -3)
 
-		local font_size = CreateFrame("EditBox", nil, ns["xpbar"], "InputBoxTemplate")
+		local font_size_text = ns.createFonstring("xpbar", "Font size:")
+		font_size_text:SetPoint("TOPLEFT", font_text, "BOTTOMLEFT", 0, -15)
+
+		local font_size = ns.createInputbox("xpbar", 30, 20, LolzenUIcfg.xpbar["xpbar_font_size"])
 		font_size:SetPoint("LEFT", font_size_text, "RIGHT", 10, 0)
-		font_size:SetSize(30, 20)
-		font_size:SetAutoFocus(false)
-		font_size:ClearFocus()
-		font_size:SetNumber(LolzenUIcfg.xpbar["xpbar_font_size"])
-		font_size:SetCursorPosition(0)
 
-		local font_flag_text = ns["xpbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-		font_flag_text:SetPoint("TOPLEFT", font_size_text, "BOTTOMLEFT", 0, -10)
-		font_flag_text:SetText("Font outlining:")
+		local font_flag_text = ns.createFonstring("xpbar", "Font flag:")
+		font_flag_text:SetPoint("TOPLEFT", font_size_text, "BOTTOMLEFT", 0, -15)
 
-		local font_flag = CreateFrame("EditBox", nil, ns["xpbar"], "InputBoxTemplate")
-		font_flag:SetPoint("LEFT", font_flag_text, "RIGHT", 10, 0)
-		font_flag:SetSize(100, 20)
-		font_flag:SetAutoFocus(false)
-		font_flag:ClearFocus()
-		font_flag:SetText(LolzenUIcfg.xpbar["xpbar_font_flag"])
-		font_flag:SetCursorPosition(0)
+		local font_flag = ns.createPicker("xpbar", "flag", "xpbar_font_flag", 120, LolzenUIcfg.xpbar["xpbar_font_flag"])
+		font_flag:SetPoint("LEFT", font_flag_text, "RIGHT", -10, -3)
 
-		local font_color_text = ns["xpbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-		font_color_text:SetPoint("TOPLEFT", font_flag_text, "BOTTOMLEFT", 0, -10)
-		font_color_text:SetText("Font color:")
+		local font_color_text = ns.createFonstring("xpbar", "Font color:")
+		font_color_text:SetPoint("TOPLEFT", font_flag_text, "BOTTOMLEFT", 0, -15)
 
-		local text_color = ns["xpbar"]:CreateTexture(nil, "ARTWORK")
-		text_color:SetSize(16, 16)
-		text_color:SetVertexColor(unpack(LolzenUIcfg.xpbar["xpbar_font_color"]))
+		local text_color = ns.createColorTexture("xpbar", 16, 16, LolzenUIcfg.xpbar["xpbar_font_color"], LolzenUIcfg.xpbar["xpbar_texture"])
 		text_color:SetPoint("LEFT", font_color_text, "RIGHT", 10, 0)
-		text_color:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.xpbar["xpbar_texture"])
 
-		local function afbarTextSetNewColor()
-			r, g, b = ColorPickerFrame:GetColorRGB()
-			text_color:SetVertexColor(r, g, b)
-		end
-
-		local function restoreTextPreviousColor()
-			text_color:SetVertexColor(unpack(ColorPickerFrame.previousValues))
-		end
-
-		local text_color_f = CreateFrame("Frame", nil, ns["xpbar"])
-		text_color_f:SetFrameStrata("HIGH")
-		text_color_f:EnableMouse(true)
+		local text_color_f = ns.createColorPicker("xpbar", text_color, LolzenUIcfg.xpbar["xpbar_font_color"])
 		text_color_f:SetAllPoints(text_color)
-		text_color_f:SetScript("OnMouseDown", function(self)
-			-- clear previous values
-			ColorPickerFrame.previousValues = nil
-			ColorPickerFrame.cancelFunc = nil
-			ColorPickerFrame.func = nil
-			-- and fill with the relevant ones
-			ColorPickerFrame.previousValues = LolzenUIcfg.xpbar["xpbar_font_color"]
-			ColorPickerFrame:SetColorRGB(unpack(LolzenUIcfg.xpbar["xpbar_font_color"]))
-			ColorPickerFrame.cancelFunc = restoreTextPreviousColor
-			ColorPickerFrame.func = afbarTextSetNewColor
-			ColorPickerFrame:Show()
-		end)
 
-		local text_pos_x_text = ns["xpbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-		text_pos_x_text:SetPoint("TOPLEFT", font_color_text, "BOTTOMLEFT", 0, -10)
-		text_pos_x_text:SetText("Text PosX:")
+		local text_pos_x_text = ns.createFonstring("xpbar", "Text PosX:")
+		text_pos_x_text:SetPoint("TOPLEFT", font_color_text, "BOTTOMLEFT", 0, -15)
 
-		local text_pos_x = CreateFrame("EditBox", nil, ns["xpbar"], "InputBoxTemplate")
+		local text_pos_x = ns.createInputbox("xpbar", 30, 20, LolzenUIcfg.xpbar["xpbar_text_posx"])
 		text_pos_x:SetPoint("LEFT", text_pos_x_text, "RIGHT", 10, 0)
-		text_pos_x:SetSize(30, 20)
-		text_pos_x:SetAutoFocus(false)
-		text_pos_x:ClearFocus()
-		text_pos_x:SetNumber(LolzenUIcfg.xpbar["xpbar_text_posx"])
-		text_pos_x:SetCursorPosition(0)
 
-		local text_pos_y_text = ns["xpbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+		local text_pos_y_text = ns.createFonstring("xpbar", "Text PosY:")
 		text_pos_y_text:SetPoint("LEFT", text_pos_x, "RIGHT", 5, 0)
-		text_pos_y_text:SetText("Text PosY:")
 
-		local text_pos_y = CreateFrame("EditBox", nil, ns["xpbar"], "InputBoxTemplate")
+		local text_pos_y = ns.createInputbox("xpbar", 30, 20, LolzenUIcfg.xpbar["xpbar_text_posy"])
 		text_pos_y:SetPoint("LEFT", text_pos_y_text, "RIGHT", 10, 0)
-		text_pos_y:SetSize(30, 20)
-		text_pos_y:SetAutoFocus(false)
-		text_pos_y:ClearFocus()
-		text_pos_y:SetNumber(LolzenUIcfg.xpbar["xpbar_text_posy"])
-		text_pos_y:SetCursorPosition(0)
 
-		local text_anchor_text = ns["xpbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+		local text_anchor_text = ns.createFonstring("xpbar", "Text Anchor:")
 		text_anchor_text:SetPoint("LEFT", text_pos_y, "RIGHT", 10, 0)
-		text_anchor_text:SetText("Text Anchor1:")
 
-		local text_anchor = CreateFrame("EditBox", nil, ns["xpbar"], "InputBoxTemplate")
-		text_anchor:SetPoint("LEFT", text_anchor_text, "RIGHT", 10, 0)
-		text_anchor:SetSize(100, 20)
-		text_anchor:SetAutoFocus(false)
-		text_anchor:ClearFocus()
-		text_anchor:SetText(LolzenUIcfg.xpbar["xpbar_text_anchor1"])
-		text_anchor:SetCursorPosition(0)
-
-		local text_anchor2_text = ns["xpbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-		text_anchor2_text:SetPoint("LEFT", text_anchor, "RIGHT", 5, 0)
-		text_anchor2_text:SetText("Text Anchor2:")
-
-		local text_anchor2 = CreateFrame("EditBox", nil, ns["xpbar"], "InputBoxTemplate")
-		text_anchor2:SetPoint("LEFT", text_anchor2_text, "RIGHT", 10, 0)
-		text_anchor2:SetSize(100, 20)
-		text_anchor2:SetAutoFocus(false)
-		text_anchor2:ClearFocus()
-		text_anchor2:SetText(LolzenUIcfg.xpbar["xpbar_text_anchor2"])
-		text_anchor2:SetCursorPosition(0)
+		local text_anchor = ns.createPicker("xpbar", "anchor", "xpbar_text_anchor_1", 110, LolzenUIcfg.xpbar["xpbar_text_anchor1"])
+		text_anchor:SetPoint("LEFT", text_anchor_text, "RIGHT", -10, -3)
 
 		ns["xpbar"].okay = function(self)
 			LolzenUIcfg.xpbar["xpbar_height"] = tonumber(height:GetText())
 			LolzenUIcfg.xpbar["xpbar_width"] = tonumber(width:GetText())
-			LolzenUIcfg.xpbar["xpbar_anchor"] = anchor:GetText()
+			LolzenUIcfg.xpbar["xpbar_anchor"] = ns.picker_anchor[UIDropDownMenu_GetSelectedID(anchor)]
 			LolzenUIcfg.xpbar["xpbar_parent"] = parent:GetText()
 			LolzenUIcfg.xpbar["xpbar_posx"] = tonumber(pos_x:GetText())
 			LolzenUIcfg.xpbar["xpbar_posy"] = tonumber(pos_y:GetText())
 			LolzenUIcfg.xpbar["xpbar_texture"] = texture:GetText()
-			LolzenUIcfg.xpbar["xpbar_alpha"] = tonumber(alpha:GetText())
-			LolzenUIcfg.xpbar["xpbar_bg_alpha"] = tonumber(bg_alpha:GetText())
+			LolzenUIcfg.xpbar["xpbar_alpha"] = tonumber(ns.picker_alpha[UIDropDownMenu_GetSelectedID(alpha)])
+			LolzenUIcfg.xpbar["xpbar_bg_alpha"] = tonumber(ns.picker_alpha[UIDropDownMenu_GetSelectedID(bg_alpha)])
 			LolzenUIcfg.xpbar["xpbar_xp_color"] = {color:GetVertexColor()}
 			LolzenUIcfg.xpbar["xpbar_xp_restedcolor"] = {color2:GetVertexColor()}
 			LolzenUIcfg.xpbar["xpbar_pvp_color"] = {color3:GetVertexColor()}
@@ -448,14 +214,13 @@ f:SetScript("OnEvent", function(self, event, addon)
 			else
 				LolzenUIcfg.xpbar["xpbar_1px_border_round"] = false
 			end
-			LolzenUIcfg.xpbar["xpbar_font"] = font:GetText()
+			LolzenUIcfg.xpbar["xpbar_font"] = ns.picker_fonts[UIDropDownMenu_GetSelectedID(font)]
 			LolzenUIcfg.xpbar["xpbar_font_size"] = tonumber(font_size:GetText())
-			LolzenUIcfg.xpbar["xpbar_font_flag"] = font_flag:GetText()
+			LolzenUIcfg.xpbar["xpbar_font_flag"] = ns.picker_flags[UIDropDownMenu_GetSelectedID(font_flag)]
 			LolzenUIcfg.xpbar["xpbar_font_color"] = {text_color:GetVertexColor()}
 			LolzenUIcfg.xpbar["xpbar_text_posx"] = tonumber(text_pos_x:GetText())
 			LolzenUIcfg.xpbar["xpbar_text_posy"] = tonumber(text_pos_y:GetText())
-			LolzenUIcfg.xpbar["xpbar_text_anchor1"] = text_anchor:GetText()
-			LolzenUIcfg.xpbar["xpbar_text_anchor2"] = text_anchor2:GetText()
+			LolzenUIcfg.xpbar["xpbar_text_anchor1"] = ns.picker_anchor[UIDropDownMenu_GetSelectedID(text_anchor)]
 		end
 
 		ns["xpbar"].default = function(self)
@@ -479,9 +244,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 			LolzenUIcfg.xpbar["xpbar_font_flag"] = "THINOUTLINE"
 			LolzenUIcfg.xpbar["xpbar_font_color"] = {1, 1, 1}
 			LolzenUIcfg.xpbar["xpbar_text_posx"] = 0
-			LolzenUIcfg.xpbar["xpbar_text_posy"] = -2
-			LolzenUIcfg.xpbar["xpbar_text_anchor1"] = "BOTTOM"
-			LolzenUIcfg.xpbar["xpbar_text_anchor2"] = "TOP"
+			LolzenUIcfg.xpbar["xpbar_text_posy"] = 8
+			LolzenUIcfg.xpbar["xpbar_text_anchor1"] = "TOP"
 			ReloadUI()
 		end
 	end
