@@ -26,7 +26,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		local width_text = ns.createFonstring("artifactbar", "Width:")
 		width_text:SetPoint("LEFT", height, "RIGHT", 10, 0)
 
-		local width = ns.createInputbox("artifactbar", 30, 20, LolzenUIcfg.artifactbar["artifactbar_width"])
+		local width = ns.createInputbox("artifactbar", 40, 20, LolzenUIcfg.artifactbar["artifactbar_width"])
 		width:SetPoint("LEFT", width_text, "RIGHT", 10, 0)
 
 		local alpha_text = ns.createFonstring("artifactbar", "Alpha:")
@@ -157,7 +157,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		local text_pos_y = ns.createInputbox("artifactbar", 30, 20, LolzenUIcfg.artifactbar["artifactbar_text_posy"])
 		text_pos_y:SetPoint("LEFT", text_pos_y_text, "RIGHT", 10, 0)
 
-		local text_anchor_text = ns.createFonstring("artifactbar", "Text Anchor1:")
+		local text_anchor_text = ns.createFonstring("artifactbar", "Text Anchor:")
 		text_anchor_text:SetPoint("LEFT", text_pos_y, "RIGHT", 10, 0)
 
 		local text_anchor = ns.createPicker("artifactbar", "anchor", "artifactbar_text_anchor_1", 110, LolzenUIcfg.artifactbar["artifactbar_text_anchor1"])
