@@ -74,7 +74,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		-- fontstring
 		local xptext = xpbar:CreateFontString(nil, "OVERLAY")
-		xptext:SetPoint(LolzenUIcfg.xpbar["xpbar_text_anchor1"], xpbar, LolzenUIcfg.xpbar["xpbar_text_anchor2"], LolzenUIcfg.xpbar["xpbar_text_posx"], LolzenUIcfg.xpbar["xpbar_text_posy"])
+		xptext:SetPoint(LolzenUIcfg.xpbar["xpbar_text_anchor1"], xpbar, LolzenUIcfg.xpbar["xpbar_text_posx"], LolzenUIcfg.xpbar["xpbar_text_posy"])
 		xptext:SetParent(UIParent)
 		xptext:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\"..LolzenUIcfg.xpbar["xpbar_font"], LolzenUIcfg.xpbar["xpbar_font_size"], LolzenUIcfg.xpbar["xpbar_font_flag"])
 		xptext:SetTextColor(unpack(LolzenUIcfg.xpbar["xpbar_font_color"]))
