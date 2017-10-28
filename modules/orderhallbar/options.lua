@@ -9,13 +9,10 @@ f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)
 	if addon == "LolzenUI" and LolzenUIcfg.modules["orderhallbar"] == true then
 
-		local title = ns["orderhallbar"]:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
-		title:SetPoint("TOPLEFT", ns["orderhallbar"], 16, -16)
-		title:SetText("|cff5599ff"..ns["orderhallbar"].name.."|r")
+		local title = ns.createTitle("orderhallbar")
 
-		local about = ns["orderhallbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+		local about = ns.createDescription("orderhallbar", "Modify the OrderHallBar and show currencies marked as \"Show in Backpack\"")
 		about:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8)
-		about:SetText("Modify the OrderHallBar and show currencies marked as \"Show in Backpack\"")
 
 		local cb1 = CreateFrame("CheckButton", "alwaysshow", ns["orderhallbar"], "ChatConfigCheckButtonTemplate")
 		cb1:SetPoint("TOPLEFT", about, "BOTTOMLEFT", 0, -20)
@@ -27,159 +24,74 @@ f:SetScript("OnEvent", function(self, event, addon)
 			cb1:SetChecked(false)
 		end
 
-		local ohb_bg_text = ns["orderhallbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-		ohb_bg_text:SetPoint("TOPLEFT", cb1, "BOTTOMLEFT", 0, -8)
-		ohb_bg_text:SetText("Backround:")
+		local header1 = ns.createHeader("orderhallbar", "Background:")
+		header1:SetPoint("TOPLEFT", cb1, "BOTTOMLEFT", 0, -30)
+		
+		local ohb_bg_text = ns.createFonstring("orderhallbar", "Texture:")
+		ohb_bg_text:SetPoint("TOPLEFT", header1, "BOTTOMLEFT", 0, -8)
 
-		local ohb_bg = CreateFrame("EditBox", nil, ns["orderhallbar"], "InputBoxTemplate")
+		local ohb_bg = ns.createInputbox("orderhallbar", 80, 20, LolzenUIcfg.orderhallbar["ohb_background"])
 		ohb_bg:SetPoint("LEFT", ohb_bg_text, "RIGHT", 10, 0)
-		ohb_bg:SetSize(80, 20)
-		ohb_bg:SetAutoFocus(false)
-		ohb_bg:ClearFocus()
-		ohb_bg:SetText(LolzenUIcfg.orderhallbar["ohb_background"])
-		ohb_bg:SetCursorPosition(0)
 
-		local color_text = ns["orderhallbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+		local color_text = ns.createFonstring("orderhallbar", "Color:")
 		color_text:SetPoint("LEFT", ohb_bg, "RIGHT", 10, 0)
-		color_text:SetText("Background color:")
 
-		local color = ns["orderhallbar"]:CreateTexture(nil, "ARTWORK")
-		color:SetSize(16, 16)
-		color:SetVertexColor(unpack(LolzenUIcfg.orderhallbar["ohb_background_color"]))
+		local color = ns.createColorTexture("orderhallbar", 16, 16, LolzenUIcfg.orderhallbar["ohb_background_color"], LolzenUIcfg.orderhallbar["ohb_background"])
 		color:SetPoint("LEFT", color_text, "RIGHT", 10, 0)
-		color:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.orderhallbar["ohb_background"])
 
-		local function afbarSetNewColor()
-			r, g, b = ColorPickerFrame:GetColorRGB()
-			color:SetVertexColor(r, g, b)
-		end
-
-		local function restorePreviousColor()
-			color:SetVertexColor(unpack(ColorPickerFrame.previousValues))
-		end
-
-		local color_f = CreateFrame("Frame", nil, ns["orderhallbar"])
-		color_f:SetFrameStrata("HIGH")
-		color_f:EnableMouse(true)
+		local color_f = ns.createColorPicker("orderhallbar", color, LolzenUIcfg.orderhallbar["ohb_background_color"])
 		color_f:SetAllPoints(color)
-		color_f:SetScript("OnMouseDown", function(self)
-			-- clear previous values
-			ColorPickerFrame.previousValues = nil
-			ColorPickerFrame.cancelFunc = nil
-			ColorPickerFrame.func = nil
-			-- and fill with the relevant ones
-			ColorPickerFrame.previousValues = LolzenUIcfg.orderhallbar["ohb_background_color"]
-			ColorPickerFrame:SetColorRGB(unpack(LolzenUIcfg.orderhallbar["ohb_background_color"]))
-			ColorPickerFrame.cancelFunc = restorePreviousColor
-			ColorPickerFrame.func = afbarSetNewColor
-			ColorPickerFrame:Show()
-		end)
 
-		local alpha_text = ns["orderhallbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+		local alpha_text = ns.createFonstring("orderhallbar", "Alpha:")
 		alpha_text:SetPoint("LEFT", color, "RIGHT", 10, 0)
-		alpha_text:SetText("Alpha:")
 
-		local alpha = CreateFrame("EditBox", nil, ns["orderhallbar"], "InputBoxTemplate")
+		local alpha = ns.createInputbox("orderhallbar", 30, 20, LolzenUIcfg.orderhallbar["ohb_background_alpha"])
 		alpha:SetPoint("LEFT", alpha_text, "RIGHT", 10, 0)
-		alpha:SetSize(30, 20)
-		alpha:SetAutoFocus(false)
-		alpha:ClearFocus()
-		alpha:SetText(LolzenUIcfg.orderhallbar["ohb_background_alpha"])
-		alpha:SetCursorPosition(0)
 
-		local zone_color_text = ns["orderhallbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-		zone_color_text:SetPoint("TOPLEFT", ohb_bg_text, "BOTTOMLEFT", 0, -10)
-		zone_color_text:SetText("Zonetext color:")
+		local header2 = ns.createHeader("orderhallbar", "Zonetext:")
+		header2:SetPoint("TOPLEFT", ohb_bg_text, "BOTTOMLEFT", 0, -30)
 
-		local zone_color = ns["orderhallbar"]:CreateTexture(nil, "ARTWORK")
-		zone_color:SetSize(16, 16)
-		zone_color:SetVertexColor(unpack(LolzenUIcfg.orderhallbar["ohb_zone_color"]))
+		local zone_color_text = ns.createFonstring("orderhallbar", "Color:")
+		zone_color_text:SetPoint("TOPLEFT", header2, "BOTTOMLEFT", 0, -8)
+
+		local zone_color = ns.createColorTexture("orderhallbar", 16, 16, LolzenUIcfg.orderhallbar["ohb_zone_color"], LolzenUIcfg.orderhallbar["ohb_background"])
 		zone_color:SetPoint("LEFT", zone_color_text, "RIGHT", 10, 0)
-		zone_color:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.orderhallbar["ohb_background"])
 
-		local function zone_afbarSetNewColor()
-			r, g, b = ColorPickerFrame:GetColorRGB()
-			zone_color:SetVertexColor(r, g, b)
-		end
-
-		local function zone_restorePreviousColor()
-			zone_color:SetVertexColor(unpack(ColorPickerFrame.previousValues))
-		end
-
-		local zone_color_f = CreateFrame("Frame", nil, ns["orderhallbar"])
-		zone_color_f:SetFrameStrata("HIGH")
-		zone_color_f:EnableMouse(true)
+		local zone_color_f = ns.createColorPicker("orderhallbar", zone_color, LolzenUIcfg.orderhallbar["ohb_zone_color"])
 		zone_color_f:SetAllPoints(zone_color)
-		zone_color_f:SetScript("OnMouseDown", function(self)
-			-- clear previous values
-			ColorPickerFrame.previousValues = nil
-			ColorPickerFrame.cancelFunc = nil
-			ColorPickerFrame.func = nil
-			-- and fill with the relevant ones
-			ColorPickerFrame.previousValues = LolzenUIcfg.orderhallbar["ohb_zone_color"]
-			ColorPickerFrame:SetColorRGB(unpack(LolzenUIcfg.orderhallbar["ohb_zone_color"]))
-			ColorPickerFrame.cancelFunc = zone_restorePreviousColor
-			ColorPickerFrame.func = zone_afbarSetNewColor
-			ColorPickerFrame:Show()
-		end)
 
-		local currency_header = ns["orderhallbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
-		currency_header:SetPoint("TOPLEFT", zone_color_text, "BOTTOMLEFT", 0, -10)
-		currency_header:SetText("|cff5599ffCurrency:|r")
+		local header3 = ns.createHeader("orderhallbar", "Currency:")
+		header3:SetPoint("TOPLEFT", zone_color_text, "BOTTOMLEFT", 0, -30)
 
-		local font_text = ns["orderhallbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-		font_text:SetPoint("TOPLEFT", currency_header, "BOTTOMLEFT", 0, -8)
-		font_text:SetText("|cff5599ffFont:|r Interface\\AddOns\\LolzenUI\\fonts\\")
+		local font_text = ns.createFonstring("orderhallbar", "Font:")
+		font_text:SetPoint("TOPLEFT", header3, "BOTTOMLEFT", 0, -8)
 
-		local font = CreateFrame("EditBox", nil, ns["orderhallbar"], "InputBoxTemplate")
-		font:SetPoint("LEFT", font_text, "RIGHT", 10, 0)
-		font:SetSize(120, 20)
-		font:SetAutoFocus(false)
-		font:ClearFocus()
-		font:SetText(LolzenUIcfg.orderhallbar["ohb_currency_font"])
-		font:SetCursorPosition(0)
+		local font = ns.createPicker("orderhallbar", "font", "orderhallbar_font", 120, LolzenUIcfg.orderhallbar["ohb_currency_font"])
+		font:SetPoint("LEFT", font_text, "RIGHT", -10, -3)
 
-		local font_size_text = ns["orderhallbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-		font_size_text:SetPoint("LEFT", font, "RIGHT", 5, 0)
-		font_size_text:SetText("Size:")
+		local font_size_text = ns.createFonstring("orderhallbar", "Size:")
+		font_size_text:SetPoint("LEFT", font, "RIGHT", -5, 3)
 
-		local font_size = CreateFrame("EditBox", nil, ns["orderhallbar"], "InputBoxTemplate")
+		local font_size = ns.createInputbox("orderhallbar", 30, 20, LolzenUIcfg.orderhallbar["ohb_currency_font_size"])
 		font_size:SetPoint("LEFT", font_size_text, "RIGHT", 10, 0)
-		font_size:SetSize(30, 20)
-		font_size:SetAutoFocus(false)
-		font_size:ClearFocus()
-		font_size:SetNumber(LolzenUIcfg.orderhallbar["ohb_currency_font_size"])
-		font_size:SetCursorPosition(0)
 
-		local font_flag_text = ns["orderhallbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-		font_flag_text:SetPoint("LEFT", font_size, "RIGHT", 5, 0)
-		font_flag_text:SetText("Flag:")
+		local font_flag_text = ns.createFonstring("orderhallbar", "Flag:")
+		font_flag_text:SetPoint("LEFT", font_size, "RIGHT", 10, 0)
 
-		local font_flag = CreateFrame("EditBox", nil, ns["orderhallbar"], "InputBoxTemplate")
-		font_flag:SetPoint("LEFT", font_flag_text, "RIGHT", 10, 0)
-		font_flag:SetSize(100, 20)
-		font_flag:SetAutoFocus(false)
-		font_flag:ClearFocus()
-		font_flag:SetText(LolzenUIcfg.orderhallbar["ohb_currency_font_flag"])
-		font_flag:SetCursorPosition(0)
+		local font_flag = ns.createPicker("orderhallbar", "flag", "orderhallbar_font_flag", 120, LolzenUIcfg.orderhallbar["ohb_currency_font_flag"])
+		font_flag:SetPoint("LEFT", font_flag_text, "RIGHT", -10, -3)
 
-		local icon_size_text = ns["orderhallbar"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-		icon_size_text:SetPoint("TOPLEFT", font_text, "BOTTOMLEFT", 0, -8)
-		icon_size_text:SetText("Icon size:")
+		local icon_size_text = ns.createFonstring("orderhallbar", "Icon Size:")
+		icon_size_text:SetPoint("TOPLEFT", font_text, "BOTTOMLEFT", 0, -15)
 
-		local icon_size = CreateFrame("EditBox", nil, ns["orderhallbar"], "InputBoxTemplate")
+		local icon_size = ns.createInputbox("orderhallbar", 30, 20, LolzenUIcfg.orderhallbar["ohb_currency_icon_size"])
 		icon_size:SetPoint("LEFT", icon_size_text, "RIGHT", 10, 0)
-		icon_size:SetSize(30, 20)
-		icon_size:SetAutoFocus(false)
-		icon_size:ClearFocus()
-		icon_size:SetNumber(LolzenUIcfg.orderhallbar["ohb_currency_icon_size"])
-		icon_size:SetCursorPosition(0)
 
 		ns["orderhallbar"].okay = function(self)
 			LolzenUIcfg.orderhallbar["ohb_currency_icon_size"] = tonumber(icon_size:GetText())
-			LolzenUIcfg.orderhallbar["ohb_currency_font"] = font:GetText()
+			LolzenUIcfg.orderhallbar["ohb_currency_font"] = ns.picker_fonts[UIDropDownMenu_GetSelectedID(font)]
 			LolzenUIcfg.orderhallbar["ohb_currency_font_size"] = tonumber(font_size:GetText())
-			LolzenUIcfg.orderhallbar["ohb_currency_font_flag"] = font_flag:GetText()
+			LolzenUIcfg.orderhallbar["ohb_currency_font_flag"] = ns.picker_flags[UIDropDownMenu_GetSelectedID(font_flag)]
 			LolzenUIcfg.orderhallbar["ohb_zone_color"] = {zone_color:GetVertexColor()}
 			LolzenUIcfg.orderhallbar["ohb_background"] = ohb_bg:GetText()
 			LolzenUIcfg.orderhallbar["ohb_background_color"] = {color:GetVertexColor()}
