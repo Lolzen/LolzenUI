@@ -9,13 +9,10 @@ f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)
 	if addon == "LolzenUI" and LolzenUIcfg.modules["objectivetracker"] == true then
 
-		local title = ns["objectivetracker"]:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
-		title:SetPoint("TOPLEFT", ns["objectivetracker"], 16, -16)
-		title:SetText("|cff5599ff"..ns["objectivetracker"].name.."|r")
+		local title = ns.createTitle("objectivetracker")
 
-		local about = ns["objectivetracker"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+		local about = ns.createDescription("objectivetracker", "Modify behaviour and position of the ObjectiveTrackerFrame.")
 		about:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8)
-		about:SetText("Modify behaviour and position of the ObjectiveTrackerFrame.")
 
 		local cb1 = CreateFrame("CheckButton", "combatcollapse", ns["objectivetracker"], "ChatConfigCheckButtonTemplate")
 		cb1:SetPoint("TOPLEFT", about, "BOTTOMLEFT", 0, -20)
@@ -27,9 +24,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 			cb1:SetChecked(false)
 		end
 
-		cb1_desc = ns["objectivetracker"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+		local cb1_desc = ns.createFonstring("objectivetracker", "auto collapse infight and auto expand out of combat")
 		cb1_desc:SetPoint("TOPLEFT", cb1, "BOTTOMLEFT", 0, 0)
-		cb1_desc:SetText("|cffffffffauto collapse infight and auto expand out of combat|r")
 		
 		local cb2 = CreateFrame("CheckButton", "logincollapse", ns["objectivetracker"], "ChatConfigCheckButtonTemplate")
 		cb2:SetPoint("TOPLEFT", cb1_desc, "BOTTOMLEFT", 0, -8)
@@ -41,49 +37,26 @@ f:SetScript("OnEvent", function(self, event, addon)
 			cb2:SetChecked(false)
 		end
 
-		cb2_desc = ns["objectivetracker"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+		local cb2_desc = ns.createFonstring("objectivetracker", "auto collapse on login")
 		cb2_desc:SetPoint("TOPLEFT", cb2, "BOTTOMLEFT", 0, 0)
-		cb2_desc:SetText("|cffffffffauto collapse on login|r")
 
-		local pos_x_text = ns["objectivetracker"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+		local pos_x_text = ns.createFonstring("objectivetracker", "PosX:")
 		pos_x_text:SetPoint("TOPLEFT", cb2_desc, "BOTTOMLEFT", 0, -20)
-		pos_x_text:SetText("|cffffffffPosX:")
 
-		local pos_x = CreateFrame("EditBox", nil, ns["objectivetracker"], "InputBoxTemplate")
+		local pos_x = ns.createInputbox("objectivetracker", 30, 20, LolzenUIcfg.objectivetracker["objectivetracker_posx"])
 		pos_x:SetPoint("LEFT", pos_x_text, "RIGHT", 10, 0)
-		pos_x:SetSize(30, 20)
-		pos_x:SetAutoFocus(false)
-		pos_x:ClearFocus()
-		pos_x:SetNumber(LolzenUIcfg.objectivetracker["objectivetracker_posx"])
-		pos_x:SetCursorPosition(0)
 
-		local pos_y_text = ns["objectivetracker"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+		local pos_y_text = ns.createFonstring("objectivetracker", "PosY:")
 		pos_y_text:SetPoint("LEFT", pos_x, "RIGHT", 5, 0)
-		pos_y_text:SetText("|cffffffffPosY:")
 
-		local pos_y = CreateFrame("EditBox", nil, ns["objectivetracker"], "InputBoxTemplate")
+		local pos_y = ns.createInputbox("objectivetracker", 30, 20, LolzenUIcfg.objectivetracker["objectivetracker_posy"])
 		pos_y:SetPoint("LEFT", pos_y_text, "RIGHT", 10, 0)
-		pos_y:SetSize(30, 20)
-		pos_y:SetAutoFocus(false)
-		pos_y:ClearFocus()
-		pos_y:SetNumber(LolzenUIcfg.objectivetracker["objectivetracker_posy"])
-		pos_y:SetCursorPosition(0)
 
-		local anchor_text = ns["objectivetracker"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+		local anchor_text = ns.createFonstring("objectivetracker", "Anchor:")
 		anchor_text:SetPoint("LEFT", pos_y, "RIGHT", 5, 0)
-		anchor_text:SetText("|cffffffffAnchor:")
 
-		local anchor_point = CreateFrame("EditBox", nil, ns["objectivetracker"], "InputBoxTemplate")
-		anchor_point:SetPoint("LEFT", anchor_text, "RIGHT", 10, 0)
-		anchor_point:SetSize(100, 20)
-		anchor_point:SetAutoFocus(false)
-		anchor_point:ClearFocus()
-		anchor_point:SetText(LolzenUIcfg.objectivetracker["objectivetracker_anchor"])
-		anchor_point:SetCursorPosition(0)
-
-		local pos_desc = ns["objectivetracker"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-		pos_desc:SetPoint("TOPLEFT", pos_x_text, "BOTTOMLEFT", 0, -8)
-		pos_desc:SetText("|cffffffffThe startingpoint is the anchor set ("..LolzenUIcfg.objectivetracker["objectivetracker_anchor"].." 0/0)")
+		local anchor = ns.createPicker("objectivetracker", "anchor", "objectivetracker_anchor", 110, LolzenUIcfg.objectivetracker["objectivetracker_anchor"])
+		anchor:SetPoint("LEFT", anchor_text, "RIGHT", -10, -3)
 
 		ns["objectivetracker"].okay = function(self)
 			if cb1:GetChecked(true) then
@@ -98,7 +71,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 			LolzenUIcfg.objectivetracker["objectivetracker_posx"] = tonumber(pos_x:GetText())
 			LolzenUIcfg.objectivetracker["objectivetracker_posy"] = tonumber(pos_y:GetText())
-			LolzenUIcfg.objectivetracker["objectivetracker_anchor"] = anchor_point:GetText()
+			LolzenUIcfg.objectivetracker["objectivetracker_anchor"] = ns.picker_anchor[UIDropDownMenu_GetSelectedID(anchor)]
 			LolzenUIcfg.objectivetracker["objectivetracker_scale"] = tonumber(anchor_point:GetText())
 		end
 
