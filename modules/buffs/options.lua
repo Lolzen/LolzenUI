@@ -177,9 +177,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 		local dur_font_flag = ns.createPicker("buffs", "flag", "buffs_dur_font_flag_picker", 100, LolzenUIcfg.buffs["buff_duration_font_flag"])
 		dur_font_flag:SetPoint("LEFT", dur_font_flag_text, "RIGHT", -10, -3)
 
-		local cb1 = CreateFrame("CheckButton", "detailedduration", ns["buffs"], "ChatConfigCheckButtonTemplate")
+		local cb1 = ns.createCheckBox("buffs", "detailedduration", "|cff5599ffmore detailed duration text (uses more cpu cycles)|r", LolzenUIcfg.buffs["buff_duration_detailed"])
 		cb1:SetPoint("TOPLEFT", dur_font_text, "BOTTOMLEFT", 0, -8)
-		detaileddurationText:SetText("|cff5599ffmore detailed duration text (uses more cpu cycles)|r")
 
 		local header4 = ns.createHeader("buffs", "Counter text:")
 		header4:SetPoint("TOPLEFT", cb1, "BOTTOMLEFT", 0, -30)
@@ -219,12 +218,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		local count_font_flag = ns.createPicker("buffs", "flag", "buffs_count_font_flag_picker", 100, LolzenUIcfg.buffs["buff_counter_font_flag"])
 		count_font_flag:SetPoint("LEFT", count_font_flag_text, "RIGHT", -10, -3)
-
-		if LolzenUIcfg.buffs["buff_duration_detailed"] == true then
-			cb1:SetChecked(true)
-		else
-			cb1:SetChecked(false)
-		end
 
 		ns["buffs"].okay = function(self)
 			LolzenUIcfg.buffs["buff_size"] = tonumber(buff_size:GetText())
