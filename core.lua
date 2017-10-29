@@ -114,7 +114,7 @@ ns.picker_anchor = {
 ns.picker_fonts = {
 	"DroidSans.ttf",
 	"DroidSansBold.ttf",
-	"SEMPRG.ttf"
+	"SEMPRG.ttf",
 }
 
 ns.picker_flags = {
