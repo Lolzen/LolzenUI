@@ -53,6 +53,18 @@ ns.createInputbox = function(module, width, height, num)
 	return box
 end
 
+-- checkbox
+ns.createCheckBox = function(module, name, text, checkedVar)
+	local checkbox = CreateFrame("CheckButton", name, ns[module], "ChatConfigCheckButtonTemplate")
+	_G[checkbox:GetName().."Text"]:SetText(text)
+	if checkedVar == true then
+		checkbox:SetChecked(true)
+	else
+		checkbox:SetChecked(false)
+	end
+	return checkbox
+end
+
 -- picker
 ns.picker_alpha = {
 	1,
