@@ -14,35 +14,14 @@ f:SetScript("OnEvent", function(self, event, addon)
 		local about = ns.createDescription("interruptannouncer", "Announces interrupts")
 		about:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8)
 
-		local cb1 = CreateFrame("CheckButton", "instanceannounce", ns["interruptannouncer"], "ChatConfigCheckButtonTemplate")
+		local cb1 = ns.createCheckBox("interruptannouncer", "instanceannounce", "|cff5599ffannounce interrupts in instance chat|r", LolzenUIcfg.interruptannouncer["interruptannoucer_instance"])
 		cb1:SetPoint("TOPLEFT", about, "BOTTOMLEFT", 0, -20)
-		instanceannounceText:SetText("|cff5599ffannounce interrupts in instance chat|r")
 
-		if LolzenUIcfg.interruptannouncer["interruptannoucer_instance"] == true then
-			cb1:SetChecked(true)
-		else
-			cb1:SetChecked(false)
-		end
-
-		local cb2 = CreateFrame("CheckButton", "partyannounce", ns["interruptannouncer"], "ChatConfigCheckButtonTemplate")
+		local cb2 = ns.createCheckBox("interruptannouncer", "partyannounce", "|cff5599ffannounce interrupts in party chat|r", LolzenUIcfg.interruptannouncer["interruptannoucer_party"])
 		cb2:SetPoint("TOPLEFT", cb1, "BOTTOMLEFT", 0, 0)
-		partyannounceText:SetText("|cff5599ffannounce interrupts in party chat|r")
 
-		if LolzenUIcfg.interruptannouncer["interruptannoucer_party"] == true then
-			cb2:SetChecked(true)
-		else
-			cb2:SetChecked(false)
-		end
-
-		local cb3 = CreateFrame("CheckButton", "sayannounce", ns["interruptannouncer"], "ChatConfigCheckButtonTemplate")
+		local cb3 = ns.createCheckBox("interruptannouncer", "sayannounce", "|cff5599ffannounce interrupts in say chat|r", LolzenUIcfg.interruptannouncer["interruptannoucer_say"])
 		cb3:SetPoint("TOPLEFT", cb2, "BOTTOMLEFT", 0, 0)
-		sayannounceText:SetText("|cff5599ffannounce interrupts in say chat|r")
-
-		if LolzenUIcfg.interruptannouncer["interruptannoucer_say"] == true then
-			cb3:SetChecked(true)
-		else
-			cb3:SetChecked(false)
-		end
 
 		local msg_text = ns.createFonstring("interruptannouncer", "Message:")
 		msg_text:SetPoint("TOPLEFT", cb3, "BOTTOMLEFT", 0, -13)
