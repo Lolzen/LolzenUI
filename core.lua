@@ -107,7 +107,6 @@ ns.picker_flags = {
 }
 
 ns.createPicker = function(module, pickertype, name, width, selected)
-	local obj
 	local t
 	if pickertype == "alpha" then
 		t = ns.picker_alpha
@@ -119,13 +118,12 @@ ns.createPicker = function(module, pickertype, name, width, selected)
 		t = ns.picker_flags
 	end
 	local selectedNum
-	local name = CreateFrame("Button", name, ns[module], "UIDropDownMenuTemplate")
-	obj = name
-	name:Show()
+	local picker = CreateFrame("Button", name, ns[module], "UIDropDownMenuTemplate")
+	picker:Show()
 	local function OnClick(name)
-		UIDropDownMenu_SetSelectedID(obj, name:GetID())
+		UIDropDownMenu_SetSelectedID(picker, name:GetID())
 	end
-	local function initialize(name, level)
+	local function initialize(picker, level)
 		local info = UIDropDownMenu_CreateInfo()
 		for k,v in pairs(t) do
 			if v == selected then
@@ -138,12 +136,12 @@ ns.createPicker = function(module, pickertype, name, width, selected)
 			UIDropDownMenu_AddButton(info, level)
 		end
 	end
-	UIDropDownMenu_Initialize(name, initialize)
-	UIDropDownMenu_SetWidth(name, width)
-	UIDropDownMenu_SetButtonWidth(name, 124)
-	UIDropDownMenu_SetSelectedID(name, selectedNum)
-	UIDropDownMenu_JustifyText(name, "LEFT")
-	return name
+	UIDropDownMenu_Initialize(picker, initialize)
+	UIDropDownMenu_SetWidth(picker, width)
+	UIDropDownMenu_SetButtonWidth(picker, 124)
+	UIDropDownMenu_SetSelectedID(picker, selectedNum)
+	UIDropDownMenu_JustifyText(picker, "LEFT")
+	return picker
 end
 
 -- color texture
