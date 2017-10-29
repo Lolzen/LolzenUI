@@ -19,68 +19,38 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		-- // normaltexture buttonpreview // --
 
-		local button = ns["actionbars"]:CreateTexture(nil, "TEXTURE")
-		button:SetTexture(select(3, GetSpellInfo(214815)))
-		button:SetSize(LolzenUIcfg.actionbar["actionbar_button_size"], LolzenUIcfg.actionbar["actionbar_button_size"])
+		local button = ns.createButtonTexture("actionbars", LolzenUIcfg.actionbar["actionbar_button_size"], select(3, GetSpellInfo(214815)))
 		button:SetPoint("TOPLEFT", header1, "BOTTOMLEFT", 0, -8)
-		button:SetTexCoord(.04, .94, .04, .94)
 
-		local normaltex = ns["actionbars"]:CreateTexture(nil, "OVERLAY")
-		normaltex:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.actionbar["actionbar_normal_texture"])
-		normaltex:SetPoint("TOPLEFT", button, "TOPLEFT", -2, 2)
-		normaltex:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 2, -2)
+		local normaltex = ns.createButtonOverlay("actionbars", button, LolzenUIcfg.actionbar["actionbar_normal_texture"])
 
 		-- // flashtexture buttonpreview // --
 
-		local button2 = ns["actionbars"]:CreateTexture(nil, "TEXTURE")
-		button2:SetTexture(select(3, GetSpellInfo(214815)))
-		button2:SetSize(LolzenUIcfg.actionbar["actionbar_button_size"], LolzenUIcfg.actionbar["actionbar_button_size"])
+		local button2 = ns.createButtonTexture("actionbars", LolzenUIcfg.actionbar["actionbar_button_size"], select(3, GetSpellInfo(214815)))
 		button2:SetPoint("LEFT", button, "RIGHT", LolzenUIcfg.actionbar["actionbar_button_spacing"], 0)
-		button2:SetTexCoord(.04, .94, .04, .94)
 
-		local flashtex = ns["actionbars"]:CreateTexture(nil, "OVERLAY")
-		flashtex:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.actionbar["actionbar_flash_texture"])
-		flashtex:SetPoint("TOPLEFT", button2, "TOPLEFT", -2, 2)
-		flashtex:SetPoint("BOTTOMRIGHT", button2, "BOTTOMRIGHT", 2, -2)
+		local flashtex = ns.createButtonOverlay("actionbars", button2, LolzenUIcfg.actionbar["actionbar_flash_texture"])
 
 		-- // checkedtexture buttonpreview // --
 
-		local button3 = ns["actionbars"]:CreateTexture(nil, "TEXTURE")
-		button3:SetTexture(select(3, GetSpellInfo(214815)))
-		button3:SetSize(LolzenUIcfg.actionbar["actionbar_button_size"], LolzenUIcfg.actionbar["actionbar_button_size"])
+		local button3 = ns.createButtonTexture("actionbars", LolzenUIcfg.actionbar["actionbar_button_size"], select(3, GetSpellInfo(214815)))
 		button3:SetPoint("LEFT", button2, "RIGHT", LolzenUIcfg.actionbar["actionbar_button_spacing"], 0)
-		button3:SetTexCoord(.04, .94, .04, .94)
 
-		local checkedtex = ns["actionbars"]:CreateTexture(nil, "OVERLAY")
-		checkedtex:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.actionbar["actionbar_checked_texture"])
-		checkedtex:SetPoint("TOPLEFT", button3, "TOPLEFT", -2, 2)
-		checkedtex:SetPoint("BOTTOMRIGHT", button3, "BOTTOMRIGHT", 2, -2)
+		local checkedtex = ns.createButtonOverlay("actionbars", button3, LolzenUIcfg.actionbar["actionbar_checked_texture"])
 
 		-- // hovertexture buttonpreview // --
 
-		local button4 = ns["actionbars"]:CreateTexture(nil, "TEXTURE")
-		button4:SetTexture(select(3, GetSpellInfo(214815)))
-		button4:SetSize(LolzenUIcfg.actionbar["actionbar_button_size"], LolzenUIcfg.actionbar["actionbar_button_size"])
+		local button4 = ns.createButtonTexture("actionbars", LolzenUIcfg.actionbar["actionbar_button_size"], select(3, GetSpellInfo(214815)))
 		button4:SetPoint("LEFT", button3, "RIGHT", LolzenUIcfg.actionbar["actionbar_button_spacing"], 0)
-		button4:SetTexCoord(.04, .94, .04, .94)
 
-		local hovertex = ns["actionbars"]:CreateTexture(nil, "OVERLAY")
-		hovertex:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.actionbar["actionbar_hover_texture"])
-		hovertex:SetPoint("TOPLEFT", button4, "TOPLEFT", -2, 2)
-		hovertex:SetPoint("BOTTOMRIGHT", button4, "BOTTOMRIGHT", 2, -2)
+		local hovertex = ns.createButtonOverlay("actionbars", button4, LolzenUIcfg.actionbar["actionbar_hover_texture"])
 
 		-- // pushedtexture buttonpreview // --
 
-		local button5 = ns["actionbars"]:CreateTexture(nil, "TEXTURE")
-		button5:SetTexture(select(3, GetSpellInfo(214815)))
-		button5:SetSize(LolzenUIcfg.actionbar["actionbar_button_size"], LolzenUIcfg.actionbar["actionbar_button_size"])
+		local button5 = ns.createButtonTexture("actionbars", LolzenUIcfg.actionbar["actionbar_button_size"], select(3, GetSpellInfo(214815)))
 		button5:SetPoint("LEFT", button4, "RIGHT", LolzenUIcfg.actionbar["actionbar_button_spacing"], 0)
-		button5:SetTexCoord(.04, .94, .04, .94)
 
-		local pushedtex = ns["actionbars"]:CreateTexture(nil, "OVERLAY")
-		pushedtex:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.actionbar["actionbar_pushed_texture"])
-		pushedtex:SetPoint("TOPLEFT", button5, "TOPLEFT", -2, 2)
-		pushedtex:SetPoint("BOTTOMRIGHT", button5, "BOTTOMRIGHT", 2, -2)
+		local pushedtex = ns.createButtonOverlay("actionbars", button5, LolzenUIcfg.actionbar["actionbar_pushed_texture"])
 
 		local header2 = ns.createHeader("actionbars", "Textures & Size: |cffffffff(Textures are located in Interface/AddOns/LolzenUI/media)|r")
 		header2:SetPoint("TOPLEFT", button, "BOTTOMLEFT", 0, -20)
