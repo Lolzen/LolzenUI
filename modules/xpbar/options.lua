@@ -107,19 +107,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 		local color_f4 = ns.createColorPicker("xpbar", color4, LolzenUIcfg.xpbar["xpbar_paragon_color"])
 		color_f4:SetAllPoints(color4)
 
-		local cb1 = CreateFrame("CheckButton", "pxborder_xp", ns["xpbar"], "ChatConfigCheckButtonTemplate")
+		local cb1 = ns.createCheckBox("xpbar", "pxborder_xp", "|cff5599ffdraw a 1px border around the xpbar|r", LolzenUIcfg.xpbar["xpbar_1px_border"])
 		cb1:SetPoint("TOPLEFT", color_text, "BOTTOMLEFT", 0, -8)
-		pxborder_xpText:SetText("|cff5599ffdraw a 1px border around the xpbar|r")
 
-		if LolzenUIcfg.xpbar["xpbar_1px_border"] == true then
-			cb1:SetChecked(true)
-		else
-			cb1:SetChecked(false)
-		end
-
-		local cb2 = CreateFrame("CheckButton", "pxborder_round_xp", ns["xpbar"], "ChatConfigCheckButtonTemplate")
+		local cb2 = ns.createCheckBox("xpbar", "pxborder_round_xp", "|cff5599ffrounded 1px border|r", LolzenUIcfg.xpbar["xpbar_1px_border_round"])
 		cb2:SetPoint("TOPLEFT", cb1, "BOTTOMLEFT", 0, 0)
-		pxborder_round_xpText:SetText("|cff5599ffrounded 1px border|r")
 
 		cb1:SetScript("OnClick", function(self)
 			if cb1:GetChecked() == false then
@@ -135,11 +127,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			cb2:Disable()
 			pxborder_round_xpText:SetText("|cff555555rounded 1px border|r |cffff5555enable 1px border for this option|r")
 		else
-			if LolzenUIcfg.xpbar["xpbar_1px_border_round"] == true then
-				cb2:SetChecked(true)
-			else
-				cb2:SetChecked(false)
-			end
+			cb2:Enable()
 		end
 
 		local header2 = ns.createHeader("xpbar", "Font")
