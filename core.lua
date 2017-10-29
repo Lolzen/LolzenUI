@@ -67,6 +67,24 @@ ns.createCheckBox = function(module, name, text, checkedVar)
 	return checkbox
 end
 
+-- button texture
+ns.createButtonTexture = function(module, size, texture)
+	local buttonTex = ns[module]:CreateTexture(nil, "TEXTURE")
+	buttonTex:SetSize(size, size)
+	buttonTex:SetTexture(texture)
+	buttonTex:SetTexCoord(.04, .94, .04, .94)
+	return buttonTex
+end
+
+-- button overlay texture
+ns.createButtonOverlay = function(module, parent, texture)
+	local buttonOverlay = ns[module]:CreateTexture(nil, "OVERLAY")
+	buttonOverlay:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..texture)
+	buttonOverlay:SetPoint("TOPLEFT", parent, "TOPLEFT", -2, 2)
+	buttonOverlay:SetPoint("BOTTOMRIGHT", parent, "BOTTOMRIGHT", 2, -2)
+	return buttonOverlay
+end
+
 -- picker
 ns.picker_alpha = {
 	1,
