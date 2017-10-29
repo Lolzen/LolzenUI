@@ -14,35 +14,14 @@ f:SetScript("OnEvent", function(self, event, addon)
 		local about = ns.createDescription("itemlevel", "Displays item level on equippable items")
 		about:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8)
 
-		local cb1 = CreateFrame("CheckButton", "Character", ns["itemlevel"], "ChatConfigCheckButtonTemplate")
+		local cb1 = ns.createCheckBox("itemlevel", "Character", "|cff5599ffShow Itemlevel on Character frame|r", LolzenUIcfg.itemlevel["ilvl_characterframe"])
 		cb1:SetPoint("TOPLEFT", about, "BOTTOMLEFT", 0, -20)
-		CharacterText:SetText("|cff5599ffShow Itemlevel on Character frame|r")
 
-		if LolzenUIcfg.itemlevel["ilvl_characterframe"] == true then
-			cb1:SetChecked(true)
-		else
-			cb1:SetChecked(false)
-		end
-
-		local cb2 = CreateFrame("CheckButton", "Inspect", ns["itemlevel"], "ChatConfigCheckButtonTemplate")
+		local cb2 = ns.createCheckBox("itemlevel", "Inspect", "|cff5599ffShow Itemlevel on Inspect frame|r", LolzenUIcfg.itemlevel["ilvl_inspectframe"])
 		cb2:SetPoint("TOPLEFT", cb1, "BOTTOMLEFT", 0, 0)
-		InspectText:SetText("|cff5599ffShow Itemlevel on Inspect frame|r")
 
-		if LolzenUIcfg.itemlevel["ilvl_inspectframe"] == true then
-			cb2:SetChecked(true)
-		else
-			cb2:SetChecked(false)
-		end
-
-		local cb3 = CreateFrame("CheckButton", "Bags", ns["itemlevel"], "ChatConfigCheckButtonTemplate")
+		local cb3 = ns.createCheckBox("itemlevel", "Bags", "|cff5599ffShow Itemlevel in Bags|r", LolzenUIcfg.itemlevel["ilvl_bags"])
 		cb3:SetPoint("TOPLEFT", cb2, "BOTTOMLEFT", 0, 0)
-		BagsText:SetText("|cff5599ffShow Itemlevel in Bags|r")
-
-		if LolzenUIcfg.itemlevel["ilvl_bags"] == true then
-			cb3:SetChecked(true)
-		else
-			cb3:SetChecked(false)
-		end
 
 		local header = ns.createHeader("itemlevel", "iLvL text:")
 		header:SetPoint("TOPLEFT", cb3, "BOTTOMLEFT", 0, -13)
