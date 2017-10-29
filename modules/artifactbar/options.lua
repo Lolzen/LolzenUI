@@ -80,19 +80,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 		local color_f = ns.createColorPicker("artifactbar", color, LolzenUIcfg.artifactbar["artifactbar_color"])
 		color_f:SetAllPoints(color)
 
-		local cb1 = CreateFrame("CheckButton", "pxborder", ns["artifactbar"], "ChatConfigCheckButtonTemplate")
+		local cb1 = ns.createCheckBox("artifactbar", "pxborder", "|cff5599ffdraw a 1px border around the artifactbar|r", LolzenUIcfg.artifactbar["artifactbar_1px_border"])
 		cb1:SetPoint("TOPLEFT", color_text, "BOTTOMLEFT", 0, -8)
-		pxborderText:SetText("|cff5599ffdraw a 1px border around the artifactbar|r")
 
-		if LolzenUIcfg.artifactbar["artifactbar_1px_border"] == true then
-			cb1:SetChecked(true)
-		else
-			cb1:SetChecked(false)
-		end
-
-		local cb2 = CreateFrame("CheckButton", "pxborder_round", ns["artifactbar"], "ChatConfigCheckButtonTemplate")
+		local cb2 = ns.createCheckBox("artifactbar", "pxborder_round", "|cff5599ffrounded 1px border|r", LolzenUIcfg.artifactbar["artifactbar_1px_border_round"])
 		cb2:SetPoint("TOPLEFT", cb1, "BOTTOMLEFT", 0, 0)
-		pxborder_roundText:SetText("|cff5599ffrounded 1px border|r")
 
 		cb1:SetScript("OnClick", function(self)
 			if cb1:GetChecked() == false then
@@ -108,11 +100,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			cb2:Disable()
 			pxborder_roundText:SetText("|cff555555rounded 1px border|r |cffff5555enable 1px border for this option|r")
 		else
-			if LolzenUIcfg.artifactbar["artifactbar_1px_border_round"] == true then
-				cb2:SetChecked(true)
-			else
-				cb2:SetChecked(false)
-			end
+			cb2:Enable()
 		end
 
 		local header2 = ns.createHeader("artifactbar", "Font")
