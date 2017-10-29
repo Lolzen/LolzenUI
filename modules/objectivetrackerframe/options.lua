@@ -14,28 +14,14 @@ f:SetScript("OnEvent", function(self, event, addon)
 		local about = ns.createDescription("objectivetracker", "Modify behaviour and position of the ObjectiveTrackerFrame.")
 		about:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8)
 
-		local cb1 = CreateFrame("CheckButton", "combatcollapse", ns["objectivetracker"], "ChatConfigCheckButtonTemplate")
+		local cb1 = ns.createCheckBox("objectivetracker", "combatcollapse", "|cff5599ffcombat auto collapse|r", LolzenUIcfg.objectivetracker["objectivetracker_combatcollapse"])
 		cb1:SetPoint("TOPLEFT", about, "BOTTOMLEFT", 0, -20)
-		combatcollapseText:SetText("|cff5599ffcombat auto collapse|r")
-
-		if LolzenUIcfg.objectivetracker["objectivetracker_combatcollapse"] == true then
-			cb1:SetChecked(true)
-		else
-			cb1:SetChecked(false)
-		end
 
 		local cb1_desc = ns.createFonstring("objectivetracker", "auto collapse infight and auto expand out of combat")
 		cb1_desc:SetPoint("TOPLEFT", cb1, "BOTTOMLEFT", 0, 0)
-		
-		local cb2 = CreateFrame("CheckButton", "logincollapse", ns["objectivetracker"], "ChatConfigCheckButtonTemplate")
-		cb2:SetPoint("TOPLEFT", cb1_desc, "BOTTOMLEFT", 0, -8)
-		logincollapseText:SetText("|cff5599ffauto login collapse|r")
 
-		if LolzenUIcfg.objectivetracker["objectivetracker_logincollapse"] == true then
-			cb2:SetChecked(true)
-		else
-			cb2:SetChecked(false)
-		end
+		local cb2 = ns.createCheckBox("objectivetracker", "logincollapse", "|cff5599ffauto login collapse|r", LolzenUIcfg.objectivetracker["objectivetracker_logincollapse"])
+		cb2:SetPoint("TOPLEFT", cb1_desc, "BOTTOMLEFT", 0, -8)
 
 		local cb2_desc = ns.createFonstring("objectivetracker", "auto collapse on login")
 		cb2_desc:SetPoint("TOPLEFT", cb2, "BOTTOMLEFT", 0, 0)
