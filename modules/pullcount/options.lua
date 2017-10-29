@@ -17,55 +17,20 @@ f:SetScript("OnEvent", function(self, event, addon)
 		local header1 = ns.createHeader("pullcount", "Play sounds from custom messages from:")
 		header1:SetPoint("TOPLEFT", about, "BOTTOMLEFT", 0, -20)
 
-		local cb1 = CreateFrame("CheckButton", "filter_guild", ns["pullcount"], "ChatConfigCheckButtonTemplate")
+		local cb1 = ns.createCheckBox("pullcount", "filter_guild", "|cff5599ffguild chat|r", LolzenUIcfg.pullcount["pull_filter_guild"])
 		cb1:SetPoint("TOPLEFT", header1, "BOTTOMLEFT", 0, -8)
-		filter_guildText:SetText("|cff5599ffguild chat|r")
 
-		if LolzenUIcfg.pullcount["pull_filter_guild"] == true then
-			cb1:SetChecked(true)
-		else
-			cb1:SetChecked(false)
-		end
-
-		local cb2 = CreateFrame("CheckButton", "filter_party", ns["pullcount"], "ChatConfigCheckButtonTemplate")
+		local cb2 = ns.createCheckBox("pullcount", "filter_party", "|cff5599ffparty chat|r", LolzenUIcfg.pullcount["pull_filter_party"])
 		cb2:SetPoint("TOPLEFT", cb1, "BOTTOMLEFT", 0, 0)
-		filter_partyText:SetText("|cff5599ffparty chat|r")
 
-		if LolzenUIcfg.pullcount["pull_filter_party"] == true then
-			cb2:SetChecked(true)
-		else
-			cb2:SetChecked(false)
-		end
-
-		local cb3 = CreateFrame("CheckButton", "filter_instance", ns["pullcount"], "ChatConfigCheckButtonTemplate")
+		local cb3 = ns.createCheckBox("pullcount", "filter_instance", "|cff5599ffinstance chat|r", LolzenUIcfg.pullcount["pull_filter_instance"])
 		cb3:SetPoint("TOPLEFT", cb2, "BOTTOMLEFT", 0, 0)
-		filter_instanceText:SetText("|cff5599ffinstance chat|r")
 
-		if LolzenUIcfg.pullcount["pull_filter_instance"] == true then
-			cb3:SetChecked(true)
-		else
-			cb3:SetChecked(false)
-		end
-
-		local cb4 = CreateFrame("CheckButton", "filter_say", ns["pullcount"], "ChatConfigCheckButtonTemplate")
+		local cb4 = ns.createCheckBox("pullcount", "filter_say", "|cff5599ffsay chat|r", LolzenUIcfg.pullcount["pull_filter_say"])
 		cb4:SetPoint("TOPLEFT", cb3, "BOTTOMLEFT", 0, 0)
-		filter_sayText:SetText("|cff5599ffsay chat|r")
 
-		if LolzenUIcfg.pullcount["pull_filter_say"] == true then
-			cb4:SetChecked(true)
-		else
-			cb4:SetChecked(false)
-		end
-
-		local cb5 = CreateFrame("CheckButton", "filter_channel", ns["pullcount"], "ChatConfigCheckButtonTemplate")
+		local cb5 = ns.createCheckBox("pullcount", "filter_channel", "|cff5599ffcustom channels|r", LolzenUIcfg.pullcount["pull_filter_channel"])
 		cb5:SetPoint("TOPLEFT", cb4, "BOTTOMLEFT", 0, 0)
-		filter_channelText:SetText("|cff5599ffcustom channels|r")
-
-		if LolzenUIcfg.pullcount["pull_filter_channel"] == true then
-			cb5:SetChecked(true)
-		else
-			cb5:SetChecked(false)
-		end
 
 		local header2 = ns.createHeader("pullcount", "Custom Messages to play sounds on:")
 		header2:SetPoint("TOPLEFT", cb5, "BOTTOMLEFT", 0, -20)
