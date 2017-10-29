@@ -15,7 +15,7 @@ end
 
 -- title
 ns.createTitle = function(module)
-	title = ns[module]:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
+	local title = ns[module]:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
 	title:SetPoint("TOPLEFT", ns[module], 16, -16)
 	title:SetText("|cff5599ff"..string.upper(string.sub(ns[module].name, 1, 1))..string.sub(ns[module].name, 2).." module Options|r")
 	return title
@@ -23,32 +23,34 @@ end
 
 -- description
 ns.createDescription = function(module, text)
-	desc = ns[module]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+	local desc = ns[module]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 	desc:SetText(text)
 	return desc
 end
 
 -- header
 ns.createHeader = function(module, text)
-	header = ns[module]:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
+	local header = ns[module]:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
 	header:SetText("|cff5599ff"..text.."|r")
 	return header
 end
 
 -- generic fontstring
 ns.createFonstring = function(module, text)
-	genstr = ns[module]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+	local genstr = ns[module]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 	genstr:SetText(text)
 	return genstr
 end
 
 -- inputbox
 ns.createInputbox = function(module, width, height, num)
-	box = CreateFrame("EditBox", nil, ns[module], "InputBoxTemplate")
+	local box = CreateFrame("EditBox", nil, ns[module], "InputBoxTemplate")
 	box:SetSize(width, height)
 	box:SetAutoFocus(false)
 	box:ClearFocus()
-	box:SetNumber(num)
+	if num ~= nil then
+		box:SetNumber(num)
+	end
 	box:SetCursorPosition(0)
 	return box
 end
@@ -117,7 +119,7 @@ ns.createPicker = function(module, pickertype, name, width, selected)
 		t = ns.picker_flags
 	end
 	local selectedNum
-	name = CreateFrame("Button", name, ns[module], "UIDropDownMenuTemplate")
+	local name = CreateFrame("Button", name, ns[module], "UIDropDownMenuTemplate")
 	obj = name
 	name:Show()
 	local function OnClick(name)
