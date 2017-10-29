@@ -14,15 +14,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 		local about = ns.createDescription("orderhallbar", "Modify the OrderHallBar and show currencies marked as \"Show in Backpack\"")
 		about:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8)
 
-		local cb1 = CreateFrame("CheckButton", "alwaysshow", ns["orderhallbar"], "ChatConfigCheckButtonTemplate")
+		local cb1 = ns.createCheckBox("orderhallbar", "alwaysshow", "|cff5599ffalways show the orderhallbar|r", LolzenUIcfg.orderhallbar["ohb_always_show"])
 		cb1:SetPoint("TOPLEFT", about, "BOTTOMLEFT", 0, -20)
-		alwaysshowText:SetText("|cff5599ffalways show the orderhallbar|r")
-
-		if LolzenUIcfg.orderhallbar["ohb_always_show"] == true then
-			cb1:SetChecked(true)
-		else
-			cb1:SetChecked(false)
-		end
 
 		local header1 = ns.createHeader("orderhallbar", "Background:")
 		header1:SetPoint("TOPLEFT", cb1, "BOTTOMLEFT", 0, -30)
