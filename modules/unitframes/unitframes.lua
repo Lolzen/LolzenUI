@@ -228,7 +228,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				HealthPoints:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 18, "THINOUTLINE")
 				HealthPoints:SetPoint("RIGHT", -2, 8)
 			elseif unit == "party" or unit == "raid" then
-				HealthPoints:SetPoint("CENTER", 0, 0)
+				HealthPoints:SetPoint("LEFT", 5, 0)
 				HealthPoints:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 13, "THINOUTLINE")
 			else
 				HealthPoints:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 24, "THINOUTLINE")
@@ -288,11 +288,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 			Spark:SetParent(Castbar)
 			self.Castbar.Spark = Spark
 
-			local icon = Castbar:CreateTexture(nil, "OVERLAY")
+			local icon = Castbar:CreateTexture(nil, "BACKGROUND")
 			icon:SetHeight(33)
 			icon:SetWidth(33)
 			icon:SetTexCoord(.07, .93, .07, .93)
-			icon:SetPoint("RIGHT", Health, "LEFT", -4, 6)
+			icon:SetPoint("RIGHT", Health, "LEFT", -14, 6)
 			self.Castbar.Icon = icon
 
 			local iconborder = CreateFrame("Frame")
@@ -308,7 +308,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			self.Castbar.Iconborder = iconborder
 
 			local Time = Castbar:CreateFontString(nil, "OVERLAY")
-			Time:SetPoint("TOPLEFT", icon, "TOPRIGHT", 8, 2)
+			Time:SetPoint("TOPLEFT", icon, "TOPRIGHT", 13, 2)
 			Time:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 12 ,"OUTLINE")
 			Time:SetTextColor(1, 1, 1)
 			self.Castbar.Time = Time
@@ -319,11 +319,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 			cbtext:SetTextColor(1, 1, 1)
 			self.Castbar.Text = cbtext
 
-			local Shield = Castbar:CreateTexture(nil, 'OVERLAY')
-			Shield:SetSize(20, 20)
-			Shield:SetPoint("LEFT", Castbar, 2, 5)
+			local Shield = Castbar:CreateTexture(nil, "ARTWORK")
+			Shield:SetSize(100, 100)
+			Shield:SetPoint("CENTER", icon, 17, 0)
+			Shield:SetTexture("Interface\\CastingBar\\UI-CastingBar-Arena-Shield")
 			self.Castbar.Shield = Shield
-			--positioning!
 
 			local name = Health:CreateFontString(nil, "OVERLAY")
 			name:SetPoint("RIGHT", Health, "RIGHT", -2, -21)
@@ -340,6 +340,14 @@ f:SetScript("OnEvent", function(self, event, addon)
 			lead:SetSize(16, 16)
 			lead:SetPoint("TOPLEFT", Health, 0, 10)
 			self.LeaderIndicator = lead
+			
+			if unit == "party" or unit == "raid" then
+				local role = Health:CreateTexture(nil, "OVERLAY")
+				role:SetSize(16, 16)
+				role:SetPoint("RIGHT", Health,  0, 0)
+				self.GroupRoleIndicator = role
+				self.RaidRoleIndicator = role
+			end
 
 			if(isSingle) then
 				self:SetSize(220, 21)
