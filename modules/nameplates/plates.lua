@@ -97,7 +97,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				Spark:SetParent(Castbar)
 				frame.Castbar.Spark = Spark
 
-				local icon = Castbar:CreateTexture(nil, "OVERLAY")
+				local icon = Castbar:CreateTexture(nil, "BACKGROUND")
 				icon:SetHeight(8)
 				icon:SetWidth(8)
 				icon:SetTexCoord(.07, .93, .07, .93)
@@ -118,7 +118,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 				local Shield = Castbar:CreateTexture(nil, 'OVERLAY')
 				Shield:SetSize(20, 20)
-				Shield:SetPoint("CENTER", icon, 2, 5)
+				Shield:SetTexture("Interface\\CastingBar\\UI-CastingBar-Arena-Shield")
+				Shield:SetPoint("CENTER", icon, 2, 0)
 				frame.Castbar.Shield = Shield
 
 				local RaidTargetIndicator = health:CreateTexture(nil, 'OVERLAY')
