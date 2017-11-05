@@ -19,8 +19,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 			nameplateSelfScale = 1,
 		}
 
-		local PostUpdateHealth = function(health, unit, min, max)
-			frame = health:GetParent()
+		local UpdateTargetIndicator = function(frame, event)
+			local unit = frame.unit
 			if UnitIsUnit(unit, "target") then
 				frame.Targetindicator:SetAlpha(1)
 			else
@@ -142,6 +142,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				targetindicator:SetSize(100*cvars.nameplateSelectedScale, 5*cvars.nameplateSelectedScale)
 				targetindicator:SetVertexColor(48/255, 113/255, 191/255)
 				frame.Targetindicator = targetindicator
+				frame:RegisterEvent("PLAYER_TARGET_CHANGED", UpdateTargetIndicator)
 
 				-- workaround so we can actually have an glow border
 				local threat = Glow:CreateTexture(nil, "OVERLAY")
@@ -155,8 +156,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 				Castbar.PostCastStart = PostCastStart
 
 				threat.PostUpdate = PostUpdateThreat
-				
-				health.PostUpdate = PostUpdateHealth
 			end
 		end)
 		oUF:SpawnNamePlates(nil, nil, cvars)
