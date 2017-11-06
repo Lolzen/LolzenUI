@@ -162,16 +162,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 			LolzenUIcfg.artifactbar["artifactbar_alpha"] = tonumber(ns.picker_alpha[UIDropDownMenu_GetSelectedID(alpha)])
 			LolzenUIcfg.artifactbar["artifactbar_bg_alpha"] = tonumber(ns.picker_alpha[UIDropDownMenu_GetSelectedID(bg_alpha)])
 			LolzenUIcfg.artifactbar["artifactbar_color"] = {color:GetVertexColor()}
-			if cb1:GetChecked(true) then
-				LolzenUIcfg.artifactbar["artifactbar_1px_border"] = true
-			else
-				LolzenUIcfg.artifactbar["artifactbar_1px_border"] = false
-			end
-			if cb2:GetChecked(true) then
-				LolzenUIcfg.artifactbar["artifactbar_1px_border_round"] = true
-			else
-				LolzenUIcfg.artifactbar["artifactbar_1px_border_round"] = false
-			end
+			LolzenUIcfg.artifactbar["artifactbar_1px_border"] = cb1:GetChecked()
+			LolzenUIcfg.artifactbar["artifactbar_1px_border_round"] = cb2:GetChecked()
 			LolzenUIcfg.artifactbar["artifactbar_font"] = ns.picker_fonts[UIDropDownMenu_GetSelectedID(font)]
 			LolzenUIcfg.artifactbar["artifactbar_font_size"] = tonumber(font_size:GetText())
 			LolzenUIcfg.artifactbar["artifactbar_font_flag"] = ns.picker_flags[UIDropDownMenu_GetSelectedID(font_flag)]
