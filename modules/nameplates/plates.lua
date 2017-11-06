@@ -20,8 +20,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		}
 
 		local UpdateTargetIndicator = function(frame, event)
-			local unit = frame.unit
-			if UnitIsUnit(unit, "target") then
+			if UnitIsUnit(frame.unit, "target") then
 				frame.Targetindicator:SetAlpha(1)
 			else
 				frame.Targetindicator:SetAlpha(0)
@@ -158,6 +157,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 				threat.PostUpdate = PostUpdateThreat
 			end
 		end)
-		oUF:SpawnNamePlates(nil, nil, cvars)
+		oUF:SpawnNamePlates(nil, UpdateTargetIndicator, cvars)
 	end
 end)
