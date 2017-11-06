@@ -213,11 +213,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			LolzenUIcfg.buffs["buff_duration_anchor2"] = ns.picker_anchor[UIDropDownMenu_GetSelectedID(dur_anchor2)]
 			LolzenUIcfg.buffs["buff_duration_posx"] = tonumber(dur_pos_x:GetText())
 			LolzenUIcfg.buffs["buff_duration_posy"] = tonumber(dur_pos_y:GetText())
-			if cb1:GetChecked(true) then
-				LolzenUIcfg.buffs["buff_duration_detailed"] = true
-			else
-				LolzenUIcfg.buffs["buff_duration_detailed"] = false
-			end
+			LolzenUIcfg.buffs["buff_duration_detailed"] = cb1:GetChecked()
 			LolzenUIcfg.buffs["buff_duration_font"] = ns.picker_fonts[UIDropDownMenu_GetSelectedID(dur_font)]
 			LolzenUIcfg.buffs["buff_duration_font_size"] = tonumber(dur_font_size:GetText())
 			LolzenUIcfg.buffs["buff_duration_font_flag"] = ns.picker_flags[UIDropDownMenu_GetSelectedID(dur_font_flag)]
