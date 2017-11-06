@@ -11,11 +11,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 	--[[ ToDo:
 			preview
-			add lvlname pos x/y n stuff
-			add raidmark to preview
-			add cb_height
 			cb shield scale per formula, user independed
-			cb shield -> use centered texture from media
 	]]
 		local title = ns.createTitle("nameplates")
 
@@ -37,7 +33,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		local prev_np_lvlname = prev_np_frame:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
 		prev_np_lvlname:SetFont(LolzenUIcfg.nameplates["np_lvlname_font"], LolzenUIcfg.nameplates["np_lvlname_font_size"]*LolzenUIcfg.nameplates["np_selected_scale"], LolzenUIcfg.nameplates["np_lvlname_font_flag"])
 		prev_np_lvlname:SetText("|cffffff00110|r + Random Name")
-		prev_np_lvlname:SetPoint("CENTER", prev_np_frame, 0, 3)
+		prev_np_lvlname:SetPoint(LolzenUIcfg.nameplates["np_lvlname_anchor"], prev_np_frame, LolzenUIcfg.nameplates["np_lvlname_posx"], LolzenUIcfg.nameplates["np_lvlname_posy"])
 		
 		local prev_np_threatglow = CreateFrame("Frame", nil, ns["nameplates"])
 		prev_np_threatglow:SetFrameStrata("BACKGROUND")
@@ -51,9 +47,14 @@ f:SetScript("OnEvent", function(self, event, addon)
 	
 		local prev_np_targetindicator = prev_np_frame:CreateTexture(nil, "OVERLAY")
 		prev_np_targetindicator:SetTexture("Interface\\AddOns\\LolzenUI\\media\\target-glow")
-		prev_np_targetindicator:SetPoint("CENTER", prev_np, 0, -3)
+		prev_np_targetindicator:SetPoint("CENTER", prev_np, 0, -3*LolzenUIcfg.nameplates["np_selected_scale"])
 		prev_np_targetindicator:SetSize(LolzenUIcfg.nameplates["np_width"]*LolzenUIcfg.nameplates["np_selected_scale"], LolzenUIcfg.nameplates["np_height"]*LolzenUIcfg.nameplates["np_selected_scale"])
 		prev_np_targetindicator:SetVertexColor(48/255, 113/255, 191/255)
+		
+		local prev_np_raidmark = prev_np_frame:CreateTexture(nil, "OVERLAY")
+		prev_np_raidmark:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcon_8")
+		prev_np_raidmark:SetPoint(LolzenUIcfg.nameplates["np_raidmark_anchor"], prev_np, LolzenUIcfg.nameplates["np_raidmark_posx"], LolzenUIcfg.nameplates["np_raidmark_posy"])
+		prev_np_raidmark:SetSize(LolzenUIcfg.nameplates["np_raidmark_size"], LolzenUIcfg.nameplates["np_raidmark_size"])
 		
 		local cb1 = ns.createCheckBox("nameplates", "targetindicator", "|cff5599ffTarget indicator on target nameplate|r", LolzenUIcfg.nameplates["np_targetindicator"])
 		cb1:SetPoint("TOPLEFT", prev_np, "BOTTOMLEFT", 0, -20)
@@ -118,7 +119,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		
 		local header3 = ns.createHeader("nameplates", "Level & Name")
 		header3:SetPoint("TOPLEFT", height_text, "BOTTOMLEFT", 0, -30)
-		
+
 		local lvlname_font_text = ns.createFonstring("nameplates", "Font:")
 		lvlname_font_text:SetPoint("TOPLEFT", header3, "BOTTOMLEFT", 0, -10)
 
@@ -136,12 +137,44 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		local lvlname_font_flag = ns.createPicker("nameplates", "flag", "lvlname_font_flag", 120, LolzenUIcfg.nameplates["np_lvlname_font_flag"])
 		lvlname_font_flag:SetPoint("LEFT", lvlname_font_flag_text, "RIGHT", -10, -3)
+
+		local lvlname_pos_x_text = ns.createFonstring("nameplates", "PosX:")
+		lvlname_pos_x_text:SetPoint("TOPLEFT", lvlname_font_text, "BOTTOMLEFT", 0, -15)
+
+		local lvlname_pos_x = ns.createInputbox("nameplates", 30, 20, LolzenUIcfg.nameplates["np_lvlname_posx"])
+		lvlname_pos_x:SetPoint("LEFT", lvlname_pos_x_text, "RIGHT", 10, 0)
+
+		local lvlname_pos_y_text = ns.createFonstring("nameplates", "PosY:")
+		lvlname_pos_y_text:SetPoint("LEFT", lvlname_pos_x, "RIGHT", 5, 0)
+
+		local lvlname_pos_y = ns.createInputbox("nameplates", 30, 20, LolzenUIcfg.nameplates["np_lvlname_posy"])
+		lvlname_pos_y:SetPoint("LEFT", lvlname_pos_y_text, "RIGHT", 10, 0)
+		
+		local lvlname_anchor_text = ns.createFonstring("nameplates", "Anchor1:")
+		lvlname_anchor_text:SetPoint("LEFT", lvlname_pos_y, "RIGHT", 10, 0)
+
+		local lvlname_anchor = ns.createPicker("nameplates", "anchor", "nameplates_lvlname_anchor1", 110, LolzenUIcfg.nameplates["np_lvlname_anchor"])
+		lvlname_anchor:SetPoint("LEFT", lvlname_anchor_text, "RIGHT", -10, -3)
 		
 		local header4 = ns.createHeader("nameplates", "Raidmark")
-		header4:SetPoint("TOPLEFT", lvlname_font_text, "BOTTOMLEFT", 0, -30)
+		header4:SetPoint("TOPLEFT", lvlname_pos_x_text, "BOTTOMLEFT", 0, -30)
 		
 		local cb3 = ns.createCheckBox("nameplates", "raidtargetindicator", "|cff5599ffShow raid mark indicators|r", LolzenUIcfg.nameplates["np_raidtargetindicator"])
 		cb3:SetPoint("TOPLEFT", header4, "BOTTOMLEFT", 0, -5)
+		
+		cb3:SetScript("OnClick", function(self)
+			if cb3:GetChecked() == false then
+				prev_np_raidmark:Hide()
+			else
+				prev_np_raidmark:Show()
+			end
+		end)
+
+		if cb3:GetChecked() == false then
+			prev_np_raidmark:Hide()
+		else
+			prev_np_raidmark:Show()
+		end
 		
 		local rt_size_text = ns.createFonstring("nameplates", "Size:")
 		rt_size_text:SetPoint("TOPLEFT", cb3, "BOTTOMLEFT", 0, 0)
@@ -195,7 +228,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		cb_prev_np_lvlname:SetPoint("CENTER", cb_prev_np_frame, 0, 3)
 		
 		local cb_prev_np_cb = cb_prev_np_frame:CreateTexture(nil, "BACKGROUND")
-		cb_prev_np_cb:SetSize(LolzenUIcfg.nameplates["np_width"]*LolzenUIcfg.nameplates["np_selected_scale"], 1*LolzenUIcfg.nameplates["np_selected_scale"])
+		cb_prev_np_cb:SetSize(LolzenUIcfg.nameplates["np_cb_width"]*LolzenUIcfg.nameplates["np_selected_scale"], LolzenUIcfg.nameplates["np_cb_height"]*LolzenUIcfg.nameplates["np_selected_scale"])
 		cb_prev_np_cb:SetPoint(LolzenUIcfg.nameplates["np_cb_anchor"], cb_prev_np_frame, LolzenUIcfg.nameplates["np_cb_anchor2"], LolzenUIcfg.nameplates["np_cb_posx"], LolzenUIcfg.nameplates["np_cb_posy"])
 		cb_prev_np_cb:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.nameplates["np_cb_texture"])
 		
@@ -209,9 +242,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 		cb_prev_np_icon:SetPoint(LolzenUIcfg.nameplates["np_cbicon_anchor"], cb_prev_np_frame, LolzenUIcfg.nameplates["np_cbicon_anchor2"], LolzenUIcfg.nameplates["np_cbicon_posx"], LolzenUIcfg.nameplates["np_cbicon_posy"])
 		
 		local cb_prev_np_shield = cb_prev_np_frame:CreateTexture(nil, "BACKGROUND")
-		cb_prev_np_shield:SetSize(20*LolzenUIcfg.nameplates["np_selected_scale"], 20*LolzenUIcfg.nameplates["np_selected_scale"])
-		cb_prev_np_shield:SetTexture("Interface\\CastingBar\\UI-CastingBar-Arena-Shield")
-		cb_prev_np_shield:SetPoint("CENTER", cb_prev_np_icon, 2*LolzenUIcfg.nameplates["np_selected_scale"], 0)
+		cb_prev_np_shield:SetSize(LolzenUIcfg.nameplates["np_cbicon_size"]*3*LolzenUIcfg.nameplates["np_selected_scale"], LolzenUIcfg.nameplates["np_cbicon_size"]*3*LolzenUIcfg.nameplates["np_selected_scale"])
+		cb_prev_np_shield:SetTexture("Interface\\AddOns\\LolzenUI\\media\\shield")
+		cb_prev_np_shield:SetPoint("CENTER", cb_prev_np_icon, 0, -3)
 		
 		local cb_prev_np_time = ns.createFonstring("np_castbar_options", "0.1")
 		cb_prev_np_time:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\"..LolzenUIcfg.nameplates["np_cbtime_font"], LolzenUIcfg.nameplates["np_cbtime_font_size"]*LolzenUIcfg.nameplates["np_selected_scale"] , LolzenUIcfg.nameplates["np_cbtime_font_flag"])
@@ -250,6 +283,18 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		local cb_texture = ns.createInputbox("np_castbar_options", 100, 20, LolzenUIcfg.nameplates["np_cb_texture"])
 		cb_texture:SetPoint("LEFT", cb_texture_text, "RIGHT", 10, 0)
+		
+		local cb_height_text = ns.createFonstring("np_castbar_options", "Height:")
+		cb_height_text:SetPoint("LEFT", cb_texture, "RIGHT", 10, 0)
+
+		local cb_height = ns.createInputbox("np_castbar_options", 40, 20, LolzenUIcfg.nameplates["np_cb_height"])
+		cb_height:SetPoint("LEFT", cb_height_text, "RIGHT", 10, 0)
+		
+		local cb_width_text = ns.createFonstring("np_castbar_options", "Width:")
+		cb_width_text:SetPoint("LEFT", cb_height, "RIGHT", 10, 0)
+		
+		local cb_width = ns.createInputbox("np_castbar_options", 40, 20, LolzenUIcfg.nameplates["np_cb_width"])
+		cb_width:SetPoint("LEFT", cb_width_text, "RIGHT", 10, 0)
 		
 		local cb_header2 = ns.createHeader("np_castbar_options", "Spark")
 		cb_header2:SetPoint("TOPLEFT", cb_texture_text, "BOTTOMLEFT", 0, -30)
