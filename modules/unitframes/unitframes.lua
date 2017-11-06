@@ -1,5 +1,8 @@
 --// unitframes // --
 
+local _, ns = ...
+local oUF = ns.oUF
+
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)
@@ -279,7 +282,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 			local Castbar = CreateFrame("StatusBar", nil, self)
 			Castbar:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
 			Castbar:SetAllPoints(Health)
-		--	Castbar:SetStatusBarColor(0.8, 0, 0)
+			Castbar:SetStatusBarColor(0.8, 0, 0, 0.2)
+			Castbar:SetFrameStrata("HIGH")
 			self.Castbar = Castbar
 
 			local Spark = Castbar:CreateTexture(nil, "OVERLAY")
