@@ -93,31 +93,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 			LolzenUIcfg.pullcount["pull_sound_9"] = pull_sound_count[9].eb:GetText()
 			LolzenUIcfg.pullcount["pull_sound_10"] = pull_sound_count[10].eb:GetText()
 			LolzenUIcfg.pullcount["pull_sound_pull"] = pull_now:GetText()
-			if cb1:GetChecked(true) then
-				LolzenUIcfg.pullcount["pull_filter_guild"] = true
-			else
-				LolzenUIcfg.pullcount["pull_filter_guild"] = false
-			end
-			if cb2:GetChecked(true) then
-				LolzenUIcfg.pullcount["pull_filter_party"] = true
-			else
-				LolzenUIcfg.pullcount["pull_filter_party"] = false
-			end
-			if cb3:GetChecked(true) then
-				LolzenUIcfg.pullcount["pull_filter_instance"] = true
-			else
-				LolzenUIcfg.pullcount["pull_filter_instance"] = false
-			end
-			if cb4:GetChecked(true) then
-				LolzenUIcfg.pullcount["pull_filter_say"] = true
-			else
-				LolzenUIcfg.pullcount["pull_filter_say"] = false
-			end
-			if cb5:GetChecked(true) then
-				LolzenUIcfg.pullcount["pull_filter_channel"] = true
-			else
-				LolzenUIcfg.pullcount["pull_filter_channel"] = false
-			end
+			LolzenUIcfg.pullcount["pull_filter_guild"] = cb1:GetChecked()
+			LolzenUIcfg.pullcount["pull_filter_party"] = cb2:GetChecked()
+			LolzenUIcfg.pullcount["pull_filter_instance"] = cb3:GetChecked()
+			LolzenUIcfg.pullcount["pull_filter_say"] = cb4:GetChecked()
+			LolzenUIcfg.pullcount["pull_filter_channel"] = cb5:GetChecked()
 		end
 
 		ns["pullcount"].default = function(self)
