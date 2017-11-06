@@ -192,16 +192,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 			LolzenUIcfg.xpbar["xpbar_xp_restedcolor"] = {color2:GetVertexColor()}
 			LolzenUIcfg.xpbar["xpbar_pvp_color"] = {color3:GetVertexColor()}
 			LolzenUIcfg.xpbar["xpbar_paragon_color"] = {color4:GetVertexColor()}
-			if cb1:GetChecked(true) then
-				LolzenUIcfg.xpbar["xpbar_1px_border"] = true
-			else
-				LolzenUIcfg.xpbar["xpbar_1px_border"] = false
-			end
-			if cb2:GetChecked(true) then
-				LolzenUIcfg.xpbar["xpbar_1px_border_round"] = true
-			else
-				LolzenUIcfg.xpbar["xpbar_1px_border_round"] = false
-			end
+			LolzenUIcfg.xpbar["xpbar_1px_border"] = cb1:GetChecked()
+			LolzenUIcfg.xpbar["xpbar_1px_border_round"] = cb2:GetChecked()
 			LolzenUIcfg.xpbar["xpbar_font"] = ns.picker_fonts[UIDropDownMenu_GetSelectedID(font)]
 			LolzenUIcfg.xpbar["xpbar_font_size"] = tonumber(font_size:GetText())
 			LolzenUIcfg.xpbar["xpbar_font_flag"] = ns.picker_flags[UIDropDownMenu_GetSelectedID(font_flag)]
