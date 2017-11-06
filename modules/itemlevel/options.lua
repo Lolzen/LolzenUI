@@ -72,21 +72,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 		font_flag:SetPoint("LEFT", font_flag_text, "RIGHT", -10, -3)
 
 		ns["itemlevel"].okay = function(self)
-			if cb1:GetChecked(true) then
-				LolzenUIcfg.itemlevel["ilvl_characterframe"] = true
-			else
-				LolzenUIcfg.itemlevel["ilvl_characterframe"] = false
-			end
-			if cb2:GetChecked(true) then
-				LolzenUIcfg.itemlevel["ilvl_inspectframe"] = true
-			else
-				LolzenUIcfg.itemlevel["ilvl_inspectframe"] = false
-			end
-			if cb3:GetChecked(true) then
-				LolzenUIcfg.itemlevel["ilvl_bags"] = true
-			else
-				LolzenUIcfg.itemlevel["ilvl_bags"] = false
-			end
+			LolzenUIcfg.itemlevel["ilvl_characterframe"] = cb1:GetChecked()
+			LolzenUIcfg.itemlevel["ilvl_inspectframe"] = cb2:GetChecked()
+			LolzenUIcfg.itemlevel["ilvl_bags"] = cb3:GetChecked()
 			LolzenUIcfg.itemlevel["ilvl_anchor"] = ns.picker_anchor[UIDropDownMenu_GetSelectedID(anchor)]
 			LolzenUIcfg.itemlevel["ilvl_font_posx"] = tonumber(pos_x:GetText())
 			LolzenUIcfg.itemlevel["ilvl_font_posy"] = tonumber(pos_y:GetText())
