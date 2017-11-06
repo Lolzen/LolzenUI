@@ -18,11 +18,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		cb1:SetPoint("TOPLEFT", about, "BOTTOMLEFT", 0, -20)
 
 		ns["minimap"].okay = function(self)
-			if cb1:GetChecked(true) then
-				LolzenUIcfg.minimap["minimap_square"] = true
-			else
-				LolzenUIcfg.minimap["minimap_square"] = false
-			end
+			LolzenUIcfg.minimap["minimap_square"] = cb1:GetChecked()
 		end
 
 		ns["minimap"].default = function(self)
