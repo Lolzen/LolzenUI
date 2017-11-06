@@ -45,16 +45,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 		anchor:SetPoint("LEFT", anchor_text, "RIGHT", -10, -3)
 
 		ns["objectivetracker"].okay = function(self)
-			if cb1:GetChecked(true) then
-				LolzenUIcfg.objectivetracker["objectivetracker_combatcollapse"] = true
-			else
-				LolzenUIcfg.objectivetracker["objectivetracker_combatcollapse"] = false
-			end
-			if cb2:GetChecked(true) then
-				LolzenUIcfg.objectivetracker["objectivetracker_logincollapse"] = true
-			else
-				LolzenUIcfg.objectivetracker["objectivetracker_logincollapse"] = false
-			end
+			LolzenUIcfg.objectivetracker["objectivetracker_combatcollapse"] = cb1:GetChecked()
+			LolzenUIcfg.objectivetracker["objectivetracker_logincollapse"] = cb2:GetChecked()
 			LolzenUIcfg.objectivetracker["objectivetracker_posx"] = tonumber(pos_x:GetText())
 			LolzenUIcfg.objectivetracker["objectivetracker_posy"] = tonumber(pos_y:GetText())
 			LolzenUIcfg.objectivetracker["objectivetracker_anchor"] = ns.picker_anchor[UIDropDownMenu_GetSelectedID(anchor)]
