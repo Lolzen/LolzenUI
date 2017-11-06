@@ -89,11 +89,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			LolzenUIcfg.orderhallbar["ohb_background"] = ohb_bg:GetText()
 			LolzenUIcfg.orderhallbar["ohb_background_color"] = {color:GetVertexColor()}
 			LolzenUIcfg.orderhallbar["ohb_background_alpha"] = tonumber(alpha:GetText())
-			if cb1:GetChecked(true) then
-				LolzenUIcfg.orderhallbar["ohb_always_show"] = true
-			else
-				LolzenUIcfg.orderhallbar["ohb_always_show"] = false
-			end
+			LolzenUIcfg.orderhallbar["ohb_always_show"] = cb1:GetChecked()
 		end
 
 		ns["orderhallbar"].default = function(self)
