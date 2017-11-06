@@ -3,9 +3,11 @@
 ## Title: Lolzen User interface
 ## Version: 7.3.0_rework
 ## Notes: Restyle the whole WoW UI
-## OptionalDeps: oUF
 ## x-Credits: haste, Neal
+## X-oUF: LolzenUI
 ## SavedVariables: LolzenUIcfg
+
+libs\oUF\oUF.xml
 
 defaultconfig.lua
 core.lua
