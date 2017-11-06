@@ -33,21 +33,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 		msg_desc:SetPoint("TOPLEFT", msg_text, "BOTTOMLEFT", 0, -8)
 
 		ns["interruptannouncer"].okay = function(self)
-			if cb1:GetChecked(true) then
-				LolzenUIcfg.interruptannouncer["interruptannoucer_instance"] = true
-			else
-				LolzenUIcfg.interruptannouncer["interruptannoucer_instance"] = false
-			end
-			if cb2:GetChecked(true) then
-				LolzenUIcfg.interruptannouncer["interruptannoucer_party"] = true
-			else
-				LolzenUIcfg.interruptannouncer["interruptannoucer_party"] = false
-			end
-			if cb3:GetChecked(true) then
-				LolzenUIcfg.interruptannouncer["interruptannoucer_say"] = true
-			else
-				LolzenUIcfg.interruptannouncer["interruptannoucer_say"] = false
-			end
+			LolzenUIcfg.interruptannouncer["interruptannoucer_instance"] = cb1:GetChecked()
+			LolzenUIcfg.interruptannouncer["interruptannoucer_party"] = cb2:GetChecked()
+			LolzenUIcfg.interruptannouncer["interruptannoucer_say"] = cb3:GetChecked()
 			LolzenUIcfg.interruptannouncer["interruptannouncer_msg"] = msg:GetText()
 		end
 
