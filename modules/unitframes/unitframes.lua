@@ -206,6 +206,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				Glow:SetPoint("TOPLEFT", self, -5, 5)
 				Glow:SetPoint("BOTTOMRIGHT", self, 5, -5)
 				Glow:SetBackdropBorderColor(6, 0, 0)
+				Glow:SetFrameLevel(2)
 			end
 
 			-- workaround so we can actually have an glow border
