@@ -51,6 +51,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			["Horde"] = "Interface\\Timer\\Horde-Logo",
 		}
 
+		-- faction icon
 		local factionbg = GameTooltip:CreateTexture("GameTooltFactionBackground", "BACKGROUND")
 		factionbg:SetSize(64, 64)
 		factionbg:SetPoint("RIGHT", GameTooltip, "TOPLEFT", 32, -4)
@@ -83,7 +84,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 		-- return the unitReactionColor values
 		local function getReactionColor(unit)
 			local reactioncolor = FACTION_BAR_COLORS[UnitReaction(unit, "player")]
-			return reactioncolor.r, reactioncolor.g, reactioncolor.b
+			if reactioncolor then
+				return reactioncolor.r, reactioncolor.g, reactioncolor.b
+			end
 		end
 
 		-- return hex value of color values and the unitname
@@ -104,6 +107,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 		end
 
+		-- return the unitclassification
 		local function getMobType(unit)
 			local classif = mobType[UnitClassification(unit)]
 			if classif ~= nil then
@@ -157,6 +161,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 		end
 
+		-- return the alternative PvP flag
 		local function getPvPflag(unit)
 			if UnitIsPVP(unit) then
 				if isInInstance ~= "pvp" and isInInstance ~= "arena" and GetZonePVPInfo() ~= "combat" then
@@ -171,7 +176,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 		end
 		
-		-- sets the target of the mouseovetarget on the tooltip
+		-- return the target of the mouseovetarget on the tooltip
 		local function getUnitTarget(unit)
 			if UnitIsPlayer(unit.."target") then
 				if UnitName(unit.."target") == UnitName("player") then
@@ -201,9 +206,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 			local unit = getTooltipUnit()
 			if not unit or not UnitExists(unit) then return end
 
-			-- colorize TooltipBorder accordinglly to classColor or UnitReaction
+			-- colorize TooltipBorder accordingly to classColor or UnitReaction
 			if UnitIsPlayer(unit) then
+				-- colorize the tooltip border with classcolor
 				self:SetBackdropBorderColor(getClassColor(unit))
+				-- colorize the unit's name and add the alternative PvP flag
 				_G["GameTooltipTextLeft1"]:SetText(getPvPflag(unit)..getStatusFlag(unit)..getColorHexUnit(unit, getClassColor(unit)))
 				-- display talents
 				if UnitLevel(unit) > 9 then
@@ -214,19 +221,24 @@ f:SetScript("OnEvent", function(self, event, addon)
 						end
 					end
 				end
+				-- colorize the guild name if it's the same as the Player's
 				if IsInGuild(unit) then
 					if _G["GameTooltipTextLeft2"]:GetText():find("^"..GetGuildInfo("player")) then
 						_G["GameTooltipTextLeft2"]:SetTextColor(0, 5, 1)
 					end
 				end
+				-- alter the appearance of level, race & class
 				for i=1, GameTooltip:NumLines(), 1 do
 					if _G["GameTooltipTextLeft"..i]:GetText():find("^"..LEVEL) then
 						_G["GameTooltipTextLeft"..i]:SetText(getColorizedLevel(unit).." "..UnitRace(unit).." "..UnitClass(unit))
 					end
 				end
 			else
+				-- colorize the tooltip border with unitreaction
 				self:SetBackdropBorderColor(getReactionColor(unit))
+				-- colorize the unit's name and add the alternative PvP flag
 				_G["GameTooltipTextLeft1"]:SetText(getPvPflag(unit)..getColorHexUnit(unit, getReactionColor(unit)))
+				-- alter the appearance of level, race & class
 				for i=1, GameTooltip:NumLines(), 1 do
 					if _G["GameTooltipTextLeft"..i]:GetText():find("^"..LEVEL) then
 						_G["GameTooltipTextLeft"..i]:SetText(getColorizedLevel(unit)..getMobType(unit).." "..(UnitCreatureType(unit) or ""))
@@ -298,6 +310,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			InspectTalents(1, getTooltipUnit())
 		end
 
+		-- register the tooltip with UNIT_TARGET event, which fires when a unit switches the target
 		GameTooltip:RegisterEvent("UNIT_TARGET")
 		GameTooltip:SetScript("OnEvent", function(self, event, ...) self[event](self, event, ...) end)
 	end
