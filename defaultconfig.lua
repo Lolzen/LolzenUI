@@ -283,19 +283,11 @@ defaultconfig.pullcount = {
 	["pull_filter_channel"] = true,
 }
 
-defaultconfig.slashcommands = {
-
-}
-
 defaultconfig.tooltip = {
 
 }
 
 defaultconfig.unitframes = {
-
-}
-
-defaultconfig.versioncheck = {
 
 }
 
