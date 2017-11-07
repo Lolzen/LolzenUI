@@ -22,7 +22,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		-- the backdrop of our Tooltips along with a beautiful border
 		local backdrop = { 
 			bgFile = "Interface\\Buttons\\WHITE8x8",
-			edgeFile = "Interface\\AddOns\\LolzenUI\\media\\border", 
+			edgeFile = "Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.tooltip["tip_border"], 
 			tile = false,
 			tileSize = 8,
 			edgeSize = 16,
@@ -45,7 +45,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			["minus"] = " -",
 		}
 
-		-- faction icons and a background texture
+		-- faction icons
 		local factionIcons = {
 			["Alliance"] = "Interface\\Timer\\Alliance-Logo",
 			["Horde"] = "Interface\\Timer\\Horde-Logo",
@@ -66,7 +66,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		GameTooltipStatusBar:ClearAllPoints()
 		GameTooltipStatusBar:SetPoint("BOTTOMLEFT", 5, 4)
 		GameTooltipStatusBar:SetPoint("BOTTOMRIGHT", -5, 4)
-		GameTooltipStatusBar:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
+		GameTooltipStatusBar:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.tooltip["tip_healthbar_texture"])
 		GameTooltipStatusBar:SetStatusBarColor(0.3, 0.9, 0.3, 1)
 		GameTooltipStatusBar:SetHeight(2)
 		
@@ -120,11 +120,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 		-- return the StatusFlag aka AFK, DND or offline
 		local function getStatusFlag(unit)
 			if UnitIsAFK(unit) then
-				return "|cffffffffAFK| |r"
+				return "|cffffffff"..LolzenUIcfg.tooltip["tip_statusflag_afk"].." |r"
 			elseif UnitIsDND(unit) then
-				return "|cffffffffDND| |r"
+				return "|cffffffff"..LolzenUIcfg.tooltip["tip_statusflag_dnd"].." |r"
 			elseif not UnitIsConnected(unit) then
-				return "|cffffffff(Off) |r"
+				return "|cffffffff"..LolzenUIcfg.tooltip["tip_statusflag_off"].." |r"
 			else
 				return "" 
 			end
@@ -213,18 +213,20 @@ f:SetScript("OnEvent", function(self, event, addon)
 				-- colorize the unit's name and add the alternative PvP flag
 				_G["GameTooltipTextLeft1"]:SetText(getPvPflag(unit)..getStatusFlag(unit)..getColorHexUnit(unit, getClassColor(unit)))
 				-- display talents
-				if UnitLevel(unit) > 9 then
-					if not InspectFrame or not InspectFrame:IsShown() then
-						if CheckInteractDistance(unit,1) and CanInspect(unit) then
-							GameTooltip:RegisterEvent("INSPECT_READY")
-							NotifyInspect(unit)
+				if LolzenUIcfg.tooltip["tip_display_talents"] == true then
+					if UnitLevel(unit) > 9 then
+						if not InspectFrame or not InspectFrame:IsShown() then
+							if CheckInteractDistance(unit,1) and CanInspect(unit) then
+								GameTooltip:RegisterEvent("INSPECT_READY")
+								NotifyInspect(unit)
+							end
 						end
 					end
 				end
 				-- colorize the guild name if it's the same as the Player's
 				if IsInGuild(unit) then
 					if _G["GameTooltipTextLeft2"]:GetText():find("^"..GetGuildInfo("player")) then
-						_G["GameTooltipTextLeft2"]:SetTextColor(0, 5, 1)
+						_G["GameTooltipTextLeft2"]:SetTextColor(unpack(LolzenUIcfg.tooltip["tip_own_guild_color"]))
 					end
 				end
 				-- alter the appearance of level, race & class
@@ -259,13 +261,17 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 
 			-- set the raidIcon on the tooltip or hide it
-			if GetRaidTargetIndex(unit) then
-				ricon:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcon_"..GetRaidTargetIndex(unit))
+			if LolzenUIcfg.tooltip["tip_show_raidmark"] == true then
+				if GetRaidTargetIndex(unit) then
+					ricon:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcon_"..GetRaidTargetIndex(unit))
+				end
 			end
 
 			-- show a background texture of the faction
-			if UnitFactionGroup(unit) and UnitFactionGroup(unit) == "Horde" or "Alliance" then
-				factionbg:SetTexture(factionIcons[UnitFactionGroup(unit)])
+			if LolzenUIcfg.tooltip["tip_show_factionicons"] == true then
+				if UnitFactionGroup(unit) and UnitFactionGroup(unit) == "Horde" or "Alliance" then
+					factionbg:SetTexture(factionIcons[UnitFactionGroup(unit)])
+				end
 			end
 			
 			-- call the target of target function to get the target from the mouseover unit
@@ -275,7 +281,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		-- [hooks and scripts]
 		-- anchor
 		hooksecurefunc("GameTooltip_SetDefaultAnchor", function(tooltip)
-			tooltip:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -13, 43)
+			tooltip:SetPoint(LolzenUIcfg.tooltip["tip_anchor1"], UIParent, LolzenUIcfg.tooltip["tip_anchor2"], LolzenUIcfg.tooltip["tip_posx"], LolzenUIcfg.tooltip["tip_posy"])
 		end)
 
 		-- styling for units
@@ -283,8 +289,12 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		-- clear textures when the tooltip is hidden
 		GameTooltip:HookScript("OnHide", function(self)
-			ricon:SetTexture(nil)
-			factionbg:SetTexture(nil)
+			if LolzenUIcfg.tooltip["tip_show_raidmark"] == true then
+				ricon:SetTexture(nil)
+			end
+			if LolzenUIcfg.tooltip["tip_show_factionicons"] == true then
+				factionbg:SetTexture(nil)
+			end
 		end)
 
 		-- set the background color
@@ -305,9 +315,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 
 		-- inspect when INSPECT_READY is fired
-		function GameTooltip:INSPECT_READY()
-			GameTooltip:UnregisterEvent("INSPECT_READY")
-			InspectTalents(1, getTooltipUnit())
+		if LolzenUIcfg.tooltip["tip_display_talents"] == true then
+			function GameTooltip:INSPECT_READY()
+				GameTooltip:UnregisterEvent("INSPECT_READY")
+				InspectTalents(1, getTooltipUnit())
+			end
 		end
 
 		-- register the tooltip with UNIT_TARGET event, which fires when a unit switches the target
