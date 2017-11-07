@@ -284,7 +284,19 @@ defaultconfig.pullcount = {
 }
 
 defaultconfig.tooltip = {
-
+	["tip_show_factionicons"] = true,
+	["tip_show_raidmark"] = true,
+	["tip_display_talents"] = true,
+	["tip_border"] = "border",
+	["tip_healthbar_texture"] = "statusbar",
+	["tip_statusflag_afk"] = "AFK|",
+	["tip_statusflag_dnd"] = "DND|",
+	["tip_statusflag_off"] = "(Off)",
+	["tip_posx"] = -13,
+	["tip_posy"] = 43,
+	["tip_anchor1"] = "BOTTOMRIGHT",
+	["tip_anchor2"] = "BOTTOMRIGHT",
+	["tip_own_guild_color"] = {0, 5, 1},
 }
 
 defaultconfig.unitframes = {
