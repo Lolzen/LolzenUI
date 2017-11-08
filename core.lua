@@ -124,6 +124,11 @@ ns.picker_flags = {
 	"",
 }
 
+ns.picker_bin = {
+	0,
+	1,
+}
+
 ns.createPicker = function(module, pickertype, name, width, selected)
 	local t
 	if pickertype == "alpha" then
@@ -134,6 +139,8 @@ ns.createPicker = function(module, pickertype, name, width, selected)
 		t = ns.picker_fonts
 	elseif pickertype == "flag" then
 		t = ns.picker_flags
+	elseif pickertype == "bin" then
+		t = ns.picker_bin
 	end
 	local selectedNum
 	local picker = CreateFrame("Button", name, ns[module], "UIDropDownMenuTemplate")
@@ -156,7 +163,7 @@ ns.createPicker = function(module, pickertype, name, width, selected)
 	end
 	UIDropDownMenu_Initialize(picker, initialize)
 	UIDropDownMenu_SetWidth(picker, width)
-	UIDropDownMenu_SetButtonWidth(picker, 124)
+	UIDropDownMenu_SetButtonWidth(picker, width+15)
 	UIDropDownMenu_SetSelectedID(picker, selectedNum)
 	UIDropDownMenu_JustifyText(picker, "LEFT")
 	return picker
