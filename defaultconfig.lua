@@ -144,7 +144,37 @@ defaultconfig.buffwatcher ={
 }
 
 defaultconfig.chat = {
-
+	["chat_custom_channel_stamps"] = true,
+	["chat_strip_brackets"] = true,
+	["chat_timestamp"] = true,
+	["chat_disable_fading"] = true,
+	["chat_flag_afk"] = "AFK |",
+	["chat_flag_dnd"] = "DND |",
+	["chat_font"] = "DroidSans.ttf",
+	["chat_font_size"] = 12,
+	["chat_font_flag"] = "",
+	["chat_font_shadow"] = true,
+	["chat_font_spacing"] = 1,
+	["chat_background"] = true,
+	["chat_background_texture"] = "statusbar",
+	["chat_background_alpha"] = 0.5,
+	["chat_background_border"] = "border",
+	["chat_sticky_say"] = 1,
+	["chat_sticky_yell"] = 0,
+	["chat_sticky_party"] = 1,
+	["chat_sticky_guild"] = 1,
+	["chat_sticky_officer"] = 1,
+	["chat_sticky_raid"] = 1,
+	["chat_sticky_raidwarning"] = 1,
+	["chat_sticky_whisper"] = 0,
+	["chat_sticky_channel"] = 1,
+	["chat_auto_who"] = true,
+	["chat_show_afkdnd_once"] = true,
+	["chat_posx"] = 8,
+	["chat_posy"] = 15,
+	["chat_anchor1"] = "BOTTOMLEFT",
+	["chat_anchor2"] = "BOTTOMLEFT",
+	["chat_strip_say_and_yell"] = true,
 }
 
 defaultconfig.clock = {
