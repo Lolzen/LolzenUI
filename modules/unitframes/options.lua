@@ -9,17 +9,14 @@ f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)
 	if addon == "LolzenUI" and LolzenUIcfg.modules["unitframes"] == true then
 
-		local title = ns["unitframes"]:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
-		title:SetPoint("TOPLEFT", ns["unitframes"], 16, -16)
-		title:SetText("|cff5599ff"..ns["unitframes"].name.."|r")
+		local title = ns.createTitle("unitframes")
 
-		local about = ns["unitframes"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+		local about = ns.createDescription("unitframes", "Unitframes")
 		about:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8)
-		about:SetText("Unitframes; needs oUF to function properly!")
 
 		local notice = ns["unitframes"]:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 		notice:SetPoint("TOPLEFT", about, "BOTTOMLEFT", 0, -20)
-		notice:SetText("|cff5599ffTO BE DONE; ToDo:*bossframe*cleanup|r")
+		notice:SetText("|cff5599ffTO BE DONE|r")
 
 --		local v2 = ns["unitframes"]:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 --		v2:SetPoint("TOPLEFT", v1, "BOTTOMLEFT", 0, -8)
