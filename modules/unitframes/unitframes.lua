@@ -8,7 +8,7 @@ f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)
 	if addon == "LolzenUI" then
 		if LolzenUIcfg.modules["unitframes"] == false then return end
-		
+
 		-- tags
 		local siValue = function(val)
 			if val >= 1e6 then
@@ -55,26 +55,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 		oUF.colors.power[13] = {0.84, 0.1, 0.87} --insanity (everything darker is unseeable on the powerbar)
 
 		local PostCastStart = function(Castbar, unit, spell, spellrank)
-			if not unit == "targettarget" then
+			local name = Castbar:GetParent().Name
+			if name then
 				Castbar:GetParent().Name:SetText(spell)
 			end
-		end
-
-		local PostCastStop = function(Castbar, unit)
-			local name
-			if unit:sub(1,4) == "boss" then
-				-- And people complain about Lua's lack for full regexp support.
-				name = UnitName(unit):gsub('(%u)%S* %l*%s*', '%1 ')
-			else
-				name = UnitName(unit)
-			end
-
-			Castbar:GetParent().Name:SetText(name)
-		end
-
-		local PostCastStopUpdate = function(self, event, unit)
-			if unit ~= self.unit then return end
-			return PostCastStop(self.Castbar, unit)
 		end
 
 		local PostUpdateHealth = function(Health, unit, min, max)
@@ -102,7 +86,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 
 		local PostUpdatePower = function(Power, unit, min, max)
-			local Health = Power:GetParent().Health
 			local color = oUF.colors.power[UnitPowerType(unit)]
 
 			--power.colorPower won't overtake the custom power colors set earlier
@@ -153,15 +136,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 		end
 
-		local PostUpdateGapIcon = function(Auras, unit, icon, visibleBuffs)
-			if(Auras.currentGap) then
-				Auras.currentGap.Border:Show()
-			end
-
-			icon.Border:Hide()
-			Auras.currentGap = icon
-		end
-
 		local CreateAura = function(self, num)
 			local size = 23
 			local Auras = CreateFrame("Frame", nil, self)
@@ -187,31 +161,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 				edgeFile = "Interface\\AddOns\\LolzenUI\\media\\border", edgeSize = 12,
 				insets = {left = 4, right = 4, top = 4, bottom = 4},
 			})
-			if unit == "targettarget" then
-				Border:SetPoint("TOPLEFT", self, -3, 3)
-				Border:SetPoint("BOTTOMRIGHT", self, 3, -1)
-			else
-				Border:SetPoint("TOPLEFT", self, -3, 3)
-				Border:SetPoint("BOTTOMRIGHT", self, 3, -2)
-			end
+			Border:SetPoint("TOPLEFT", self, -3, 3)
+			Border:SetPoint("BOTTOMRIGHT", self, 3, -2)
 			Border:SetBackdropBorderColor(0, 0, 0)
 			Border:SetFrameLevel(3)
-
-			local Glow = CreateFrame("Frame", nil, self)
-			Glow:SetBackdrop({
-				edgeFile ="Interface\\AddOns\\LolzenUI\\media\\glow", edgeSize = 5,
-				insets = {left = 4, right = 4, top = 4, bottom = 4}
-			})
-			if unit == "player" then
-				Glow:SetPoint("TOPLEFT", self, -5, 5)
-				Glow:SetPoint("BOTTOMRIGHT", self, 5, -5)
-				Glow:SetBackdropBorderColor(6, 0, 0)
-				Glow:SetFrameLevel(2)
-			end
-
-			-- workaround so we can actually have an glow border
-			local threat = Glow:CreateTexture(nil, "OVERLAY")
-			self.ThreatIndicator = threat
 
 			local Health = CreateFrame("StatusBar", nil, self)
 			Health:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
@@ -228,40 +181,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 			self.Health = Health
 
 			local HealthPoints = Health:CreateFontString(nil, "OVERLAY")
-			if unit == "targettarget" then
-				HealthPoints:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 18, "THINOUTLINE")
-				HealthPoints:SetPoint("RIGHT", -2, 8)
-			elseif unit == "party" or unit == "raid" then
-				HealthPoints:SetPoint("LEFT", 5, 0)
-				HealthPoints:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 13, "THINOUTLINE")
-			else
-				HealthPoints:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 24, "THINOUTLINE")
-				HealthPoints:SetPoint("RIGHT", -2, 8)
-			end
+			HealthPoints:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 24, "THINOUTLINE")
+			HealthPoints:SetPoint("RIGHT", -2, 8)
 			self:Tag(HealthPoints, "[|cffc41f3b>dead<|r][|cff999999>offline<|r][lolzen:health]") 
 
 			Health.value = HealthPoints
-
-			local Power = CreateFrame("StatusBar", nil, self)
-			Power:SetHeight(2)
-			Power:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
-			Power:SetFrameStrata("HIGH")
-
-			Power.frequentUpdates = true
-
-			Power:SetPoint("LEFT")
-			Power:SetPoint("RIGHT")
-			Power:SetPoint("TOP", Health, "BOTTOM", 0, 2)
-
-			self.Power = Power
-
-			local PowerPoints = Power:CreateFontString(nil, "OVERLAY")
-			PowerPoints:SetPoint("RIGHT", HealthPoints, "LEFT", 0, 0)
-			PowerPoints:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 18, "THINOUTLINE")
-			PowerPoints:SetTextColor(1, 1, 1)
-			self:Tag(PowerPoints, "[lolzen:power< ]")
-
-			Power.value = PowerPoints
 
 			local bg = self:CreateTexture(nil, "BORDER")
 			bg:SetAllPoints(self)
@@ -269,72 +193,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 			bg:SetVertexColor(0.3, 0.3, 0.3)
 			bg:SetAlpha(1)
 
-			local level = Health:CreateFontString(nil, "OVERLAY")
-			level:SetPoint("LEFT", Health, "LEFT", 2, -21) 
-			level:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSans.ttf", 12, "THINOUTLINE")
-
-			self.Level = level
-
 			local RaidTargetIndicator = Health:CreateTexture(nil, 'OVERLAY')
 			RaidTargetIndicator:SetSize(16, 16)
 			RaidTargetIndicator:SetPoint("CENTER", Health, 0, 10)
 			self.RaidTargetIndicator = RaidTargetIndicator
-
-			local Castbar = CreateFrame("StatusBar", nil, self)
-			Castbar:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
-			Castbar:SetAllPoints(Health)
-			Castbar:SetStatusBarColor(0.8, 0, 0, 0.2)
-			Castbar:SetFrameStrata("HIGH")
-			self.Castbar = Castbar
-
-			local Spark = Castbar:CreateTexture(nil, "OVERLAY")
-			Spark:SetSize(8, 23)
-			Spark:SetBlendMode("ADD")
-			Spark:SetParent(Castbar)
-			self.Castbar.Spark = Spark
-
-			local icon = Castbar:CreateTexture(nil, "BACKGROUND")
-			icon:SetHeight(33)
-			icon:SetWidth(33)
-			icon:SetTexCoord(.07, .93, .07, .93)
-			icon:SetPoint("RIGHT", Health, "LEFT", -14, 6)
-			self.Castbar.Icon = icon
-
-			local iconborder = CreateFrame("Frame")
-			iconborder:SetBackdrop({
-				edgeFile = "Interface\\AddOns\\LolzenUI\\media\\border", edgeSize = 12,
-				insets = {left = 4, right = 4, top = 4, bottom = 4},
-			})
-			iconborder:SetParent(Castbar)
-			iconborder:SetPoint("TOPLEFT", icon, -2, 3)
-			iconborder:SetPoint("BOTTOMRIGHT", icon, 3, -2)
-			iconborder:SetBackdropBorderColor(0, 0, 0)
-			iconborder:SetFrameLevel(3)
-			self.Castbar.Iconborder = iconborder
-
-			local Time = Castbar:CreateFontString(nil, "OVERLAY")
-			Time:SetPoint("TOPLEFT", icon, "TOPRIGHT", 13, 2)
-			Time:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 12 ,"OUTLINE")
-			Time:SetTextColor(1, 1, 1)
-			self.Castbar.Time = Time
-
-			local cbtext = Castbar:CreateFontString(nil, "OVERLAY")
-			cbtext:SetPoint("LEFT", Health, "LEFT", 2, 0)
-			cbtext:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSans.ttf", 14 ,"OUTLINE")
-			cbtext:SetTextColor(1, 1, 1)
-			self.Castbar.Text = cbtext
-
-			local Shield = Castbar:CreateTexture(nil, "ARTWORK")
-			Shield:SetSize(100, 100)
-			Shield:SetPoint("CENTER", icon, 17, 0)
-			Shield:SetTexture("Interface\\CastingBar\\UI-CastingBar-Arena-Shield")
-			self.Castbar.Shield = Shield
-
-			local name = Health:CreateFontString(nil, "OVERLAY")
-			name:SetPoint("RIGHT", Health, "RIGHT", -2, -21)
-			name:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSans.ttf", 12, "THINOUTLINE")
-			name:SetTextColor(1, 1, 1)
-			self.Name = name
 
 			local rc = Health:CreateTexture(nil, "OVERLAY")
 			rc:SetSize(16, 16)
@@ -345,66 +207,185 @@ f:SetScript("OnEvent", function(self, event, addon)
 			lead:SetSize(16, 16)
 			lead:SetPoint("TOPLEFT", Health, 0, 10)
 			self.LeaderIndicator = lead
-			
-			if unit == "party" or unit == "raid" then
-				local role = Health:CreateTexture(nil, "OVERLAY")
-				role:SetSize(16, 16)
-				role:SetPoint("RIGHT", Health,  0, 0)
-				self.GroupRoleIndicator = role
-				self.RaidRoleIndicator = role
-			end
 
 			if(isSingle) then
 				self:SetSize(220, 21)
 			end
 
-			if unit == "target" then
-				self:Tag(level, '[lolzen:level][shortclassification]')
-			end
-
 			self.Range = {
 				insideAlpha = 1,
 				outsideAlpha = 1/2,
-		}
-
-			self:RegisterEvent('UNIT_NAME_UPDATE', PostCastStopUpdate)
-			table.insert(self.__elements, PostCastStopUpdate)
-
-			Castbar.PostChannelStart = PostCastStart
-			Castbar.PostCastStart = PostCastStart
-
-			Castbar.PostCastStop = PostCastStop
-			Castbar.PostChannelStop = PostCastStop
+			}
 
 			Health.PostUpdate = PostUpdateHealth
-			Power.PostUpdate = PostUpdatePower
-
-			threat.PostUpdate = PostUpdateThreat
 		end
 
 		local UnitSpecific = {
 			player = function(self, ...)
 				shared(self, ...)
-		--		local AltPowerBar = CreateFrame("StatusBar", nil, self)
-		--		AltPowerBar:SetHeight(3)
-		--		AltPowerBar:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
-		--		AltPowerBar:SetStatusBarColor(1, 1, 1)
 
-		--		AltPowerBar:SetPoint("LEFT")
-		--		AltPowerBar:SetPoint("RIGHT")
-		--		AltPowerBar:SetPoint("TOP", self.Power, "BOTTOM")
+				local Power = CreateFrame("StatusBar", nil, self)
+				Power:SetHeight(2)
+				Power:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
+				Power:SetFrameStrata("HIGH")
 
-		--		self.AltPowerBar = AltPowerBar
+				Power.frequentUpdates = true
 
-		--		local Background = AltPowerBar:CreateTexture(nil, 'BORDER')
-		--		Background:SetTexture(0, 0, 0, .4)
-		--		Background:SetAllPoints()
+				Power:SetPoint("LEFT")
+				Power:SetPoint("RIGHT")
+				Power:SetPoint("TOP", self.Health, "BOTTOM", 0, 2)
 
-				self.Name:Hide()
+				self.Power = Power
+
+				local PowerPoints = Power:CreateFontString(nil, "OVERLAY")
+				PowerPoints:SetPoint("RIGHT", self.Health.value, "LEFT", 0, 0)
+				PowerPoints:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 18, "THINOUTLINE")
+				PowerPoints:SetTextColor(1, 1, 1)
+				Power.value = PowerPoints
+				self:Tag(PowerPoints, "[lolzen:power]")
+
+				local Glow = CreateFrame("Frame", nil, self)
+				Glow:SetBackdrop({
+					edgeFile ="Interface\\AddOns\\LolzenUI\\media\\glow", edgeSize = 5,
+					insets = {left = 4, right = 4, top = 4, bottom = 4}
+				})
+				Glow:SetPoint("TOPLEFT", self, -5, 5)
+				Glow:SetPoint("BOTTOMRIGHT", self, 5, -5)
+				Glow:SetBackdropBorderColor(6, 0, 0)
+				Glow:SetFrameLevel(2)
+
+				-- workaround so we can actually have an glow border
+				local threat = Glow:CreateTexture(nil, "OVERLAY")
+				self.ThreatIndicator = threat
+
+				local Castbar = CreateFrame("StatusBar", nil, self)
+				Castbar:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
+				Castbar:SetAllPoints(self.Health)
+				Castbar:SetStatusBarColor(0.8, 0, 0, 0.2)
+				Castbar:SetFrameStrata("HIGH")
+				self.Castbar = Castbar
+
+				local Spark = Castbar:CreateTexture(nil, "OVERLAY")
+				Spark:SetSize(8, 23)
+				Spark:SetBlendMode("ADD")
+				Spark:SetParent(Castbar)
+				self.Castbar.Spark = Spark
+
+				local icon = Castbar:CreateTexture(nil, "BACKGROUND")
+				icon:SetHeight(33)
+				icon:SetWidth(33)
+				icon:SetTexCoord(.07, .93, .07, .93)
+				icon:SetPoint("RIGHT", self.Health, "LEFT", -14, 6)
+				self.Castbar.Icon = icon
+
+				local iconborder = CreateFrame("Frame")
+				iconborder:SetBackdrop({
+					edgeFile = "Interface\\AddOns\\LolzenUI\\media\\border", edgeSize = 12,
+					insets = {left = 4, right = 4, top = 4, bottom = 4},
+				})
+				iconborder:SetParent(Castbar)
+				iconborder:SetPoint("TOPLEFT", icon, -2, 3)
+				iconborder:SetPoint("BOTTOMRIGHT", icon, 3, -2)
+				iconborder:SetBackdropBorderColor(0, 0, 0)
+				iconborder:SetFrameLevel(3)
+				self.Castbar.Iconborder = iconborder
+
+				local Time = Castbar:CreateFontString(nil, "OVERLAY")
+				Time:SetPoint("TOPLEFT", icon, "TOPRIGHT", 13, 2)
+				Time:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 12 ,"OUTLINE")
+				Time:SetTextColor(1, 1, 1)
+				self.Castbar.Time = Time
+
+				local cbtext = Castbar:CreateFontString(nil, "OVERLAY")
+				cbtext:SetPoint("LEFT", self.Health, "LEFT", 2, 0)
+				cbtext:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSans.ttf", 14 ,"OUTLINE")
+				cbtext:SetTextColor(1, 1, 1)
+				self.Castbar.Text = cbtext
+
+				local Shield = Castbar:CreateTexture(nil, "ARTWORK")
+				Shield:SetSize(100, 100)
+				Shield:SetPoint("CENTER", icon, 17, 0)
+				Shield:SetTexture("Interface\\CastingBar\\UI-CastingBar-Arena-Shield")
+				self.Castbar.Shield = Shield
+
+				Power.PostUpdate = PostUpdatePower
+				threat.PostUpdate = PostUpdateThreat
+				Castbar.PostChannelStart = PostCastStart
+				Castbar.PostCastStart = PostCastStart
 			end,
 
 			target = function(self, ...)
 				shared(self, ...)
+
+				local Power = CreateFrame("StatusBar", nil, self)
+				Power:SetHeight(2)
+				Power:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
+				Power:SetFrameStrata("HIGH")
+
+				Power.frequentUpdates = true
+
+				Power:SetPoint("LEFT")
+				Power:SetPoint("RIGHT")
+				Power:SetPoint("TOP", self.Health, "BOTTOM", 0, 2)
+
+				self.Power = Power
+
+				local PowerPoints = Power:CreateFontString(nil, "OVERLAY")
+				PowerPoints:SetPoint("RIGHT", self.Health.value, "LEFT", 0, 0)
+				PowerPoints:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 18, "THINOUTLINE")
+				PowerPoints:SetTextColor(1, 1, 1)
+				self:Tag(PowerPoints, "[lolzen:power]")
+				self.Power.value = PowerPoints
+
+				local Castbar = CreateFrame("StatusBar", nil, self)
+				Castbar:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
+				Castbar:SetAllPoints(self.Health)
+				Castbar:SetStatusBarColor(0.8, 0, 0, 0.2)
+				Castbar:SetFrameStrata("HIGH")
+				self.Castbar = Castbar
+
+				local Spark = Castbar:CreateTexture(nil, "OVERLAY")
+				Spark:SetSize(8, 23)
+				Spark:SetBlendMode("ADD")
+				Spark:SetParent(Castbar)
+				self.Castbar.Spark = Spark
+
+				local icon = Castbar:CreateTexture(nil, "BACKGROUND")
+				icon:SetHeight(33)
+				icon:SetWidth(33)
+				icon:SetTexCoord(.07, .93, .07, .93)
+				icon:SetPoint("RIGHT", self.Health, "LEFT", -14, 6)
+				self.Castbar.Icon = icon
+
+				local iconborder = CreateFrame("Frame")
+				iconborder:SetBackdrop({
+					edgeFile = "Interface\\AddOns\\LolzenUI\\media\\border", edgeSize = 12,
+					insets = {left = 4, right = 4, top = 4, bottom = 4},
+				})
+				iconborder:SetParent(Castbar)
+				iconborder:SetPoint("TOPLEFT", icon, -2, 3)
+				iconborder:SetPoint("BOTTOMRIGHT", icon, 3, -2)
+				iconborder:SetBackdropBorderColor(0, 0, 0)
+				iconborder:SetFrameLevel(3)
+				self.Castbar.Iconborder = iconborder
+
+				local Time = Castbar:CreateFontString(nil, "OVERLAY")
+				Time:SetPoint("TOPLEFT", icon, "TOPRIGHT", 13, 2)
+				Time:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 12 ,"OUTLINE")
+				Time:SetTextColor(1, 1, 1)
+				self.Castbar.Time = Time
+
+				local cbtext = Castbar:CreateFontString(nil, "OVERLAY")
+				cbtext:SetPoint("LEFT", self.Health, "LEFT", 2, 0)
+				cbtext:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSans.ttf", 14 ,"OUTLINE")
+				cbtext:SetTextColor(1, 1, 1)
+				self.Castbar.Text = cbtext
+
+				local Shield = Castbar:CreateTexture(nil, "ARTWORK")
+				Shield:SetSize(100, 100)
+				Shield:SetPoint("CENTER", icon, 17, 0)
+				Shield:SetTexture("Interface\\CastingBar\\UI-CastingBar-Arena-Shield")
+				self.Castbar.Shield = Shield
 
 				local Debuffs = CreateAura(self, 8)
 				Debuffs:SetPoint("TOP", self, "BOTTOM", 0, -30)
@@ -426,40 +407,117 @@ f:SetScript("OnEvent", function(self, event, addon)
 				panel:SetBackdropBorderColor(0, 0, 0)
 				panel:SetFrameLevel(3)
 				panel:SetBackdropColor(0, 0, 0, 0.8)
+
+				local level = self.Health:CreateFontString(nil, "OVERLAY")
+				level:SetPoint("LEFT", self.Health, "LEFT", 2, -21) 
+				level:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSans.ttf", 12, "THINOUTLINE")
+				self.Level = level
+				self:Tag(level, "[lolzen:level][shortclassification]")
+
+				local name = self.Health:CreateFontString(nil, "OVERLAY")
+				name:SetPoint("RIGHT", self.Health, "RIGHT", -2, -21)
+				name:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSans.ttf", 12, "THINOUTLINE")
+				name:SetTextColor(1, 1, 1)
+				self.Name = name
+				self:Tag(name, "[name]")
+
+				Power.PostUpdate = PostUpdatePower
+				Castbar.PostChannelStart = PostCastStart
+				Castbar.PostCastStart = PostCastStart
 			end,
 
 			targettarget = function(self, ...)
 				shared(self, ...)
 
+				self.Health.value:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 18, "THINOUTLINE")
+				self.Health.value:SetPoint("RIGHT", -2, 8)
+
 				self:SetSize(120, 18)
-				self.Castbar:SetAlpha(0)
-				self.Power:SetAlpha(0)
-				self.Name:Hide()
 			end,
 
 			party = function(self, ...)
 				shared(self, ...)
 
-				self.Castbar:SetAlpha(0)
-				self.Name:Hide()
-				self.Power:SetAlpha(0)
-				self.Power:SetHeight(0)
+				self.Health.value:SetPoint("LEFT", 5, 0)
+				self.Health.value:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 13, "THINOUTLINE")
+
+				local role = self.Health:CreateTexture(nil, "OVERLAY")
+				role:SetSize(16, 16)
+				role:SetPoint("RIGHT", self.Health,  0, 0)
+				self.GroupRoleIndicator = role
+				self.RaidRoleIndicator = role
 			end,
 
 			raid = function(self, ...)
 				shared(self, ...)
 
-				self.Castbar:SetAlpha(0)
-				self.Name:Hide()
-				self.Power:SetAlpha(0)
+				self.Health.value:SetPoint("LEFT", 5, 0)
+				self.Health.value:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 13, "THINOUTLINE")
+
+				local role = self.Health:CreateTexture(nil, "OVERLAY")
+				role:SetSize(16, 16)
+				role:SetPoint("RIGHT", self.Health,  0, 0)
+				self.GroupRoleIndicator = role
+				self.RaidRoleIndicator = role
 			end,
 
 			pet = function(self, ...)
 				shared(self, ...)
 
+				local Castbar = CreateFrame("StatusBar", nil, self)
+				Castbar:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
+				Castbar:SetAllPoints(self.Health)
+				Castbar:SetStatusBarColor(0.8, 0, 0, 0.2)
+				Castbar:SetFrameStrata("HIGH")
+				self.Castbar = Castbar
+
+				local Spark = Castbar:CreateTexture(nil, "OVERLAY")
+				Spark:SetSize(8, 23)
+				Spark:SetBlendMode("ADD")
+				Spark:SetParent(Castbar)
+				self.Castbar.Spark = Spark
+
+				local icon = Castbar:CreateTexture(nil, "BACKGROUND")
+				icon:SetHeight(33)
+				icon:SetWidth(33)
+				icon:SetTexCoord(.07, .93, .07, .93)
+				icon:SetPoint("RIGHT", self.Health, "LEFT", -14, 6)
+				self.Castbar.Icon = icon
+
+				local iconborder = CreateFrame("Frame")
+				iconborder:SetBackdrop({
+					edgeFile = "Interface\\AddOns\\LolzenUI\\media\\border", edgeSize = 12,
+					insets = {left = 4, right = 4, top = 4, bottom = 4},
+				})
+				iconborder:SetParent(Castbar)
+				iconborder:SetPoint("TOPLEFT", icon, -2, 3)
+				iconborder:SetPoint("BOTTOMRIGHT", icon, 3, -2)
+				iconborder:SetBackdropBorderColor(0, 0, 0)
+				iconborder:SetFrameLevel(3)
+				self.Castbar.Iconborder = iconborder
+
+				local Time = Castbar:CreateFontString(nil, "OVERLAY")
+				Time:SetPoint("TOPLEFT", icon, "TOPRIGHT", 13, 2)
+				Time:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 12 ,"OUTLINE")
+				Time:SetTextColor(1, 1, 1)
+				self.Castbar.Time = Time
+
+				local cbtext = Castbar:CreateFontString(nil, "OVERLAY")
+				cbtext:SetPoint("LEFT", self.Health, "LEFT", 2, 0)
+				cbtext:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSans.ttf", 14 ,"OUTLINE")
+				cbtext:SetTextColor(1, 1, 1)
+				self.Castbar.Text = cbtext
+
+				local Shield = Castbar:CreateTexture(nil, "ARTWORK")
+				Shield:SetSize(100, 100)
+				Shield:SetPoint("CENTER", icon, 17, 0)
+				Shield:SetTexture("Interface\\CastingBar\\UI-CastingBar-Arena-Shield")
+				self.Castbar.Shield = Shield
+
 				self:SetSize(120, 19)
-				self.Power:SetAlpha(0)
-				self.Name:Hide()
+
+				Castbar.PostChannelStart = PostCastStart
+				Castbar.PostCastStart = PostCastStart
 			end,
 		}
 
@@ -502,9 +560,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 			spawnHelper(self, 'target', "CENTER", 250, -200)
 			spawnHelper(self, 'targettarget', "CENTER", 300, -177)
 
-		--	for n=1, MAX_BOSS_FRAMES or 5 do
-		--		spawnHelper(self,'boss' .. n, 'TOPRIGHT', -10, -155 - (40 * n))
-		--	end
+			for n=1, MAX_BOSS_FRAMES or 5 do
+				spawnHelper(self, "boss" .. n, "CENTER", 0, -240 + (40 * n))
+			end
 
 			self:SetActiveStyle("Lolzen - Party")
 
