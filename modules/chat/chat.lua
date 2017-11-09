@@ -1,5 +1,4 @@
 --// chat // --
--- based on oChat
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
