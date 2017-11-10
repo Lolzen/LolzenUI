@@ -9,6 +9,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 	if addon == "LolzenUI" then
 		if LolzenUIcfg.modules["itemlevel"] == false then return end
 
+		local ItemUpgradeInfo = LibStub("LibItemUpgradeInfo-1.0")
+
 		local slots = {
 			"Head", 
 			"Neck", 
@@ -30,19 +32,19 @@ f:SetScript("OnEvent", function(self, event, addon)
 			"SecondaryHand",
 		}
 
-		local function showItemlvl(unit, slot)
+		local function getItemlvl(unit, slot)
 			if unit and UnitExists(unit) then
 				local itemLink = GetInventoryItemLink(unit, GetInventorySlotInfo(("%sSlot"):format(slot)))
 				if itemLink then
-					return select(4, GetItemInfo(itemLink))
+					return ItemUpgradeInfo:GetUpgradedItemLevel(itemLink)
 				end
 			end
 		end
 
-		local function showItemlvlBags(bagID, slotID)
+		local function getItemlvlBags(bagID, slotID)
 			local itemLink = GetContainerItemLink(bagID, slotID)
 			if itemLink and IsEquippableItem(itemLink) then
-				return select(4, GetItemInfo(itemLink))
+				return ItemUpgradeInfo:GetHeirloomTrueLevel(itemLink)
 			end
 		end
 
@@ -56,7 +58,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 					s.str:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\"..LolzenUIcfg.itemlevel["ilvl_font"], LolzenUIcfg.itemlevel["ilvl_font_size"], LolzenUIcfg.itemlevel["ilvl_font_flag"])
 					s.str:SetPoint(LolzenUIcfg.itemlevel["ilvl_anchor"], s, LolzenUIcfg.itemlevel["ilvl_font_posx"], LolzenUIcfg.itemlevel["ilvl_font_posy"])
 				end
-				s.str:SetText(showItemlvl("player", slots[i]))
+				s.str:SetText(getItemlvl("player", slots[i]))
 				s.str:SetTextColor(unpack(LolzenUIcfg.itemlevel["ilvl_font_color"]))
 			end
 		end
@@ -72,7 +74,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 						s.str:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\"..LolzenUIcfg.itemlevel["ilvl_font"], LolzenUIcfg.itemlevel["ilvl_font_size"], LolzenUIcfg.itemlevel["ilvl_font_flag"])
 						s.str:SetPoint(LolzenUIcfg.itemlevel["ilvl_anchor"], s, LolzenUIcfg.itemlevel["ilvl_font_posx"], LolzenUIcfg.itemlevel["ilvl_font_posy"])
 					else
-						s.str:SetText(showItemlvl(InspectFrame.unit, slots[i]))
+						s.str:SetText(getItemlvl(InspectFrame.unit, slots[i]))
 						s.str:SetTextColor(unpack(LolzenUIcfg.itemlevel["ilvl_font_color"]))
 					end
 				end
@@ -105,7 +107,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 							s.str:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\"..LolzenUIcfg.itemlevel["ilvl_font"], LolzenUIcfg.itemlevel["ilvl_font_size"], LolzenUIcfg.itemlevel["ilvl_font_flag"])
 							s.str:SetPoint(LolzenUIcfg.itemlevel["ilvl_anchor"], s, LolzenUIcfg.itemlevel["ilvl_font_posx"], LolzenUIcfg.itemlevel["ilvl_font_posy"])
 						else
-							s.str:SetText(showItemlvlBags(bag, slot))
+							s.str:SetText(getItemlvlBags(bag, slot))
 							s.str:SetTextColor(unpack(LolzenUIcfg.itemlevel["ilvl_font_color"]))
 						end
 					end
