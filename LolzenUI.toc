@@ -8,6 +8,7 @@
 ## SavedVariables: LolzenUIcfg
 
 libs\oUF\oUF.xml
+libs\LibItemUpgradeInfo-1.0\LibItemUpgradeInfo-1.0.xml
 
 defaultconfig.lua
 core.lua
