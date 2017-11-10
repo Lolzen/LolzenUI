@@ -1,0 +1,12 @@
+tag 2a15ba125380849df661a837e9d251eb0933e497 Release-70300-29
+Author:	Alar of Runetotem <alar@aspide.it>
+Date:	Thu Aug 31 22:42:26 2017 +0200
+
+Toc updated to 70300
+
+commit a8e342c2525bcf013e5e0d8246a146f2b9deb9e9
+Author: Alar of Runetotem <alar@aspide.it>
+Date:   Thu Aug 31 22:40:42 2017 +0200
+
+    Recommiting and pushing to trigger packager
+
