@@ -107,6 +107,14 @@ f:SetScript("OnEvent", function(self, event, addon)
 			--power.colorPower won't overtake the custom power colors set earlier
 			Power:SetStatusBarColor(color[1], color[2], color[3])
 			Power.value:SetTextColor(color[1], color[2], color[3])
+			local parent = Power:GetParent()
+			if parent.PowerDivider then
+				if min > 0 then
+					parent.PowerDivider:Show()
+				else
+					parent.PowerDivider:Hide()
+				end
+			end
 		end
 
 		local PostCreateIcon = function(Auras, button)
@@ -253,6 +261,13 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 				self.Power = Power
 
+				local PowerDivider = Power:CreateTexture(nil, "OVERLAY")
+				PowerDivider:SetSize(self:GetWidth(), 1)
+				PowerDivider:SetPoint("TOPLEFT", Power)
+				PowerDivider:SetTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
+				PowerDivider:SetVertexColor(0, 0, 0)
+				self.PowerDivider = PowerDivider
+
 				local PowerPoints = Power:CreateFontString(nil, "OVERLAY")
 				PowerPoints:SetPoint("RIGHT", self.Health.value, "LEFT", 0, 0)
 				PowerPoints:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 18, "THINOUTLINE")
@@ -373,6 +388,13 @@ f:SetScript("OnEvent", function(self, event, addon)
 				Power:SetPoint("TOP", self.Health, "BOTTOM", 0, 2)
 
 				self.Power = Power
+
+				local PowerDivider = Power:CreateTexture(nil, "OVERLAY")
+				PowerDivider:SetSize(self:GetWidth(), 1)
+				PowerDivider:SetPoint("TOPLEFT", Power)
+				PowerDivider:SetTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
+				PowerDivider:SetVertexColor(0, 0, 0)
+				self.PowerDivider = PowerDivider
 
 				local PowerPoints = Power:CreateFontString(nil, "OVERLAY")
 				PowerPoints:SetPoint("RIGHT", self.Health.value, "LEFT", 0, 0)
