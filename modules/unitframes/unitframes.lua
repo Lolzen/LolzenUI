@@ -48,11 +48,18 @@ f:SetScript("OnEvent", function(self, event, addon)
 		-- tags end
 
 		-- change some power colors
-		oUF.colors.power[0] = {48/255, 113/255, 191/255} --mana
-		oUF.colors.power[2] = {255/255, 178/255, 0} --focus
-		oUF.colors.power[3] = {1.00, 1.00, 34/255} --energy
-		oUF.colors.power[11] = {51/255, 181/255, 229/225} --maelstrom
-		oUF.colors.power[13] = {0.84, 0.1, 0.87} --insanity (everything darker is unseeable on the powerbar)
+		oUF.colors.power[0] = {48/255, 113/255, 191/255} --mana [Healers & Mages]
+		--oUF.colors.power[1] = {} --rage [Warrior/Guardian Druid]
+		oUF.colors.power[2] = {255/255, 178/255, 0} --focus [Hunter]
+		oUF.colors.power[3] = {1.00, 1.00, 34/255} --energy [Rogue]
+		--oUF.colors.power[6] = {} --runic power [Death Knight]
+		--oUF.colors.power[8] = {} --astral power [Balance Druid]
+		--oUF.colors.power[9] = {} --holy power [Paladin] -- !level paladin and test!
+		oUF.colors.power[11] = {51/255, 181/255, 229/225} --maelstrom [Shaman]
+		--oUF.colors.power[12] = {} --chi [Monk]
+		oUF.colors.power[13] = {0.84, 0.1, 0.87} --insanity [Shadow Priest]
+		oUF.colors.power[17] = {} --fury [Havoc Demon Hunter]
+		oUF.colors.power[18] = {} --pain [Vengeance Demon Hunter]
 
 		local PostCastStart = function(Castbar, unit, spell, spellrank)
 			local name = Castbar:GetParent().Name
@@ -82,6 +89,15 @@ f:SetScript("OnEvent", function(self, event, addon)
 				Glow:Show()
 			else
 				Glow:Hide()
+			end
+		end
+
+		local PostUpdateClassPower = function(element, power, maxPower, maxPowerChanged)
+			if (not maxPower or not maxPowerChanged) then return end
+
+			for i = 1, maxPower do
+				local parent = element[i]:GetParent()
+				element[i]:SetSize((parent:GetWidth()/maxPower) - ((5*maxPower-1)/(maxPower+1)), 8)
 			end
 		end
 
@@ -244,6 +260,33 @@ f:SetScript("OnEvent", function(self, event, addon)
 				Power.value = PowerPoints
 				self:Tag(PowerPoints, "[lolzen:power]")
 
+				-- ClassPower (Combo Points, etc)
+				local ClassPower = {}
+				local spacing = 5
+				for i=1, 10 do
+					ClassPower[i] = CreateFrame("StatusBar", "ClassPower"..i.."Bar", self)
+					ClassPower[i]:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
+					if i == 1 then
+						ClassPower[i]:SetPoint("TOPLEFT", self, "BOTTOMLEFT", 0, -5)
+					else
+						ClassPower[i]:SetPoint("LEFT", ClassPower[i-1], "RIGHT", spacing, 0)
+					end
+
+					local border = CreateFrame("Frame", nil, ClassPower[i])
+					border:SetBackdrop({
+					--edgeFile = "Interface\\AddOns\\LolzenUI\\media\\border", edgeSize = 12,
+					--insets = {left = 0, right = 0, top = 0, bottom = 0},
+						edgeFile=[[Interface/Tooltips/UI-Tooltip-Border]],
+						tile=true, tileSize=4, edgeSize=4,
+						insets={left=0.5,right=0.5,top=0.5,bottom=0.5}
+					})
+					border:SetPoint("TOPLEFT", ClassPower[i], -1, 1.5)
+					border:SetPoint("BOTTOMRIGHT", ClassPower[i], 1.5, -1)
+					border:SetBackdropBorderColor(0, 0, 0)
+					border:SetFrameLevel(3)
+				end
+				self.ClassPower = ClassPower
+
 				local Glow = CreateFrame("Frame", nil, self)
 				Glow:SetBackdrop({
 					edgeFile ="Interface\\AddOns\\LolzenUI\\media\\glow", edgeSize = 5,
@@ -312,6 +355,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				threat.PostUpdate = PostUpdateThreat
 				Castbar.PostChannelStart = PostCastStart
 				Castbar.PostCastStart = PostCastStart
+				ClassPower.PostUpdate = PostUpdateClassPower
 			end,
 
 			target = function(self, ...)
@@ -445,7 +489,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 				role:SetSize(16, 16)
 				role:SetPoint("RIGHT", self.Health,  0, 0)
 				self.GroupRoleIndicator = role
-				self.RaidRoleIndicator = role
 			end,
 
 			raid = function(self, ...)
@@ -457,7 +500,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 				local role = self.Health:CreateTexture(nil, "OVERLAY")
 				role:SetSize(16, 16)
 				role:SetPoint("RIGHT", self.Health,  0, 0)
-				self.GroupRoleIndicator = role
 				self.RaidRoleIndicator = role
 			end,
 
