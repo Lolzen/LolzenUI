@@ -402,6 +402,7 @@ local function updateDB(t, module)
 			elseif type(v) == "boolean" then
 				local bool
 				if v == true then
+					if LolzenUIcfg[module][k] == false then return end -- don't always write just because the boolean is set to false
 					bool = "true"
 					LolzenUIcfg[module][k] = true
 				elseif v == false then
