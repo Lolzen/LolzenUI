@@ -1,6 +1,6 @@
 --// buffwatcher // --
 
-local addon, ns = ...
+local _, ns = ...
 
 ns.RegisterModule("buffwatcher")
 

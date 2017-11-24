@@ -1,6 +1,6 @@
 --// interruptannouncer // --
 
-local addon, ns = ...
+local _, ns = ...
 
 ns.RegisterModule("interruptannouncer")
 

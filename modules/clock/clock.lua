@@ -1,6 +1,6 @@
 --// clock // --
 
-local addon, ns = ...
+local _, ns = ...
 
 ns.RegisterModule("clock")
 

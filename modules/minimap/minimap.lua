@@ -1,6 +1,6 @@
 --// minimap // --
 
-local addon, ns = ...
+local _, ns = ...
 
 ns.RegisterModule("minimap")
 

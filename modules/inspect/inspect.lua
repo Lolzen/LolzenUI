@@ -1,7 +1,7 @@
 --// inspect // --
 -- this module is based on Snoopy Inspect by TotalPackage
 
-local addon, ns = ...
+local _, ns = ...
 
 ns.RegisterModule("inspect")
 

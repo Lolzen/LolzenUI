@@ -1,6 +1,6 @@
 ﻿--// worldmap // --
 
-local addon, ns = ...
+local _, ns = ...
 
 ns.RegisterModule("worldmap")
 

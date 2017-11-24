@@ -1,6 +1,6 @@
 --// itemlevel // --
 
-local addon, ns = ...
+local _, ns = ...
 
 ns.RegisterModule("itemlevel")
 

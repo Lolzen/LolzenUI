@@ -1,6 +1,6 @@
 --// chat // --
 
-local addon, ns = ...
+local _, ns = ...
 
 ns.RegisterModule("chat")
 

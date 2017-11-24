@@ -1,6 +1,6 @@
 --// pullcount // --
 
-local addon, ns = ...
+local _, ns = ...
 
 ns.RegisterModule("pullcount")
 
