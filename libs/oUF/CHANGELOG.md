@@ -1,3 +1,9 @@
+**Changes in 7.0.10:**
+
+- _Adrian L Lange (1):_
+    1. core: Let the packager set a static version (#401)
+- 1 file changed, 1 insertion(+), 1 deletion(-)
+
 **Changes in 7.0.9:**
 
 - _Val Voronov (1):_
@@ -95,7 +101,7 @@
     2. totems: Use actual number of totem sub-widgets instead of MAX_TOTEMS
 - _Phanx (1):_
     1. health: Ignore updates with nil unit (Blizz bug in 7.1) (#319)
-- _Rainrider (20):_
+- _Rainrider (19):_
     1. core:  update the pet frame properly after entering/exiting a vehicle
     2. power: Allow using atlases
     3. castbar: add a .holdTime option
@@ -109,13 +115,12 @@
     11. castbar: set .Text for failed and interrupted casts accordingly
     12. castbar: pass the spellid to Post* hooks where applicable
     13. castbar: add .timeToHold option
-    14. tags: update documentation
-    15. core: update documentation
-    16. portrait: check for PlayerModel instead of Model
-    17. range: minor cleanup
-    18. raidroleindicator: make sure all update paths trigger Pre|PostUpdate
-    19. masterlooterindicator: make sure all update paths trigger Pre|PostUpdate
-    20. runes: update docs
+    14. core: update documentation
+    15. portrait: check for PlayerModel instead of Model
+    16. range: minor cleanup
+    17. raidroleindicator: make sure all update paths trigger Pre|PostUpdate
+    18. masterlooterindicator: make sure all update paths trigger Pre|PostUpdate
+    19. runes: update docs
 - _Sticklord (1):_
     1. core: Change the framestrata to LOW
 - _Val Voronov (19):_
