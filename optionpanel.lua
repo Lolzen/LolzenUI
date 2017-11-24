@@ -74,10 +74,10 @@ ns.panel.okay = function(self)
 end
 
 ns.panel.default = function(self)
-	--for i=1, #ns.modules do
-	--	LolzenUIcfg.modules[ns.modules[i]] = true
-	--end
---	ReloadUI()
+	for i=1, #ns.modules do
+		LolzenUIcfg.modules[ns.modules[i]] = true
+	end
+	ReloadUI()
 end
 
 ns.panel:RegisterEvent("ADDON_LOADED")
