@@ -6,16 +6,17 @@ This is my personal User Interface for World of Warcraft.
 
 It is a compilation of different utilities for either information, feature, ease-of-life addition or anything of that sort.
 
-##### embedded Libs:
+#### embedded Libs:
 ------
 **LibItemUpgradeInfo-1.0**
 
 As blizzards API doesn't perfectly well work (heirlooms, upgrades, ..) LolzenUI makes use of this lib.
+
 **oUF**
 
 the Unitframes and Nameplates integrated make use of oUF.
 
-##### Some AddOn Suggestions to complement LolzenUI:
+#### Some AddOn Suggestions to complement LolzenUI:
 ------
 - BaudBag (or any other Bag addon)
 - BonusRollPreview
@@ -38,7 +39,7 @@ the Unitframes and Nameplates integrated make use of oUF.
 - VendorBait
 - xanErrorDevourer
 
-##### ToDo:
+#### ToDo:
 ------
 - [ ] finish Unitframe options
 - [ ] revisit descriptions
