@@ -392,7 +392,32 @@ defaultconfig.xpbar = {
 	["xpbar_text_posy"] = 8,
 }
 
--- check default config and update if necessary
+-- // check default config and update if necessary // --
+local function updateDB(t, module)
+	for k, v in pairs(t) do
+		if not LolzenUIcfg[module][k] then
+			if type(v) == "table" then
+				LolzenUIcfg[module][k] = {unpack(v)}
+				print("|cff5599ffLolzenUI:|r new option in |cff00ff99"..module.."|r (|cffff8888"..k.." = "..unpack(v).."|r)")
+			elseif type(v) == "boolean" then
+				local bool
+				if v == true then
+					bool = "true"
+					LolzenUIcfg[module][k] = true
+				elseif v == false then
+					if LolzenUIcfg[module][k] == false then return end -- don't always write just because the boolean is set to false
+					bool = "false"
+					LolzenUIcfg[module][k] = false
+				end
+				print("|cff5599ffLolzenUI:|r new option in |cff00ff99"..module.."|r (|cffff8888"..k.." = "..bool.."|r)")
+			else
+				LolzenUIcfg[module][k] = v
+				print("|cff5599ffLolzenUI:|r new option in |cff00ff99"..module.."|r (|cffff8888"..k.." = "..v.."|r)")
+			end
+		end
+	end
+end
+
 local f = CreateFrame("Frame")
 f:SetScript("OnEvent", function(self, event, addon)
 	if addon == "LolzenUI" then
@@ -400,6 +425,16 @@ f:SetScript("OnEvent", function(self, event, addon)
 		if LolzenUIcfg == nil then
 			LolzenUIcfg = defaultconfig
 			print("|cff5599ffLolzenUI:|r first login detected! n\default values written to saved vars")
+		else
+			-- update saved variables upon finding new entries
+			for k, v in pairs(defaultconfig) do
+				if not LolzenUIcfg[k] then
+					LolzenUIcfg[k] = v
+					print("|cff5599ffLolzenUI:|r Updated Saved vars ("..k..")")
+				else
+					updateDB(defaultconfig[k], k)
+				end
+			end
 		end
 	end
 end)
