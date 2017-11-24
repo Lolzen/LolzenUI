@@ -10,9 +10,6 @@ As blizzards API doesn't perfectly well work (heirlooms, upgrades, ..) LolzenUI 
 - oUF
 the Unitframes and Nameplates integrated make use of oUF.
 
-
-
-
 ##### Some AddOn Suggestions to complement LolzenUI:
 - BaudBag (or any other Bag addon)
 - BonusRollPreview
@@ -34,3 +31,18 @@ the Unitframes and Nameplates integrated make use of oUF.
 - tullaRange
 - VendorBait
 - xanErrorDevourer
+
+##### ToDo:
+- [ ] finish Unitframe options
+- [ ] revisit descriptions
+- [ ] unify optionpanel formatting as good as possible
+- [ ] scale independency (720p, 1080p, ...)
+- [ ] itemlevel: add support for more bags
+- [ ] itemlevel: automatic coloring related to avg itemlevel (?)
+- [ ] pullcount: mention that /pull [num] is a thing
+- [ ] pullcount: add security check to detect DBM or BigWigs - if so disable builtin /pull functionality
+- [ ] pullcount: make use of that sexy battleground timer
+- [ ] redo chicchai and integrate
+- [ ] libSharedMedia support
+- [ ] optimizations
+- [ ] tweak module (several tiny tweaks like "increase max watched currency" (BaudBag does this))
