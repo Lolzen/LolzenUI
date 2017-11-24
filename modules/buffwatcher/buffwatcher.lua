@@ -1,5 +1,9 @@
 --// buffwatcher // --
 
+local addon, ns = ...
+
+ns.RegisterModule("buffwatcher")
+
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)

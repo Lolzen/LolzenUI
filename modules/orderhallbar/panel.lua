@@ -1,5 +1,9 @@
 ﻿--// orderhallbar // --
 
+local addon, ns = ...
+
+ns.RegisterModule("orderhallbar")
+
 local function getAreaText()
 	if not OrderHallCommandBar then return end
 	if GetRealZoneText() == GetMinimapZoneText() then

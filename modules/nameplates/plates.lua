@@ -3,6 +3,8 @@
 local _, ns = ...
 local oUF = ns.oUF
 
+ns.RegisterModule("nameplates")
+
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)

@@ -1,5 +1,8 @@
 ﻿--// MainMenuBar //--
 
+local addon, ns = ...
+ns.RegisterModule("actionbars")
+
 local modded
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")

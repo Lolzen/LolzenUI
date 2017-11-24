@@ -1,5 +1,9 @@
 --// versioncheck // --
 
+local addon, ns = ...
+
+ns.RegisterModule("versioncheck")
+
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)

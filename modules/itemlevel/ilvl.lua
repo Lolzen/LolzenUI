@@ -1,5 +1,9 @@
 --// itemlevel // --
 
+local addon, ns = ...
+
+ns.RegisterModule("itemlevel")
+
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:RegisterEvent("INSPECT_READY")

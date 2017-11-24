@@ -330,7 +330,37 @@ defaultconfig.tooltip = {
 }
 
 defaultconfig.unitframes = {
-
+	--general options
+	["uf_use_sivalue"] = true,
+	["uf_power_colors"] = {
+		["0"] = {48/255, 113/255, 191/255}, --colors.power.MANA --0.00	0.00	1.00
+		["1"] = {1, 0, 0}, --default
+		["2"] = {255/255, 178/255, 0}, --colors.power.FOCUS --1.00	0.50	0.25
+		["3"] = {1.00, 1.00, 34/255}, --colors.power.ENERGY --1.00	1.00	0.00
+		["4"] = {1.00, 0.96, 0.41}, --default
+		["5"] = {0.50, 0.50, 0.50}, --default
+		["6"] = {0.00, 0.82, 1.00}, --default
+		["7"] = {0.50, 0.32, 0.55}, --default
+		["8"] = {0.30, 0.52, 0.90}, --default
+		["9"] = {0.95, 0.90, 0.60}, --default
+		["11"] = {51/255, 181/255, 229/225}, --colors.power.MAELSTROM --0.00	0.50	1.00
+		["12"] = {0.71, 1.00, 0.92}, --default
+		["13"] = {0.84, 0.1, 0.87}, --colors.power.INSANITY --0.40	0.00	0.80
+		["16"] = {0.10, 0.10, 0.98}, --default
+		["17"] = {0.788, 0.259, 0.992}, --default
+		["18"] = {1.00, 0.61, 0.00}, --default
+	},
+	["uf_statusbar_texture"] = "statusbar",
+	["uf_ri_size"] = 16, 
+	["uf_ri_posx"] = 0,
+	["uf_ri_posy"] = 10,
+	["uf_ri_anchor"] = "CENTER",
+	["uf_lead_size"] = 16,
+	["uf_lead_posx"] = 0,
+	["uf_lead_posy"] = 10,
+	["uf_lead_anchor"] = "TOPLEFT",
+	["uf_fade_outofreach"] = true,
+	["uf_fade_outofreach_alpha"] = 0.5,
 }
 
 defaultconfig.worldmap = {

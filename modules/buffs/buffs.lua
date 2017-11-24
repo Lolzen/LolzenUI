@@ -1,5 +1,9 @@
 --// buffs // --
 
+local addon, ns = ...
+
+ns.RegisterModule("buffs")
+
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)
@@ -88,25 +92,44 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		if LolzenUIcfg.buffs["buff_duration_detailed"] == true then
 			-- Change the timer
-			SecondsToTimeAbbrev = function(time)
-				local hr, m, s, text
-				if time <= 0 then 
-					text = ""
-				elseif(time < 3600 and time > 40) then
-					m = floor(time / 60)
-					s = mod(time, 60)
-					text = (m == 0 and format("|cffffffff%d", s)) or format("|cffffffff%d:%02d", m, s)
-				elseif time < 60 then
-					m = floor(time / 60)
-					s = mod(time, 60)
-					text = (m == 0 and format("|cffffffff%d", s))
-				else
-					hr = floor(time / 3600)
-					m = floor(mod(time, 3600) / 60)
-					text = format("%d:%2d", hr, m)
-				end
-				return text
+			-- original code from tekkub https://github.com/TekNoLogic/tekBuffTimers
+			local SECONDS_PER_MINUTE = 60
+			local SECONDS_PER_HOUR   = 60 * SECONDS_PER_MINUTE
+			local SECONDS_PER_DAY    = 24 * SECONDS_PER_HOUR
+
+			function SecondsToTimeAbbrev(seconds)
+				if seconds <= 0 then return "" end
+
+				local days = seconds / SECONDS_PER_DAY
+				if days >= 1 then return string.format("|cffffffff%.1fd|r", days) end
+
+				local hours = seconds / SECONDS_PER_HOUR
+				if hours >= 1 then return string.format("|cffffffff%.02fh|r", hours) end
+
+				local minutes = seconds / SECONDS_PER_MINUTE
+				local seconds = seconds % SECONDS_PER_MINUTE
+				if minutes >= 1 then return string.format("|cffffffff%d:%02d|r", minutes, seconds) end
+				return string.format("|cffffffff%ds|r", seconds)
 			end
+--			SecondsToTimeAbbrev = function(time)
+--				local hr, m, s, text
+--				if time <= 0 then 
+--					text = ""
+--				elseif(time < 3600 and time > 40) then
+--					m = floor(time / 60)
+--					s = mod(time, 60)
+--					text = (m == 0 and format("|cffffffff%d", s)) or format("|cffffffff%d:%02d", m, s)
+--				elseif time < 60 then
+--					m = floor(time / 60)
+--					s = mod(time, 60)
+--					text = (m == 0 and format("|cffffffff%d", s))
+--				else
+--					hr = floor(time / 3600)
+--					m = floor(mod(time, 3600) / 60)
+--					text = format("%d:%2d", hr, m)
+--				end
+--				return text
+--			end
 		end
 	end
 end)

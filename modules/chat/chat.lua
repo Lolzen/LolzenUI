@@ -1,5 +1,9 @@
 --// chat // --
 
+local addon, ns = ...
+
+ns.RegisterModule("chat")
+
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:RegisterEvent("PLAYER_ENTERING_WORLD")

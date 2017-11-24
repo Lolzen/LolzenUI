@@ -1,5 +1,9 @@
 --// objectivetracker // --
 
+local addon, ns = ...
+
+ns.RegisterModule("objectivetracker")
+
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:RegisterEvent("PLAYER_REGEN_DISABLED")

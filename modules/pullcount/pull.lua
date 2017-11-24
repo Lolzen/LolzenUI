@@ -1,5 +1,9 @@
 --// pullcount // --
 
+local addon, ns = ...
+
+ns.RegisterModule("pullcount")
+
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:RegisterEvent("CHAT_MSG_ADDON")

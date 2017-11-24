@@ -1,5 +1,9 @@
 ﻿--// artifactbar // --
 
+local addon, ns = ...
+
+ns.RegisterModule("artifactbar")
+
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)

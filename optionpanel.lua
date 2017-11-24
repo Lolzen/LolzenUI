@@ -55,11 +55,6 @@ local function createButtons()
 		if LolzenUIcfg.modules[ns.modules[i]] == true then
 			button[i]:SetChecked(true)
 			button[i].text:SetTextColor(51/255, 181/255, 229/225)
-			-- create the module specific options
-			ns[ns.modules[i]] = CreateFrame("Frame", ns.modules[i].."panel", ns.panel)
-			ns[ns.modules[i]].name = ns.modules[i]
-			ns[ns.modules[i]].parent = ns.panel.name
-			InterfaceOptions_AddCategory(ns[ns.modules[i]])
 		else
 			button[i]:SetChecked(false)
 			button[i].text:SetTextColor(1, 1, 1)

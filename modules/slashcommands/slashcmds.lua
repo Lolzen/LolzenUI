@@ -1,9 +1,14 @@
 --// slashcommands //--
 
+local addon, ns = ...
+
+ns.RegisterModule("slashcommands")
+
 -- Open up the option panel
 SLASH_LOLZENUI1 = "/lolzen"
 SLASH_LOLZENUI2 = "/lolzenui"
 SlashCmdList["LOLZENUI"] = function(self)
+	LoadAddOn("LolzenUI_Options")
 	-- we have to call it twice; known Blizzard bug
 	-- see http://www.wowinterface.com/forums/showthread.php?t=54599
 	InterfaceOptionsFrame_OpenToCategory("LolzenUI")

@@ -1,5 +1,9 @@
 --// tooltip // --
 
+local addon, ns = ...
+
+ns.RegisterModule("tooltip")
+
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)
@@ -86,6 +90,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 			local reactioncolor = FACTION_BAR_COLORS[UnitReaction(unit, "player")]
 			if reactioncolor then
 				return reactioncolor.r, reactioncolor.g, reactioncolor.b
+			--else
+			--	return 1, 1, 1 --fallback // needs a real fix, this seems to be caused on Player controlled NPCs such as the Lightforged Warframe
 			end
 		end
 

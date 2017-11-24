@@ -1,5 +1,9 @@
 --// minimap // --
 
+local addon, ns = ...
+
+ns.RegisterModule("minimap")
+
 local frames = {
 	MinimapZoomIn,
 	MinimapZoomOut,

@@ -3,13 +3,14 @@
 local _, ns = ...
 local oUF = ns.oUF
 
+ns.RegisterModule("unitframes")
+
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)
 	if addon == "LolzenUI" then
 		if LolzenUIcfg.modules["unitframes"] == false then return end
 
-		-- tags
 		local siValue = function(val)
 			if val >= 1e6 then
 				return ('%.1f'):format(val / 1e6):gsub('%.', 'm')
@@ -20,6 +21,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 		end
 
+		-- tags
 		local tags = oUF.Tags.Methods or oUF.Tags
 		local tagevents = oUF.TagEvents or oUF.Tags.Events
 
@@ -27,14 +29,22 @@ f:SetScript("OnEvent", function(self, event, addon)
 			if not UnitIsConnected(unit) or UnitIsDead(unit) or UnitIsGhost(unit) then return end
 
 			local min, max = UnitHealth(unit), UnitHealthMax(unit)
-			return siValue(min)
+			if LolzenUIcfg.unitframes["uf_use_sivalue"] == true then
+				return siValue(min)
+			else
+				return min
+			end
 		end
 
 		tags["lolzen:power"] = function(unit)
 			local min, max = UnitPower(unit), UnitPowerMax(unit)
 			if min == 0 or max == 0 or not UnitIsConnected(unit) or UnitIsDead(unit) or UnitIsGhost(unit) then return end
 
-			return siValue(min)
+			if LolzenUIcfg.unitframes["uf_use_sivalue"] == true then
+				return siValue(min)
+			else
+				return min
+			end
 		end
 		tagevents["lolzen:power"] = tagevents.missingpp
 
@@ -47,19 +57,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 		-- tags end
 
-		-- change some power colors
-		oUF.colors.power[0] = {48/255, 113/255, 191/255} --mana [Healers & Mages]
-		--oUF.colors.power[1] = {} --rage [Warrior/Guardian Druid]
-		oUF.colors.power[2] = {255/255, 178/255, 0} --focus [Hunter]
-		oUF.colors.power[3] = {1.00, 1.00, 34/255} --energy [Rogue]
-		--oUF.colors.power[6] = {} --runic power [Death Knight]
-		--oUF.colors.power[8] = {} --astral power [Balance Druid]
-		--oUF.colors.power[9] = {} --holy power [Paladin] -- !level paladin and test!
-		oUF.colors.power[11] = {51/255, 181/255, 229/225} --maelstrom [Shaman]
-		--oUF.colors.power[12] = {} --chi [Monk]
-		oUF.colors.power[13] = {0.84, 0.1, 0.87} --insanity [Shadow Priest]
-		oUF.colors.power[17] = {} --fury [Havoc Demon Hunter]
-		oUF.colors.power[18] = {} --pain [Vengeance Demon Hunter]
+		-- change power colors to user defined values
+		for k, v in pairs(LolzenUIcfg.unitframes["uf_power_colors"]) do
+			oUF.colors.power[tonumber(k)] = v
+		end
 
 		local PostCastStart = function(Castbar, unit, spell, spellrank)
 			local name = Castbar:GetParent().Name
@@ -74,10 +75,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 			elseif UnitIsGhost(unit) then
 				Health:SetValue(0)
 			end
-			local gradient = { 1, 1, 0, 0, 1, 1, 0, 0, 1, 0}
+			local gradient = {1, 1, 0, 0, 1, 1, 0, 0, 1, 0}
 
-			--this is somewhat bugged, howewer gradient table matches Health.colorSmooth = true
-			--local r, g, b = oUF.ColorGradient(min / max, unpack(oUF.colors.smooth)) 
 			local r, g, b = oUF.ColorGradient(min / max, unpack(gradient))
 			Health.value:SetTextColor(r,g,b)
 		end
@@ -93,7 +92,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 
 		local PostUpdateClassPower = function(element, power, maxPower, maxPowerChanged)
-			if (not maxPower or not maxPowerChanged) then return end
+			if not maxPower or not maxPowerChanged then return end
 
 			for i = 1, maxPower do
 				local parent = element[i]:GetParent()
@@ -191,7 +190,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			Border:SetFrameLevel(3)
 
 			local Health = CreateFrame("StatusBar", nil, self)
-			Health:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
+			Health:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.unitframes["uf_statusbar_texture"])
 
 			Health.frequentUpdates = true
 			Health.colorTapping = true
@@ -213,33 +212,30 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 			local bg = self:CreateTexture(nil, "BORDER")
 			bg:SetAllPoints(self)
-			bg:SetTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
+			bg:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.unitframes["uf_statusbar_texture"])
 			bg:SetVertexColor(0.3, 0.3, 0.3)
 			bg:SetAlpha(1)
 
-			local RaidTargetIndicator = Health:CreateTexture(nil, 'OVERLAY')
-			RaidTargetIndicator:SetSize(16, 16)
-			RaidTargetIndicator:SetPoint("CENTER", Health, 0, 10)
+			local RaidTargetIndicator = Health:CreateTexture(nil, "OVERLAY")
+			RaidTargetIndicator:SetSize(LolzenUIcfg.unitframes["uf_ri_size"], LolzenUIcfg.unitframes["uf_ri_size"])
+			RaidTargetIndicator:SetPoint(LolzenUIcfg.unitframes["uf_ri_anchor"], Health, LolzenUIcfg.unitframes["uf_ri_posx"], LolzenUIcfg.unitframes["uf_ri_posy"])
 			self.RaidTargetIndicator = RaidTargetIndicator
 
-			local rc = Health:CreateTexture(nil, "OVERLAY")
-			rc:SetSize(16, 16)
-			rc:SetPoint("LEFT", Health, 10, 10)
-			self.ReadyCheckIndicator = rc
-
 			local lead = Health:CreateTexture(nil, "OVERLAY")
-			lead:SetSize(16, 16)
-			lead:SetPoint("TOPLEFT", Health, 0, 10)
+			lead:SetSize(LolzenUIcfg.unitframes["uf_lead_size"], LolzenUIcfg.unitframes["uf_lead_size"])
+			lead:SetPoint(LolzenUIcfg.unitframes["uf_lead_anchor"], Health, LolzenUIcfg.unitframes["uf_lead_posx"], LolzenUIcfg.unitframes["uf_lead_posy"])
 			self.LeaderIndicator = lead
 
 			if(isSingle) then
 				self:SetSize(220, 21)
 			end
 
-			self.Range = {
-				insideAlpha = 1,
-				outsideAlpha = 1/2,
-			}
+			if LolzenUIcfg.unitframes["uf_fade_outofreach"] == true then
+				self.Range = {
+					insideAlpha = 1,
+					outsideAlpha = LolzenUIcfg.unitframes["uf_fade_outofreach_alpha"],
+				}
+			end
 
 			Health.PostUpdate = PostUpdateHealth
 		end
@@ -248,12 +244,16 @@ f:SetScript("OnEvent", function(self, event, addon)
 			player = function(self, ...)
 				shared(self, ...)
 
+				self.Health.value:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 24, "THINOUTLINE")
+				self.Health.value:SetPoint("RIGHT", -2, 8)
+
 				local Power = CreateFrame("StatusBar", nil, self)
 				Power:SetHeight(2)
-				Power:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
+				Power:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.unitframes["uf_statusbar_texture"])
 				Power:SetFrameStrata("HIGH")
 
 				Power.frequentUpdates = true
+				
 
 				Power:SetPoint("LEFT")
 				Power:SetPoint("RIGHT")
@@ -263,8 +263,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 				local PowerDivider = Power:CreateTexture(nil, "OVERLAY")
 				PowerDivider:SetSize(self:GetWidth(), 1)
-				PowerDivider:SetPoint("TOPLEFT", Power)
-				PowerDivider:SetTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
+				PowerDivider:SetPoint("TOPLEFT", Power, 0, 1)
+				PowerDivider:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.unitframes["uf_statusbar_texture"])
 				PowerDivider:SetVertexColor(0, 0, 0)
 				self.PowerDivider = PowerDivider
 
@@ -280,7 +280,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				local spacing = 5
 				for i=1, 10 do
 					ClassPower[i] = CreateFrame("StatusBar", "ClassPower"..i.."Bar", self)
-					ClassPower[i]:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
+					ClassPower[i]:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.unitframes["uf_statusbar_texture"])
 					if i == 1 then
 						ClassPower[i]:SetPoint("TOPLEFT", self, "BOTTOMLEFT", 0, -5)
 					else
@@ -317,7 +317,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				self.ThreatIndicator = threat
 
 				local Castbar = CreateFrame("StatusBar", nil, self)
-				Castbar:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
+				Castbar:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.unitframes["uf_statusbar_texture"])
 				Castbar:SetAllPoints(self.Health)
 				Castbar:SetStatusBarColor(0.8, 0, 0, 0.2)
 				Castbar:SetFrameStrata("HIGH")
@@ -376,9 +376,12 @@ f:SetScript("OnEvent", function(self, event, addon)
 			target = function(self, ...)
 				shared(self, ...)
 
+				self.Health.value:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 24, "THINOUTLINE")
+				self.Health.value:SetPoint("RIGHT", -2, 8)
+
 				local Power = CreateFrame("StatusBar", nil, self)
 				Power:SetHeight(2)
-				Power:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
+				Power:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.unitframes["uf_statusbar_texture"])
 				Power:SetFrameStrata("HIGH")
 
 				Power.frequentUpdates = true
@@ -391,8 +394,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 				local PowerDivider = Power:CreateTexture(nil, "OVERLAY")
 				PowerDivider:SetSize(self:GetWidth(), 1)
-				PowerDivider:SetPoint("TOPLEFT", Power)
-				PowerDivider:SetTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
+				PowerDivider:SetPoint("TOPLEFT", Power, 0, 1)
+				PowerDivider:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.unitframes["uf_statusbar_texture"])
 				PowerDivider:SetVertexColor(0, 0, 0)
 				self.PowerDivider = PowerDivider
 
@@ -404,7 +407,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				self.Power.value = PowerPoints
 
 				local Castbar = CreateFrame("StatusBar", nil, self)
-				Castbar:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
+				Castbar:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.unitframes["uf_statusbar_texture"])
 				Castbar:SetAllPoints(self.Health)
 				Castbar:SetStatusBarColor(0.8, 0, 0, 0.2)
 				Castbar:SetFrameStrata("HIGH")
@@ -463,12 +466,13 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 				local panel = CreateFrame("Frame")
 				panel:SetBackdrop({
-					bgFile = "Interface\\AddOns\\LolzenUI\\media\\statusbar",
-					edgeFile = "Interface\\AddOns\\LolzenUI\\media\\border", edgeSize = 12,
-					insets = {left = 2, right = 2, top = 2, bottom = 2},
+					bgFile = "Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.unitframes["uf_statusbar_texture"],
+					edgeFile=[[Interface/Tooltips/UI-Tooltip-Border]],
+						tile=true, tileSize=4, edgeSize=4,
+						insets={left=0.5,right=0.5,top=0.5,bottom=0.5}
 				})
 				panel:SetParent(self)
-				panel:SetSize(224, 18)
+				panel:SetSize(self:GetWidth()+2, 18)
 				panel:SetPoint("TOP", self.Health, "BOTTOM", 0, -2)
 				panel:SetBackdropBorderColor(0, 0, 0)
 				panel:SetFrameLevel(3)
@@ -511,6 +515,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 				role:SetSize(16, 16)
 				role:SetPoint("RIGHT", self.Health,  0, 0)
 				self.GroupRoleIndicator = role
+
+				local rc = self.Health:CreateTexture(nil, "OVERLAY")
+				rc:SetSize(16, 16)
+				rc:SetPoint("LEFT", self.Health, 10, 10)
+				self.ReadyCheckIndicator = rc
 			end,
 
 			raid = function(self, ...)
@@ -523,13 +532,21 @@ f:SetScript("OnEvent", function(self, event, addon)
 				role:SetSize(16, 16)
 				role:SetPoint("RIGHT", self.Health,  0, 0)
 				self.RaidRoleIndicator = role
+
+				local rc = self.Health:CreateTexture(nil, "OVERLAY")
+				rc:SetSize(16, 16)
+				rc:SetPoint("LEFT", self.Health, 10, 10)
+				self.ReadyCheckIndicator = rc
 			end,
 
 			pet = function(self, ...)
 				shared(self, ...)
 
+				self.Health.value:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 18, "THINOUTLINE")
+				self.Health.value:SetPoint("RIGHT", -2, 8)
+
 				local Castbar = CreateFrame("StatusBar", nil, self)
-				Castbar:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
+				Castbar:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.unitframes["uf_statusbar_texture"])
 				Castbar:SetAllPoints(self.Health)
 				Castbar:SetStatusBarColor(0.8, 0, 0, 0.2)
 				Castbar:SetFrameStrata("HIGH")

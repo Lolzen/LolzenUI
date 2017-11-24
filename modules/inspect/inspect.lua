@@ -1,6 +1,10 @@
 --// inspect // --
 -- this module is based on Snoopy Inspect by TotalPackage
 
+local addon, ns = ...
+
+ns.RegisterModule("inspect")
+
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)

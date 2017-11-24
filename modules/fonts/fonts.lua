@@ -1,5 +1,9 @@
 --// fonts // --
 
+local addon, ns = ...
+
+ns.RegisterModule("fonts")
+
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)
