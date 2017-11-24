@@ -1,6 +1,6 @@
 ## Interface: 70300
 ## Author: Lolzen
-## Title: Lolzen User interface
+## Title: Lolzen User Interface
 ## Version: 7.3.2_rework
 ## Notes: Restyle the whole WoW UI
 ## x-Credits: haste, Neal
@@ -14,16 +14,7 @@ defaultconfig.lua
 core.lua
 optionpanel.lua
 
-modules/actionbars/HideBlizzArt.lua
-modules/actionbars/SkinActionbars.lua
-modules/actionbars/SkinPetBar.lua
-modules/actionbars/MainMenuBar.lua
-modules/actionbars/MultiBarBottomLeft.lua
-modules/actionbars/MultiBarBottomRight.lua
-modules/actionbars/MultiBarLeft.lua
-modules/actionbars/MultiBarRight.lua
-modules/actionbars/PetBar.lua
-modules/actionbars/PossessBar.lua
+modules/actionbars/actionbars.lua
 modules/artifactbar/artifact.lua
 modules/buffs/buffs.lua
 modules/buffwatcher/buffwatcher.lua
