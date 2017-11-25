@@ -1,12 +1,12 @@
 ![Alt text](http://abload.de/img/wowscrnshot_112417_185tsk5.jpg "Screenshot1")
 
-### LolzenUI
+## LolzenUI
 This is my personal User Interface for World of Warcraft.
 
 It is a compilation of different utilities for either information, feature, ease-of-life addition or anything of that sort.
 
 ------
-#### embedded Libs:
+### embedded Libs:
 **LibItemUpgradeInfo-1.0**
 
 As blizzards API doesn't perfectly well work (heirlooms, upgrades, ..) LolzenUI makes use of this lib.
@@ -16,7 +16,7 @@ As blizzards API doesn't perfectly well work (heirlooms, upgrades, ..) LolzenUI 
 the Unitframes and Nameplates integrated make use of oUF.
 
 ------
-#### Some AddOn Suggestions to complement LolzenUI:
+### Some AddOn Suggestions to complement LolzenUI:
 - BaudBag (or any other Bag addon)
 - BonusRollPreview
 - ChatLootIcons
@@ -39,7 +39,7 @@ the Unitframes and Nameplates integrated make use of oUF.
 - xanErrorDevourer
 
 ------
-#### ToDo:
+### ToDo:
 - [ ] finish Unitframe options
 - [ ] revisit descriptions
 - [ ] unify optionpanel formatting as good as possible
@@ -48,7 +48,7 @@ the Unitframes and Nameplates integrated make use of oUF.
 - [ ] itemlevel: automatic coloring related to avg itemlevel (?)
 - [ ] pullcount: mention that /pull [num] is a thing
 - [ ] pullcount: add security check to detect DBM or BigWigs - if so disable builtin /pull functionality
-- [ ] pullcount: make use of that sexy battleground timer
+- [x] pullcount: make use of that sexy battleground timer
 - [ ] redo chicchai and integrate
 - [ ] libSharedMedia support
 - [ ] optimizations
