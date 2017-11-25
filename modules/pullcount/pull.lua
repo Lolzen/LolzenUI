@@ -10,7 +10,6 @@ f:RegisterEvent("CHAT_MSG_ADDON")
 
 local isCounting = false
 local eF = CreateFrame("Frame")
-local colorInfo = {r = 1, g = 0, b = 0} --option!
 
 local function stopUpdater()
 	eF:SetScript("OnUpdate", nil)
@@ -19,7 +18,6 @@ end
 local function initiateCountdown(num)
 	if isCounting == true then return end
 	isCounting = true
-	RaidNotice_AddMessage(RaidWarningFrame, tostring(num), colorInfo, 1)
 	if LolzenUIcfg.pullcount["pull_sound_"..num] then
 		PlaySoundFile("Interface\\AddOns\\LolzenUI\\sounds\\"..LolzenUIcfg.pullcount["pull_sound_"..num], "master")
 	end
@@ -30,12 +28,10 @@ local function initiateCountdown(num)
 		if last >= 1 then
 			if pullNum-1 <= LolzenUIcfg.pullcount["pull_count_range"] then
 				if LolzenUIcfg.pullcount["pull_sound_"..pullNum -1] then
-					RaidNotice_AddMessage(RaidWarningFrame, tostring(pullNum-1), colorInfo, 1)
 					if LolzenUIcfg.pullcount["pull_sound_"..pullNum-1] then
 						PlaySoundFile("Interface\\AddOns\\LolzenUI\\sounds\\"..LolzenUIcfg.pullcount["pull_sound_"..pullNum-1], "master")
 					end
 				elseif pullNum-1 == 0 then
-					RaidNotice_AddMessage(RaidWarningFrame, ">>Pull Now<<", colorInfo, 1)
 					PlaySoundFile("Interface\\AddOns\\LolzenUI\\sounds\\"..LolzenUIcfg.pullcount["pull_sound_pull"], "master")
 				end
 			end
@@ -49,6 +45,7 @@ local function initiateCountdown(num)
 			stopUpdater()
 		end
 	end)
+	TimerTracker_OnEvent(TimerTracker, "START_TIMER", 2, num, num)
 end
 
 f:SetScript("OnEvent", function(self, event, ...)
@@ -59,18 +56,15 @@ f:SetScript("OnEvent", function(self, event, ...)
 		RegisterAddonMessagePrefix("BigWigs")
 		RegisterAddonMessagePrefix("D4")
 
-		local colorInfo = {r = 1, g = 0, b = 0} --option!
 		local filter = function(frame, event, message, ...)
 			for i = 1, LolzenUIcfg.pullcount["pull_count_range"] do
 				local msg = LolzenUIcfg.pullcount["pull_msg_count"]
 				msg = string.gsub(msg, "!n", i)
 				if message:match(msg) then
-					RaidNotice_AddMessage(RaidWarningFrame, tostring(i), colorInfo, 1)
 					PlaySoundFile("Interface\\AddOns\\LolzenUI\\sounds\\"..LolzenUIcfg.pullcount["pull_sound_"..i], "master")
 				end
 			end
 			if message:match(LolzenUIcfg.pullcount["pull_msg_now"]) then
-				RaidNotice_AddMessage(RaidWarningFrame, ">>Pull Now<<", colorInfo, 1)
 				PlaySoundFile("Interface\\AddOns\\LolzenUI\\sounds\\"..LolzenUIcfg.pullcount["pull_sound_pull"], "master")
 			end
 		end
@@ -100,14 +94,14 @@ f:SetScript("OnEvent", function(self, event, ...)
 			local bwPrefix, bwMsg, extra = strsplit("^", msg)
 			
 			if bwPrefix == "P" and bwMsg == "Pull" then
-				print("recieved pull timer from BigWigs :"..tonumber(extra))
+				--print("recieved pull timer from BigWigs :"..tonumber(extra))
 				initiateCountdown(tonumber(extra))
 			end		
 		elseif prefix == "D4" then
 			local dbmPrefix, time, _, _, _ = strsplit("\t", msg)
 			
 			if dbmPrefix == "PT" then
-				print("recieved pull timer from DBM : "..tonumber(time))
+				--print("recieved pull timer from DBM : "..tonumber(time))
 				initiateCountdown(tonumber(time))
 			end
 		end
