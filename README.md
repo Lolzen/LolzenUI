@@ -46,7 +46,7 @@ the Unitframes and Nameplates integrated make use of oUF.
 - [ ] scale independency (720p, 1080p, ...)
 - [ ] itemlevel: add support for more bags
 - [ ] itemlevel: automatic coloring related to avg itemlevel (?)
-- [ ] pullcount: mention that /pull [num] is a thing
+- [x] pullcount: mention that /pull [num] is a thing
 - [ ] pullcount: add security check to detect DBM or BigWigs - if so disable builtin /pull functionality
 - [x] pullcount: make use of that sexy battleground timer
 - [ ] redo chicchai and integrate
