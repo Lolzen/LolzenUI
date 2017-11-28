@@ -9,7 +9,11 @@
 
 libs\oUF\oUF.xml
 libs\LibItemUpgradeInfo-1.0\LibItemUpgradeInfo-1.0.xml
+libs\LibSharedMedia-3.0\LibStub\LibStub.lua
+libs\LibSharedMedia-3.0\CallbackHandler-1.0\CallbackHandler-1.0.lua
+libs\LibSharedMedia-3.0\LibSharedMedia-3.0\lib.xml
 
+sharedmedia.lua
 defaultconfig.lua
 core.lua
 optionpanel.lua
