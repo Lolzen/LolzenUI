@@ -111,25 +111,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 				if minutes >= 1 then return string.format("|cffffffff%d:%02d|r", minutes, seconds) end
 				return string.format("|cffffffff%ds|r", seconds)
 			end
---			SecondsToTimeAbbrev = function(time)
---				local hr, m, s, text
---				if time <= 0 then 
---					text = ""
---				elseif(time < 3600 and time > 40) then
---					m = floor(time / 60)
---					s = mod(time, 60)
---					text = (m == 0 and format("|cffffffff%d", s)) or format("|cffffffff%d:%02d", m, s)
---				elseif time < 60 then
---					m = floor(time / 60)
---					s = mod(time, 60)
---					text = (m == 0 and format("|cffffffff%d", s))
---				else
---					hr = floor(time / 3600)
---					m = floor(mod(time, 3600) / 60)
---					text = format("%d:%2d", hr, m)
---				end
---				return text
---			end
 		end
 	end
 end)
