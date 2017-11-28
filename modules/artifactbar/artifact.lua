@@ -16,7 +16,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		afbar:SetPoint(LolzenUIcfg.artifactbar["artifactbar_anchor"], LolzenUIcfg.artifactbar["artifactbar_parent"], LolzenUIcfg.artifactbar["artifactbar_posx"], LolzenUIcfg.artifactbar["artifactbar_posy"])
 		afbar:SetHeight(LolzenUIcfg.artifactbar["artifactbar_height"])
 		afbar:SetWidth(LolzenUIcfg.artifactbar["artifactbar_width"])
-		afbar:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.artifactbar["artifactbar_texture"])
+		afbar:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.artifactbar["artifactbar_texture"]))
 		afbar:SetAlpha(LolzenUIcfg.artifactbar["artifactbar_alpha"])
 		afbar:SetStatusBarColor(unpack(LolzenUIcfg.artifactbar["artifactbar_color"]))
 		afbar:SetFrameStrata("BACKGROUND")
@@ -24,7 +24,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		--Background for our bar
 		local bg = afbar:CreateTexture(nil, "BACKGROUND")
 		bg:SetAllPoints(afbar)
-		bg:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.artifactbar["artifactbar_texture"])
+		bg:SetTexture(LSM:Fetch("statusbar", LolzenUIcfg.artifactbar["artifactbar_texture"]))
 		bg:SetVertexColor(0, 0, 0, LolzenUIcfg.artifactbar["artifactbar_bg_alpha"])
 
 		--1px "border"
