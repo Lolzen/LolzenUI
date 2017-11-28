@@ -1,6 +1,7 @@
 --// buffs // --
 
 local _, ns = ...
+local LSM = LibStub("LibSharedMedia-3.0")
 
 ns.RegisterModule("buffs")
 
@@ -57,13 +58,13 @@ f:SetScript("OnEvent", function(self, event, addon)
 				-- Reposition BuffTimeduration
 				button.duration:ClearAllPoints()
 				button.duration:SetPoint(LolzenUIcfg.buffs["buff_duration_anchor1"], button, LolzenUIcfg.buffs["buff_duration_anchor2"], LolzenUIcfg.buffs["buff_duration_posx"], LolzenUIcfg.buffs["buff_duration_posy"])
-				button.duration:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\"..LolzenUIcfg.buffs["buff_duration_font"], LolzenUIcfg.buffs["buff_duration_font_size"], LolzenUIcfg.buffs["buff_duration_font_flag"])
+				button.duration:SetFont(LSM:Fetch("font", LolzenUIcfg.buffs["buff_duration_font"]), LolzenUIcfg.buffs["buff_duration_font_size"], LolzenUIcfg.buffs["buff_duration_font_flag"])
 				button.duration:SetDrawLayer("OVERLAY")
 
 				-- Reposition buffcounters
 				button.count:ClearAllPoints()
 				button.count:SetPoint(LolzenUIcfg.buffs["buff_counter_anchor"], button, LolzenUIcfg.buffs["buff_counter_posx"], LolzenUIcfg.buffs["buff_counter_posy"])
-				button.count:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\"..LolzenUIcfg.buffs["buff_counter_font"], LolzenUIcfg.buffs["buff_counter_size"], LolzenUIcfg.buffs["buff_counter_font_flag"])
+				button.count:SetFont(LSM:Fetch("font", LolzenUIcfg.buffs["buff_counter_font"]), LolzenUIcfg.buffs["buff_counter_size"], LolzenUIcfg.buffs["buff_counter_font_flag"])
 				button.count:SetDrawLayer("OVERLAY")
 
 				button.modded = true
