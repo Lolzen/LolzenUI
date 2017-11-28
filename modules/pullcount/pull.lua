@@ -53,8 +53,13 @@ f:SetScript("OnEvent", function(self, event, ...)
 	if event == "ADDON_LOADED" and arg1 == "LolzenUI" then
 		if LolzenUIcfg.modules["pullcount"] == false then return end
 		-- Register BigWigs and DBM prefixes so we can get their pullcounters too
-		RegisterAddonMessagePrefix("BigWigs")
-		RegisterAddonMessagePrefix("D4")
+		-- but only if we don't run them already
+		if not IsAddOnLoaded("BigWigs") then
+			RegisterAddonMessagePrefix("BigWigs")
+		end
+		if not IsAddOnLoaded("DBM-Core") then
+			RegisterAddonMessagePrefix("D4")
+		end
 
 		local filter = function(frame, event, message, ...)
 			for i = 1, LolzenUIcfg.pullcount["pull_count_range"] do
@@ -88,6 +93,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		end
 	elseif event == "CHAT_MSG_ADDON" then
 		if LolzenUIcfg.modules["pullcount"] == false then return end
+		if IsAddOnLoaded("DBM-Core") or IsAddOnLoaded("BigWigs") then return end
 		
 		local prefix, msg, channel, sender = ...
 		if prefix == "BigWigs" then
@@ -121,14 +127,21 @@ local function SendPull(num)
 	end
 end
 
-SLASH_PULL1 = "/pull"
-SlashCmdList["PULL"] = function(num)
-	if LolzenUIcfg.modules["pullcount"] == false then return end
-	if num and type(num) == "string" then
-		if num == "" then
-			SendPull(LolzenUIcfg.pullcount["pull_count_range"])
-		else
-			SendPull(num)
+-- Disable the /pull command if either DBM or BigWigs are running, else use our /pull slashcommand
+if IsAddOnLoaded("DBM-Core") or IsAddOnLoaded("BigWigs") then
+	--do nothing
+else
+	SLASH_PULL1 = "/pull"
+	SlashCmdList["PULL"] = function(num)
+		if LolzenUIcfg.modules["pullcount"] == false then return end
+		
+		if num and type(num) == "string" then
+			--print(num)
+			if num == "" then
+				SendPull(LolzenUIcfg.pullcount["pull_count_range"])
+			else
+				SendPull(num)
+			end
 		end
 	end
 end
