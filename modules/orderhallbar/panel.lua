@@ -1,6 +1,7 @@
 ﻿--// orderhallbar // --
 
 local _, ns = ...
+local LSM = LibStub("LibSharedMedia-3.0")
 
 ns.RegisterModule("orderhallbar")
 
@@ -24,7 +25,7 @@ local function getCurrencies()
 
 			if not currency[i].text then
 				currency[i].text = OrderHallCommandBar:CreateFontString(nil, "OVERLAY")
-				currency[i].text:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\"..LolzenUIcfg.orderhallbar["ohb_currency_font"], LolzenUIcfg.orderhallbar["ohb_currency_font_size"] ,LolzenUIcfg.orderhallbar["ohb_currency_font_flag"])
+				currency[i].text:SetFont(LSM:Fetch("font", LolzenUIcfg.orderhallbar["ohb_currency_font"]), LolzenUIcfg.orderhallbar["ohb_currency_font_size"] ,LolzenUIcfg.orderhallbar["ohb_currency_font_flag"])
 				currency[i].text:SetTextColor(1, 1, 1)
 				currency[i].text:SetPoint("LEFT", currency[i], "RIGHT", 5, 0)
 			end
@@ -99,7 +100,7 @@ local function modifyOHB()
 
 	OrderHallCommandBar.Currency:ClearAllPoints()
 	OrderHallCommandBar.Currency:SetPoint("LEFT", OrderHallCommandBar.CurrencyIcon, "RIGHT", 0, 0)
-	OrderHallCommandBar.Currency:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\"..LolzenUIcfg.orderhallbar["ohb_currency_font"], LolzenUIcfg.orderhallbar["ohb_currency_font_size"] ,LolzenUIcfg.orderhallbar["ohb_currency_font_flag"])
+	OrderHallCommandBar.Currency:SetFont(LSM:Fetch("font", LolzenUIcfg.orderhallbar["ohb_currency_font"]), LolzenUIcfg.orderhallbar["ohb_currency_font_size"] ,LolzenUIcfg.orderhallbar["ohb_currency_font_flag"])
 	OrderHallCommandBar.Currency:SetTextColor(1, 1, 1)
 	OrderHallCommandBar.Currency:SetShadowOffset(0, 0)
 
