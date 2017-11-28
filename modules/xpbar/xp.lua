@@ -28,7 +28,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		xpbar:SetPoint(LolzenUIcfg.xpbar["xpbar_anchor"], LolzenUIcfg.xpbar["xpbar_parent"], LolzenUIcfg.xpbar["xpbar_posx"], LolzenUIcfg.xpbar["xpbar_posy"])
 		xpbar:SetHeight(LolzenUIcfg.xpbar["xpbar_height"])
 		xpbar:SetWidth(LolzenUIcfg.xpbar["xpbar_width"])
-		xpbar:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.xpbar["xpbar_texture"])
+		xpbar:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.xpbar["xpbar_texture"]))
 		xpbar:SetAlpha(LolzenUIcfg.xpbar["xpbar_alpha"])
 		xpbar:SetFrameStrata("BACKGROUND")
 
