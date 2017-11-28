@@ -11,6 +11,10 @@ It is a compilation of different utilities for either information, feature, ease
 
 As blizzards API doesn't perfectly well work (heirlooms, upgrades, ..) LolzenUI makes use of this lib.
 
+**LibSharedMedia-3.0**
+
+Can be used to easily add custom fonts and textures to LolzenUI.
+
 **oUF**
 
 the Unitframes and Nameplates integrated make use of oUF.
@@ -47,9 +51,9 @@ the Unitframes and Nameplates integrated make use of oUF.
 - [ ] itemlevel: add support for more bags
 - [ ] itemlevel: automatic coloring related to avg itemlevel (?)
 - [x] pullcount: mention that /pull [num] is a thing
-- [ ] pullcount: add security check to detect DBM or BigWigs - if so disable builtin /pull functionality
+- [x] pullcount: add security check to detect DBM or BigWigs - if so disable builtin /pull functionality
 - [x] pullcount: make use of that sexy battleground timer
 - [ ] redo chicchai and integrate
-- [ ] libSharedMedia support
+- [ ] libSharedMedia support (WiP)
 - [ ] optimizations
 - [ ] tweak module (several tiny tweaks like "increase max watched currency" (BaudBag does this))
