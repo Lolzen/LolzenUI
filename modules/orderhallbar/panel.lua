@@ -89,7 +89,7 @@ local function modifyOHB()
 	if OrderHallCommandBar.modded == true then return end
 	OrderHallCommandBar.AreaName:SetTextColor(unpack(LolzenUIcfg.orderhallbar["ohb_zone_color"]))
 
-	OrderHallCommandBar.Background:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.orderhallbar["ohb_background"])
+	OrderHallCommandBar.Background:SetTexture(LSM:Fetch("background", LolzenUIcfg.orderhallbar["ohb_background"]))
 	OrderHallCommandBar.Background:SetVertexColor(unpack(LolzenUIcfg.orderhallbar["ohb_background_color"]))
 	OrderHallCommandBar.Background:SetAlpha(LolzenUIcfg.orderhallbar["ohb_background_alpha"])
 
@@ -100,13 +100,13 @@ local function modifyOHB()
 
 	OrderHallCommandBar.Currency:ClearAllPoints()
 	OrderHallCommandBar.Currency:SetPoint("LEFT", OrderHallCommandBar.CurrencyIcon, "RIGHT", 0, 0)
-	OrderHallCommandBar.Currency:SetFont(LSM:Fetch("font", LolzenUIcfg.orderhallbar["ohb_currency_font"]), LolzenUIcfg.orderhallbar["ohb_currency_font_size"] ,LolzenUIcfg.orderhallbar["ohb_currency_font_flag"])
+	OrderHallCommandBar.Currency:SetFont(LSM:Fetch("font", LolzenUIcfg.orderhallbar["ohb_currency_font"]), LolzenUIcfg.orderhallbar["ohb_currency_font_size"], LolzenUIcfg.orderhallbar["ohb_currency_font_flag"])
 	OrderHallCommandBar.Currency:SetTextColor(1, 1, 1)
 	OrderHallCommandBar.Currency:SetShadowOffset(0, 0)
 
 	-- as the mouseover tooltip isn't available anymore, since we overlap it with the currency info
 	-- create our own and mimic the original's behaviour
-	cF = CreateFrame("Frame", nil, OrderHallCommandBar)
+	local cF = CreateFrame("Frame", nil, OrderHallCommandBar)
 	cF:SetAllPoints(OrderHallCommandBar.CurrencyIcon)
 	cF:SetScript("OnEnter", function(self) 
 		GameTooltip:SetOwner(OrderHallCommandBar.CurrencyIcon, "ANCHOR_BOTTOMRIGHT")
