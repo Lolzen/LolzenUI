@@ -143,7 +143,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			-- background
 			if LolzenUIcfg.chat["chat_background"] == true then
 				local bg = cf:CreateTexture("Background")
-				bg:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.chat["chat_background_texture"])
+				bg:SetTexture(LSM:Fetch("background", LolzenUIcfg.chat["chat_background_texture"]))
 				bg:SetVertexColor(0, 0, 0, LolzenUIcfg.chat["chat_background_alpha"])
 				bg:SetPoint("BOTTOMLEFT", cf, -2, -2)
 				bg:SetPoint("TOPRIGHT", cf, 2, 2)
