@@ -1,6 +1,7 @@
 --// nameplates // --
 
 local _, ns = ...
+local LSM = LibStub("LibSharedMedia-3.0")
 local oUF = ns.oUF
 
 ns.RegisterModule("nameplates")
@@ -84,7 +85,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 				local levelname = health:CreateFontString(nil, "OVERLAY")
 				levelname:SetPoint(LolzenUIcfg.nameplates["np_lvlname_anchor"], health, LolzenUIcfg.nameplates["np_lvlname_posx"], LolzenUIcfg.nameplates["np_lvlname_posy"]) 
-				levelname:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\"..LolzenUIcfg.nameplates["np_lvlname_font"], LolzenUIcfg.nameplates["np_lvlname_font_size"], LolzenUIcfg.nameplates["np_lvlname_font_flag"])
+				levelname:SetFont(LSM:Fetch("font", LolzenUIcfg.nameplates["np_lvlname_font"]), LolzenUIcfg.nameplates["np_lvlname_font_size"], LolzenUIcfg.nameplates["np_lvlname_font_flag"])
 				frame.Level = levelname
 				frame:Tag(levelname, '[lolzen:nplevel][shortclassification] [lolzen:npname]')
 
@@ -109,13 +110,13 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 				local Time = Castbar:CreateFontString(nil, "OVERLAY")
 				Time:SetPoint(LolzenUIcfg.nameplates["np_cbtime_anchor"], Castbar, LolzenUIcfg.nameplates["np_cbtime_anchor2"], LolzenUIcfg.nameplates["np_cbtime_posx"], LolzenUIcfg.nameplates["np_cbtime_posy"])
-				Time:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\"..LolzenUIcfg.nameplates["np_cbtime_font"], LolzenUIcfg.nameplates["np_cbtime_font_size"], LolzenUIcfg.nameplates["np_cbtime_font_flag"])
+				Time:SetFont(LSM:Fetch("font", LolzenUIcfg.nameplates["np_cbtime_font"]), LolzenUIcfg.nameplates["np_cbtime_font_size"], LolzenUIcfg.nameplates["np_cbtime_font_flag"])
 				Time:SetTextColor(1, 1, 1)
 				frame.Castbar.Time = Time
 
 				local cbtext = Castbar:CreateFontString(nil, "OVERLAY")
 				cbtext:SetPoint(LolzenUIcfg.nameplates["np_cbtext_anchor"], Castbar, LolzenUIcfg.nameplates["np_cbtext_anchor2"], LolzenUIcfg.nameplates["np_cbtext_posx"], LolzenUIcfg.nameplates["np_cbtext_posy"])
-				cbtext:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\"..LolzenUIcfg.nameplates["np_cbtext_font"], LolzenUIcfg.nameplates["np_cbtext_font_size"], LolzenUIcfg.nameplates["np_cbtext_font_flag"])
+				cbtext:SetFont(LSM:Fetch("font", LolzenUIcfg.nameplates["np_cbtext_font"]), LolzenUIcfg.nameplates["np_cbtext_font_size"], LolzenUIcfg.nameplates["np_cbtext_font_flag"])
 				cbtext:SetTextColor(1, 1, 1)
 				frame.Castbar.Text = cbtext
 
