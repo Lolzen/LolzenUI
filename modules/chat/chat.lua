@@ -1,6 +1,7 @@
 --// chat // --
 
 local _, ns = ...
+local LSM = LibStub("LibSharedMedia-3.0")
 
 ns.RegisterModule("chat")
 
@@ -111,7 +112,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				t.Show = function() end
 			end
 
-			cf:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\"..LolzenUIcfg.chat["chat_font"], LolzenUIcfg.chat["chat_font_size"], LolzenUIcfg.chat["chat_font_flag"])
+			cf:SetFont(LSM:Fetch("font", LolzenUIcfg.chat["chat_font"]), LolzenUIcfg.chat["chat_font_size"], LolzenUIcfg.chat["chat_font_flag"])
 			if LolzenUIcfg.chat["chat_font_shadow"] == true then
 				cf:SetShadowOffset(1, -1)
 			end
