@@ -1,6 +1,7 @@
 --// tooltip // --
 
 local _, ns = ...
+local LSM = LibStub("LibSharedMedia-3.0")
 
 ns.RegisterModule("tooltip")
 
@@ -70,7 +71,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		GameTooltipStatusBar:ClearAllPoints()
 		GameTooltipStatusBar:SetPoint("BOTTOMLEFT", 5, 4)
 		GameTooltipStatusBar:SetPoint("BOTTOMRIGHT", -5, 4)
-		GameTooltipStatusBar:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.tooltip["tip_healthbar_texture"])
+		GameTooltipStatusBar:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.tooltip["tip_healthbar_texture"]))
 		GameTooltipStatusBar:SetStatusBarColor(0.3, 0.9, 0.3, 1)
 		GameTooltipStatusBar:SetHeight(2)
 		
