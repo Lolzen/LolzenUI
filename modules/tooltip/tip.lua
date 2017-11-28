@@ -27,7 +27,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		-- the backdrop of our Tooltips along with a beautiful border
 		local backdrop = { 
 			bgFile = "Interface\\Buttons\\WHITE8x8",
-			edgeFile = "Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.tooltip["tip_border"], 
+			edgeFile = LSM:Fetch("border", LolzenUIcfg.tooltip["tip_border"]), 
 			tile = false,
 			tileSize = 8,
 			edgeSize = 16,
