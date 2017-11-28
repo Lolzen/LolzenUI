@@ -69,7 +69,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				-- health bar
 				local health = CreateFrame("StatusBar", nil, frame)
 				health:SetAllPoints()
-				health:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.nameplates["np_texture"])
+				health:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.nameplates["np_texture"]))
 				health.colorHealth = true
 				health.colorTapping = true
 				health.colorDisconnected = true
@@ -90,7 +90,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				frame:Tag(levelname, '[lolzen:nplevel][shortclassification] [lolzen:npname]')
 
 				local Castbar = CreateFrame("StatusBar", nil, health)
-				Castbar:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.nameplates["np_cb_texture"])
+				Castbar:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.nameplates["np_cb_texture"]))
 				Castbar:SetPoint(LolzenUIcfg.nameplates["np_cb_anchor"], health, LolzenUIcfg.nameplates["np_cb_anchor2"], LolzenUIcfg.nameplates["np_cb_posx"], LolzenUIcfg.nameplates["np_cb_posy"])
 				Castbar:SetSize(LolzenUIcfg.nameplates["np_cb_width"], LolzenUIcfg.nameplates["np_cb_height"])			
 				Castbar:SetStatusBarColor(1, 1, 1, 1)
