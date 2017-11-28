@@ -1,6 +1,7 @@
 --// unitframes // --
 
 local _, ns = ...
+local LSM = LibStub("LibSharedMedia-3.0")
 local oUF = ns.oUF
 
 ns.RegisterModule("unitframes")
@@ -190,7 +191,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			Border:SetFrameLevel(3)
 
 			local Health = CreateFrame("StatusBar", nil, self)
-			Health:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.unitframes["uf_statusbar_texture"])
+			Health:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes["uf_statusbar_texture"]))
 
 			Health.frequentUpdates = true
 			Health.colorTapping = true
@@ -249,7 +250,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 				local Power = CreateFrame("StatusBar", nil, self)
 				Power:SetHeight(2)
-				Power:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.unitframes["uf_statusbar_texture"])
+				Power:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes["uf_statusbar_texture"]))
 				Power:SetFrameStrata("HIGH")
 
 				Power.frequentUpdates = true
@@ -280,7 +281,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				local spacing = 5
 				for i=1, 10 do
 					ClassPower[i] = CreateFrame("StatusBar", "ClassPower"..i.."Bar", self)
-					ClassPower[i]:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.unitframes["uf_statusbar_texture"])
+					ClassPower[i]:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes["uf_statusbar_texture"]))
 					if i == 1 then
 						ClassPower[i]:SetPoint("TOPLEFT", self, "BOTTOMLEFT", 0, -5)
 					else
@@ -317,7 +318,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				self.ThreatIndicator = threat
 
 				local Castbar = CreateFrame("StatusBar", nil, self)
-				Castbar:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.unitframes["uf_statusbar_texture"])
+				Castbar:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes["uf_statusbar_texture"]))
 				Castbar:SetAllPoints(self.Health)
 				Castbar:SetStatusBarColor(0.8, 0, 0, 0.2)
 				Castbar:SetFrameStrata("HIGH")
@@ -381,7 +382,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 				local Power = CreateFrame("StatusBar", nil, self)
 				Power:SetHeight(2)
-				Power:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.unitframes["uf_statusbar_texture"])
+				Power:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes["uf_statusbar_texture"]))
 				Power:SetFrameStrata("HIGH")
 
 				Power.frequentUpdates = true
@@ -407,7 +408,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				self.Power.value = PowerPoints
 
 				local Castbar = CreateFrame("StatusBar", nil, self)
-				Castbar:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.unitframes["uf_statusbar_texture"])
+				Castbar:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes["uf_statusbar_texture"]))
 				Castbar:SetAllPoints(self.Health)
 				Castbar:SetStatusBarColor(0.8, 0, 0, 0.2)
 				Castbar:SetFrameStrata("HIGH")
@@ -546,7 +547,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				self.Health.value:SetPoint("RIGHT", -2, 8)
 
 				local Castbar = CreateFrame("StatusBar", nil, self)
-				Castbar:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.unitframes["uf_statusbar_texture"])
+				Castbar:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes["uf_statusbar_texture"]))
 				Castbar:SetAllPoints(self.Health)
 				Castbar:SetStatusBarColor(0.8, 0, 0, 0.2)
 				Castbar:SetFrameStrata("HIGH")
