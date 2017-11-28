@@ -152,7 +152,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				cf.border:SetPoint("BOTTOMLEFT", cf, -5, -5)
 				cf.border:SetPoint("TOPRIGHT", cf, 5, 5)
 				cf.border:SetBackdrop({
-					edgeFile = "Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.chat["chat_background_border"], edgeSize = 16,
+					edgeFile = LSM:Fetch("border", LolzenUIcfg.chat["chat_background_border"]), edgeSize = 16,
 				})
 				cf.border:SetBackdropBorderColor(0, 0, 0)
 			end
