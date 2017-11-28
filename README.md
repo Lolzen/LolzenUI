@@ -53,7 +53,8 @@ the Unitframes and Nameplates integrated make use of oUF.
 - [x] pullcount: mention that /pull [num] is a thing
 - [x] pullcount: add security check to detect DBM or BigWigs - if so disable builtin /pull functionality
 - [x] pullcount: make use of that sexy battleground timer
+- [ ] orderhallbar: font option for zonetext
 - [ ] redo chicchai and integrate
-- [ ] libSharedMedia support (WiP)
+- [x] libSharedMedia support
 - [ ] optimizations
 - [ ] tweak module (several tiny tweaks like "increase max watched currency" (BaudBag does this))
