@@ -1,6 +1,7 @@
 --// clock // --
 
 local _, ns = ...
+local LSM = LibStub("LibSharedMedia-3.0")
 
 ns.RegisterModule("clock")
 
@@ -84,13 +85,13 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		local text = clockFrame:CreateFontString(nil, "ARTWORK")
 		text:SetPoint("LEFT", clockFrame)
-		text:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\"..LolzenUIcfg.clock["clock_font"], LolzenUIcfg.clock["clock_font_size"], LolzenUIcfg.clock["clock_font_flag"])
+		text:SetFont(LSM:Fetch("font", LolzenUIcfg.clock["clock_font"]), LolzenUIcfg.clock["clock_font_size"], LolzenUIcfg.clock["clock_font_flag"])
 		text:SetShadowOffset(1, -1)
 		text:SetTextColor(unpack(LolzenUIcfg.clock["clock_color"]))
 
 		local seconds = clockFrame:CreateFontString(nil, "ARTWORK")
 		seconds:SetPoint("TOPLEFT", text, "TOPRIGHT", -2, 0)
-		seconds:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\"..LolzenUIcfg.clock["clock_font_seconds"], LolzenUIcfg.clock["clock_seconds_font_size"], LolzenUIcfg.clock["clock_seconds_font_flag"])
+		seconds:SetFont(LSM:Fetch("font", LolzenUIcfg.clock["clock_font_seconds"]), LolzenUIcfg.clock["clock_seconds_font_size"], LolzenUIcfg.clock["clock_seconds_font_flag"])
 		seconds:SetShadowOffset(1, -1)
 		seconds:SetTextColor(unpack(LolzenUIcfg.clock["clock_seconds_color"]))
 
