@@ -1,6 +1,6 @@
 ﻿--// config defaults //--
 
-local addon, ns = ...
+local _, ns = ...
 
 local defaultconfig = {}
 
