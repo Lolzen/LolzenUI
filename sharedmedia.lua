@@ -12,4 +12,7 @@ LSM:Register("font", "Semplice Regular", [[Interface\Addons\LolzenUI\fonts\SEMPR
 LSM:Register("border", "LolzenUI Standard", [[Interface\Addons\LolzenUI\media\border]])
 
 --statusbars
-LSM:Register("statusbar", "LolzenUI standard", [[Interface\Addons\LolzenUI\media\statusbar]])
+LSM:Register("statusbar", "LolzenUI Standard", [[Interface\Addons\LolzenUI\media\statusbar]])
+
+--backgrounds
+LSM:Register("background", "LolzenUI Standard", [[Interface\Addons\LolzenUI\media\statusbar]])
