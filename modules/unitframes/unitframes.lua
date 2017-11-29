@@ -213,7 +213,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 			local bg = self:CreateTexture(nil, "BORDER")
 			bg:SetAllPoints(self)
-			bg:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.unitframes["uf_statusbar_texture"])
+			bg:SetTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes["uf_statusbar_texture"]))
 			bg:SetVertexColor(0.3, 0.3, 0.3)
 			bg:SetAlpha(1)
 
