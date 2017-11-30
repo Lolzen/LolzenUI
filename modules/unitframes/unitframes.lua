@@ -36,6 +36,13 @@ f:SetScript("OnEvent", function(self, event, addon)
 				return min
 			end
 		end
+		
+		tags["lolzen:perhp"] = function(unit)
+			if not UnitIsConnected(unit) or UnitIsDead(unit) or UnitIsGhost(unit) then return end
+			
+			local min, max = UnitHealth(unit), UnitHealthMax(unit)
+			return math.floor(UnitHealth(unit) / min * 100 + 0.5).."%"
+		end
 
 		tags["lolzen:power"] = function(unit)
 			local min, max = UnitPower(unit), UnitPowerMax(unit)
@@ -207,7 +214,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 			local HealthPoints = Health:CreateFontString(nil, "OVERLAY")
 			HealthPoints:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 24, "THINOUTLINE")
 			HealthPoints:SetPoint("RIGHT", -2, 8)
-			self:Tag(HealthPoints, "[|cffc41f3b>dead<|r][|cff999999>offline<|r][lolzen:health]") 
+			if LolzenUIcfg.unitframes["uf_use_hp_percent"] == true then
+				self:Tag(HealthPoints, "[|cffc41f3b>dead<|r][|cff999999>offline<|r][lolzen:perhp]")
+			else
+				self:Tag(HealthPoints, "[|cffc41f3b>dead<|r][|cff999999>offline<|r][lolzen:health]")
+			end
 
 			Health.value = HealthPoints
 
@@ -265,7 +276,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				local PowerDivider = Power:CreateTexture(nil, "OVERLAY")
 				PowerDivider:SetSize(self:GetWidth(), 1)
 				PowerDivider:SetPoint("TOPLEFT", Power, 0, 1)
-				PowerDivider:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.unitframes["uf_statusbar_texture"])
+				PowerDivider:SetTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
 				PowerDivider:SetVertexColor(0, 0, 0)
 				self.PowerDivider = PowerDivider
 
