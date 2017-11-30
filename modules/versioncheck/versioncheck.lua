@@ -14,7 +14,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		local addonversion = GetAddOnMetadata(addon, "Version")
 		if not string.find(addonversion, version) then
 			print("|cff5599ffLolzenUI|r: Version numbers don't match!")
-			print("Please look for an update at: https://github.com/Lolzen/LolzenUI")
+			print("Please look for an update at: http://www.wowinterface.com/downloads/info24512-LolzenUI.html or https://github.com/Lolzen/LolzenUI (dev verion)")
 			print("WoW patch version: "..version..", LolzenUI version: "..addonversion)
 		end
 	end
