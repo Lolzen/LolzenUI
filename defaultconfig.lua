@@ -318,6 +318,7 @@ defaultconfig.tooltip = {
 
 defaultconfig.unitframes = {
 	["uf_use_sivalue"] = true,
+	["uf_use_hp_percent"] = false,
 	["uf_power_colors"] = {
 		["0"] = {48/255, 113/255, 191/255}, --colors.power.MANA --0.00	0.00	1.00
 		["1"] = {1, 0, 0}, --default
