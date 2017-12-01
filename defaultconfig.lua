@@ -348,6 +348,7 @@ defaultconfig.unitframes = {
 	["uf_lead_anchor"] = "TOPLEFT",
 	["uf_fade_outofreach"] = true,
 	["uf_fade_outofreach_alpha"] = 0.5,
+	["uf_border"] = "LolzenUI Standard",
 	["uf_player_posx"] = -250,
 	["uf_player_posy"] = -200,
 	["uf_player_anchor"] = "CENTER",
