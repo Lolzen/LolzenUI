@@ -648,10 +648,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 		oUF:Factory(function(self)
 		--	local base = 100
 		--	spawnHelper(self, 'focus', "BOTTOM", 0, base + (40 * 1))
-			spawnHelper(self, 'pet', "CENTER", -300, -177)
-			spawnHelper(self, 'player', "CENTER", -250, -200)
-			spawnHelper(self, 'target', "CENTER", 250, -200)
-			spawnHelper(self, 'targettarget', "CENTER", 300, -177)
+			spawnHelper(self, "pet", LolzenUIcfg.unitframes["uf_pet_anchor"], LolzenUIcfg.unitframes["uf_pet_posx"], LolzenUIcfg.unitframes["uf_pet_posy"])
+			spawnHelper(self, "player", LolzenUIcfg.unitframes["uf_player_anchor"], LolzenUIcfg.unitframes["uf_player_posx"], LolzenUIcfg.unitframes["uf_player_posy"])
+			spawnHelper(self, "target", LolzenUIcfg.unitframes["uf_target_anchor"], LolzenUIcfg.unitframes["uf_target_posx"], LolzenUIcfg.unitframes["uf_target_posy"])
+			spawnHelper(self, "targettarget", LolzenUIcfg.unitframes["uf_targettarget_anchor"], LolzenUIcfg.unitframes["uf_targettarget_posx"], LolzenUIcfg.unitframes["uf_targettarget_posy"])
+			--
 
 			for n=1, MAX_BOSS_FRAMES or 5 do
 				spawnHelper(self, "boss" .. n, "CENTER", 0, -240 + (40 * n))
@@ -675,7 +676,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				'columnSpacing', 7, 
 				'columnAnchorPoint', "RIGHT"
 			)
-			party:SetPoint("BOTTOM", UIParent, 0, 140)
+			party:SetPoint(LolzenUIcfg.unitframes["uf_party_anchor"], UIParent, LolzenUIcfg.unitframes["uf_party_posx"], LolzenUIcfg.unitframes["uf_party_posy"])
 
 			self:SetActiveStyle("Lolzen - Raid")
 
@@ -701,7 +702,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				'columnSpacing', 7,
 				'columnAnchorPoint', "RIGHT"
 			)
-			raid:SetPoint("LEFT", UIParent, "LEFT", 20, 0)
+			raid:SetPoint(LolzenUIcfg.unitframes["uf_raid_anchor"], UIParent, LolzenUIcfg.unitframes["uf_raid_posx"], LolzenUIcfg.unitframes["uf_raid_posy"])
 		end)
 	end
 end)
