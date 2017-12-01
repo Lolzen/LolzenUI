@@ -189,7 +189,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 			local Border = CreateFrame("Frame", nil, self)
 			Border:SetBackdrop({
-				edgeFile = "Interface\\AddOns\\LolzenUI\\media\\border", edgeSize = 12,
+				edgeFile = LSM:Fetch("border", LolzenUIcfg.unitframes["uf_border"]), edgeSize = 12,
 				insets = {left = 4, right = 4, top = 4, bottom = 4},
 			})
 			Border:SetPoint("TOPLEFT", self, -3, 3)
@@ -350,7 +350,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 				local iconborder = CreateFrame("Frame")
 				iconborder:SetBackdrop({
-					edgeFile = "Interface\\AddOns\\LolzenUI\\media\\border", edgeSize = 12,
+					edgeFile = LSM:Fetch("border", LolzenUIcfg.unitframes["uf_border"]), edgeSize = 12,
 					insets = {left = 4, right = 4, top = 4, bottom = 4},
 				})
 				iconborder:SetParent(Castbar)
@@ -407,7 +407,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				local PowerDivider = Power:CreateTexture(nil, "OVERLAY")
 				PowerDivider:SetSize(self:GetWidth(), 1)
 				PowerDivider:SetPoint("TOPLEFT", Power, 0, 1)
-				PowerDivider:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.unitframes["uf_statusbar_texture"])
+				PowerDivider:SetTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
 				PowerDivider:SetVertexColor(0, 0, 0)
 				self.PowerDivider = PowerDivider
 
@@ -440,7 +440,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 				local iconborder = CreateFrame("Frame")
 				iconborder:SetBackdrop({
-					edgeFile = "Interface\\AddOns\\LolzenUI\\media\\border", edgeSize = 12,
+					edgeFile = LSM:Fetch("border", LolzenUIcfg.unitframes["uf_border"]), edgeSize = 12,
 					insets = {left = 4, right = 4, top = 4, bottom = 4},
 				})
 				iconborder:SetParent(Castbar)
@@ -478,7 +478,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 				local panel = CreateFrame("Frame")
 				panel:SetBackdrop({
-					bgFile = "Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.unitframes["uf_statusbar_texture"],
+					bgFile = "Interface\\AddOns\\LolzenUI\\media\\statusbar",
 					edgeFile=[[Interface/Tooltips/UI-Tooltip-Border]],
 						tile=true, tileSize=4, edgeSize=4,
 						insets={left=0.5,right=0.5,top=0.5,bottom=0.5}
@@ -579,7 +579,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 				local iconborder = CreateFrame("Frame")
 				iconborder:SetBackdrop({
-					edgeFile = "Interface\\AddOns\\LolzenUI\\media\\border", edgeSize = 12,
+					edgeFile = LSM:Fetch("border", LolzenUIcfg.unitframes["uf_border"]), edgeSize = 12,
 					insets = {left = 4, right = 4, top = 4, bottom = 4},
 				})
 				iconborder:SetParent(Castbar)
