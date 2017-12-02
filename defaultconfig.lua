@@ -407,8 +407,7 @@ local function updateDB(module)
 				print("|cff5599ffLolzenUI:|r new option in |cff00ff99"..module.."|r (|cffff8888"..k.." = "..unpack(v).."|r)")
 			elseif type(v) == "boolean" then
 				local bool
-				--if v == false and not LolzenUIcfg[module][k] == false then
-				if v == true and not LolzenUIcfg[module][k] == true then
+				if v == true and not LolzenUIcfg[module][k] == nil then
 					bool = "true"
 					LolzenUIcfg[module][k] = true
 					print("|cff5599ffLolzenUI:|r new option in |cff00ff99"..module.."|r (|cffff8888"..k.." = "..bool.."|r)")
