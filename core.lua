@@ -12,3 +12,9 @@ ns.RegisterModule = function(module)
 		tinsert(ns.modules, module)
 	end
 end
+
+-- pixel perfection
+if GetCVar("useuiscale") == "0" then
+	SetCVar("uiScale", 768/string.match(({GetScreenResolutions()})[GetCurrentResolution()], "%d+x(%d+)"))
+	SetCVar("useuiscale", 1)
+end
