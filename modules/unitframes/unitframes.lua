@@ -192,10 +192,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 				edgeFile = LSM:Fetch("border", LolzenUIcfg.unitframes["uf_border"]), edgeSize = 12,
 				insets = {left = 4, right = 4, top = 4, bottom = 4},
 			})
-			Border:SetPoint("TOPLEFT", self, -3, 3)
-			Border:SetPoint("BOTTOMRIGHT", self, 3, -2)
 			Border:SetBackdropBorderColor(0, 0, 0)
 			Border:SetFrameLevel(3)
+			self.Border = Border
 
 			local Health = CreateFrame("StatusBar", nil, self)
 			Health:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes["uf_statusbar_texture"]))
@@ -258,6 +257,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 				self.Health.value:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 24, "THINOUTLINE")
 				self.Health.value:SetPoint("RIGHT", -2, 8)
+				
+				self.Border:SetPoint("TOPLEFT", self, -3, 3)
+				self.Border:SetPoint("BOTTOMRIGHT", self, 3, -2)
 
 				local Power = CreateFrame("StatusBar", nil, self)
 				Power:SetHeight(2)
@@ -265,7 +267,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 				Power:SetFrameStrata("HIGH")
 
 				Power.frequentUpdates = true
-				
 
 				Power:SetPoint("LEFT")
 				Power:SetPoint("RIGHT")
@@ -390,6 +391,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 				self.Health.value:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 24, "THINOUTLINE")
 				self.Health.value:SetPoint("RIGHT", -2, 8)
+				
+				self.Border:SetPoint("TOPLEFT", self, -3, 3)
+				self.Border:SetPoint("BOTTOMRIGHT", self, 3, -2)
 
 				local Power = CreateFrame("StatusBar", nil, self)
 				Power:SetHeight(2)
@@ -477,27 +481,31 @@ f:SetScript("OnEvent", function(self, event, addon)
 				self.Debuffs = Debuffs
 
 				local panel = CreateFrame("Frame")
-				panel:SetBackdrop({
-					bgFile = "Interface\\AddOns\\LolzenUI\\media\\statusbar",
-					edgeFile=[[Interface/Tooltips/UI-Tooltip-Border]],
-						tile=true, tileSize=4, edgeSize=4,
-						insets={left=0.5,right=0.5,top=0.5,bottom=0.5}
-				})
 				panel:SetParent(self)
-				panel:SetSize(self:GetWidth()+2, 18)
-				panel:SetPoint("TOP", self.Health, "BOTTOM", 0, -2)
-				panel:SetBackdropBorderColor(0, 0, 0)
+				panel:SetSize(self:GetWidth(), 20)
+				panel:SetPoint("TOP", self.Health, "BOTTOM", 0, -4)
 				panel:SetFrameLevel(3)
-				panel:SetBackdropColor(0, 0, 0, 0.8)
+				
+				local Panelborder = CreateFrame("Frame", nil, self)
+				Panelborder:SetBackdrop({
+					bgFile = "Interface\\AddOns\\LolzenUI\\media\\statusbar",
+					edgeFile = LSM:Fetch("border", LolzenUIcfg.unitframes["uf_border"]), edgeSize = 12,
+					insets = {left = 2, right = 2, top = 3, bottom = 2},
+				})
+				Panelborder:SetPoint("TOPLEFT", panel, -3, 3)
+				Panelborder:SetPoint("BOTTOMRIGHT", panel, 3, -1)
+				Panelborder:SetBackdropBorderColor(0, 0, 0)
+				Panelborder:SetFrameLevel(3)
+				Panelborder:SetBackdropColor(0, 0, 0, 0.8)
 
 				local level = self.Health:CreateFontString(nil, "OVERLAY")
-				level:SetPoint("LEFT", self.Health, "LEFT", 2, -21) 
+				level:SetPoint("LEFT", self.Health, "LEFT", 2, -22) 
 				level:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSans.ttf", 12, "THINOUTLINE")
 				self.Level = level
 				self:Tag(level, "[lolzen:level][shortclassification]")
 
 				local name = self.Health:CreateFontString(nil, "OVERLAY")
-				name:SetPoint("RIGHT", self.Health, "RIGHT", -2, -21)
+				name:SetPoint("RIGHT", self.Health, "RIGHT", -2, -22)
 				name:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSans.ttf", 12, "THINOUTLINE")
 				name:SetTextColor(1, 1, 1)
 				self.Name = name
@@ -513,6 +521,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 				self.Health.value:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 18, "THINOUTLINE")
 				self.Health.value:SetPoint("RIGHT", -2, 8)
+				
+				self.Border:SetPoint("TOPLEFT", self, -3, 3)
+				self.Border:SetPoint("BOTTOMRIGHT", self, 3, -3)
 
 				self:SetSize(120, 18)
 			end,
@@ -522,6 +533,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 				self.Health.value:SetPoint("LEFT", 5, 0)
 				self.Health.value:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 13, "THINOUTLINE")
+				
+				self.Border:SetPoint("TOPLEFT", self, -3, 3)
+				self.Border:SetPoint("BOTTOMRIGHT", self, 3, -3)
 
 				local role = self.Health:CreateTexture(nil, "OVERLAY")
 				role:SetSize(16, 16)
@@ -539,6 +553,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 				self.Health.value:SetPoint("LEFT", 5, 0)
 				self.Health.value:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 13, "THINOUTLINE")
+				
+				self.Border:SetPoint("TOPLEFT", self, -3, 3)
+				self.Border:SetPoint("BOTTOMRIGHT", self, 3, -2)
 
 				local role = self.Health:CreateTexture(nil, "OVERLAY")
 				role:SetSize(16, 16)
@@ -556,6 +573,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 				self.Health.value:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 18, "THINOUTLINE")
 				self.Health.value:SetPoint("RIGHT", -2, 8)
+				
+				self.Border:SetPoint("TOPLEFT", self, -3, 3)
+				self.Border:SetPoint("BOTTOMRIGHT", self, 3, -3)
 
 				local Castbar = CreateFrame("StatusBar", nil, self)
 				Castbar:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes["uf_statusbar_texture"]))
