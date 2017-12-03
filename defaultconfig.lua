@@ -95,6 +95,14 @@ defaultconfig.artifactbar = {
 	["artifactbar_text_posy"] = 8,
 }
 
+--[[
+	["buff_spacing_horizontal"] = -3,
+	["buff_spacing_vertical"] = 0,
+	["buff_debuff_spacing_horizontal"] = -3,
+	["buff_debuffspacing_vertical"] = 0,
+	["buff_tempenchant_spacing_horizontal"] = -3,
+	["buff_tempenchant_vertical"] = 0,
+]]
 defaultconfig.buffs = {
 	["buff_size"] = 30,
 	["buff_debuff_size"] = 30,
@@ -321,21 +329,21 @@ defaultconfig.unitframes = {
 	["uf_use_hp_percent"] = false,
 	["uf_power_colors"] = {
 		["0"] = {48/255, 113/255, 191/255}, --colors.power.MANA --0.00	0.00	1.00
-		["1"] = {1, 0, 0}, --default
+		["1"] = {1, 0, 0},
 		["2"] = {255/255, 178/255, 0}, --colors.power.FOCUS --1.00	0.50	0.25
 		["3"] = {1.00, 1.00, 34/255}, --colors.power.ENERGY --1.00	1.00	0.00
-		["4"] = {1.00, 0.96, 0.41}, --default
-		["5"] = {0.50, 0.50, 0.50}, --default
-		["6"] = {0.00, 0.82, 1.00}, --default
-		["7"] = {0.50, 0.32, 0.55}, --default
-		["8"] = {0.30, 0.52, 0.90}, --default
-		["9"] = {0.95, 0.90, 0.60}, --default
+		["4"] = {1.00, 0.96, 0.41},
+		["5"] = {0.50, 0.50, 0.50},
+		["6"] = {0.00, 0.82, 1.00},
+		["7"] = {0.50, 0.32, 0.55},
+		["8"] = {0.30, 0.52, 0.90},
+		["9"] = {0.95, 0.90, 0.60},
 		["11"] = {51/255, 181/255, 229/225}, --colors.power.MAELSTROM --0.00	0.50	1.00
-		["12"] = {0.71, 1.00, 0.92}, --default
+		["12"] = {0.71, 1.00, 0.92},
 		["13"] = {0.84, 0.1, 0.87}, --colors.power.INSANITY --0.40	0.00	0.80
-		["16"] = {0.10, 0.10, 0.98}, --default
-		["17"] = {0.788, 0.259, 0.992}, --default
-		["18"] = {1.00, 0.61, 0.00}, --default
+		["16"] = {0.10, 0.10, 0.98},
+		["17"] = {0.788, 0.259, 0.992},
+		["18"] = {1.00, 0.61, 0.00},
 	},
 	["uf_statusbar_texture"] = "LolzenUI Standard",
 	["uf_ri_size"] = 16, 
@@ -352,21 +360,57 @@ defaultconfig.unitframes = {
 	["uf_player_posx"] = -250,
 	["uf_player_posy"] = -200,
 	["uf_player_anchor"] = "CENTER",
+	["uf_player_hp_font"] = "DroidSansBold",
+	["uf_player_hp_font_size"] = 24,
+	["uf_player_hp_font_flag"] = "THINOUTLINE",
+	["uf_player_hp_posx"] = -2,
+	["uf_player_hp_posy"] = 8,
+	["uf_player_hp_anchor"] = "RIGHT",
 	["uf_target_posx"] = 250,
 	["uf_target_posy"] = -200,
 	["uf_target_anchor"] = "CENTER",
+	["uf_target_hp_font"] = "DroidSansBold",
+	["uf_target_hp_font_size"] = 24,
+	["uf_target_hp_font_flag"] = "THINOUTLINE",
+	["uf_target_hp_posx"] = -2,
+	["uf_target_hp_posy"] = 8,
+	["uf_target_hp_anchor"] = "RIGHT",
 	["uf_targettarget_posx"] = 300,
 	["uf_targettarget_posy"] = -177,
 	["uf_targettarget_anchor"] = "CENTER",
+	["uf_targettarget_hp_font"] = "DroidSansBold",
+	["uf_targettarget_hp_font_size"] = 18,
+	["uf_targettarget_hp_font_flag"] = "THINOUTLINE",
+	["uf_targettarget_hp_posx"] = -2,
+	["uf_targettarget_hp_posy"] = 8,
+	["uf_targettarget_hp_anchor"] = "RIGHT",
 	["uf_party_posx"] = 0,
 	["uf_party_posy"] = 140,
 	["uf_party_anchor"] = "BOTTOM",
+	["uf_party_hp_font"] = "DroidSansBold",
+	["uf_party_hp_font_size"] = 13,
+	["uf_party_hp_font_flag"] = "THINOUTLINE",
+	["uf_party_hp_posx"] = 5,
+	["uf_party_hp_posy"] = 0,
+	["uf_party_hp_anchor"] = "LEFT",
 	["uf_raid_posx"] = 20,
 	["uf_raid_posy"] = 0,
 	["uf_raid_anchor"] = "LEFT",
+	["uf_raid_hp_font"] = "DroidSansBold",
+	["uf_raid_hp_font_size"] = 13,
+	["uf_raid_hp_font_flag"] = "THINOUTLINE",
+	["uf_raid_hp_posx"] = 5,
+	["uf_raid_hp_posy"] = 0,
+	["uf_raid_hp_anchor"] = "LEFT",
 	["uf_pet_posx"] = -300,
 	["uf_pet_posy"] = -177,
 	["uf_pet_anchor"] = "CENTER",
+	["uf_pet_hp_font"] = "DroidSansBold",
+	["uf_pet_hp_font_size"] = 18,
+	["uf_pet_hp_font_flag"] = "THINOUTLINE",
+	["uf_pet_hp_posx"] = -2,
+	["uf_pet_hp_posy"] = 8,
+	["uf_pet_hp_anchor"] = "RIGHT",
 }
 
 defaultconfig.worldmap = {
@@ -439,7 +483,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 					LolzenUIcfg[k] = v
 					print("|cff5599ffLolzenUI:|r Updated Saved vars ("..k..")")
 				else
-					updateDB(defaultconfig[k], k)
+					updateDB(k)
 				end
 			end
 		end
