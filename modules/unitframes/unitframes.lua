@@ -192,6 +192,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 				edgeFile = LSM:Fetch("border", LolzenUIcfg.unitframes["uf_border"]), edgeSize = 12,
 				insets = {left = 4, right = 4, top = 4, bottom = 4},
 			})
+			Border:SetPoint("TOPLEFT", self, -3, 3)
+			Border:SetPoint("BOTTOMRIGHT", self, 3, -2)
 			Border:SetBackdropBorderColor(0, 0, 0)
 			Border:SetFrameLevel(3)
 			self.Border = Border
@@ -260,6 +262,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 				
 				self.Border:SetPoint("TOPLEFT", self, -3, 3)
 				self.Border:SetPoint("BOTTOMRIGHT", self, 3, -2)
+				
+				self:SetSize(LolzenUIcfg.unitframes["uf_player_width"], LolzenUIcfg.unitframes["uf_player_height"])
 
 				local Power = CreateFrame("StatusBar", nil, self)
 				Power:SetHeight(2)
@@ -394,6 +398,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 				
 				self.Border:SetPoint("TOPLEFT", self, -3, 3)
 				self.Border:SetPoint("BOTTOMRIGHT", self, 3, -2)
+				
+				self:SetSize(LolzenUIcfg.unitframes["uf_target_width"], LolzenUIcfg.unitframes["uf_target_height"])
 
 				local Power = CreateFrame("StatusBar", nil, self)
 				Power:SetHeight(2)
@@ -525,7 +531,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				self.Border:SetPoint("TOPLEFT", self, -3, 3)
 				self.Border:SetPoint("BOTTOMRIGHT", self, 3, -3)
 
-				self:SetSize(120, 18)
+				self:SetSize(LolzenUIcfg.unitframes["uf_targettarget_width"], LolzenUIcfg.unitframes["uf_targettarget_height"])
 			end,
 
 			party = function(self, ...)
@@ -536,6 +542,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 				
 				self.Border:SetPoint("TOPLEFT", self, -3, 3)
 				self.Border:SetPoint("BOTTOMRIGHT", self, 3, -3)
+				
+				self:SetSize(LolzenUIcfg.unitframes["uf_party_width"], LolzenUIcfg.unitframes["uf_party_height"])
 
 				local role = self.Health:CreateTexture(nil, "OVERLAY")
 				role:SetSize(16, 16)
@@ -556,6 +564,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 				
 				self.Border:SetPoint("TOPLEFT", self, -3, 3)
 				self.Border:SetPoint("BOTTOMRIGHT", self, 3, -2)
+				
+				self:SetSize(LolzenUIcfg.unitframes["uf_raid_width"], LolzenUIcfg.unitframes["uf_raid_height"])
 
 				local role = self.Health:CreateTexture(nil, "OVERLAY")
 				role:SetSize(16, 16)
@@ -576,6 +586,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 				
 				self.Border:SetPoint("TOPLEFT", self, -3, 3)
 				self.Border:SetPoint("BOTTOMRIGHT", self, 3, -3)
+				
+				self:SetSize(LolzenUIcfg.unitframes["uf_pet_width"], LolzenUIcfg.unitframes["uf_pet_height"])
 
 				local Castbar = CreateFrame("StatusBar", nil, self)
 				Castbar:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes["uf_statusbar_texture"]))
@@ -627,8 +639,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 				Shield:SetTexture("Interface\\CastingBar\\UI-CastingBar-Arena-Shield")
 				self.Castbar.Shield = Shield
 
-				self:SetSize(120, 19)
-
 				Castbar.PostChannelStart = PostCastStart
 				Castbar.PostCastStart = PostCastStart
 			end,
@@ -677,7 +687,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			for n=1, MAX_BOSS_FRAMES or 5 do
 				spawnHelper(self, "boss" .. n, "CENTER", 0, -240 + (40 * n))
 			end
-
+			
 			self:SetActiveStyle("Lolzen - Party")
 
 			local party = self:SpawnHeader(
@@ -687,10 +697,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 				'showSolo', false,
 				'xOffset', 7,
 				'yoffset', 0,
-				'oUF-initialConfigFunction', [[
-					self:SetHeight(19)
-					self:SetWidth(70)
-				]],
 				'maxColumns', 5, 
 				'unitsperColumn', 1, 
 				'columnSpacing', 7, 
@@ -708,10 +714,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 				'showRaid', true,
 				'xoffset', 7,
 				'yOffset', -5,
-				'oUF-initialConfigFunction', [[
-					self:SetHeight(19)
-					self:SetWidth(50)
-				]],
 				--'point', "TOP",
 				'groupFilter', '1,2,3,4,5,6,7,8',
 				'groupingOrder', '8,7,6,5,4,3,2,1',
