@@ -527,7 +527,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 				self.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_targettarget_hp_font"]), LolzenUIcfg.unitframes["uf_targettarget_hp_font_size"], LolzenUIcfg.unitframes["uf_targettarget_hp_font_flag"])
 				self.Health.value:SetPoint(LolzenUIcfg.unitframes["uf_targettarget_hp_anchor"], LolzenUIcfg.unitframes["uf_targettarget_hp_posx"], LolzenUIcfg.unitframes["uf_targettarget_hp_posy"])
-				
+
 				self.Border:SetPoint("TOPLEFT", self, -3, 3)
 				self.Border:SetPoint("BOTTOMRIGHT", self, 3, -3)
 
@@ -545,10 +545,12 @@ f:SetScript("OnEvent", function(self, event, addon)
 				
 				self:SetSize(LolzenUIcfg.unitframes["uf_party_width"], LolzenUIcfg.unitframes["uf_party_height"])
 
-				local role = self.Health:CreateTexture(nil, "OVERLAY")
-				role:SetSize(16, 16)
-				role:SetPoint("RIGHT", self.Health,  0, 0)
-				self.GroupRoleIndicator = role
+				if LolzenUIcfg.unitframes["uf_party_showroleindicator"] == true then
+					local role = self.Health:CreateTexture(nil, "OVERLAY")
+					role:SetSize(LolzenUIcfg.unitframes["uf_party_ri_size"], LolzenUIcfg.unitframes["uf_party_ri_size"])
+					role:SetPoint(LolzenUIcfg.unitframes["uf_party_ri_anchor"], self.Health, LolzenUIcfg.unitframes["uf_party_ri_posx"], LolzenUIcfg.unitframes["uf_party_ri_posy"])
+					self.GroupRoleIndicator = role
+				end
 
 				local rc = self.Health:CreateTexture(nil, "OVERLAY")
 				rc:SetSize(16, 16)
@@ -567,10 +569,12 @@ f:SetScript("OnEvent", function(self, event, addon)
 				
 				self:SetSize(LolzenUIcfg.unitframes["uf_raid_width"], LolzenUIcfg.unitframes["uf_raid_height"])
 
-				local role = self.Health:CreateTexture(nil, "OVERLAY")
-				role:SetSize(16, 16)
-				role:SetPoint("RIGHT", self.Health,  0, 0)
-				self.RaidRoleIndicator = role
+				if LolzenUIcfg.unitframes["uf_raid_showroleindicator"] == true then
+					local role = self.Health:CreateTexture(nil, "OVERLAY")
+					role:SetSize(LolzenUIcfg.unitframes["uf_raid_ri_size"], LolzenUIcfg.unitframes["uf_raid_ri_size"])
+					role:SetPoint(LolzenUIcfg.unitframes["uf_raid_ri_anchor"], self.Health, LolzenUIcfg.unitframes["uf_raid_ri_posx"], LolzenUIcfg.unitframes["uf_raid_ri_posy"])
+					self.GroupRoleIndicator = role
+				end
 
 				local rc = self.Health:CreateTexture(nil, "OVERLAY")
 				rc:SetSize(16, 16)
