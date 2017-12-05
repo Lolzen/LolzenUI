@@ -91,8 +91,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 			local reactioncolor = FACTION_BAR_COLORS[UnitReaction(unit, "player")]
 			if reactioncolor then
 				return reactioncolor.r, reactioncolor.g, reactioncolor.b
-			--else
-			--	return 1, 1, 1 --fallback // needs a real fix, this seems to be caused on Player controlled NPCs such as the Lightforged Warframe
 			end
 		end
 
@@ -255,9 +253,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 				end
 			end
 
-			-- black background color
-			self:SetBackdropColor(0, 0, 0, 1)
-
 			-- hide the PvP line
 			if UnitIsPVP(unit) then
 				for i=2, GameTooltip:NumLines(), 1 do
@@ -313,7 +308,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		for i=1, #tooltips, 1 do
 			tooltips[i]:HookScript("OnTooltipSetItem", colorItemQuality)
 			tooltips[i]:SetBackdrop(backdrop)
-			tooltips[i]:HookScript("OnShow", colorBG)
+			hooksecurefunc(tooltips[i], "SetOwner", colorBG)
 		end
 
 		-- update target of mouseovertarget when UNIT_TARGET was fired (the target is changed)
