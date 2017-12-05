@@ -47,7 +47,7 @@ the Unitframes and Nameplates integrated make use of oUF.
 - [ ] finish Unitframe options
 - [ ] revisit descriptions
 - [ ] unify optionpanel formatting as good as possible
-- [ ] scale independency (720p, 1080p, ...)
+- [ ] -scale independency (720p, 1080p, ...)- makes it look ugly on lower resolutions in tests
 - [ ] itemlevel: add support for more bags
 - [ ] itemlevel: automatic coloring related to avg itemlevel (?)
 - [x] pullcount: mention that /pull [num] is a thing
