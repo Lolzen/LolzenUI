@@ -680,13 +680,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end)
 
 		oUF:Factory(function(self)
-		--	local base = 100
 		--	spawnHelper(self, 'focus', "BOTTOM", 0, base + (40 * 1))
 			spawnHelper(self, "pet", LolzenUIcfg.unitframes["uf_pet_anchor"], LolzenUIcfg.unitframes["uf_pet_posx"], LolzenUIcfg.unitframes["uf_pet_posy"])
 			spawnHelper(self, "player", LolzenUIcfg.unitframes["uf_player_anchor"], LolzenUIcfg.unitframes["uf_player_posx"], LolzenUIcfg.unitframes["uf_player_posy"])
 			spawnHelper(self, "target", LolzenUIcfg.unitframes["uf_target_anchor"], LolzenUIcfg.unitframes["uf_target_posx"], LolzenUIcfg.unitframes["uf_target_posy"])
 			spawnHelper(self, "targettarget", LolzenUIcfg.unitframes["uf_targettarget_anchor"], LolzenUIcfg.unitframes["uf_targettarget_posx"], LolzenUIcfg.unitframes["uf_targettarget_posy"])
-			--
 
 			for n=1, MAX_BOSS_FRAMES or 5 do
 				spawnHelper(self, "boss" .. n, "CENTER", 0, -240 + (40 * n))
@@ -701,6 +699,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 				'showSolo', false,
 				'xOffset', 7,
 				'yoffset', 0,
+				'oUF-initialConfigFunction', [[
+					self:SetHeight(19)
+					self:SetWidth(70)
+				]],
 				'maxColumns', 5, 
 				'unitsperColumn', 1, 
 				'columnSpacing', 7, 
@@ -718,6 +720,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 				'showRaid', true,
 				'xoffset', 7,
 				'yOffset', -5,
+				'oUF-initialConfigFunction', [[
+					self:SetHeight(19)
+					self:SetWidth(50)
+				]],
 				--'point', "TOP",
 				'groupFilter', '1,2,3,4,5,6,7,8',
 				'groupingOrder', '8,7,6,5,4,3,2,1',
