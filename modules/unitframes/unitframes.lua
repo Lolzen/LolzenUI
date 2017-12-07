@@ -36,7 +36,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				return min
 			end
 		end
-		
+
 		tags["lolzen:perhp"] = function(unit)
 			if not UnitIsConnected(unit) or UnitIsDead(unit) or UnitIsGhost(unit) then return end
 			
@@ -259,10 +259,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 				self.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_player_hp_font"]), LolzenUIcfg.unitframes["uf_player_hp_font_size"], LolzenUIcfg.unitframes["uf_player_hp_font_flag"])
 				self.Health.value:SetPoint(LolzenUIcfg.unitframes["uf_player_hp_anchor"], LolzenUIcfg.unitframes["uf_player_hp_posx"], LolzenUIcfg.unitframes["uf_player_hp_posy"])
-				
+
 				self.Border:SetPoint("TOPLEFT", self, -3, 3)
 				self.Border:SetPoint("BOTTOMRIGHT", self, 3, -2)
-				
+
 				self:SetSize(LolzenUIcfg.unitframes["uf_player_width"], LolzenUIcfg.unitframes["uf_player_height"])
 
 				local Power = CreateFrame("StatusBar", nil, self)
@@ -395,10 +395,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 				self.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_target_hp_font"]), LolzenUIcfg.unitframes["uf_target_hp_font_size"], LolzenUIcfg.unitframes["uf_target_hp_font_flag"])
 				self.Health.value:SetPoint(LolzenUIcfg.unitframes["uf_target_hp_anchor"], LolzenUIcfg.unitframes["uf_target_hp_posx"], LolzenUIcfg.unitframes["uf_target_hp_posy"])
-				
+
 				self.Border:SetPoint("TOPLEFT", self, -3, 3)
 				self.Border:SetPoint("BOTTOMRIGHT", self, 3, -2)
-				
+
 				self:SetSize(LolzenUIcfg.unitframes["uf_target_width"], LolzenUIcfg.unitframes["uf_target_height"])
 
 				local Power = CreateFrame("StatusBar", nil, self)
@@ -483,7 +483,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 				Debuffs.showDebuffType = true
 				Debuffs.onlyShowPlayer = true
 				Debuffs.PostUpdateIcon = PostUpdateIcon
-
 				self.Debuffs = Debuffs
 
 				local panel = CreateFrame("Frame")
@@ -491,7 +490,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				panel:SetSize(self:GetWidth(), 20)
 				panel:SetPoint("TOP", self.Health, "BOTTOM", 0, -4)
 				panel:SetFrameLevel(3)
-				
+
 				local Panelborder = CreateFrame("Frame", nil, self)
 				Panelborder:SetBackdrop({
 					bgFile = "Interface\\AddOns\\LolzenUI\\media\\statusbar",
@@ -587,10 +586,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 				self.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_pet_hp_font"]), LolzenUIcfg.unitframes["uf_pet_hp_font_size"], LolzenUIcfg.unitframes["uf_pet_hp_font_flag"])
 				self.Health.value:SetPoint(LolzenUIcfg.unitframes["uf_pet_hp_anchor"], LolzenUIcfg.unitframes["uf_pet_hp_posx"], LolzenUIcfg.unitframes["uf_pet_hp_posy"])
-				
+
 				self.Border:SetPoint("TOPLEFT", self, -3, 3)
 				self.Border:SetPoint("BOTTOMRIGHT", self, 3, -3)
-				
+
 				self:SetSize(LolzenUIcfg.unitframes["uf_pet_width"], LolzenUIcfg.unitframes["uf_pet_height"])
 
 				local Castbar = CreateFrame("StatusBar", nil, self)
@@ -689,7 +688,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			for n=1, MAX_BOSS_FRAMES or 5 do
 				spawnHelper(self, "boss" .. n, "CENTER", 0, -240 + (40 * n))
 			end
-			
+
 			self:SetActiveStyle("Lolzen - Party")
 
 			local party = self:SpawnHeader(
@@ -724,7 +723,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 					self:SetHeight(19)
 					self:SetWidth(50)
 				]],
-				--'point', "TOP",
 				'groupFilter', '1,2,3,4,5,6,7,8',
 				'groupingOrder', '8,7,6,5,4,3,2,1',
 				'sortMethod', 'NAME',
