@@ -539,10 +539,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 				self.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_party_hp_font"]), LolzenUIcfg.unitframes["uf_party_hp_font_size"], LolzenUIcfg.unitframes["uf_party_hp_font_flag"])
 				self.Health.value:SetPoint(LolzenUIcfg.unitframes["uf_party_hp_anchor"], LolzenUIcfg.unitframes["uf_party_hp_posx"], LolzenUIcfg.unitframes["uf_party_hp_posy"])
-				
+
 				self.Border:SetPoint("TOPLEFT", self, -3, 3)
 				self.Border:SetPoint("BOTTOMRIGHT", self, 3, -3)
-				
+
 				self:SetSize(LolzenUIcfg.unitframes["uf_party_width"], LolzenUIcfg.unitframes["uf_party_height"])
 
 				if LolzenUIcfg.unitframes["uf_party_showroleindicator"] == true then
@@ -553,8 +553,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 				end
 
 				local rc = self.Health:CreateTexture(nil, "OVERLAY")
-				rc:SetSize(16, 16)
-				rc:SetPoint("LEFT", self.Health, 10, 10)
+				rc:SetSize(LolzenUIcfg.unitframes["uf_party_rc_size"], LolzenUIcfg.unitframes["uf_party_rc_size"])
+				rc:SetPoint(LolzenUIcfg.unitframes["uf_party_rc_anchor"], self.Health, LolzenUIcfg.unitframes["uf_party_rc_posx"], LolzenUIcfg.unitframes["uf_party_rc_posy"])
 				self.ReadyCheckIndicator = rc
 			end,
 
@@ -563,10 +563,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 				self.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_raid_hp_font"]), LolzenUIcfg.unitframes["uf_raid_hp_font_size"], LolzenUIcfg.unitframes["uf_raid_hp_font_flag"])
 				self.Health.value:SetPoint(LolzenUIcfg.unitframes["uf_raid_hp_anchor"], LolzenUIcfg.unitframes["uf_raid_hp_posx"], LolzenUIcfg.unitframes["uf_raid_hp_posy"])
-				
+
 				self.Border:SetPoint("TOPLEFT", self, -3, 3)
 				self.Border:SetPoint("BOTTOMRIGHT", self, 3, -2)
-				
+
 				self:SetSize(LolzenUIcfg.unitframes["uf_raid_width"], LolzenUIcfg.unitframes["uf_raid_height"])
 
 				if LolzenUIcfg.unitframes["uf_raid_showroleindicator"] == true then
@@ -577,8 +577,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 				end
 
 				local rc = self.Health:CreateTexture(nil, "OVERLAY")
-				rc:SetSize(16, 16)
-				rc:SetPoint("LEFT", self.Health, 10, 10)
+				rc:SetSize(LolzenUIcfg.unitframes["uf_raid_rc_size"], LolzenUIcfg.unitframes["uf_raid_rc_size"])
+				rc:SetPoint(LolzenUIcfg.unitframes["uf_raid_rc_anchor"], self.Health, LolzenUIcfg.unitframes["uf_raid_rc_posx"], LolzenUIcfg.unitframes["uf_raid_rc_posy"])
 				self.ReadyCheckIndicator = rc
 			end,
 
