@@ -104,7 +104,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 			for i = 1, maxPower do
 				local parent = element[i]:GetParent()
-				element[i]:SetSize((parent:GetWidth()/maxPower) - ((5*maxPower-1)/(maxPower+1)), 8)
+				element[i]:SetSize((parent:GetWidth()/maxPower) - ((LolzenUIcfg.unitframes["uf_player_classpower_spacing"]*maxPower-1)/(maxPower+1)), 8)
 			end
 		end
 
@@ -294,30 +294,54 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 				-- ClassPower (Combo Points, etc)
 				local ClassPower = {}
-				local spacing = 5
 				for i=1, 10 do
 					ClassPower[i] = CreateFrame("StatusBar", "ClassPower"..i.."Bar", self)
 					ClassPower[i]:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes["uf_statusbar_texture"]))
 					if i == 1 then
-						ClassPower[i]:SetPoint("TOPLEFT", self, "BOTTOMLEFT", 0, -5)
+						ClassPower[i]:SetPoint(LolzenUIcfg.unitframes["uf_player_classpower_anchor1"], self, LolzenUIcfg.unitframes["uf_player_classpower_anchor2"], LolzenUIcfg.unitframes["uf_player_classpower_posx"], LolzenUIcfg.unitframes["uf_player_classpower_posy"])
 					else
-						ClassPower[i]:SetPoint("LEFT", ClassPower[i-1], "RIGHT", spacing, 0)
+						ClassPower[i]:SetPoint("LEFT", ClassPower[i-1], "RIGHT", LolzenUIcfg.unitframes["uf_player_classpower_spacing"], 0)
 					end
 
-					local border = CreateFrame("Frame", nil, ClassPower[i])
-					border:SetBackdrop({
-					--edgeFile = "Interface\\AddOns\\LolzenUI\\media\\border", edgeSize = 12,
-					--insets = {left = 0, right = 0, top = 0, bottom = 0},
-						edgeFile=[[Interface/Tooltips/UI-Tooltip-Border]],
+					ClassPower[i].border = CreateFrame("Frame", nil, ClassPower[i])
+					ClassPower[i].border:SetBackdrop({
+						edgeFile = LSM:Fetch("border", LolzenUIcfg.unitframes["uf_player_classpower_border"]),
 						tile=true, tileSize=4, edgeSize=4,
-						insets={left=0.5,right=0.5,top=0.5,bottom=0.5}
+						insets={left=0.5, right=0.5, top=0.5, bottom=0.5}
 					})
-					border:SetPoint("TOPLEFT", ClassPower[i], -1, 1.5)
-					border:SetPoint("BOTTOMRIGHT", ClassPower[i], 1.5, -1)
-					border:SetBackdropBorderColor(0, 0, 0)
-					border:SetFrameLevel(3)
+					ClassPower[i].border:SetPoint("TOPLEFT", ClassPower[i], -1.5, 1.5)
+					ClassPower[i].border:SetPoint("BOTTOMRIGHT", ClassPower[i], 1, -1)
+					ClassPower[i].border:SetBackdropBorderColor(0, 0, 0)
+					ClassPower[i].border:SetFrameLevel(3)
 				end
 				self.ClassPower = ClassPower
+
+				if select(2, UnitClass('player')) == "DEATHKNIGHT" then
+					-- Runes
+					local Runes = {}
+					for i = 1, 6 do
+						Runes[i] = CreateFrame("StatusBar", "Rune"..i.."Bar", self)
+						Runes[i]:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes["uf_statusbar_texture"]))
+						Runes[i]:SetSize((self:GetWidth()/6) - ((LolzenUIcfg.unitframes["uf_player_classpower_spacing"]*5)/(6)), 8)
+						if i == 1 then
+							Runes[i]:SetPoint(LolzenUIcfg.unitframes["uf_player_classpower_anchor1"], self, LolzenUIcfg.unitframes["uf_player_classpower_anchor2"], LolzenUIcfg.unitframes["uf_player_classpower_posx"], LolzenUIcfg.unitframes["uf_player_classpower_posy"])
+						else
+							Runes[i]:SetPoint("LEFT", Runes[i-1], "RIGHT", LolzenUIcfg.unitframes["uf_player_classpower_spacing"], 0)
+						end
+
+						Runes[i].border = CreateFrame("Frame", nil, Runes[i])
+						Runes[i].border:SetBackdrop({
+							edgeFile = LSM:Fetch("border", LolzenUIcfg.unitframes["uf_player_classpower_border"]),
+							tile=true, tileSize=4, edgeSize=4,
+							--insets={left=0, right=1, top=0, bottom=0}
+						})
+						Runes[i].border:SetPoint("TOPLEFT", Runes[i], -1.5, 1.5)
+						Runes[i].border:SetPoint("BOTTOMRIGHT", Runes[i], 1, -1)
+						Runes[i].border:SetBackdropBorderColor(0, 0, 0)
+						Runes[i].border:SetFrameLevel(3)
+					end
+					self.Runes = Runes
+				end
 
 				local Glow = CreateFrame("Frame", nil, self)
 				Glow:SetBackdrop({
