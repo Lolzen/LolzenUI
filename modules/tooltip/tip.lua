@@ -282,8 +282,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		-- [hooks and scripts]
 		-- anchor
-		hooksecurefunc("GameTooltip_SetDefaultAnchor", function(tooltip)
-			tooltip:SetPoint(LolzenUIcfg.tooltip["tip_anchor1"], UIParent, LolzenUIcfg.tooltip["tip_anchor2"], LolzenUIcfg.tooltip["tip_posx"], LolzenUIcfg.tooltip["tip_posy"])
+		hooksecurefunc("GameTooltip_SetDefaultAnchor", function(tooltip, parent)
+			if type(parent) ~= "Number" then
+				tooltip:SetPoint(LolzenUIcfg.tooltip["tip_anchor1"], UIParent, LolzenUIcfg.tooltip["tip_anchor2"], LolzenUIcfg.tooltip["tip_posx"], LolzenUIcfg.tooltip["tip_posy"])
+			end
 		end)
 
 		-- styling for units
