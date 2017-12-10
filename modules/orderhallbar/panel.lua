@@ -143,33 +143,26 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 			if OrderHallCommandBar and OrderHallCommandBar.modded == true then return end
 
-			if addon == "Blizzard_OrderHallUI" then
+			if LolzenUIcfg.orderhallbar["ohb_always_show"] == true then
+				LoadAddOn("Blizzard_OrderHallUI")
+			end
+			if OrderHallCommandBar then
+				if LolzenUIcfg.orderhallbar["ohb_always_show"] == true then
+					-- prevent hiding the bar, show it everywhere
+					OrderHallCommandBar:SetScript("OnHide", OrderHallCommandBar.Show)
+				end
+				-- hide troop info
+				OrderHallCommandBar.RefreshCategories = function() end
+				OrderHallCommandBar.RequestCategoryInfo = function() end
+			end
+		elseif addon == "Blizzard_OrderHallUI" then
+			if LolzenUIcfg.modules["orderhallbar"] == false then return end
+			
+			if OrderHallCommandBar and OrderHallCommandBar.modded == true then return end
+			
+			if OrderHallCommandBar then
 				modifyOHB()
 				getAreaText()
-				getCurrencies()
-			else
-				if LolzenUIcfg.orderhallbar["ohb_always_show"] == true then
-					LoadAddOn("Blizzard_OrderHallUI")
-				end
-				if OrderHallCommandBar then
-					if LolzenUIcfg.orderhallbar["ohb_always_show"] == true then
-						-- prevent hiding the bar, show it everywhere
-						OrderHallCommandBar:SetScript("OnHide", OrderHallCommandBar.Show)
-					end
-					-- hide troop info
-					OrderHallCommandBar.RefreshCategories = function() end
-					OrderHallCommandBar.RequestCategoryInfo = function() end
-					if LolzenUIcfg.orderhallbar["ohb_always_show"] == true then
-						-- show the bar on login too
-						if not OrderHallCommandBar:IsShown() then
-							OrderHallCommandBar:Show()
-						end
-					end
-					-- modify the look
-					modifyOHB()
-					getAreaText()
-					getCurrencies()
-				end
 			end
 		end
 	elseif event == "ZONE_CHANGED" or event == "ZONE_CHANGED_INDOORS" or event == "ZONE_CHANGED_NEW_AREA" then
