@@ -402,9 +402,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 				self.Castbar.Text = cbtext
 
 				local Shield = Castbar:CreateTexture(nil, "ARTWORK")
-				Shield:SetSize(100, 100)
-				Shield:SetPoint("CENTER", icon, 17, 0)
-				Shield:SetTexture("Interface\\CastingBar\\UI-CastingBar-Arena-Shield")
+				Shield:SetSize(icon:GetWidth()*3, icon:GetHeight()*3)
+				Shield:SetPoint("CENTER", icon, 0, 0)
+				Shield:SetTexture("Interface\\AddOns\\LolzenUI\\media\\shield")
 				self.Castbar.Shield = Shield
 
 				Power.PostUpdate = PostUpdatePower
@@ -497,9 +497,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 				self.Castbar.Text = cbtext
 
 				local Shield = Castbar:CreateTexture(nil, "ARTWORK")
-				Shield:SetSize(100, 100)
-				Shield:SetPoint("CENTER", icon, 17, 0)
-				Shield:SetTexture("Interface\\CastingBar\\UI-CastingBar-Arena-Shield")
+				Shield:SetSize(icon:GetWidth()*3, icon:GetHeight()*3)
+				Shield:SetPoint("CENTER", icon, 0, 0)
+				Shield:SetTexture("Interface\\AddOns\\LolzenUI\\media\\shield")
 				self.Castbar.Shield = Shield
 
 				local Debuffs = CreateAura(self, 8)
