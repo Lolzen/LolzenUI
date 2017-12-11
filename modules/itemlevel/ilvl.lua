@@ -7,14 +7,19 @@ ns.RegisterModule("itemlevel")
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
-f:RegisterEvent("INSPECT_READY")
-f:RegisterEvent("UNIT_INVENTORY_CHANGED")
-f:RegisterEvent("BAG_UPDATE")
 f:SetScript("OnEvent", function(self, event, addon)
 	if addon == "LolzenUI" then
 		if LolzenUIcfg.modules["itemlevel"] == false then return end
 
 		local ItemUpgradeInfo = LibStub("LibItemUpgradeInfo-1.0")
+		local eF = CreateFrame("Frame")
+		eF:RegisterEvent("INSPECT_READY")
+		eF:RegisterEvent("UNIT_INVENTORY_CHANGED")
+		--eF:RegisterEvent("BAG_OPEN")
+		eF:RegisterEvent("BAG_UPDATE")
+		--eF:RegisterEvent("BANKFRAME_OPENED")
+		eF:RegisterEvent("PLAYER_LOGIN")
+		eF:RegisterEvent("ADDON_LOADED")
 
 		local slots = {
 			"Head", 
@@ -54,7 +59,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 
 		-- PaperDollFrame
-		function f.updateCharacterSlotInfo()
+		local function updateCharacterSlotInfo()
 			for i=1, #slots do
 				-- Create fontstrings for each slot we want
 				local s = _G["Character"..slots[i].."Slot"]
@@ -69,7 +74,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 
 		-- InspectFrame
-		function f.updateInspectSlotInfo()
+		local function updateInspectSlotInfo()
 			for i=1, #slots do
 				-- Create fontstrings for each slot we want
 				local s = _G["Inspect"..slots[i].."Slot"]
@@ -91,7 +96,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		-- for some reason this would have been reversed in order otherwise, despite the slot from the corresponding bag having the correct slotID
 		local reverseNum = {}
 		local tempNum
-		function f.updateBagSlotInfo()
+		local function updateBagSlotInfo()
 			-- Cycle through all equipped bags
 			for bag = 0, NUM_BAG_SLOTS do
 				-- and get their slots
@@ -120,37 +125,38 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 		end
 
-		-- Get the character info ready on load
-		if LolzenUIcfg.itemlevel["ilvl_characterframe"] == true then
-			f:updateCharacterSlotInfo()
+
+		function eF.UNIT_INVENTORY_CHANGED()
+			if LolzenUIcfg.itemlevel["ilvl_characterframe"] == true then
+				updateCharacterSlotInfo()
+			end
 		end
-	end
+		eF.PLAYER_LOGIN = eF.UNIT_INVENTORY_CHANGED
 
-	if event == "UNIT_INVENTORY_CHANGED" then
-		if LolzenUIcfg.modules["itemlevel"] == false then return end
-
-		if LolzenUIcfg.itemlevel["ilvl_characterframe"] == true then
-			f:updateCharacterSlotInfo()
+		function eF.INSPECT_READY()
+			if LolzenUIcfg.itemlevel["ilvl_inspectframe"] == true then
+				updateInspectSlotInfo()
+			end
 		end
-	elseif event == "INSPECT_READY" then
-		if LolzenUIcfg.modules["itemlevel"] == false then return end
 
-		if LolzenUIcfg.itemlevel["ilvl_inspectframe"] == true then
-			f:updateInspectSlotInfo()
+		function eF.BAG_UPDATE()
+			if LolzenUIcfg.itemlevel["ilvl_bags"] == true then
+				updateBagSlotInfo()
+			end
 		end
-	elseif event == "BAG_UPDATE" then
-		if LolzenUIcfg.modules["itemlevel"] == false then return end
-
-		if LolzenUIcfg.itemlevel["ilvl_bags"] == true then
-			f:updateBagSlotInfo()
+		
+		function eF.ADDON_LOADED(self, event, addon)
+			if addon == "Blizzard_InspectUI" then
+				InspectFrame:HookScript("OnShow", updateInspectSlotInfo)
+			end
 		end
-	end
 
-	if addon == "Blizzard_InspectUI" then
-		if LolzenUIcfg.modules["itemlevel"] == false then return end
-
-		if LolzenUIcfg.itemlevel["ilvl_inspectframe"] == true then
-			InspectFrame:HookScript("OnShow", f.updateInspectSlotInfo)
-		end
+		eF:SetScript("OnEvent", function(self, event, ...)  
+			if(self[event]) then
+				self[event](self, event, ...)
+			else
+				print("LolzenUI - ilvl debug: "..event)
+			end 
+		end)
 	end
 end)
