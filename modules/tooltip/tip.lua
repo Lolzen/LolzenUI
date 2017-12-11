@@ -175,6 +175,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 					else
 						return "|cff00ff00(PvP) |r"
 					end
+				else
+					return ""
 				end
 			else
 				return ""
