@@ -200,6 +200,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 			local Health = CreateFrame("StatusBar", nil, self)
 			Health:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes["uf_statusbar_texture"]))
+			Health:SetFrameStrata("LOW")
 
 			Health.frequentUpdates = true
 			Health.colorTapping = true
@@ -268,7 +269,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				local Power = CreateFrame("StatusBar", nil, self)
 				Power:SetHeight(2)
 				Power:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes["uf_statusbar_texture"]))
-				Power:SetFrameStrata("HIGH")
+				Power:SetFrameStrata("MEDIUM")
 
 				Power.frequentUpdates = true
 
@@ -428,7 +429,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				local Power = CreateFrame("StatusBar", nil, self)
 				Power:SetHeight(2)
 				Power:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes["uf_statusbar_texture"]))
-				Power:SetFrameStrata("HIGH")
+				Power:SetFrameStrata("MEDIUM")
 
 				Power.frequentUpdates = true
 
