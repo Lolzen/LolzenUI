@@ -1,3 +1,9 @@
+**Changes in 7.0.12:**
+
+- _Adrian L Lange (1):_
+    1. castbar: Account for orientation and reverse fill for Spark repositioning (#408)
+- 1 file changed, 19 insertions(+), 2 deletions(-)
+
 **Changes in 7.0.11:**
 
 - _Val Voronov (1):_
@@ -107,7 +113,7 @@
     2. totems: Use actual number of totem sub-widgets instead of MAX_TOTEMS
 - _Phanx (1):_
     1. health: Ignore updates with nil unit (Blizz bug in 7.1) (#319)
-- _Rainrider (18):_
+- _Rainrider (17):_
     1. core:  update the pet frame properly after entering/exiting a vehicle
     2. power: Allow using atlases
     3. castbar: add a .holdTime option
@@ -121,11 +127,10 @@
     11. castbar: set .Text for failed and interrupted casts accordingly
     12. castbar: pass the spellid to Post* hooks where applicable
     13. castbar: add .timeToHold option
-    14. portrait: check for PlayerModel instead of Model
-    15. range: minor cleanup
-    16. raidroleindicator: make sure all update paths trigger Pre|PostUpdate
-    17. masterlooterindicator: make sure all update paths trigger Pre|PostUpdate
-    18. runes: update docs
+    14. range: minor cleanup
+    15. raidroleindicator: make sure all update paths trigger Pre|PostUpdate
+    16. masterlooterindicator: make sure all update paths trigger Pre|PostUpdate
+    17. runes: update docs
 - _Sticklord (1):_
     1. core: Change the framestrata to LOW
 - _Val Voronov (19):_
