@@ -15,7 +15,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		local eF = CreateFrame("Frame")
 		eF:RegisterEvent("INSPECT_READY")
 		eF:RegisterEvent("UNIT_INVENTORY_CHANGED")
-		--eF:RegisterEvent("BAG_OPEN")
+		eF:RegisterEvent("BAG_OPEN")
 		eF:RegisterEvent("BAG_UPDATE")
 		--eF:RegisterEvent("BANKFRAME_OPENED")
 		eF:RegisterEvent("PLAYER_LOGIN")
@@ -54,7 +54,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		local function getItemlvlBags(bagID, slotID)
 			local itemLink = GetContainerItemLink(bagID, slotID)
 			if itemLink and IsEquippableItem(itemLink) then
-				return ItemUpgradeInfo:GetHeirloomTrueLevel(itemLink)
+				return ItemUpgradeInfo:GetUpgradedItemLevel(itemLink)
 			end
 		end
 
@@ -67,9 +67,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 					s.str = s:CreateFontString(nil, "OVERLAY")
 					s.str:SetFont(LSM:Fetch("font", LolzenUIcfg.itemlevel["ilvl_font"]), LolzenUIcfg.itemlevel["ilvl_font_size"], LolzenUIcfg.itemlevel["ilvl_font_flag"])
 					s.str:SetPoint(LolzenUIcfg.itemlevel["ilvl_anchor"], s, LolzenUIcfg.itemlevel["ilvl_font_posx"], LolzenUIcfg.itemlevel["ilvl_font_posy"])
+					s.str:SetText(getItemlvl("player", slots[i]))
+					s.str:SetTextColor(unpack(LolzenUIcfg.itemlevel["ilvl_font_color"]))
+				else
+					s.str:SetText(getItemlvl("player", slots[i]))
 				end
-				s.str:SetText(getItemlvl("player", slots[i]))
-				s.str:SetTextColor(unpack(LolzenUIcfg.itemlevel["ilvl_font_color"]))
 			end
 		end
 
@@ -83,9 +85,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 						s.str = s:CreateFontString(nil, "OVERLAY")
 						s.str:SetFont(LSM:Fetch("font", LolzenUIcfg.itemlevel["ilvl_font"]), LolzenUIcfg.itemlevel["ilvl_font_size"], LolzenUIcfg.itemlevel["ilvl_font_flag"])
 						s.str:SetPoint(LolzenUIcfg.itemlevel["ilvl_anchor"], s, LolzenUIcfg.itemlevel["ilvl_font_posx"], LolzenUIcfg.itemlevel["ilvl_font_posy"])
-					else
 						s.str:SetText(getItemlvl(InspectFrame.unit, slots[i]))
 						s.str:SetTextColor(unpack(LolzenUIcfg.itemlevel["ilvl_font_color"]))
+					else
+						s.str:SetText(getItemlvl(InspectFrame.unit, slots[i]))
 					end
 				end
 			end
@@ -116,9 +119,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 							s.str = s:CreateFontString(nil, "OVERLAY")
 							s.str:SetFont(LSM:Fetch("font", LolzenUIcfg.itemlevel["ilvl_font"]), LolzenUIcfg.itemlevel["ilvl_font_size"], LolzenUIcfg.itemlevel["ilvl_font_flag"])
 							s.str:SetPoint(LolzenUIcfg.itemlevel["ilvl_anchor"], s, LolzenUIcfg.itemlevel["ilvl_font_posx"], LolzenUIcfg.itemlevel["ilvl_font_posy"])
-						else
 							s.str:SetText(getItemlvlBags(bag, slot))
 							s.str:SetTextColor(unpack(LolzenUIcfg.itemlevel["ilvl_font_color"]))
+						else
+							s.str:SetText(getItemlvlBags(bag, slot))
 						end
 					end
 				end
@@ -131,7 +135,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 				updateCharacterSlotInfo()
 			end
 		end
-		eF.PLAYER_LOGIN = eF.UNIT_INVENTORY_CHANGED
 
 		function eF.INSPECT_READY()
 			if LolzenUIcfg.itemlevel["ilvl_inspectframe"] == true then
@@ -143,6 +146,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 			if LolzenUIcfg.itemlevel["ilvl_bags"] == true then
 				updateBagSlotInfo()
 			end
+		end
+		
+		function eF.PLAYER_LOGIN()
+			eF:UNIT_INVENTORY_CHANGED()
+			eF:BAG_UPDATE()
 		end
 		
 		function eF.ADDON_LOADED(self, event, addon)
