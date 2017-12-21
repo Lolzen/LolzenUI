@@ -11,6 +11,18 @@ f:SetScript("OnEvent", function(self, event, addon)
 	if addon == "LolzenUI" then
 		if LolzenUIcfg.modules["buffs"] == false then return end
 
+		-- Change the position
+		hooksecurefunc(BuffFrame, "SetPoint", function(self)
+			if self.moving == true then return end
+			self.moving = true
+			self:SetMovable(true)
+			self:SetUserPlaced(true)
+			self:ClearAllPoints()
+			self:SetPoint(LolzenUIcfg.buffs["buff_anchor1"], LolzenUIcfg.buffs["buff_parent"], LolzenUIcfg.buffs["buff_anchor2"], LolzenUIcfg.buffs["buff_posx"], LolzenUIcfg.buffs["buff_posy"])
+			self:SetMovable(false)
+			self.moving = nil
+		end)
+
 		local function StyleBuffs(buttonName, index)
 			local button = _G[buttonName..index]
 			if not button or button.modded then return end
@@ -66,9 +78,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 
 		local function UpdateAura()
-			-- Change the position
-			BuffFrame:ClearAllPoints()
-			BuffFrame:SetPoint(LolzenUIcfg.buffs["buff_anchor1"], LolzenUIcfg.buffs["buff_parent"], LolzenUIcfg.buffs["buff_anchor2"], LolzenUIcfg.buffs["buff_posx"], LolzenUIcfg.buffs["buff_posy"])
 			for i = 1, BUFF_ACTUAL_DISPLAY do
 				StyleBuffs("BuffButton", i)
 			end
