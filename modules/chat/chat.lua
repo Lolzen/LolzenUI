@@ -198,12 +198,20 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		for i=1, NUM_CHAT_WINDOWS do
 			local cf = _G["ChatFrame"..i]
-			cf:ClearAllPoints()
+			
 			cf:SetClampedToScreen(false)
-			if i == 1 then
-				cf:SetPoint(LolzenUIcfg.chat["chat_anchor1"], UIParent, LolzenUIcfg.chat["chat_anchor2"], LolzenUIcfg.chat["chat_posx"], LolzenUIcfg.chat["chat_posy"])
+			if cf.isDocked then
+				cf:ClearAllPoints()
+				if i == 1 then
+					cf:SetPoint(LolzenUIcfg.chat["chat_anchor1"], UIParent, LolzenUIcfg.chat["chat_anchor2"], LolzenUIcfg.chat["chat_posx"], LolzenUIcfg.chat["chat_posy"])
+				else
+					cf:SetAllPoints(_G["ChatFrame1"])
+				end
 			else
-				cf:SetAllPoints(_G["ChatFrame1"])
+				if i == 1 then
+					cf:ClearAllPoints()
+					cf:SetPoint(LolzenUIcfg.chat["chat_anchor1"], UIParent, LolzenUIcfg.chat["chat_anchor2"], LolzenUIcfg.chat["chat_posx"], LolzenUIcfg.chat["chat_posy"])
+				end
 			end
 		end
 	end
