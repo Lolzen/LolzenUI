@@ -214,8 +214,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 			self.Health = Health
 
 			local HealthPoints = Health:CreateFontString(nil, "OVERLAY")
-			HealthPoints:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 24, "THINOUTLINE")
-			HealthPoints:SetPoint("RIGHT", -2, 8)
+			HealthPoints:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_general_hp_font"]), LolzenUIcfg.unitframes["uf_general_hp_font_size"], LolzenUIcfg.unitframes["uf_general_hp_font_flag"])
+			HealthPoints:SetPoint(LolzenUIcfg.unitframes["uf_general_hp_anchor"], LolzenUIcfg.unitframes["uf_general_hp_posx"], LolzenUIcfg.unitframes["uf_general_hp_posy"])
 			if LolzenUIcfg.unitframes["uf_use_hp_percent"] == true then
 				self:Tag(HealthPoints, "[|cffc41f3b>dead<|r][|cff999999>offline<|r][lolzen:perhp]")
 			else
@@ -258,8 +258,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 			player = function(self, ...)
 				shared(self, ...)
 
-				self.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_player_hp_font"]), LolzenUIcfg.unitframes["uf_player_hp_font_size"], LolzenUIcfg.unitframes["uf_player_hp_font_flag"])
-				self.Health.value:SetPoint(LolzenUIcfg.unitframes["uf_player_hp_anchor"], LolzenUIcfg.unitframes["uf_player_hp_posx"], LolzenUIcfg.unitframes["uf_player_hp_posy"])
+				if LolzenUIcfg.unitframes["uf_player_use_own_hp_font_settings"] == true then
+					self.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_player_hp_font"]), LolzenUIcfg.unitframes["uf_player_hp_font_size"], LolzenUIcfg.unitframes["uf_player_hp_font_flag"])
+					self.Health.value:SetPoint(LolzenUIcfg.unitframes["uf_player_hp_anchor"], LolzenUIcfg.unitframes["uf_player_hp_posx"], LolzenUIcfg.unitframes["uf_player_hp_posy"])
+				end
 
 				self.Border:SetPoint("TOPLEFT", self, -3, 3)
 				self.Border:SetPoint("BOTTOMRIGHT", self, 3, -2)
@@ -418,8 +420,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 			target = function(self, ...)
 				shared(self, ...)
 
-				self.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_target_hp_font"]), LolzenUIcfg.unitframes["uf_target_hp_font_size"], LolzenUIcfg.unitframes["uf_target_hp_font_flag"])
-				self.Health.value:SetPoint(LolzenUIcfg.unitframes["uf_target_hp_anchor"], LolzenUIcfg.unitframes["uf_target_hp_posx"], LolzenUIcfg.unitframes["uf_target_hp_posy"])
+				if LolzenUIcfg.unitframes["uf_target_use_own_hp_font_settings"] == true then
+					self.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_target_hp_font"]), LolzenUIcfg.unitframes["uf_target_hp_font_size"], LolzenUIcfg.unitframes["uf_target_hp_font_flag"])
+					self.Health.value:SetPoint(LolzenUIcfg.unitframes["uf_target_hp_anchor"], LolzenUIcfg.unitframes["uf_target_hp_posx"], LolzenUIcfg.unitframes["uf_target_hp_posy"])
+				end
 
 				self.Border:SetPoint("TOPLEFT", self, -3, 3)
 				self.Border:SetPoint("BOTTOMRIGHT", self, 3, -2)
@@ -549,8 +553,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 			targettarget = function(self, ...)
 				shared(self, ...)
 
-				self.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_targettarget_hp_font"]), LolzenUIcfg.unitframes["uf_targettarget_hp_font_size"], LolzenUIcfg.unitframes["uf_targettarget_hp_font_flag"])
-				self.Health.value:SetPoint(LolzenUIcfg.unitframes["uf_targettarget_hp_anchor"], LolzenUIcfg.unitframes["uf_targettarget_hp_posx"], LolzenUIcfg.unitframes["uf_targettarget_hp_posy"])
+				if LolzenUIcfg.unitframes["uf_targettarget_use_own_hp_font_settings"] == true then
+					self.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_targettarget_hp_font"]), LolzenUIcfg.unitframes["uf_targettarget_hp_font_size"], LolzenUIcfg.unitframes["uf_targettarget_hp_font_flag"])
+					self.Health.value:SetPoint(LolzenUIcfg.unitframes["uf_targettarget_hp_anchor"], LolzenUIcfg.unitframes["uf_targettarget_hp_posx"], LolzenUIcfg.unitframes["uf_targettarget_hp_posy"])
+				end
 
 				self.Border:SetPoint("TOPLEFT", self, -3, 3)
 				self.Border:SetPoint("BOTTOMRIGHT", self, 3, -3)
@@ -561,8 +567,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 			party = function(self, ...)
 				shared(self, ...)
 
-				self.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_party_hp_font"]), LolzenUIcfg.unitframes["uf_party_hp_font_size"], LolzenUIcfg.unitframes["uf_party_hp_font_flag"])
-				self.Health.value:SetPoint(LolzenUIcfg.unitframes["uf_party_hp_anchor"], LolzenUIcfg.unitframes["uf_party_hp_posx"], LolzenUIcfg.unitframes["uf_party_hp_posy"])
+				if LolzenUIcfg.unitframes["uf_party_use_own_hp_font_settings"] == true then
+					self.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_party_hp_font"]), LolzenUIcfg.unitframes["uf_party_hp_font_size"], LolzenUIcfg.unitframes["uf_party_hp_font_flag"])
+					self.Health.value:SetPoint(LolzenUIcfg.unitframes["uf_party_hp_anchor"], LolzenUIcfg.unitframes["uf_party_hp_posx"], LolzenUIcfg.unitframes["uf_party_hp_posy"])
+				end
 
 				self.Border:SetPoint("TOPLEFT", self, -3, 3)
 				self.Border:SetPoint("BOTTOMRIGHT", self, 3, -3)
@@ -585,8 +593,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 			raid = function(self, ...)
 				shared(self, ...)
 
-				self.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_raid_hp_font"]), LolzenUIcfg.unitframes["uf_raid_hp_font_size"], LolzenUIcfg.unitframes["uf_raid_hp_font_flag"])
-				self.Health.value:SetPoint(LolzenUIcfg.unitframes["uf_raid_hp_anchor"], LolzenUIcfg.unitframes["uf_raid_hp_posx"], LolzenUIcfg.unitframes["uf_raid_hp_posy"])
+				if LolzenUIcfg.unitframes["uf_raid_use_own_hp_font_settings"] == true then
+					self.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_raid_hp_font"]), LolzenUIcfg.unitframes["uf_raid_hp_font_size"], LolzenUIcfg.unitframes["uf_raid_hp_font_flag"])
+					self.Health.value:SetPoint(LolzenUIcfg.unitframes["uf_raid_hp_anchor"], LolzenUIcfg.unitframes["uf_raid_hp_posx"], LolzenUIcfg.unitframes["uf_raid_hp_posy"])
+				end
 
 				self.Border:SetPoint("TOPLEFT", self, -3, 3)
 				self.Border:SetPoint("BOTTOMRIGHT", self, 3, -2)
@@ -609,8 +619,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 			pet = function(self, ...)
 				shared(self, ...)
 
-				self.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_pet_hp_font"]), LolzenUIcfg.unitframes["uf_pet_hp_font_size"], LolzenUIcfg.unitframes["uf_pet_hp_font_flag"])
-				self.Health.value:SetPoint(LolzenUIcfg.unitframes["uf_pet_hp_anchor"], LolzenUIcfg.unitframes["uf_pet_hp_posx"], LolzenUIcfg.unitframes["uf_pet_hp_posy"])
+				if LolzenUIcfg.unitframes["uf_pet_use_own_hp_font_settings"] == true then
+					self.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_pet_hp_font"]), LolzenUIcfg.unitframes["uf_pet_hp_font_size"], LolzenUIcfg.unitframes["uf_pet_hp_font_flag"])
+					self.Health.value:SetPoint(LolzenUIcfg.unitframes["uf_pet_hp_anchor"], LolzenUIcfg.unitframes["uf_pet_hp_posx"], LolzenUIcfg.unitframes["uf_pet_hp_posy"])
+				end
 
 				self.Border:SetPoint("TOPLEFT", self, -3, 3)
 				self.Border:SetPoint("BOTTOMRIGHT", self, 3, -3)
