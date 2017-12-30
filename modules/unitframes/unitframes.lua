@@ -706,14 +706,16 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 
 		-- Hide the standard raid frames
-		local frame = CreateFrame("Frame", nil, UIParent)
-		frame:RegisterEvent("PLAYER_ENTERING_WORLD")
-		frame:SetScript("OnEvent", function(self, event)
-			CompactRaidFrameManager:UnregisterAllEvents()
-			CompactRaidFrameManager:Hide()
-			CompactRaidFrameContainer:UnregisterAllEvents()
-			CompactRaidFrameContainer:Hide()
-		end)
+		if LolzenUIcfg.unitframes["uf_raid_enabled"] == true then
+			local frame = CreateFrame("Frame", nil, UIParent)
+			frame:RegisterEvent("PLAYER_ENTERING_WORLD")
+			frame:SetScript("OnEvent", function(self, event)
+				CompactRaidFrameManager:UnregisterAllEvents()
+				CompactRaidFrameManager:Hide()
+				CompactRaidFrameContainer:UnregisterAllEvents()
+				CompactRaidFrameContainer:Hide()
+			end)
+		end
 
 		oUF:Factory(function(self)
 		--	spawnHelper(self, 'focus', "BOTTOM", 0, base + (40 * 1))
@@ -726,50 +728,54 @@ f:SetScript("OnEvent", function(self, event, addon)
 				spawnHelper(self, "boss" .. n, "CENTER", 0, -240 + (40 * n))
 			end
 
-			self:SetActiveStyle("Lolzen - Party")
+			if LolzenUIcfg.unitframes["uf_party_enabled"] == true then
+				self:SetActiveStyle("Lolzen - Party")
 
-			local party = self:SpawnHeader(
-				nil, nil, 'party,solo', 
-				'showParty', true, 
-				'showPlayer', true,
-				'showSolo', false,
-				'xOffset', 7,
-				'yoffset', 0,
-				'oUF-initialConfigFunction', [[
-					self:SetHeight(19)
-					self:SetWidth(70)
-				]],
-				'maxColumns', 5, 
-				'unitsperColumn', 1, 
-				'columnSpacing', 7, 
-				'columnAnchorPoint', "RIGHT"
-			)
-			party:SetPoint(LolzenUIcfg.unitframes["uf_party_anchor"], UIParent, LolzenUIcfg.unitframes["uf_party_posx"], LolzenUIcfg.unitframes["uf_party_posy"])
+				local party = self:SpawnHeader(
+					nil, nil, 'party,solo',
+					'showParty', true,
+					'showPlayer', true,
+					'showSolo', false,
+					'xOffset', 7,
+					'yoffset', 0,
+					'oUF-initialConfigFunction', [[
+						self:SetHeight(19)
+						self:SetWidth(70)
+					]],
+					'maxColumns', 5,
+					'unitsperColumn', 1,
+					'columnSpacing', 7,
+					'columnAnchorPoint', "RIGHT"
+				)
+				party:SetPoint(LolzenUIcfg.unitframes["uf_party_anchor"], UIParent, LolzenUIcfg.unitframes["uf_party_posx"], LolzenUIcfg.unitframes["uf_party_posy"])
+			end
 
-			self:SetActiveStyle("Lolzen - Raid")
+			if LolzenUIcfg.unitframes["uf_raid_enabled"] == true then
+				self:SetActiveStyle("Lolzen - Raid")
 
-			local raid = self:SpawnHeader(
-				nil, nil, 'raid,party,solo',
-				'showPlayer', true,
-				'showSolo', false,
-				'showParty', false,
-				'showRaid', true,
-				'xoffset', 7,
-				'yOffset', -5,
-				'oUF-initialConfigFunction', [[
-					self:SetHeight(19)
-					self:SetWidth(50)
-				]],
-				'groupFilter', '1,2,3,4,5,6,7,8',
-				'groupingOrder', '8,7,6,5,4,3,2,1',
-				'sortMethod', 'NAME',
-				'groupBy', 'GROUP',
-				'maxColumns', 8,
-				'unitsPerColumn', 5,
-				'columnSpacing', 7,
-				'columnAnchorPoint', "RIGHT"
-			)
-			raid:SetPoint(LolzenUIcfg.unitframes["uf_raid_anchor"], UIParent, LolzenUIcfg.unitframes["uf_raid_posx"], LolzenUIcfg.unitframes["uf_raid_posy"])
+				local raid = self:SpawnHeader(
+					nil, nil, 'raid,party,solo',
+					'showPlayer', true,
+					'showSolo', false,
+					'showParty', false,
+					'showRaid', true,
+					'xoffset', 7,
+					'yOffset', -5,
+					'oUF-initialConfigFunction', [[
+						self:SetHeight(19)
+						self:SetWidth(50)
+					]],
+					'groupFilter', '1,2,3,4,5,6,7,8',
+					'groupingOrder', '8,7,6,5,4,3,2,1',
+					'sortMethod', 'NAME',
+					'groupBy', 'GROUP',
+					'maxColumns', 8,
+					'unitsPerColumn', 5,
+					'columnSpacing', 7,
+					'columnAnchorPoint', "RIGHT"
+				)
+				raid:SetPoint(LolzenUIcfg.unitframes["uf_raid_anchor"], UIParent, LolzenUIcfg.unitframes["uf_raid_posx"], LolzenUIcfg.unitframes["uf_raid_posy"])
+			end
 		end)
 	end
 end)
