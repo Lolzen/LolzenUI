@@ -169,28 +169,29 @@ f:SetScript("OnEvent", function(self, event, addon)
 		ChatTypeInfo["WHISPER"].sticky = LolzenUIcfg.chat["chat_sticky_whisper"]
 		ChatTypeInfo["CHANNEL"].sticky = LolzenUIcfg.chat["chat_sticky_channel"]
 
-		-- /who whispered me? & Show afk/dnd messages only one time
+		-- /who whispered me?
 		local Who = {}
-		local status = {}
-		local msgEvent = function(msg, ...)
+		local WhoEvent = function(msg, ...)
 			local arg1, arg2, arg3 = ...
-			if LolzenUIcfg.chat["chat_show_afkdnd_once"] == true then
-				if Who[arg3] == nil then
-					SendWho(arg3)
-					Who[arg3] = 1
-				end
-			end
-			if LolzenUIcfg.chat["chat_auto_who"] == true then
-				if status[arg2] and status[arg2] == arg1 then
-					return true
-				else
-					status[arg2] = arg1
-				end
+			if Who[arg3] == nil then
+				SendWho(arg3)
+				Who[arg3] = 1
 			end
 		end
-		ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER", msgEvent)
-		ChatFrame_AddMessageEventFilter("CHAT_MSG_AFK", msgEvent)
-		ChatFrame_AddMessageEventFilter("CHAT_MSG_DND", msgEvent)
+		ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER", WhoEvent)
+		
+		-- Show afk/dnd messages only one time (DontBugMe-like)
+		local data = {}
+		local chatEvent = function(msg, ...)
+			local arg1, arg2 = ...
+			if data[arg2] and data[arg2] == arg1 then
+				return true
+			else
+				data[arg2] = arg1
+			end
+		end
+		ChatFrame_AddMessageEventFilter("CHAT_MSG_AFK", chatEvent)
+		ChatFrame_AddMessageEventFilter("CHAT_MSG_DND", chatEvent)
 	elseif event == "PLAYER_ENTERING_WORLD" then
 		if LolzenUIcfg.modules["chat"] == false then return end
 		-- disable UI forced positioning
