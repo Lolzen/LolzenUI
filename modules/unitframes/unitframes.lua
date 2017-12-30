@@ -731,23 +731,43 @@ f:SetScript("OnEvent", function(self, event, addon)
 			if LolzenUIcfg.unitframes["uf_party_enabled"] == true then
 				self:SetActiveStyle("Lolzen - Party")
 
-				local party = self:SpawnHeader(
-					nil, nil, 'party,solo',
-					'showParty', true,
-					'showPlayer', true,
-					'showSolo', false,
-					'xOffset', 7,
-					'yoffset', 0,
-					'oUF-initialConfigFunction', [[
-						self:SetHeight(19)
-						self:SetWidth(70)
-					]],
-					'maxColumns', 5,
-					'unitsperColumn', 1,
-					'columnSpacing', 7,
-					'columnAnchorPoint', "RIGHT"
-				)
-				party:SetPoint(LolzenUIcfg.unitframes["uf_party_anchor"], UIParent, LolzenUIcfg.unitframes["uf_party_posx"], LolzenUIcfg.unitframes["uf_party_posy"])
+				if LolzenUIcfg.unitframes["uf_party_use_vertical_layout"] == true then
+					local party = self:SpawnHeader(
+						nil, nil, 'party,solo',
+						'showParty', true,
+						'showPlayer', true,
+						'showSolo', false,
+						'xOffset', 0,
+						'yoffset', 0,
+						'oUF-initialConfigFunction', [[
+							self:SetHeight(19)
+							self:SetWidth(70)
+						]],
+						'maxColumns', 5,
+						'unitsperColumn', 1,
+						'columnSpacing', 5,
+						'columnAnchorPoint', "TOP"
+					)
+					party:SetPoint(LolzenUIcfg.unitframes["uf_party_anchor"], UIParent, LolzenUIcfg.unitframes["uf_party_posx"], LolzenUIcfg.unitframes["uf_party_posy"])
+				else
+					local party = self:SpawnHeader(
+						nil, nil, 'party,solo',
+						'showParty', true,
+						'showPlayer', true,
+						'showSolo', false,
+						'xOffset', 7,
+						'yoffset', 0,
+						'oUF-initialConfigFunction', [[
+							self:SetHeight(19)
+							self:SetWidth(70)
+						]],
+						'maxColumns', 5,
+						'unitsperColumn', 1,
+						'columnSpacing', 7,
+						'columnAnchorPoint', "RIGHT"
+					)
+					party:SetPoint(LolzenUIcfg.unitframes["uf_party_anchor"], UIParent, LolzenUIcfg.unitframes["uf_party_posx"], LolzenUIcfg.unitframes["uf_party_posy"])
+				end
 			end
 
 			if LolzenUIcfg.unitframes["uf_raid_enabled"] == true then
