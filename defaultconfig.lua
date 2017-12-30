@@ -409,6 +409,7 @@ defaultconfig.unitframes = {
 	["uf_party_posx"] = 0,
 	["uf_party_posy"] = 140,
 	["uf_party_enabled"] = true,
+	["uf_party_use_vertical_layout"] = false,
 	["uf_party_anchor"] = "BOTTOM",
 	["uf_party_use_own_hp_font_settings"] = true,
 	["uf_party_hp_font"] = "DroidSansBold",
