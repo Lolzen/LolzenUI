@@ -65,3 +65,4 @@ the Unitframes and Nameplates integrated make use of oUF.
 - [ ] optimizations
 - [ ] tweak module (several tiny tweaks like "increase max watched currency" (BaudBag does this))
 - [ ] previews: make more previews/preview positions where it makes sense
+- [ ] unitframes: fading OOC
