@@ -46,11 +46,5 @@ f:SetScript("OnEvent", function(self, event, addon)
 		SlashCmdList["GM"] = function() 
 			ToggleHelpFrame()
 		end
-
-		-- /uiscale for the optimal scale
-		--SLASH_SCALE1 = "/uiscale"
-		--SlashCmdList["SCALE"] = function() 
-		--	SetCVar("uiScale", 768/string.match(({GetScreenResolutions()})[GetCurrentResolution()], "%d+x(%d+)"))
-		--end
 	end
 end)
