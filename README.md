@@ -45,15 +45,23 @@ the Unitframes and Nameplates integrated make use of oUF.
 ------
 ### ToDo:
 - [ ] finish Unitframe options
+  - [ ] Castbar stuff (standalone; size, color, positioning,..)
+  - [ ] add tag & options for hpval.hpperc (in any order) with optional divider
+  - [ ] option/tag 7m5 > 7.5m
+  - [ ] buff/debuff options
+  - [ ] /focus
+  - [ ] bossframes
+- [ ] fix subpanel loading through inGame menu
+- [ ] clock: option to disable seconds
+- [ ] actionbars: add option to show keybinds
+- [ ] artifactbar/xpbar: option to show text only on mouseover
+- [ ] tooltip: afk/dnd flag colors
+- [ ] tooltip: option to color any guild
 - [ ] revisit descriptions
 - [ ] unify optionpanel formatting as good as possible
 - [ ] itemlevel: add support for more bags
-- [ ] itemlevel: automatic coloring related to avg itemlevel (?)
-- [x] pullcount: mention that /pull [num] is a thing
-- [x] pullcount: add security check to detect DBM or BigWigs - if so disable builtin /pull functionality
-- [x] pullcount: make use of that sexy battleground timer
+- [ ] itemlevel: option for coloring items per itemquality
 - [ ] orderhallbar: font option for zonetext
-- [ ] redo chicchai and integrate
-- [x] libSharedMedia support
 - [ ] optimizations
 - [ ] tweak module (several tiny tweaks like "increase max watched currency" (BaudBag does this))
+- [ ] previews: make more previews/preview positions where it makes sense
