@@ -6,6 +6,17 @@ ns.panel = CreateFrame("Frame", "LolzenUIPanel")
 ns.panel.name = addon
 InterfaceOptions_AddCategory(ns.panel)
 
+-- a little hack to load options upon clicking the LolzenUIPanel button without having to rely on /lolzen or /lolzenui
+hooksecurefunc("InterfaceOptionsListButton_OnClick", function(self, button)
+	if self.element:GetName() == "LolzenUIPanel" then
+		if not IsAddOnLoaded("LolzenUI_Options") then
+			LoadAddOn("LolzenUI_Options")
+			InterfaceAddOnsList_Update()
+			print("|cff5599ffLolzenUI:|r loaded LolzenUI_Options")
+		end
+	end
+end)
+
 local title = ns.panel:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
 title:SetPoint("TOPLEFT", 16, -16)
 title:SetText("|cff5599ff"..addon.."|r")
