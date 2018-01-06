@@ -39,25 +39,27 @@ local button = {}
 local column = 15
 local function createButtons()
 	for i=1, #ns.modules do
-		button[i] = CreateFrame("CheckButton", "tickbox"..i, ns.panel, "UICheckButtonTemplate")
-		if i == 1 then
-			button[i]:SetPoint("TOPLEFT", checkboxes, "BOTTOMLEFT", 0, -8)
-		elseif i == column or i == column*2 or i == column*3 then
-			button[i]:SetPoint("LEFT", button[i+1-column], "RIGHT", 130, 0)
-		else
-			button[i]:SetPoint("TOPLEFT", button[i-1], "BOTTOMLEFT", 0, 4)
-		end
+		if not button[i] then
+			button[i] = CreateFrame("CheckButton", "tickbox"..i, ns.panel, "UICheckButtonTemplate")
+			if i == 1 then
+				button[i]:SetPoint("TOPLEFT", checkboxes, "BOTTOMLEFT", 0, -8)
+			elseif i == column or i == column*2 or i == column*3 then
+				button[i]:SetPoint("LEFT", button[i+1-column], "RIGHT", 130, 0)
+			else
+				button[i]:SetPoint("TOPLEFT", button[i-1], "BOTTOMLEFT", 0, 4)
+			end
 
-		button[i].text = _G["tickbox"..i.."Text"]
-		button[i].text:SetText(ns.modules[i])
-		
-		-- get status from saved vars
-		if LolzenUIcfg.modules[ns.modules[i]] == true then
-			button[i]:SetChecked(true)
-			button[i].text:SetTextColor(51/255, 181/255, 229/225)
-		else
-			button[i]:SetChecked(false)
-			button[i].text:SetTextColor(1, 1, 1)
+			button[i].text = _G["tickbox"..i.."Text"]
+			button[i].text:SetText(ns.modules[i])
+
+			-- get status from saved vars
+			if LolzenUIcfg.modules[ns.modules[i]] == true then
+				button[i]:SetChecked(true)
+				button[i].text:SetTextColor(51/255, 181/255, 229/225)
+			else
+				button[i]:SetChecked(false)
+				button[i].text:SetTextColor(1, 1, 1)
+			end
 		end
 	end
 end
