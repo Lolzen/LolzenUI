@@ -74,7 +74,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 				icon[i].timer = icon[i]:CreateAnimationGroup()
 				icon[i].timerAnim = icon[i].timer:CreateAnimation()
 				icon[i].timerAnim:SetDuration(0.1)
-				
+
+				-- do the timer stuff when Play() is called
 				icon[i].timer:SetScript("OnPlay", function(self)
 					local name, _, _, count, _, _, expirationTime = UnitBuff("player", icon[i].name)
 					if name then
@@ -90,11 +91,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 						if count and count > 0 then
 							icon[i].count:SetText(count)
 						end
-					else
-						self:Stop()
 					end
 				end)
-		
+
+				-- hide icons when the Stop() is called
 				icon[i].timer:SetScript("OnStop", function(self)
 					if icon[i]:GetAlpha() ~= 0 then
 						icon[i]:SetAlpha(0)
@@ -103,7 +103,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 						icon[i].count:SetText(nil)
 					end
 				end)
-		
+
+				--repeat until Stop() is requested
 				icon[i].timer:SetScript("OnFinished", function(self, requested)
 					if not requested then
 						self:Play()
@@ -112,11 +113,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 		end
 
-		-- detect if a watched buff is buffed
-		local function DetectBuff(button, num, filter)
+		local function AuraDetect()
 			for i=1, #LolzenUIcfg.buffwatcher["buffwatchlist"][UnitName("player")] do
-				local name, _, _, count, _, _, expirationTime = UnitBuff("player", icon[i].name)
-				if name then
+				if UnitAura("player", icon[i].name) then
 					icon[i].timer:Play()
 				else
 					icon[i].timer:Stop()
@@ -124,13 +123,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 		end
 
-		local function BuffDetect()
-			DetectBuff("BuffButton", BUFF_ACTUAL_DISPLAY)
-		end
-
-		local function BuffOnLoad(self, event, ...)
+		local function AuraOnLoad(self, event, ...)
 			if event == "PLAYER_LOGIN" then
-				BuffDetect()
+				AuraDetect()
 				-- hide the buttons and their children on login
 				for i=1, #LolzenUIcfg.buffwatcher["buffwatchlist"][UnitName("player")] do
 					if icon[i]:GetAlpha() ~= 0 then
@@ -141,13 +136,13 @@ f:SetScript("OnEvent", function(self, event, addon)
 					end
 				end
 			else
-				BuffDetect()
+				AuraDetect()
 			end
 		end
 
 		local eF = CreateFrame("Frame")
 		eF:RegisterEvent("PLAYER_LOGIN")
 		eF:RegisterEvent("UNIT_AURA")
-		eF:SetScript("OnEvent", BuffOnLoad)
+		eF:SetScript("OnEvent", AuraOnLoad)
 	end
 end)
