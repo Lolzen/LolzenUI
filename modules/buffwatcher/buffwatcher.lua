@@ -9,7 +9,7 @@ f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)
 	if addon == "LolzenUI" then
 		if LolzenUIcfg.modules["buffwatcher"] == false then return end
-		
+
 		-- add character to buffwatchlist
 		if not LolzenUIcfg.buffwatcher["buffwatchlist"][UnitName("player")] then
 			LolzenUIcfg.buffwatcher["buffwatchlist"][UnitName("player")] = {}
@@ -34,6 +34,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			else
 				icon[i]:SetPoint("LEFT", icon[i-1], "RIGHT", LolzenUIcfg.buffwatcher["buffwatch_icon_spacing"], 0)
 			end
+
 			-- border
 			if not icon[i].border then
 				icon[i].border = CreateFrame("Frame")
@@ -46,13 +47,15 @@ f:SetScript("OnEvent", function(self, event, addon)
 				icon[i].border:SetBackdropBorderColor(0, 0, 0)
 				icon[i].border:SetFrameLevel(3)
 			end
-			-- timer
-			if not icon[i].timer then
-				icon[i].timer = icon[i].border:CreateFontString(nil, "OVERLAY")
-				icon[i].timer:SetPoint("TOP", icon[i], "BOTTOM", 0, 7)
-				icon[i].timer:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 12 ,"OUTLINE")
-				icon[i].timer:SetTextColor(1, 1, 1)
+
+			-- time
+			if not icon[i].time then
+				icon[i].time = icon[i].border:CreateFontString(nil, "OVERLAY")
+				icon[i].time:SetPoint("TOP", icon[i], "BOTTOM", 0, 7)
+				icon[i].time:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 12 ,"OUTLINE")
+				icon[i].time:SetTextColor(1, 1, 1)
 			end
+
 			-- counter
 			if not icon[i].count then
 			icon[i].count = icon[i].border:CreateFontString(nil, "OVERLAY")
@@ -60,17 +63,19 @@ f:SetScript("OnEvent", function(self, event, addon)
 			icon[i].count:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 18 ,"OUTLINE")
 			icon[i].count:SetTextColor(1, 1, 1)
 			end
+
 			-- identifier
 			if not icon[i].name then
 				icon[i].name = GetSpellInfo(LolzenUIcfg.buffwatcher["buffwatchlist"][UnitName("player")][i])
 			end
-		end
 
-		local last = 0
-		anchor:SetScript("OnUpdate", function(self, elapsed)
-			last = last + elapsed
-			if last > 0.1 then
-				for i=1, #LolzenUIcfg.buffwatcher["buffwatchlist"][UnitName("player")] do
+			-- timer
+			if not icon[i].timer then
+				icon[i].timer = icon[i]:CreateAnimationGroup()
+				icon[i].timerAnim = icon[i].timer:CreateAnimation()
+				icon[i].timerAnim:SetDuration(0.1)
+				
+				icon[i].timer:SetScript("OnPlay", function(self)
 					local name, _, _, count, _, _, expirationTime = UnitBuff("player", icon[i].name)
 					if name then
 						if icon[i]:GetAlpha() ~= 1 then
@@ -78,24 +83,71 @@ f:SetScript("OnEvent", function(self, event, addon)
 							icon[i].border:SetAlpha(1)
 						end
 						if expirationTime and expirationTime - GetTime() > 4 then
-							icon[i].timer:SetFormattedText("%.1f", expirationTime - GetTime())
+							icon[i].time:SetFormattedText("%.1f", expirationTime - GetTime())
 						elseif expirationTime and expirationTime - GetTime() > 0 then
-							icon[i].timer:SetFormattedText("|cffff0000 %.1f |r", expirationTime - GetTime())
+							icon[i].time:SetFormattedText("|cffff0000 %.1f |r", expirationTime - GetTime())
 						end
 						if count and count > 0 then
 							icon[i].count:SetText(count)
 						end
 					else
-						if icon[i]:GetAlpha() ~= 0 then
-							icon[i]:SetAlpha(0)
-							icon[i].border:SetAlpha(0)
-							icon[i].timer:SetText(nil)
-							icon[i].count:SetText(nil)
-						end
+						self:Stop()
+					end
+				end)
+		
+				icon[i].timer:SetScript("OnStop", function(self)
+					if icon[i]:GetAlpha() ~= 0 then
+						icon[i]:SetAlpha(0)
+						icon[i].border:SetAlpha(0)
+						icon[i].time:SetText(nil)
+						icon[i].count:SetText(nil)
+					end
+				end)
+		
+				icon[i].timer:SetScript("OnFinished", function(self, requested)
+					if not requested then
+						self:Play()
+					end
+				end)
+			end
+		end
+
+		-- detect if a watched buff is buffed
+		local function DetectBuff(button, num, filter)
+			for i=1, #LolzenUIcfg.buffwatcher["buffwatchlist"][UnitName("player")] do
+				local name, _, _, count, _, _, expirationTime = UnitBuff("player", icon[i].name)
+				if name then
+					icon[i].timer:Play()
+				else
+					icon[i].timer:Stop()
+				end
+			end
+		end
+
+		local function BuffDetect()
+			DetectBuff("BuffButton", BUFF_ACTUAL_DISPLAY)
+		end
+
+		local function BuffOnLoad(self, event, ...)
+			if event == "PLAYER_LOGIN" then
+				BuffDetect()
+				-- hide the buttons and their children on login
+				for i=1, #LolzenUIcfg.buffwatcher["buffwatchlist"][UnitName("player")] do
+					if icon[i]:GetAlpha() ~= 0 then
+						icon[i]:SetAlpha(0)
+						icon[i].border:SetAlpha(0)
+						icon[i].time:SetText(nil)
+						icon[i].count:SetText(nil)
 					end
 				end
-				last = 0
+			else
+				BuffDetect()
 			end
-		end)
+		end
+
+		local eF = CreateFrame("Frame")
+		eF:RegisterEvent("PLAYER_LOGIN")
+		eF:RegisterEvent("UNIT_AURA")
+		eF:SetScript("OnEvent", BuffOnLoad)
 	end
 end)
