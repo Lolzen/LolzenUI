@@ -1,7 +1,7 @@
 ## Interface: 70300
 ## Author: Lolzen
 ## Title: Lolzen User Interface
-## Version: 7.3.2_rework
+## Version: 7.3.2_beta
 ## Notes: Restyle the whole WoW UI
 ## x-Credits: haste, Neal
 ## X-oUF: LolzenUI
