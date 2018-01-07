@@ -87,6 +87,7 @@ defaultconfig.artifactbar = {
 	["artifactbar_color"] = {1, 1, 0.7},
 	["artifactbar_1px_border"] = true,
 	["artifactbar_1px_border_round"] = true,
+	["artifactbar_mouseover_text"] = true,
 	["artifactbar_font"] = "DroidSansBold",
 	["artifactbar_font_size"] = 10,
 	["artifactbar_font_flag"] = "THINOUTLINE",
