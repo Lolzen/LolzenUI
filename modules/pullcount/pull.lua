@@ -8,12 +8,32 @@ local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:RegisterEvent("CHAT_MSG_ADDON")
 
-local isCounting = false
-local eF = CreateFrame("Frame")
+local timer = f:CreateAnimationGroup()
 
-local function stopUpdater()
-	eF:SetScript("OnUpdate", nil)
-end
+local timerAnim = timer:CreateAnimation()
+timerAnim:SetDuration(1)
+
+local isCounting = false
+local pullNum = 0
+timer:SetScript("OnFinished", function(self, requested)
+	if requested == true then return end
+	if pullNum-1 <= LolzenUIcfg.pullcount["pull_count_range"] then
+		if LolzenUIcfg.pullcount["pull_sound_"..pullNum -1] then
+			if LolzenUIcfg.pullcount["pull_sound_"..pullNum-1] then
+				PlaySoundFile("Interface\\AddOns\\LolzenUI\\sounds\\"..LolzenUIcfg.pullcount["pull_sound_"..pullNum-1], "master")
+			end
+		elseif pullNum-1 == 0 then
+			PlaySoundFile("Interface\\AddOns\\LolzenUI\\sounds\\"..LolzenUIcfg.pullcount["pull_sound_pull"], "master")
+		end
+	end
+	pullNum = pullNum -1
+	if pullNum ~= 0 then
+		self:Play()
+	end
+	if pullNum == 0 then
+		isCounting = false
+	end	
+end)
 
 local function initiateCountdown(num)
 	if isCounting == true then return end
@@ -21,30 +41,8 @@ local function initiateCountdown(num)
 	if LolzenUIcfg.pullcount["pull_sound_"..num] then
 		PlaySoundFile("Interface\\AddOns\\LolzenUI\\sounds\\"..LolzenUIcfg.pullcount["pull_sound_"..num], "master")
 	end
-	local pullNum = num
-	local last = 0
-	eF:SetScript("OnUpdate", function(self, elapsed)
-		last = last + elapsed
-		if last >= 1 then
-			if pullNum-1 <= LolzenUIcfg.pullcount["pull_count_range"] then
-				if LolzenUIcfg.pullcount["pull_sound_"..pullNum -1] then
-					if LolzenUIcfg.pullcount["pull_sound_"..pullNum-1] then
-						PlaySoundFile("Interface\\AddOns\\LolzenUI\\sounds\\"..LolzenUIcfg.pullcount["pull_sound_"..pullNum-1], "master")
-					end
-				elseif pullNum-1 == 0 then
-					PlaySoundFile("Interface\\AddOns\\LolzenUI\\sounds\\"..LolzenUIcfg.pullcount["pull_sound_pull"], "master")
-				end
-			end
-			pullNum = pullNum -1
-			last = 0
-		end
-		if pullNum-1 <= 0 then
-			isCounting = false
-			return
-		elseif pullNum == 0 then
-			stopUpdater()
-		end
-	end)
+	pullNum = num
+	timer:Play()
 	TimerTracker_OnEvent(TimerTracker, "START_TIMER", 2, num, num)
 end
 
