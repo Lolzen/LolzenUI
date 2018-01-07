@@ -173,6 +173,7 @@ defaultconfig.chat = {
 }
 
 defaultconfig.clock = {
+	["clock_seconds_enabled"] = true,
 	["clock_color"] = {0.85, 0.55, 0},
 	["clock_seconds_color"] = {1, 1, 1},
 	["clock_font"] = "DroidSansBold",
