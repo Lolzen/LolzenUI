@@ -104,7 +104,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 				local time, sec = date("%H|c00ffffff\46|r%M|c00ffffff|r"), date("%S")
 
 				text:SetText(time)
-				seconds:SetText(sec)
+				if LolzenUIcfg.clock["clock_seconds_enabled"] == true then
+					seconds:SetText(sec)
+				end
 			end
 		end)
 
