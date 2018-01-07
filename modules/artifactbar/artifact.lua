@@ -73,6 +73,16 @@ f:SetScript("OnEvent", function(self, event, addon)
 		xptext:SetFont(LSM:Fetch("font", LolzenUIcfg.artifactbar["artifactbar_font"]), LolzenUIcfg.artifactbar["artifactbar_font_size"], LolzenUIcfg.artifactbar["artifactbar_font_flag"])
 		xptext:SetTextColor(unpack(LolzenUIcfg.artifactbar["artifactbar_font_color"]))
 
+		if LolzenUIcfg.artifactbar["artifactbar_mouseover_text"] == true then
+			xptext:Hide()
+			afbar:SetScript("OnEnter", function(self)
+				xptext:Show()
+			end)
+			afbar:SetScript("OnLeave", function(self)
+				xptext:Hide()
+			end)
+		end
+
 		-- get artifact power data
 		function afbar:ARTIFACT_XP_UPDATE()
 			local hasArtifact = HasArtifactEquipped("player")
