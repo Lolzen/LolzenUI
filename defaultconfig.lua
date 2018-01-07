@@ -488,6 +488,7 @@ defaultconfig.xpbar = {
 	["xpbar_xp_rested_color"] = {46/255, 103/255, 208/255},
 	["xpbar_1px_border"] = true,
 	["xpbar_1px_border_round"] = true,
+	["xpbar_mouseover_text"] = true,
 	["xpbar_font"] = "DroidSansBold",
 	["xpbar_font_size"] = 10,
 	["xpbar_font_flag"] = "THINOUTLINE",
