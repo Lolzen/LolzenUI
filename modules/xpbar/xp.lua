@@ -84,6 +84,16 @@ f:SetScript("OnEvent", function(self, event, addon)
 		xptext:SetFont(LSM:Fetch("font", LolzenUIcfg.xpbar["xpbar_font"]), LolzenUIcfg.xpbar["xpbar_font_size"], LolzenUIcfg.xpbar["xpbar_font_flag"])
 		xptext:SetTextColor(unpack(LolzenUIcfg.xpbar["xpbar_font_color"]))
 
+		if LolzenUIcfg.xpbar["xpbar_mouseover_text"] == true then
+			xptext:Hide()
+			xpbar:SetScript("OnEnter", function(self)
+				xptext:Show()
+			end)
+			xpbar:SetScript("OnLeave", function(self)
+				xptext:Hide()
+			end)
+		end
+
 		function xpbar:Update()
 			-- Proprity #1: If in BGs show the HonorXP
 			-- Priority #2: Show REP when ticked on
