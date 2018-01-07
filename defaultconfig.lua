@@ -29,6 +29,7 @@ defaultconfig.modules = {
 }
 
 defaultconfig.actionbar = {
+	["actionbar_show_keybinds"] = false,
 	["actionbar_button_spacing"] = 6,
 	["actionbar_button_size"] = 26,
 	["actionbar_normal_texture"] = "gloss",
