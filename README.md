@@ -53,7 +53,7 @@ the Unitframes and Nameplates integrated make use of oUF.
   - [ ] bossframes
 - [x] fix subpanel loading through inGame menu
 - [x] clock: option to disable seconds
-- [ ] actionbars: add option to show keybinds
+- [x] actionbars: add option to show keybinds
 - [ ] artifactbar/xpbar: option to show text only on mouseover
 - [ ] tooltip: afk/dnd flag colors
 - [ ] tooltip: option to color any guild
