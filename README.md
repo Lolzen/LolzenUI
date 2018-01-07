@@ -52,7 +52,7 @@ the Unitframes and Nameplates integrated make use of oUF.
   - [ ] /focus
   - [ ] bossframes
 - [x] fix subpanel loading through inGame menu
-- [ ] clock: option to disable seconds
+- [x] clock: option to disable seconds
 - [ ] actionbars: add option to show keybinds
 - [ ] artifactbar/xpbar: option to show text only on mouseover
 - [ ] tooltip: afk/dnd flag colors
