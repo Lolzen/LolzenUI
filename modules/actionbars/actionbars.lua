@@ -90,7 +90,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 
 			if _G[name.."HotKey"] then
-				_G[name.."HotKey"]:Hide()
+				if LolzenUIcfg.actionbar["actionbar_show_keybinds"] == false then
+					_G[name.."HotKey"]:Hide()
+				end
 			end
 
 			if _G[name.."Name"] then
@@ -115,7 +117,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 		-- hide those pesky hotkeys, ffs
 		hooksecurefunc("ActionButton_UpdateHotkeys", function(self, actionButtonType)
 			local name = self:GetName()
-			_G[name.."HotKey"]:Hide()
+			if LolzenUIcfg.actionbar["actionbar_show_keybinds"] == false then
+				_G[name.."HotKey"]:Hide()
+			end
 		end)
 		
 		local function setActionBarPosition(name)
