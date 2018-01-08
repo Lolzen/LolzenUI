@@ -44,13 +44,15 @@ the Unitframes and Nameplates integrated make use of oUF.
 
 ------
 ### ToDo:
+- [ ] bug: toys from menu are blocked
 - [ ] finish Unitframe options
   - [ ] Castbar stuff (standalone; size, color, positioning,..)
   - [ ] add tag & options for hpval.hpperc (in any order) with optional divider
   - [x] option/tag 7m5 > 7.5m
   - [ ] buff/debuff options
   - [ ] /focus
-  - [ ] bossframes
+  - [x] bossframes
+  - [ ] powerpoint options
 - [x] fix subpanel loading through inGame menu
 - [x] clock: option to disable seconds
 - [x] actionbars: add option to show keybinds
