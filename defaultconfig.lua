@@ -328,6 +328,7 @@ defaultconfig.tooltip = {
 	["tip_anchor1"] = "BOTTOMRIGHT",
 	["tip_anchor2"] = "BOTTOMRIGHT",
 	["tip_own_guild_color"] = {0, 5, 1},
+	["tip_use_guild_color_globally"] = false,
 }
 
 defaultconfig.unitframes = {
