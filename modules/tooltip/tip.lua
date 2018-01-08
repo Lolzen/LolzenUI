@@ -234,11 +234,17 @@ f:SetScript("OnEvent", function(self, event, addon)
 					end
 				end
 				-- colorize the guild name if it's the same as the Player's
-				if IsInGuild(unit) then
-					if _G["GameTooltipTextLeft2"]:GetText():find("^"..GetGuildInfo("player")) then
+				-- or color any guild if the option is set
+				if GetGuildInfo(unit) then
+					if UnitIsInMyGuild(unit) and LolzenUIcfg.tooltip["tip_use_guild_color_globally"] == false then
+						if _G["GameTooltipTextLeft2"]:GetText():find("^"..GetGuildInfo("player")) then
+							_G["GameTooltipTextLeft2"]:SetTextColor(unpack(LolzenUIcfg.tooltip["tip_own_guild_color"]))
+						end
+					elseif LolzenUIcfg.tooltip["tip_use_guild_color_globally"] == true then
 						_G["GameTooltipTextLeft2"]:SetTextColor(unpack(LolzenUIcfg.tooltip["tip_own_guild_color"]))
 					end
 				end
+
 				-- alter the appearance of level, race & class
 				for i=1, GameTooltip:NumLines(), 1 do
 					if _G["GameTooltipTextLeft"..i]:GetText():find("^"..LEVEL) then
