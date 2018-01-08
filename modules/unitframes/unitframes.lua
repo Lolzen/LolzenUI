@@ -14,9 +14,17 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		local siValue = function(val)
 			if val >= 1e6 then
-				return ('%.1f'):format(val / 1e6):gsub('%.', 'm')
+				if LolzenUIcfg.unitframes["uf_use_dot_format"] == true then
+					return ("%.1fm"):format(val / 1e6)
+				else
+					return ("%.1f"):format(val / 1e6):gsub('%.', 'm')
+				end
 			elseif val >= 1e4 then
-				return ("%.1f"):format(val / 1e3):gsub('%.', 'k')
+				if LolzenUIcfg.unitframes["uf_use_dot_format"] == true then
+					return ("%.1fk"):format(val / 1e3)
+				else
+					return ("%.1f"):format(val / 1e3):gsub('%.', 'k')
+				end
 			else
 				return val
 			end
