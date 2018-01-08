@@ -12,7 +12,6 @@ hooksecurefunc("InterfaceOptionsListButton_OnClick", function(self, button)
 		if not IsAddOnLoaded("LolzenUI_Options") then
 			LoadAddOn("LolzenUI_Options")
 			InterfaceAddOnsList_Update()
-			print("|cff5599ffLolzenUI:|r loaded LolzenUI_Options")
 		end
 	end
 end)
