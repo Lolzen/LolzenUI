@@ -56,7 +56,7 @@ the Unitframes and Nameplates integrated make use of oUF.
 - [x] actionbars: add option to show keybinds
 - [x] artifactbar/xpbar: option to show text only on mouseover
 - [x] tooltip: afk/dnd flag colors
-- [ ] tooltip: option to color any guild
+- [x] tooltip: option to color any guild
 - [ ] revisit descriptions
 - [ ] unify optionpanel formatting as good as possible
 - [ ] itemlevel: add support for more bags
