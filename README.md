@@ -47,7 +47,7 @@ the Unitframes and Nameplates integrated make use of oUF.
 - [ ] finish Unitframe options
   - [ ] Castbar stuff (standalone; size, color, positioning,..)
   - [ ] add tag & options for hpval.hpperc (in any order) with optional divider
-  - [ ] option/tag 7m5 > 7.5m
+  - [x] option/tag 7m5 > 7.5m
   - [ ] buff/debuff options
   - [ ] /focus
   - [ ] bossframes
