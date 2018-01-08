@@ -55,7 +55,7 @@ the Unitframes and Nameplates integrated make use of oUF.
 - [x] clock: option to disable seconds
 - [x] actionbars: add option to show keybinds
 - [x] artifactbar/xpbar: option to show text only on mouseover
-- [ ] tooltip: afk/dnd flag colors
+- [x] tooltip: afk/dnd flag colors
 - [ ] tooltip: option to color any guild
 - [ ] revisit descriptions
 - [ ] unify optionpanel formatting as good as possible
