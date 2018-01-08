@@ -60,7 +60,7 @@ the Unitframes and Nameplates integrated make use of oUF.
 - [ ] revisit descriptions
 - [ ] unify optionpanel formatting as good as possible
 - [ ] itemlevel: add support for more bags
-- [ ] itemlevel: option for coloring items per itemquality
+- [x] itemlevel: option for coloring items per itemquality
 - [ ] orderhallbar: font option for zonetext
 - [x] optimizations
 - [ ] tweak module (several tiny tweaks like "increase max watched currency" (BaudBag does this))
