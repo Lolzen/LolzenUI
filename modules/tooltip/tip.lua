@@ -125,11 +125,14 @@ f:SetScript("OnEvent", function(self, event, addon)
 		-- return the StatusFlag aka AFK, DND or offline
 		local function getStatusFlag(unit)
 			if UnitIsAFK(unit) then
-				return "|cffffffff"..LolzenUIcfg.tooltip["tip_statusflag_afk"].." |r"
+				local r, g, b = unpack(LolzenUIcfg.tooltip["tip_statusflag_afk_color"])
+				return ("|cff%02x%02x%02x%s ".."|r "):format(r*255, g*255, b*255, LolzenUIcfg.tooltip["tip_statusflag_afk"])
 			elseif UnitIsDND(unit) then
-				return "|cffffffff"..LolzenUIcfg.tooltip["tip_statusflag_dnd"].." |r"
+				local r, g, b = unpack(LolzenUIcfg.tooltip["tip_statusflag_dnd_color"])
+				return ("|cff%02x%02x%02x%s ".."|r "):format(r*255, g*255, b*255, LolzenUIcfg.tooltip["tip_statusflag_dnd"])
 			elseif not UnitIsConnected(unit) then
-				return "|cffffffff"..LolzenUIcfg.tooltip["tip_statusflag_off"].." |r"
+				local r, g, b = unpack(LolzenUIcfg.tooltip["tip_statusflag_off_color"])
+				return ("|cff%02x%02x%02x%s ".."|r "):format(r*255, g*255, b*255, LolzenUIcfg.tooltip["tip_statusflag_off"])
 			else
 				return "" 
 			end
