@@ -208,6 +208,7 @@ defaultconfig.itemlevel = {
 	["ilvl_anchor"] = "TOP",
 	["ilvl_font_posx"] = 0,
 	["ilvl_font_posy"] = -5,
+	["ilvl_use_itemquality_color"] = false,
 }
 
 defaultconfig.interruptannouncer = {
