@@ -58,6 +58,30 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 		end
 
+		local function getColorItemQuality(unit, slot)
+			if unit and UnitExists(unit) then
+				local itemLink = GetInventoryItemLink(unit, GetInventorySlotInfo(("%sSlot"):format(slot)))
+				if itemLink then
+					local quality = select(3, GetItemInfo(itemLink))
+					if quality then
+						local r, g, b = GetItemQualityColor(quality)
+						return r, g, b
+					end
+				end
+			end
+		end
+
+		local function getColorItemQualityBags(bagID, slotID)
+			local itemLink = GetContainerItemLink(bagID, slotID)
+			if itemLink then
+				local quality = select(3, GetItemInfo(itemLink))
+				if quality then
+					local r, g, b = GetItemQualityColor(quality)
+					return r, g, b
+				end
+			end
+		end
+
 		-- PaperDollFrame
 		local function updateCharacterSlotInfo()
 			for i=1, #slots do
@@ -68,9 +92,16 @@ f:SetScript("OnEvent", function(self, event, addon)
 					s.str:SetFont(LSM:Fetch("font", LolzenUIcfg.itemlevel["ilvl_font"]), LolzenUIcfg.itemlevel["ilvl_font_size"], LolzenUIcfg.itemlevel["ilvl_font_flag"])
 					s.str:SetPoint(LolzenUIcfg.itemlevel["ilvl_anchor"], s, LolzenUIcfg.itemlevel["ilvl_font_posx"], LolzenUIcfg.itemlevel["ilvl_font_posy"])
 					s.str:SetText(getItemlvl("player", slots[i]))
-					s.str:SetTextColor(unpack(LolzenUIcfg.itemlevel["ilvl_font_color"]))
+					if LolzenUIcfg.itemlevel["ilvl_use_itemquality_color"] == true then
+						s.str:SetTextColor(getColorItemQuality("player", slots[i]))
+					else
+						s.str:SetTextColor(unpack(LolzenUIcfg.itemlevel["ilvl_font_color"]))
+					end
 				else
 					s.str:SetText(getItemlvl("player", slots[i]))
+					if LolzenUIcfg.itemlevel["ilvl_use_itemquality_color"] == true then
+						s.str:SetTextColor(getColorItemQuality("player", slots[i]))
+					end
 				end
 			end
 		end
@@ -86,9 +117,16 @@ f:SetScript("OnEvent", function(self, event, addon)
 						s.str:SetFont(LSM:Fetch("font", LolzenUIcfg.itemlevel["ilvl_font"]), LolzenUIcfg.itemlevel["ilvl_font_size"], LolzenUIcfg.itemlevel["ilvl_font_flag"])
 						s.str:SetPoint(LolzenUIcfg.itemlevel["ilvl_anchor"], s, LolzenUIcfg.itemlevel["ilvl_font_posx"], LolzenUIcfg.itemlevel["ilvl_font_posy"])
 						s.str:SetText(getItemlvl(InspectFrame.unit, slots[i]))
-						s.str:SetTextColor(unpack(LolzenUIcfg.itemlevel["ilvl_font_color"]))
+						if LolzenUIcfg.itemlevel["ilvl_use_itemquality_color"] == true then
+							s.str:SetTextColor(getColorItemQuality(InspectFrame.unit, slots[i]))
+						else
+							s.str:SetTextColor(unpack(LolzenUIcfg.itemlevel["ilvl_font_color"]))
+						end
 					else
 						s.str:SetText(getItemlvl(InspectFrame.unit, slots[i]))
+						if LolzenUIcfg.itemlevel["ilvl_use_itemquality_color"] == true then
+							s.str:SetTextColor(getColorItemQuality(InspectFrame.unit, slots[i]))
+						end
 					end
 				end
 			end
@@ -120,9 +158,16 @@ f:SetScript("OnEvent", function(self, event, addon)
 							s.str:SetFont(LSM:Fetch("font", LolzenUIcfg.itemlevel["ilvl_font"]), LolzenUIcfg.itemlevel["ilvl_font_size"], LolzenUIcfg.itemlevel["ilvl_font_flag"])
 							s.str:SetPoint(LolzenUIcfg.itemlevel["ilvl_anchor"], s, LolzenUIcfg.itemlevel["ilvl_font_posx"], LolzenUIcfg.itemlevel["ilvl_font_posy"])
 							s.str:SetText(getItemlvlBags(bag, slot))
-							s.str:SetTextColor(unpack(LolzenUIcfg.itemlevel["ilvl_font_color"]))
+							if LolzenUIcfg.itemlevel["ilvl_use_itemquality_color"] == true then
+								s.str:SetTextColor(getColorItemQualityBags(bag, slot))
+							else
+								s.str:SetTextColor(unpack(LolzenUIcfg.itemlevel["ilvl_font_color"]))
+							end
 						else
 							s.str:SetText(getItemlvlBags(bag, slot))
+							if LolzenUIcfg.itemlevel["ilvl_use_itemquality_color"] == true then
+								s.str:SetTextColor(getColorItemQualityBags(bag, slot))
+							end
 						end
 					end
 				end
