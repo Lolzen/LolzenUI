@@ -690,6 +690,73 @@ f:SetScript("OnEvent", function(self, event, addon)
 				Castbar.PostChannelStart = PostCastStart
 				Castbar.PostCastStart = PostCastStart
 			end,
+
+			boss = function(self, ...)
+				shared(self, ...)
+			
+				if LolzenUIcfg.unitframes["uf_boss_use_own_hp_font_settings"] == true then
+					self.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_boss_hp_font"]), LolzenUIcfg.unitframes["uf_boss_hp_font_size"], LolzenUIcfg.unitframes["uf_boss_hp_font_flag"])
+					self.Health.value:SetPoint(LolzenUIcfg.unitframes["uf_boss_hp_anchor"], LolzenUIcfg.unitframes["uf_boss_hp_posx"], LolzenUIcfg.unitframes["uf_boss_hp_posy"])
+				end
+
+				self.Border:SetPoint("TOPLEFT", self, -3, 3)
+				self.Border:SetPoint("BOTTOMRIGHT", self, 3, -2)
+
+				self:SetSize(LolzenUIcfg.unitframes["uf_boss_width"], LolzenUIcfg.unitframes["uf_boss_height"])
+
+		--		local Castbar = CreateFrame("StatusBar", nil, self)
+		--		Castbar:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes["uf_statusbar_texture"]))
+		--		Castbar:SetAllPoints(self.Health)
+		--		Castbar:SetStatusBarColor(0.8, 0, 0, 0.2)
+		--		Castbar:SetFrameStrata("HIGH")
+		--		self.Castbar = Castbar
+
+		--		local Spark = Castbar:CreateTexture(nil, "OVERLAY")
+		--		Spark:SetSize(8, 23)
+		--		Spark:SetBlendMode("ADD")
+		--		Spark:SetParent(Castbar)
+		--		self.Castbar.Spark = Spark
+
+		--		local icon = Castbar:CreateTexture(nil, "BACKGROUND")
+		--		icon:SetHeight(33)
+		--		icon:SetWidth(33)
+		--		icon:SetTexCoord(.07, .93, .07, .93)
+		--		icon:SetPoint("RIGHT", self.Health, "LEFT", -14, 6)
+		--		self.Castbar.Icon = icon
+
+		--		local iconborder = CreateFrame("Frame")
+		--		iconborder:SetBackdrop({
+		--			edgeFile = LSM:Fetch("border", LolzenUIcfg.unitframes["uf_border"]), edgeSize = 12,
+		--			insets = {left = 4, right = 4, top = 4, bottom = 4},
+		--		})
+		--		iconborder:SetParent(Castbar)
+		--		iconborder:SetPoint("TOPLEFT", icon, -2, 3)
+		--		iconborder:SetPoint("BOTTOMRIGHT", icon, 3, -2)
+		--		iconborder:SetBackdropBorderColor(0, 0, 0)
+		--		iconborder:SetFrameLevel(3)
+		--		self.Castbar.Iconborder = iconborder
+
+		--		local Time = Castbar:CreateFontString(nil, "OVERLAY")
+		--		Time:SetPoint("TOPLEFT", icon, "TOPRIGHT", 13, 2)
+		--		Time:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 12 ,"OUTLINE")
+		--		Time:SetTextColor(1, 1, 1)
+		--		self.Castbar.Time = Time
+
+		--		local cbtext = Castbar:CreateFontString(nil, "OVERLAY")
+		--		cbtext:SetPoint("LEFT", self.Health, "LEFT", 2, 0)
+		--		cbtext:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSans.ttf", 14 ,"OUTLINE")
+		--		cbtext:SetTextColor(1, 1, 1)
+		--		self.Castbar.Text = cbtext
+
+		--		local Shield = Castbar:CreateTexture(nil, "ARTWORK")
+		--		Shield:SetSize(100, 100)
+		--		Shield:SetPoint("CENTER", icon, 17, 0)
+		--		Shield:SetTexture("Interface\\CastingBar\\UI-CastingBar-Arena-Shield")
+		--		self.Castbar.Shield = Shield
+
+		--		Castbar.PostChannelStart = PostCastStart
+		--		Castbar.PostCastStart = PostCastStart
+			end,
 		}
 
 		-- A small helper to change the style into a unit specific, if it exists.
@@ -733,7 +800,15 @@ f:SetScript("OnEvent", function(self, event, addon)
 			spawnHelper(self, "targettarget", LolzenUIcfg.unitframes["uf_targettarget_anchor"], LolzenUIcfg.unitframes["uf_targettarget_posx"], LolzenUIcfg.unitframes["uf_targettarget_posy"])
 
 			for n=1, MAX_BOSS_FRAMES or 5 do
-				spawnHelper(self, "boss" .. n, "CENTER", 0, -240 + (40 * n))
+				if LolzenUIcfg.unitframes["uf_boss_additional_pos"] == "ABOVE" then
+					spawnHelper(self, "boss" .. n, LolzenUIcfg.unitframes["uf_boss_anchor"], LolzenUIcfg.unitframes["uf_boss_posx"], LolzenUIcfg.unitframes["uf_boss_posy"] - LolzenUIcfg.unitframes["uf_boss_height"] + (LolzenUIcfg.unitframes["uf_boss_height"] * n) - LolzenUIcfg.unitframes["uf_boss_additional_spacing"] + (LolzenUIcfg.unitframes["uf_boss_additional_spacing"] * n))
+				elseif LolzenUIcfg.unitframes["uf_boss_additional_pos"] == "BELOW" then
+					spawnHelper(self, "boss" .. n, LolzenUIcfg.unitframes["uf_boss_anchor"], LolzenUIcfg.unitframes["uf_boss_posx"], LolzenUIcfg.unitframes["uf_boss_posy"] + LolzenUIcfg.unitframes["uf_boss_height"] - (LolzenUIcfg.unitframes["uf_boss_height"] * n) + LolzenUIcfg.unitframes["uf_boss_additional_spacing"] - (LolzenUIcfg.unitframes["uf_boss_additional_spacing"] * n))
+				elseif 	LolzenUIcfg.unitframes["uf_boss_additional_pos"] == "LEFT" then
+					spawnHelper(self, "boss" .. n, LolzenUIcfg.unitframes["uf_boss_anchor"], (LolzenUIcfg.unitframes["uf_boss_posx"] + LolzenUIcfg.unitframes["uf_boss_width"]) - (LolzenUIcfg.unitframes["uf_boss_width"] * n) + LolzenUIcfg.unitframes["uf_boss_additional_spacing"] - (LolzenUIcfg.unitframes["uf_boss_additional_spacing"] * n), LolzenUIcfg.unitframes["uf_boss_posy"])
+				elseif 	LolzenUIcfg.unitframes["uf_boss_additional_pos"] == "RIGHT" then
+					spawnHelper(self, "boss" .. n, LolzenUIcfg.unitframes["uf_boss_anchor"], (LolzenUIcfg.unitframes["uf_boss_posx"] - LolzenUIcfg.unitframes["uf_boss_width"]) + (LolzenUIcfg.unitframes["uf_boss_width"] * n) - LolzenUIcfg.unitframes["uf_boss_additional_spacing"] + (LolzenUIcfg.unitframes["uf_boss_additional_spacing"] * n), LolzenUIcfg.unitframes["uf_boss_posy"])
+				end
 			end
 
 			if LolzenUIcfg.unitframes["uf_party_enabled"] == true then
