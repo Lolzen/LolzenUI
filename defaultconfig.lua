@@ -334,6 +334,7 @@ defaultconfig.tooltip = {
 
 defaultconfig.unitframes = {
 	["uf_use_sivalue"] = true,
+	["uf_use_dot_format"] = false,
 	["uf_use_hp_percent"] = false,
 	["uf_general_hp_font"] = "DroidSansBold",
 	["uf_general_hp_font_size"] = 24,
