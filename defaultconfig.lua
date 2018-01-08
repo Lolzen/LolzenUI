@@ -472,6 +472,20 @@ defaultconfig.unitframes = {
 	["uf_pet_hp_anchor"] = "RIGHT",
 	["uf_pet_width"] = 120,
 	["uf_pet_height"] = 18,
+	["uf_boss_posx"] = 0,
+	["uf_boss_posy"] = -200,
+	["uf_boss_anchor"] = "CENTER",
+	["uf_boss_additional_pos"] = "ABOVE",
+	["uf_boss_additional_spacing"] = 5,
+	["uf_boss_use_own_hp_font_settings"] = true,
+	["uf_boss_hp_font"] = "DroidSansBold",
+	["uf_boss_hp_font_size"] = 24,
+	["uf_boss_hp_font_flag"] = "THINOUTLINE",
+	["uf_boss_hp_posx"] = -2,
+	["uf_boss_hp_posy"] = 8,
+	["uf_boss_hp_anchor"] = "RIGHT",
+	["uf_boss_width"] = 220,
+	["uf_boss_height"] = 21,
 }
 
 defaultconfig.worldmap = {
