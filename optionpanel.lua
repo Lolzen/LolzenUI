@@ -76,11 +76,7 @@ end
 
 ns.panel.okay = function(self)
 	for i=1, #ns.modules do
-		if button[i]:GetChecked() then
-			LolzenUIcfg.modules[ns.modules[i]] = true
-		else
-			LolzenUIcfg.modules[ns.modules[i]] = false
-		end
+		LolzenUIcfg.modules[ns.modules[i]] = button[i]:GetChecked()
 	end
 	ReloadUI()
 end
