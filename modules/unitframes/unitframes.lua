@@ -49,7 +49,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			if not UnitIsConnected(unit) or UnitIsDead(unit) or UnitIsGhost(unit) then return end
 			
 			local min, max = UnitHealth(unit), UnitHealthMax(unit)
-			return math.floor(UnitHealth(unit) / min * 100 + 0.5).."%"
+			return math.floor(UnitHealth(unit) / max * 100 + 0.5).."%"
 		end
 
 		tags["lolzen:power"] = function(unit)
