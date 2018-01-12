@@ -53,7 +53,7 @@ the Unitframes and Nameplates integrated make use of oUF.
   - [x] /focus
   - [x] bossframes
   - [x] powerpoint options
-  - [ ] castbar framestrata
+  - [x] castbar framestrata
 - [ ] nameplates: debuffs
 - [x] fix subpanel loading through inGame menu
 - [x] clock: option to disable seconds
