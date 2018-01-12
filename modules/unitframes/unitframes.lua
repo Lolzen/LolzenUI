@@ -549,13 +549,13 @@ f:SetScript("OnEvent", function(self, event, addon)
 				Panelborder:SetBackdropColor(0, 0, 0, 0.8)
 
 				local level = self.Health:CreateFontString(nil, "OVERLAY")
-				level:SetPoint("LEFT", self.Health, "LEFT", 2, -22) 
+				level:SetPoint("LEFT", self.Health, "LEFT", 2, -23) 
 				level:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSans.ttf", 12, "THINOUTLINE")
 				self.Level = level
 				self:Tag(level, "[lolzen:level][shortclassification]")
 
 				local name = self.Health:CreateFontString(nil, "OVERLAY")
-				name:SetPoint("RIGHT", self.Health, "RIGHT", -2, -22)
+				name:SetPoint("RIGHT", self.Health, "RIGHT", -2, -23)
 				name:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSans.ttf", 12, "THINOUTLINE")
 				name:SetTextColor(1, 1, 1)
 				self.Name = name
