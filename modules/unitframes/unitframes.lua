@@ -224,7 +224,13 @@ f:SetScript("OnEvent", function(self, event, addon)
 			local HealthPoints = Health:CreateFontString(nil, "OVERLAY")
 			HealthPoints:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_general_hp_font"]), LolzenUIcfg.unitframes["uf_general_hp_font_size"], LolzenUIcfg.unitframes["uf_general_hp_font_flag"])
 			HealthPoints:SetPoint(LolzenUIcfg.unitframes["uf_general_hp_anchor"], LolzenUIcfg.unitframes["uf_general_hp_posx"], LolzenUIcfg.unitframes["uf_general_hp_posy"])
-			if LolzenUIcfg.unitframes["uf_use_hp_percent"] == true then
+			if LolzenUIcfg.unitframes["uf_use_val_and_perc"] == true then
+				if LolzenUIcfg.unitframes["uf_perc_first"] == true then
+					self:Tag(HealthPoints, "[|cffc41f3b>dead<|r][|cff999999>offline<|r][lolzen:perhp]"..LolzenUIcfg.unitframes["uf_val_perc_divider"].."[lolzen:health]")
+				else
+					self:Tag(HealthPoints, "[|cffc41f3b>dead<|r][|cff999999>offline<|r][lolzen:health]"..LolzenUIcfg.unitframes["uf_val_perc_divider"].."[lolzen:perhp]")
+				end
+			elseif LolzenUIcfg.unitframes["uf_use_hp_percent"] == true and LolzenUIcfg.unitframes["uf_use_val_and_perc"] == false then
 				self:Tag(HealthPoints, "[|cffc41f3b>dead<|r][|cff999999>offline<|r][lolzen:perhp]")
 			else
 				self:Tag(HealthPoints, "[|cffc41f3b>dead<|r][|cff999999>offline<|r][lolzen:health]")
