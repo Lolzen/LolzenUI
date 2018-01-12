@@ -3,15 +3,15 @@
 ## Title: Lolzen User Interface
 ## Version: 7.3.2_beta
 ## Notes: Restyle the whole WoW UI
-## x-Credits: haste, Neal
+## x-Credits: haste, Neal, p3lim, tekkub, Seerah
 ## X-oUF: LolzenUI
 ## SavedVariables: LolzenUIcfg
 
 libs\oUF\oUF.xml
-libs\LibItemUpgradeInfo-1.0\LibItemUpgradeInfo-1.0.xml
-libs\LibSharedMedia-3.0\LibStub\LibStub.lua
-libs\LibSharedMedia-3.0\CallbackHandler-1.0\CallbackHandler-1.0.lua
-libs\LibSharedMedia-3.0\LibSharedMedia-3.0\lib.xml
+libs\LibStub\LibStub.lua
+libs\CallBackHandler-1.0\CallBackHandler-1.0.lua
+libs\LibItemUpgradeInfo-1.0\Core.lua
+libs\LibSharedMedia-3.0\LibSharedMedia-3.0.lua
 
 sharedmedia.lua
 defaultconfig.lua
