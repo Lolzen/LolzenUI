@@ -50,9 +50,10 @@ the Unitframes and Nameplates integrated make use of oUF.
   - [ ] add tag & options for hpval.hpperc (in any order) with optional divider
   - [x] option/tag 7m5 > 7.5m
   - [ ] buff/debuff options
-  - [ ] /focus
+  - [x] /focus
   - [x] bossframes
   - [x] powerpoint options
+  - [ ] castbar framestrata
 - [ ] nameplates: debuffs
 - [x] fix subpanel loading through inGame menu
 - [x] clock: option to disable seconds
