@@ -382,7 +382,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				Castbar:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes["uf_statusbar_texture"]))
 				Castbar:SetAllPoints(self.Health)
 				Castbar:SetStatusBarColor(0.8, 0, 0, 0.2)
-				Castbar:SetFrameStrata("HIGH")
+				Castbar:SetFrameStrata("MEDIUM")
 				self.Castbar = Castbar
 
 				local Spark = Castbar:CreateTexture(nil, "OVERLAY")
@@ -483,7 +483,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				Castbar:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes["uf_statusbar_texture"]))
 				Castbar:SetAllPoints(self.Health)
 				Castbar:SetStatusBarColor(0.8, 0, 0, 0.2)
-				Castbar:SetFrameStrata("HIGH")
+				Castbar:SetFrameStrata("MEDIUM")
 				self.Castbar = Castbar
 
 				local Spark = Castbar:CreateTexture(nil, "OVERLAY")
