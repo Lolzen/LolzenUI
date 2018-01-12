@@ -47,7 +47,7 @@ checkboxes:SetText("|cff5599ffModules:|r to load:")
 -- create the buttons
 local button = {}
 local column = 15
-local function createButtons()
+function ns.createButtons()
 	for i=1, #ns.modules do
 		if not button[i] then
 			button[i] = CreateFrame("CheckButton", "tickbox"..i, ns.panel, "UICheckButtonTemplate")
@@ -91,6 +91,6 @@ end
 ns.panel:RegisterEvent("ADDON_LOADED")
 ns.panel:SetScript("OnEvent", function(self, event, addon)
 	if addon == "LolzenUI" then
-		createButtons()
+		ns.createButtons()
 	end
 end)
