@@ -765,6 +765,136 @@ f:SetScript("OnEvent", function(self, event, addon)
 		--		Castbar.PostChannelStart = PostCastStart
 		--		Castbar.PostCastStart = PostCastStart
 			end,
+
+			focus = function(self, ...)
+				shared(self, ...)
+
+				if LolzenUIcfg.unitframes["uf_focus_use_own_hp_font_settings"] == true then
+					self.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_focus_hp_font"]), LolzenUIcfg.unitframes["uf_focus_hp_font_size"], LolzenUIcfg.unitframes["uf_focus_hp_font_flag"])
+					self.Health.value:SetPoint(LolzenUIcfg.unitframes["uf_focus_hp_anchor"], LolzenUIcfg.unitframes["uf_focus_hp_posx"], LolzenUIcfg.unitframes["uf_focus_hp_posy"])
+				end
+
+				self.Border:SetPoint("TOPLEFT", self, -3, 3)
+				self.Border:SetPoint("BOTTOMRIGHT", self, 3, -2)
+
+				self:SetSize(LolzenUIcfg.unitframes["uf_focus_width"], LolzenUIcfg.unitframes["uf_focus_height"])
+				
+				local Power = CreateFrame("StatusBar", nil, self)
+				Power:SetHeight(2)
+				Power:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes["uf_statusbar_texture"]))
+				Power:SetFrameStrata("MEDIUM")
+
+				Power.frequentUpdates = true
+
+				Power:SetPoint("LEFT")
+				Power:SetPoint("RIGHT")
+				Power:SetPoint("TOP", self.Health, "BOTTOM", 0, 2)
+
+				self.Power = Power
+
+				local PowerDivider = Power:CreateTexture(nil, "OVERLAY")
+				PowerDivider:SetSize(self:GetWidth(), 1)
+				PowerDivider:SetPoint("TOPLEFT", Power, 0, 1)
+				PowerDivider:SetTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
+				PowerDivider:SetVertexColor(0, 0, 0)
+				self.PowerDivider = PowerDivider
+
+				local PowerPoints = Power:CreateFontString(nil, "OVERLAY")
+				if LolzenUIcfg.unitframes["uf_focus_pp_parent"] == "hp" then
+					PowerPoints:SetPoint(LolzenUIcfg.unitframes["uf_focus_pp_anchor"], self.Health.value, LolzenUIcfg.unitframes["uf_focus_pp_anchor2"], LolzenUIcfg.unitframes["uf_focus_pp_posx"], LolzenUIcfg.unitframes["uf_focus_pp_posy"])
+				elseif LolzenUIcfg.unitframes["uf_focus_pp_parent"] == "self" then
+					PowerPoints:SetPoint(LolzenUIcfg.unitframes["uf_focus_pp_anchor"], self, LolzenUIcfg.unitframes["uf_focus_pp_anchor2"], LolzenUIcfg.unitframes["uf_focus_pp_posx"], LolzenUIcfg.unitframes["uf_focus_pp_posy"])
+				end
+				PowerPoints:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_focus_pp_font"]), LolzenUIcfg.unitframes["uf_focus_pp_font_size"], LolzenUIcfg.unitframes["uf_focus_pp_font_flag"])
+				PowerPoints:SetTextColor(1, 1, 1)
+				self:Tag(PowerPoints, "[lolzen:power]")
+				self.Power.value = PowerPoints
+
+		--		local Castbar = CreateFrame("StatusBar", nil, self)
+		--		Castbar:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes["uf_statusbar_texture"]))
+		--		Castbar:SetAllPoints(self.Health)
+		--		Castbar:SetStatusBarColor(0.8, 0, 0, 0.2)
+		--		Castbar:SetFrameStrata("HIGH")
+		--		self.Castbar = Castbar
+
+		--		local Spark = Castbar:CreateTexture(nil, "OVERLAY")
+		--		Spark:SetSize(8, 23)
+		--		Spark:SetBlendMode("ADD")
+		--		Spark:SetParent(Castbar)
+		--		self.Castbar.Spark = Spark
+
+		--		local icon = Castbar:CreateTexture(nil, "BACKGROUND")
+		--		icon:SetHeight(33)
+		--		icon:SetWidth(33)
+		--		icon:SetTexCoord(.07, .93, .07, .93)
+		--		icon:SetPoint("RIGHT", self.Health, "LEFT", -14, 6)
+		--		self.Castbar.Icon = icon
+
+		--		local iconborder = CreateFrame("Frame")
+		--		iconborder:SetBackdrop({
+		--			edgeFile = LSM:Fetch("border", LolzenUIcfg.unitframes["uf_border"]), edgeSize = 12,
+		--			insets = {left = 4, right = 4, top = 4, bottom = 4},
+		--		})
+		--		iconborder:SetParent(Castbar)
+		--		iconborder:SetPoint("TOPLEFT", icon, -2, 3)
+		--		iconborder:SetPoint("BOTTOMRIGHT", icon, 3, -2)
+		--		iconborder:SetBackdropBorderColor(0, 0, 0)
+		--		iconborder:SetFrameLevel(3)
+		--		self.Castbar.Iconborder = iconborder
+
+		--		local Time = Castbar:CreateFontString(nil, "OVERLAY")
+		--		Time:SetPoint("TOPLEFT", icon, "TOPRIGHT", 13, 2)
+		--		Time:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 12 ,"OUTLINE")
+		--		Time:SetTextColor(1, 1, 1)
+		--		self.Castbar.Time = Time
+
+		--		local cbtext = Castbar:CreateFontString(nil, "OVERLAY")
+		--		cbtext:SetPoint("LEFT", self.Health, "LEFT", 2, 0)
+		--		cbtext:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSans.ttf", 14 ,"OUTLINE")
+		--		cbtext:SetTextColor(1, 1, 1)
+		--		self.Castbar.Text = cbtext
+
+		--		local Shield = Castbar:CreateTexture(nil, "ARTWORK")
+		--		Shield:SetSize(100, 100)
+		--		Shield:SetPoint("CENTER", icon, 17, 0)
+		--		Shield:SetTexture("Interface\\CastingBar\\UI-CastingBar-Arena-Shield")
+		--		self.Castbar.Shield = Shield
+
+				local panel = CreateFrame("Frame")
+				panel:SetParent(self)
+				panel:SetSize(self:GetWidth(), 20)
+				panel:SetPoint("TOP", self.Health, "BOTTOM", 0, -4)
+				panel:SetFrameLevel(3)
+
+				local Panelborder = CreateFrame("Frame", nil, self)
+				Panelborder:SetBackdrop({
+					bgFile = "Interface\\AddOns\\LolzenUI\\media\\statusbar",
+					edgeFile = LSM:Fetch("border", LolzenUIcfg.unitframes["uf_border"]), edgeSize = 12,
+					insets = {left = 2, right = 2, top = 3, bottom = 2},
+				})
+				Panelborder:SetPoint("TOPLEFT", panel, -3, 3)
+				Panelborder:SetPoint("BOTTOMRIGHT", panel, 3, -1)
+				Panelborder:SetBackdropBorderColor(0, 0, 0)
+				Panelborder:SetFrameLevel(3)
+				Panelborder:SetBackdropColor(0, 0, 0, 0.8)
+
+				local level = self.Health:CreateFontString(nil, "OVERLAY")
+				level:SetPoint("LEFT", self.Health, "LEFT", 2, -18) 
+				level:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSans.ttf", 12, "THINOUTLINE")
+				self.Level = level
+				self:Tag(level, "[lolzen:level][shortclassification]")
+
+				local name = self.Health:CreateFontString(nil, "OVERLAY")
+				name:SetPoint("RIGHT", self.Health, "RIGHT", -2, -18)
+				name:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSans.ttf", 12, "THINOUTLINE")
+				name:SetTextColor(1, 1, 1)
+				self.Name = name
+				self:Tag(name, "[name]")
+				
+				Power.PostUpdate = PostUpdatePower
+		--		Castbar.PostChannelStart = PostCastStart
+		--		Castbar.PostCastStart = PostCastStart
+			end,
 		}
 
 		-- A small helper to change the style into a unit specific, if it exists.
@@ -801,7 +931,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 
 		oUF:Factory(function(self)
-		--	spawnHelper(self, 'focus', "BOTTOM", 0, base + (40 * 1))
+			spawnHelper(self, "focus", LolzenUIcfg.unitframes["uf_focus_anchor"], LolzenUIcfg.unitframes["uf_focus_posx"], LolzenUIcfg.unitframes["uf_focus_posy"])
 			spawnHelper(self, "pet", LolzenUIcfg.unitframes["uf_pet_anchor"], LolzenUIcfg.unitframes["uf_pet_posx"], LolzenUIcfg.unitframes["uf_pet_posy"])
 			spawnHelper(self, "player", LolzenUIcfg.unitframes["uf_player_anchor"], LolzenUIcfg.unitframes["uf_player_posx"], LolzenUIcfg.unitframes["uf_player_posy"])
 			spawnHelper(self, "target", LolzenUIcfg.unitframes["uf_target_anchor"], LolzenUIcfg.unitframes["uf_target_posx"], LolzenUIcfg.unitframes["uf_target_posy"])
