@@ -52,7 +52,8 @@ the Unitframes and Nameplates integrated make use of oUF.
   - [ ] buff/debuff options
   - [ ] /focus
   - [x] bossframes
-  - [ ] powerpoint options
+  - [x] powerpoint options
+- [ ] nameplates: debuffs
 - [x] fix subpanel loading through inGame menu
 - [x] clock: option to disable seconds
 - [x] actionbars: add option to show keybinds
