@@ -13,6 +13,12 @@ ns.RegisterModule = function(module)
 	end
 end
 
+ns.customModuleOptions = function(module, defaults)
+	if not LolzenUIcfg[module] then
+		LolzenUIcfg[module] = defaults
+	end
+end
+
 -- pixel perfection
 if GetCVar("useuiscale") == "0" then
 	SetCVar("uiScale", 768/string.match(({GetScreenResolutions()})[GetCurrentResolution()], "%d+x(%d+)"))
