@@ -297,8 +297,12 @@ f:SetScript("OnEvent", function(self, event, addon)
 				self.PowerDivider = PowerDivider
 
 				local PowerPoints = Power:CreateFontString(nil, "OVERLAY")
-				PowerPoints:SetPoint("RIGHT", self.Health.value, "LEFT", 0, 0)
-				PowerPoints:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 18, "THINOUTLINE")
+				if LolzenUIcfg.unitframes["uf_player_pp_parent"] == "hp" then
+					PowerPoints:SetPoint(LolzenUIcfg.unitframes["uf_player_pp_anchor"], self.Health.value, LolzenUIcfg.unitframes["uf_player_pp_anchor2"], LolzenUIcfg.unitframes["uf_player_pp_posx"], LolzenUIcfg.unitframes["uf_player_pp_posy"])
+				elseif LolzenUIcfg.unitframes["uf_player_pp_parent"] == "self" then
+					PowerPoints:SetPoint(LolzenUIcfg.unitframes["uf_player_pp_anchor"], self, LolzenUIcfg.unitframes["uf_player_pp_anchor2"], LolzenUIcfg.unitframes["uf_player_pp_posx"], LolzenUIcfg.unitframes["uf_player_pp_posy"])
+				end
+				PowerPoints:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_player_pp_font"]), LolzenUIcfg.unitframes["uf_player_pp_font_size"], LolzenUIcfg.unitframes["uf_player_pp_font_flag"])
 				PowerPoints:SetTextColor(1, 1, 1)
 				Power.value = PowerPoints
 				self:Tag(PowerPoints, "[lolzen:power]")
@@ -459,8 +463,12 @@ f:SetScript("OnEvent", function(self, event, addon)
 				self.PowerDivider = PowerDivider
 
 				local PowerPoints = Power:CreateFontString(nil, "OVERLAY")
-				PowerPoints:SetPoint("RIGHT", self.Health.value, "LEFT", 0, 0)
-				PowerPoints:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 18, "THINOUTLINE")
+				if LolzenUIcfg.unitframes["uf_target_pp_parent"] == "hp" then
+					PowerPoints:SetPoint(LolzenUIcfg.unitframes["uf_target_pp_anchor"], self.Health.value, LolzenUIcfg.unitframes["uf_target_pp_anchor2"], LolzenUIcfg.unitframes["uf_target_pp_posx"], LolzenUIcfg.unitframes["uf_target_pp_posy"])
+				elseif LolzenUIcfg.unitframes["uf_target_pp_parent"] == "self" then
+					PowerPoints:SetPoint(LolzenUIcfg.unitframes["uf_target_pp_anchor"], self, LolzenUIcfg.unitframes["uf_target_pp_anchor2"], LolzenUIcfg.unitframes["uf_target_pp_posx"], LolzenUIcfg.unitframes["uf_target_pp_posy"])
+				end
+				PowerPoints:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_target_pp_font"]), LolzenUIcfg.unitframes["uf_target_pp_font_size"], LolzenUIcfg.unitframes["uf_target_pp_font_flag"])
 				PowerPoints:SetTextColor(1, 1, 1)
 				self:Tag(PowerPoints, "[lolzen:power]")
 				self.Power.value = PowerPoints
