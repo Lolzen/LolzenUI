@@ -150,24 +150,18 @@ f:SetScript("OnEvent", function(self, event, addon)
 			iconborder:SetBackdropBorderColor(0, 0, 0)
 			iconborder:SetFrameLevel(3)
 
+			--[[
 			local overlay = button.overlay
 			overlay.SetVertexColor = overlayProxy
-			overlay:Hide()
-			overlay.Show = overlay.Hide
-			overlay.Hide = overlayHide
+			overlay:SetTexture("Interface\\AddOns\\LolzenUI\\media\\auraborder")
+			overlay:SetTexCoord(.07, .93, .07, .93)
+			]]
 		end
 
-		local PostUpdateIcon
-		do
-			local playerUnits = {
-				player = true,
-				pet = true,
-				vehicle = true,
-			}
-
-			PostUpdateIcon = function(icons, unit, icon, index, offset, filter, isDebuff)
-				local texture = icon.icon
-				if(playerUnits[icon.caster]) then
+		local PostUpdateIcon = function(icons, unit, button, index, offset, filter, isDebuff)
+			if LolzenUIcfg.unitframes["uf_target_aura_desature_nonplayer_auras"] == true then
+				local texture = button.icon
+				if button.isPlayer then
 					texture:SetDesaturated(false)
 				else
 					texture:SetDesaturated(true)
@@ -176,13 +170,16 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 
 		local CreateAura = function(self, num)
-			local size = 23
 			local Auras = CreateFrame("Frame", nil, self)
 
-			Auras:SetSize(num * (size + 4), size)
-			Auras.num = num
-			Auras.size = size
-			Auras.spacing = 4
+			Auras:SetSize(num * (LolzenUIcfg.unitframes["uf_target_aura_size"] + 4), LolzenUIcfg.unitframes["uf_target_aura_size"])
+			if LolzenUIcfg.unitframes["uf_target_aura_show_type"] == "Both" then
+				Auras.numTotal = num
+			else
+				Auras.num = num
+			end
+			Auras.size = LolzenUIcfg.unitframes["uf_target_aura_size"]
+			Auras.spacing = LolzenUIcfg.unitframes["uf_target_aura_spacing"]
 
 			Auras.PostCreateIcon = PostCreateIcon
 
@@ -529,12 +526,41 @@ f:SetScript("OnEvent", function(self, event, addon)
 				Shield:SetTexture("Interface\\AddOns\\LolzenUI\\media\\shield")
 				self.Castbar.Shield = Shield
 
-				local Debuffs = CreateAura(self, 8)
-				Debuffs:SetPoint("TOP", self, "BOTTOM", 0, -30)
-				Debuffs.showDebuffType = true
-				Debuffs.onlyShowPlayer = true
-				Debuffs.PostUpdateIcon = PostUpdateIcon
-				self.Debuffs = Debuffs
+				if LolzenUIcfg.unitframes["uf_target_aura_show_type"] == "Buffs" then
+					local Buffs = CreateAura(self, LolzenUIcfg.unitframes["uf_target_aura_maxnum"])
+					Buffs:SetPoint(LolzenUIcfg.unitframes["uf_target_aura_anchor1"], self, LolzenUIcfg.unitframes["uf_target_aura_anchor2"], LolzenUIcfg.unitframes["uf_target_aura_posx"], LolzenUIcfg.unitframes["uf_target_aura_posy"])
+					--Buffs.showBuffType = true
+					if LolzenUIcfg.unitframes["uf_target_aura_show_only_player"] == true then
+						Buffs.onlyShowPlayer = true
+					end
+					Buffs["growth-x"] = LolzenUIcfg.unitframes["uf_target_aura_growth_x"]
+					Buffs["growth-y"] = LolzenUIcfg.unitframes["uf_target_aura_growth_y"]
+					Buffs.PostUpdateIcon = PostUpdateIcon
+					self.Buffs = Buffs
+				elseif LolzenUIcfg.unitframes["uf_target_aura_show_type"] == "Debuffs" then
+					local Debuffs = CreateAura(self, LolzenUIcfg.unitframes["uf_target_aura_maxnum"])
+					Debuffs:SetPoint(LolzenUIcfg.unitframes["uf_target_aura_anchor1"], self, LolzenUIcfg.unitframes["uf_target_aura_anchor2"], LolzenUIcfg.unitframes["uf_target_aura_posx"], LolzenUIcfg.unitframes["uf_target_aura_posy"])
+				--	Debuffs.showDebuffType = true
+					if LolzenUIcfg.unitframes["uf_target_aura_show_only_player"] == true then
+						Debuffs.onlyShowPlayer = true
+					end
+					Debuffs["growth-x"] = LolzenUIcfg.unitframes["uf_target_aura_growth_x"]
+					Debuffs["growth-y"] = LolzenUIcfg.unitframes["uf_target_aura_growth_y"]
+					Debuffs.PostUpdateIcon = PostUpdateIcon
+					self.Debuffs = Debuffs
+				elseif LolzenUIcfg.unitframes["uf_target_aura_show_type"] == "Both" then
+					local Auras = CreateAura(self, LolzenUIcfg.unitframes["uf_target_aura_maxnum"])
+					Auras:SetPoint(LolzenUIcfg.unitframes["uf_target_aura_anchor1"], self, LolzenUIcfg.unitframes["uf_target_aura_anchor2"], LolzenUIcfg.unitframes["uf_target_aura_posx"], LolzenUIcfg.unitframes["uf_target_aura_posy"])
+				--	Auras.showBuffType = true
+				--	Auras.showDebuffType = true
+					if LolzenUIcfg.unitframes["uf_target_aura_show_only_player"] == true then
+						Auras.onlyShowPlayer = true
+					end
+					Auras["growth-x"] = LolzenUIcfg.unitframes["uf_target_aura_growth_x"]
+					Auras["growth-y"] = LolzenUIcfg.unitframes["uf_target_aura_growth_y"]
+					Auras.PostUpdateIcon = PostUpdateIcon
+					self.Auras = Auras
+				end
 
 				local panel = CreateFrame("Frame")
 				panel:SetParent(self)
@@ -866,6 +892,14 @@ f:SetScript("OnEvent", function(self, event, addon)
 		--		Shield:SetTexture("Interface\\CastingBar\\UI-CastingBar-Arena-Shield")
 		--		self.Castbar.Shield = Shield
 
+				--[[
+				local Debuffs = CreateAura(self, 8)
+				Debuffs:SetPoint("TOP", self, "BOTTOM", 0, -30)
+				Debuffs.showDebuffType = true
+				Debuffs.onlyShowPlayer = true
+				Debuffs.PostUpdateIcon = PostUpdateIcon
+				self.Debuffs = Debuffs
+				]]
 				local panel = CreateFrame("Frame")
 				panel:SetParent(self)
 				panel:SetSize(self:GetWidth(), 20)
