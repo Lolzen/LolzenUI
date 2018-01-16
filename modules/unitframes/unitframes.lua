@@ -73,11 +73,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 		-- tags end
 
-		-- change power colors to user defined values
-		for k, v in pairs(LolzenUIcfg.unitframes["uf_power_colors"]) do
-			oUF.colors.power[tonumber(k)] = v
-		end
-
 		local PostCastStart = function(Castbar, unit, spell, spellrank)
 			local name = Castbar:GetParent().Name
 			if name then
@@ -117,9 +112,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 
 		local PostUpdatePower = function(Power, unit, min, max)
-			local color = oUF.colors.power[UnitPowerType(unit)]
+			-- use custom power colors
+			local color = LolzenUIcfg.unitframes["uf_power_colors"][tostring(UnitPowerType(unit))]
 
-			--power.colorPower won't overtake the custom power colors set earlier
 			Power:SetStatusBarColor(color[1], color[2], color[3])
 			Power.value:SetTextColor(color[1], color[2], color[3])
 			local parent = Power:GetParent()
