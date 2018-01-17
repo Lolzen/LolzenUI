@@ -47,27 +47,17 @@ the Unitframes and Nameplates integrated make use of oUF.
 - [ ] possible bug: buttons get occasionaly blocked (?)
 - [ ] finish Unitframe options
   - [ ] Castbar stuff (standalone; size, color, positioning,..)
-  - [x] add tag & options for hpval.hpperc (in any order) with optional divider
-  - [x] option/tag 7m5 > 7.5m
-  - [x] buff/debuff options
-  - [x] /focus
-  - [x] bossframes
-  - [x] powerpoint options
-  - [x] castbar framestrata
+  - [ ] OOC fading
+  - [ ] focus castbar
+  - [ ] focus auras
+  - [ ] boss castbar
+  - [ ] boss auras
+  - [ ] target/focus panel options
 - [ ] nameplates: debuffs
-- [x] fix subpanel loading through inGame menu
-- [x] clock: option to disable seconds
-- [x] actionbars: add option to show keybinds
-- [x] artifactbar/xpbar: option to show text only on mouseover
-- [x] tooltip: afk/dnd flag colors
-- [x] tooltip: option to color any guild
 - [ ] revisit descriptions
 - [ ] unify optionpanel formatting as good as possible
 - [ ] itemlevel: add support for more bags
-- [x] itemlevel: option for coloring items per itemquality
 - [ ] orderhallbar: font option for zonetext
-- [x] optimizations
 - [ ] tweak module (several tiny tweaks like "increase max watched currency" (BaudBag does this))
 - [ ] previews: make more previews/preview positions where it makes sense
-- [ ] unitframes: fading OOC
 - [ ] finetuning
