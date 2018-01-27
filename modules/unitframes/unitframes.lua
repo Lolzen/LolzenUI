@@ -235,6 +235,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			bg:SetTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes["uf_statusbar_texture"]))
 			bg:SetVertexColor(0.3, 0.3, 0.3)
 			bg:SetAlpha(1)
+			self.Background = bg
 
 			local RaidTargetIndicator = Health:CreateTexture(nil, "OVERLAY")
 			RaidTargetIndicator:SetSize(LolzenUIcfg.unitframes["uf_ri_size"], LolzenUIcfg.unitframes["uf_ri_size"])
@@ -372,22 +373,47 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 				local Castbar = CreateFrame("StatusBar", nil, self)
 				Castbar:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes["uf_statusbar_texture"]))
-				Castbar:SetAllPoints(self.Health)
-				Castbar:SetStatusBarColor(0.8, 0, 0, 0.2)
+				if LolzenUIcfg.unitframes["uf_player_cb_standalone"] == true then
+					Castbar:SetPoint(LolzenUIcfg.unitframes["uf_player_cb_anchor1"], UIParent, LolzenUIcfg.unitframes["uf_player_cb_anchor2"], LolzenUIcfg.unitframes["uf_player_cb_posx"], LolzenUIcfg.unitframes["uf_player_cb_posy"])
+					Castbar:SetSize(LolzenUIcfg.unitframes["uf_player_cb_width"], LolzenUIcfg.unitframes["uf_player_cb_height"])
+				else
+					Castbar:SetAllPoints(self.Health)
+				end
+				Castbar:SetStatusBarColor(LolzenUIcfg.unitframes["uf_player_cb_color"][1], LolzenUIcfg.unitframes["uf_player_cb_color"][2], LolzenUIcfg.unitframes["uf_player_cb_color"][3], LolzenUIcfg.unitframes["uf_player_cb_alpha"])
 				Castbar:SetFrameStrata("MEDIUM")
 				self.Castbar = Castbar
 
+				if LolzenUIcfg.unitframes["uf_player_cb_standalone"] == true then
+					local cbbg = Castbar:CreateTexture(nil, "BORDER")
+					cbbg:SetAllPoints(Castbar)
+					cbbg:SetTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes["uf_statusbar_texture"]))
+					cbbg:SetVertexColor(0.3, 0.3, 0.3)
+					cbbg:SetAlpha(1)
+					self.Castbar.background = cbbg
+
+					local cbborder = CreateFrame("Frame")
+					cbborder:SetBackdrop({
+						edgeFile = LSM:Fetch("border", LolzenUIcfg.unitframes["uf_border"]), edgeSize = 12,
+						insets = {left = 4, right = 4, top = 4, bottom = 4},
+					})
+					cbborder:SetParent(Castbar)
+					cbborder:SetPoint("TOPLEFT", Castbar, -2, 3)
+					cbborder:SetPoint("BOTTOMRIGHT", Castbar, 3, -2)
+					cbborder:SetBackdropBorderColor(0, 0, 0)
+					cbborder:SetFrameLevel(3)
+					self.Castbar.border = cbborder
+				end
+
 				local Spark = Castbar:CreateTexture(nil, "OVERLAY")
-				Spark:SetSize(8, 23)
+				Spark:SetSize(self:GetWidth()/27.5, self:GetHeight() + 2)
 				Spark:SetBlendMode("ADD")
-				Spark:SetParent(Castbar)
 				self.Castbar.Spark = Spark
 
 				local icon = Castbar:CreateTexture(nil, "BACKGROUND")
-				icon:SetHeight(33)
-				icon:SetWidth(33)
+				icon:SetHeight(LolzenUIcfg.unitframes["uf_player_cb_icon_size"])
+				icon:SetWidth(LolzenUIcfg.unitframes["uf_player_cb_icon_size"])
 				icon:SetTexCoord(.07, .93, .07, .93)
-				icon:SetPoint("RIGHT", self.Health, "LEFT", -14, 6)
+				icon:SetPoint(LolzenUIcfg.unitframes["uf_player_cb_icon_anchor1"], Castbar, LolzenUIcfg.unitframes["uf_player_cb_icon_anchor2"], LolzenUIcfg.unitframes["uf_player_cb_icon_posx"], LolzenUIcfg.unitframes["uf_player_cb_icon_posy"])
 				self.Castbar.Icon = icon
 
 				local iconborder = CreateFrame("Frame")
@@ -403,15 +429,15 @@ f:SetScript("OnEvent", function(self, event, addon)
 				self.Castbar.Iconborder = iconborder
 
 				local Time = Castbar:CreateFontString(nil, "OVERLAY")
-				Time:SetPoint("TOPLEFT", icon, "TOPRIGHT", 13, 2)
-				Time:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 12 ,"OUTLINE")
-				Time:SetTextColor(1, 1, 1)
+				Time:SetPoint(LolzenUIcfg.unitframes["uf_player_cb_time_anchor1"], icon, LolzenUIcfg.unitframes["uf_player_cb_time_anchor2"], LolzenUIcfg.unitframes["uf_player_cb_time_posx"], LolzenUIcfg.unitframes["uf_player_cb_time_posy"])
+				Time:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_player_cb_font"]), LolzenUIcfg.unitframes["uf_player_cb_font_size"], LolzenUIcfg.unitframes["uf_player_cb_font_flag"])
+				Time:SetTextColor(LolzenUIcfg.unitframes["uf_player_cb_font_color"][1], LolzenUIcfg.unitframes["uf_player_cb_font_color"][2], LolzenUIcfg.unitframes["uf_player_cb_font_color"][3])
 				self.Castbar.Time = Time
 
 				local cbtext = Castbar:CreateFontString(nil, "OVERLAY")
-				cbtext:SetPoint("LEFT", self.Health, "LEFT", 2, 0)
-				cbtext:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSans.ttf", 14 ,"OUTLINE")
-				cbtext:SetTextColor(1, 1, 1)
+				cbtext:SetPoint(LolzenUIcfg.unitframes["uf_player_cb_text_anchor1"], Castbar, LolzenUIcfg.unitframes["uf_player_cb_text_anchor2"], LolzenUIcfg.unitframes["uf_player_cb_text_posx"], LolzenUIcfg.unitframes["uf_player_cb_text_posy"])
+				cbtext:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_player_cb_font"]), LolzenUIcfg.unitframes["uf_player_cb_font_size"], LolzenUIcfg.unitframes["uf_player_cb_font_flag"])
+				cbtext:SetTextColor(LolzenUIcfg.unitframes["uf_player_cb_font_color"][1], LolzenUIcfg.unitframes["uf_player_cb_font_color"][2], LolzenUIcfg.unitframes["uf_player_cb_font_color"][3])
 				self.Castbar.Text = cbtext
 
 				local Shield = Castbar:CreateTexture(nil, "ARTWORK")
