@@ -462,7 +462,7 @@ defaultconfig.unitframes = {
 	----
 	["uf_target_cb_standalone"] = false,
 	["uf_target_cb_posx"] = 0,
-	["uf_target_cb_posy"] = -295,
+	["uf_target_cb_posy"] = -275,
 	["uf_target_cb_anchor1"] = "CENTER",
 	["uf_target_cb_anchor2"] = "CENTER",
 	["uf_target_cb_width"] = 220,
