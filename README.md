@@ -46,13 +46,15 @@ the Unitframes and Nameplates integrated make use of oUF.
 ### ToDo:
 - [ ] possible bug: buttons get occasionaly blocked (?)
 - [ ] finish Unitframe options
-  - [ ] Castbar stuff (standalone; size, color, positioning,..)
+  - [x] Castbar stuff (standalone; size, color, positioning,..)
   - [ ] OOC fading
   - [ ] focus castbar
   - [ ] focus auras
   - [ ] boss castbar
   - [ ] boss auras
   - [ ] target/focus panel options
+  - [ ] uf power colors: make it more efficient
+  - [ ] put stuff back into shared and only use it on desired unitframes [TEST]
 - [ ] nameplates: debuffs
 - [ ] revisit descriptions
 - [ ] unify optionpanel formatting as good as possible
