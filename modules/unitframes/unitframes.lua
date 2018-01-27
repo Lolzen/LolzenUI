@@ -74,10 +74,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		-- tags end
 
 		local PostCastStart = function(Castbar, unit, spell, spellrank)
-			local name = Castbar:GetParent().Name
-			if name then
-				Castbar:GetParent().Name:SetText(spell)
-			end
+			Castbar.Text:SetText(spell)
 		end
 
 		local PostUpdateHealth = function(Health, unit, min, max)
