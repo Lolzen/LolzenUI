@@ -774,6 +774,12 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		--		Castbar.PostChannelStart = PostCastStart
 		--		Castbar.PostCastStart = PostCastStart
+				self.Panel:SetSize(self:GetWidth(), 20)
+				self.Panel:SetPoint("TOP", self.Health, "BOTTOM", 0, -4)
+
+				self.Level:SetPoint("LEFT", self.Health, "LEFT", 2, -18) 
+
+				self.Name:SetPoint("RIGHT", self.Health, "RIGHT", -2, -18)
 			end,
 
 			focus = function(self, ...)
