@@ -563,6 +563,7 @@ defaultconfig.unitframes = {
 	["uf_boss_height"] = 21,
 	["uf_boss_additional_pos"] = "ABOVE",
 	["uf_boss_additional_spacing"] = 5,
+	["uf_boss_show_power"] = false,
 	["uf_boss_use_own_hp_font_settings"] = true,
 	["uf_boss_hp_font"] = "DroidSansBold",
 	["uf_boss_hp_font_size"] = 24,
