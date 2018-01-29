@@ -706,6 +706,15 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 				self:SetSize(LolzenUIcfg.unitframes["uf_boss_width"], LolzenUIcfg.unitframes["uf_boss_height"])
 
+				if LolzenUIcfg.unitframes["uf_boss_show_power"] == true then
+					self.Power:SetPoint("LEFT")
+					self.Power:SetPoint("RIGHT")
+					self.Power:SetPoint("TOP", self.Health, "BOTTOM", 0, 2)
+
+					self.PowerDivider:SetSize(self:GetWidth(), 1)
+					self.PowerDivider:SetPoint("TOPLEFT", self.Power, 0, 1)
+				end
+
 		--		local Castbar = CreateFrame("StatusBar", nil, self)
 		--		Castbar:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes["uf_statusbar_texture"]))
 		--		Castbar:SetAllPoints(self.Health)
