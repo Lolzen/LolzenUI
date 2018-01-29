@@ -287,7 +287,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 			self.Castbar.border = cbborder
 
 			local Spark = Castbar:CreateTexture(nil, "OVERLAY")
-			Spark:SetSize(self:GetWidth()/27.5, self:GetHeight()*2)
 			Spark:SetBlendMode("ADD")
 			self.Castbar.Spark = Spark
 
@@ -425,6 +424,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 				end
 				self.Castbar:SetStatusBarColor(LolzenUIcfg.unitframes["uf_player_cb_color"][1], LolzenUIcfg.unitframes["uf_player_cb_color"][2], LolzenUIcfg.unitframes["uf_player_cb_color"][3], LolzenUIcfg.unitframes["uf_player_cb_alpha"])
 
+				self.Castbar.Spark:SetSize(self:GetWidth()/27.5, self:GetHeight()*2)
+
 				self.Castbar.Icon:SetHeight(LolzenUIcfg.unitframes["uf_player_cb_icon_size"])
 				self.Castbar.Icon:SetWidth(LolzenUIcfg.unitframes["uf_player_cb_icon_size"])
 				self.Castbar.Icon:SetPoint(LolzenUIcfg.unitframes["uf_player_cb_icon_anchor1"], self.Castbar, LolzenUIcfg.unitframes["uf_player_cb_icon_anchor2"], LolzenUIcfg.unitframes["uf_player_cb_icon_posx"], LolzenUIcfg.unitframes["uf_player_cb_icon_posy"])
@@ -543,6 +544,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 					self.Castbar:SetAllPoints(self.Health)
 				end
 				self.Castbar:SetStatusBarColor(LolzenUIcfg.unitframes["uf_target_cb_color"][1], LolzenUIcfg.unitframes["uf_target_cb_color"][2], LolzenUIcfg.unitframes["uf_target_cb_color"][3], LolzenUIcfg.unitframes["uf_target_cb_alpha"])
+
+				self.Castbar.Spark:SetSize(self:GetWidth()/27.5, self:GetHeight()*2)
 
 				self.Castbar.Icon:SetHeight(LolzenUIcfg.unitframes["uf_target_cb_icon_size"])
 				self.Castbar.Icon:SetWidth(LolzenUIcfg.unitframes["uf_target_cb_icon_size"])
