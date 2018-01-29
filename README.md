@@ -52,7 +52,7 @@ the Unitframes and Nameplates integrated make use of oUF.
   - [ ] focus castbar
   - [ ] focus auras
   - [ ] boss castbar
-  - [ ] boss auras
+  - [x] boss auras
   - [ ] target/focus panel options
   - [ ] uf power colors: make it more efficient
   - [x] put stuff back into shared and only use it on desired unitframes [TEST]
@@ -65,3 +65,4 @@ the Unitframes and Nameplates integrated make use of oUF.
 - [ ] previews: make more previews/preview positions where it makes sense
 - [ ] finetuning
 - [ ] export/import profiles
+- [ ] localizations
