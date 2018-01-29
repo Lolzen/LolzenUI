@@ -287,7 +287,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			self.Castbar.border = cbborder
 
 			local Spark = Castbar:CreateTexture(nil, "OVERLAY")
-			Spark:SetSize(self:GetWidth()/27.5, self:GetHeight() + 2)
+			Spark:SetSize(self:GetWidth()/27.5, self:GetHeight()*2)
 			Spark:SetBlendMode("ADD")
 			self.Castbar.Spark = Spark
 
