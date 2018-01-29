@@ -46,6 +46,7 @@ the Unitframes and Nameplates integrated make use of oUF.
 ### ToDo:
 - [ ] possible bug: buttons get occasionaly blocked (?)
 - [ ] finish Unitframe options
+  - [ ] option to enable user placement (shift + click)
   - [x] Castbar stuff (standalone; size, color, positioning,..)
   - [ ] OOC fading
   - [ ] focus castbar
@@ -54,7 +55,7 @@ the Unitframes and Nameplates integrated make use of oUF.
   - [ ] boss auras
   - [ ] target/focus panel options
   - [ ] uf power colors: make it more efficient
-  - [ ] put stuff back into shared and only use it on desired unitframes [TEST]
+  - [x] put stuff back into shared and only use it on desired unitframes [TEST]
 - [ ] nameplates: debuffs
 - [ ] revisit descriptions
 - [ ] unify optionpanel formatting as good as possible
@@ -63,3 +64,4 @@ the Unitframes and Nameplates integrated make use of oUF.
 - [ ] tweak module (several tiny tweaks like "increase max watched currency" (BaudBag does this))
 - [ ] previews: make more previews/preview positions where it makes sense
 - [ ] finetuning
+- [ ] export/import profiles
