@@ -713,6 +713,13 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 					self.PowerDivider:SetSize(self:GetWidth(), 1)
 					self.PowerDivider:SetPoint("TOPLEFT", self.Power, 0, 1)
+
+					if LolzenUIcfg.unitframes["uf_boss_pp_parent"] == "hp" then
+						self.Power.value:SetPoint(LolzenUIcfg.unitframes["uf_boss_pp_anchor"], self.Health.value, LolzenUIcfg.unitframes["uf_boss_pp_anchor2"], LolzenUIcfg.unitframes["uf_boss_pp_posx"], LolzenUIcfg.unitframes["uf_boss_pp_posy"])
+					elseif LolzenUIcfg.unitframes["uf_boss_pp_parent"] == "self" then
+						self.Power.value:SetPoint(LolzenUIcfg.unitframes["uf_boss_pp_anchor"], self, LolzenUIcfg.unitframes["uf_boss_pp_anchor2"], LolzenUIcfg.unitframes["uf_boss_pp_posx"], LolzenUIcfg.unitframes["uf_boss_pp_posy"])
+					end
+					self.Power.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_boss_pp_font"]), LolzenUIcfg.unitframes["uf_boss_pp_font_size"], LolzenUIcfg.unitframes["uf_boss_pp_font_flag"])
 				end
 
 		--		local Castbar = CreateFrame("StatusBar", nil, self)
