@@ -51,7 +51,7 @@ the Unitframes and Nameplates integrated make use of oUF.
   - [ ] OOC fading
   - [ ] focus castbar
   - [ ] focus auras
-  - [ ] boss castbar
+  - [x] boss castbar
   - [x] boss auras
   - [ ] boss options scrollable
   - [ ] pet castbar
