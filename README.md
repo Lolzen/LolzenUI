@@ -50,7 +50,7 @@ the Unitframes and Nameplates integrated make use of oUF.
   - [ ] option to enable user placement (shift + click)
   - [ ] OOC fading
   - [ ] focus castbar
-  - [ ] focus auras
+  - [x] focus auras
   - [ ] pet castbar
   - [ ] make something with alphachannel to "cut" a hole into pet frame (when player is casting), so the pet unitrame doesn't collide with player castbar time
   - [ ] target/focus/boss panel (name & level font, etc) options
