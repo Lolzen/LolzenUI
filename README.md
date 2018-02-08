@@ -45,21 +45,17 @@ the Unitframes and Nameplates integrated make use of oUF.
 ------
 ### ToDo:
 - [ ] possible bug: buttons get occasionaly blocked (?)
+- [ ] bug: occasional taint: find & fix it
 - [ ] finish Unitframe options
   - [ ] option to enable user placement (shift + click)
-  - [x] Castbar stuff (standalone; size, color, positioning,..)
   - [ ] OOC fading
   - [ ] focus castbar
   - [ ] focus auras
-  - [x] boss castbar
-  - [x] boss auras
-  - [x] boss options scrollable
   - [ ] pet castbar
   - [ ] make something with alphachannel to "cut" a hole into pet frame (when player is casting), so the pet unitrame doesn't collide with player castbar time
   - [ ] target/focus/boss panel (name & level font, etc) options
   - [ ] uf power colors: make it more efficient
-  - [x] put stuff back into shared and only use it on desired unitframes [TEST]
-  - [ ] scrollable content: make scroll area size fit needed space (so there's no empty space to scroll down to") & hide scrollbar if everything shown fits into the panel
+  - [x] scrollable content: make scroll area size fit needed space (so there's no empty space to scroll down to") & hide scrollbar if everything shown fits into the panel
 - [ ] nameplates: debuffs
 - [ ] revisit descriptions
 - [ ] unify optionpanel formatting as good as possible
