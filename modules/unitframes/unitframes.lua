@@ -751,7 +751,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				end
 
 				self.Castbar:SetAllPoints(self.Health)
-				self.Castbar:SetStatusBarColor(LolzenUIcfg.unitframes["uf_target_cb_color"][1], LolzenUIcfg.unitframes["uf_target_cb_color"][2], LolzenUIcfg.unitframes["uf_target_cb_color"][3], LolzenUIcfg.unitframes["uf_target_cb_alpha"])
+				self.Castbar:SetStatusBarColor(LolzenUIcfg.unitframes["uf_boss_cb_color"][1], LolzenUIcfg.unitframes["uf_boss_cb_color"][2], LolzenUIcfg.unitframes["uf_boss_cb_color"][3], LolzenUIcfg.unitframes["uf_boss_cb_alpha"])
 
 				self.Castbar.Spark:SetSize(self:GetWidth()/27.5, self:GetHeight()*2)
 
