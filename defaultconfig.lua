@@ -459,7 +459,6 @@ defaultconfig.unitframes = {
 	["uf_target_aura_growth_y"] = "DOWN",
 	["uf_target_aura_show_only_player"] = true,
 	["uf_target_aura_desature_nonplayer_auras"] = true,
-	----
 	["uf_target_cb_standalone"] = false,
 	["uf_target_cb_posx"] = 0,
 	["uf_target_cb_posy"] = -275,
@@ -486,7 +485,6 @@ defaultconfig.unitframes = {
 	["uf_target_cb_font_size"] = 12,
 	["uf_target_cb_font_flag"] = "OUTLINE",
 	["uf_target_cb_font_color"] = {1, 1, 1},
-	----
 	["uf_targettarget_posx"] = 300,
 	["uf_targettarget_posy"] = -177,
 	["uf_targettarget_anchor"] = "CENTER",
@@ -630,6 +628,18 @@ defaultconfig.unitframes = {
 	["uf_focus_pp_parent"] = "hp",
 	["uf_focus_width"] = 220,
 	["uf_focus_height"] = 11,
+	["uf_focus_aura_show_type"] = "Both",
+	["uf_focus_aura_posx"] = 0,
+	["uf_focus_aura_posy"] = -30,
+	["uf_focus_aura_anchor1"] = "TOP",
+	["uf_focus_aura_anchor2"] = "BOTTOM",
+	["uf_focus_aura_maxnum"] = 8,
+	["uf_focus_aura_size"] = 23,
+	["uf_focus_aura_spacing"] = 4,
+	["uf_focus_aura_growth_x"] = "RIGHT",
+	["uf_focus_aura_growth_y"] = "DOWN",
+	["uf_focus_aura_show_only_player"] = false,
+	["uf_focus_aura_desature_nonplayer_auras"] = false,
 }
 
 defaultconfig.worldmap = {
