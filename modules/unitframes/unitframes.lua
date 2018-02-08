@@ -802,6 +802,34 @@ f:SetScript("OnEvent", function(self, event, addon)
 				end
 				self.Power.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_focus_pp_font"]), LolzenUIcfg.unitframes["uf_focus_pp_font_size"], LolzenUIcfg.unitframes["uf_focus_pp_font_flag"])
 
+				if LolzenUIcfg.unitframes["uf_focus_aura_show_type"] == "Buffs" then
+					self.Buffs:SetPoint(LolzenUIcfg.unitframes["uf_focus_aura_anchor1"], self, LolzenUIcfg.unitframes["uf_focus_aura_anchor2"], LolzenUIcfg.unitframes["uf_focus_aura_posx"], LolzenUIcfg.unitframes["uf_focus_aura_posy"])
+					self.Buffs.numBuffs = LolzenUIcfg.unitframes["uf_focus_aura_maxnum"]
+					if LolzenUIcfg.unitframes["uf_focus_aura_show_only_player"] == true then
+						self.Buffs.onlyShowPlayer = true
+					end
+					--self.Buffs.showBuffType = true
+					self.Buffs["growth-x"] = LolzenUIcfg.unitframes["uf_focus_aura_growth_x"]
+					self.Buffs["growth-y"] = LolzenUIcfg.unitframes["uf_focus_aura_growth_y"]
+				elseif LolzenUIcfg.unitframes["uf_focus_aura_show_type"] == "Debuffs" then
+					self.Debuffs:SetPoint(LolzenUIcfg.unitframes["uf_focus_aura_anchor1"], self, LolzenUIcfg.unitframes["uf_focus_aura_anchor2"], LolzenUIcfg.unitframes["uf_focus_aura_posx"], LolzenUIcfg.unitframes["uf_focus_aura_posy"])
+					if LolzenUIcfg.unitframes["uf_focus_aura_show_only_player"] == true then
+						self.Debuffs.onlyShowPlayer = true
+					end
+					--self.Debuffs.showDebuffType = true
+					self.Debuffs["growth-x"] = LolzenUIcfg.unitframes["uf_focus_aura_growth_x"]
+					self.Debuffs["growth-y"] = LolzenUIcfg.unitframes["uf_focus_aura_growth_y"]
+				elseif LolzenUIcfg.unitframes["uf_focus_aura_show_type"] == "Both" then
+					self.Auras:SetPoint(LolzenUIcfg.unitframes["uf_focus_aura_anchor1"], self, LolzenUIcfg.unitframes["uf_focus_aura_anchor2"], LolzenUIcfg.unitframes["uf_focus_aura_posx"], LolzenUIcfg.unitframes["uf_focus_aura_posy"])
+					if LolzenUIcfg.unitframes["uf_focus_aura_show_only_player"] == true then
+						self.Auras.onlyShowPlayer = true
+					end
+					--self.Auras.showBuffType = true
+					--self.Auras.showDebuffType = true
+					self.Auras["growth-x"] = LolzenUIcfg.unitframes["uf_focus_aura_growth_x"]
+					self.Auras["growth-y"] = LolzenUIcfg.unitframes["uf_focus_aura_growth_y"]
+				end
+
 		--		local Castbar = CreateFrame("StatusBar", nil, self)
 		--		Castbar:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes["uf_statusbar_texture"]))
 		--		Castbar:SetAllPoints(self.Health)
@@ -852,14 +880,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 		--		Shield:SetTexture("Interface\\CastingBar\\UI-CastingBar-Arena-Shield")
 		--		self.Castbar.Shield = Shield
 
-				--[[
-				local Debuffs = CreateAura(self, 8)
-				Debuffs:SetPoint("TOP", self, "BOTTOM", 0, -30)
-				Debuffs.showDebuffType = true
-				Debuffs.onlyShowPlayer = true
-				Debuffs.PostUpdateIcon = PostUpdateIcon
-				self.Debuffs = Debuffs
-				]]
 				self.Panel:SetSize(self:GetWidth(), 20)
 				self.Panel:SetPoint("TOP", self.Health, "BOTTOM", 0, -4)
 
