@@ -56,7 +56,8 @@ the Unitframes and Nameplates integrated make use of oUF.
   - [ ] target/focus/boss panel (name & level font, etc) options
   - [ ] uf power colors: make it more efficient
 - [x] nameplates: auras
-- [ ] revisit descriptions
+- [x] revisit descriptions
+- [ ] inspect: add keybind setting or a button which opens keybinds to the panel to make it useful
 - [ ] unify optionpanel formatting as good as possible
 - [ ] itemlevel: add support for more bags
 - [ ] orderhallbar: font option for zonetext
