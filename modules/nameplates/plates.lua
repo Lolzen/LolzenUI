@@ -49,6 +49,61 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 		end
 
+		local PostCreateIcon = function(Auras, button)
+		--	local count = button.count
+		--	count:ClearAllPoints()
+		--	count:SetPoint"BOTTOM"
+			--button.count:SetFont(LSM:Fetch("font", LolzenUIcfg.nameplates["np_cbtime_font"]), 2, LolzenUIcfg.nameplates["np_cbtime_font_flag"])
+
+			button.icon:SetTexCoord(.07, .93, .07, .93)
+
+			local iconborder = CreateFrame("Frame")
+			iconborder:SetBackdrop({
+				edgeFile = "Interface\\AddOns\\LolzenUI\\media\\border", edgeSize = 12,
+				insets = {left = 4, right = 4, top = 4, bottom = 4},
+			})
+			iconborder:SetParent(button)
+			iconborder:SetPoint("TOPLEFT", button, -2, 3)
+			iconborder:SetPoint("BOTTOMRIGHT", button, 3, -2)
+			iconborder:SetBackdropBorderColor(0, 0, 0)
+			iconborder:SetFrameLevel(3)
+
+			--[[
+			local overlay = button.overlay
+			overlay.SetVertexColor = overlayProxy
+			overlay:SetTexture("Interface\\AddOns\\LolzenUI\\media\\auraborder")
+			overlay:SetTexCoord(.07, .93, .07, .93)
+			]]
+		end
+
+		local PostUpdateIcon = function(icons, unit, button, index, offset, filter, isDebuff)
+			if LolzenUIcfg.nameplates["np_aura_desature_nonplayer_auras"] == true then
+				local texture = button.icon
+				if button.isPlayer then
+					texture:SetDesaturated(false)
+				else
+					texture:SetDesaturated(true)
+				end
+			end
+		end
+
+		local CreateAura = function(self, num)
+			local Auras = CreateFrame("Frame", nil, self)
+
+			Auras:SetSize(num * (LolzenUIcfg.nameplates["np_aura_size"] + 4), LolzenUIcfg.nameplates["np_aura_size"])
+			if LolzenUIcfg.nameplates["np_aura_show_type"] == "Both" then
+				Auras.numTotal = num
+			else
+				Auras.num = num
+			end
+			Auras.size = LolzenUIcfg.nameplates["np_aura_size"]
+			Auras.spacing = LolzenUIcfg.nameplates["np_aura_spacing"]
+
+			Auras.PostCreateIcon = PostCreateIcon
+
+			return Auras
+		end
+
 		local tags = oUF.Tags.Methods or oUF.Tags
 		local tagevents = oUF.TagEvents or oUF.Tags.Events
 
@@ -159,12 +214,51 @@ f:SetScript("OnEvent", function(self, event, addon)
 					threat.PostUpdate = PostUpdateThreat
 				end
 
+				local Buffs = CreateAura(frame, LolzenUIcfg.nameplates["np_aura_maxnum"])
+				frame.Buffs = Buffs
+				
+				local Debuffs = CreateAura(frame, LolzenUIcfg.nameplates["np_aura_maxnum"])
+				frame.Debuffs = Debuffs
+				
+				local Auras = CreateAura(frame, LolzenUIcfg.nameplates["np_aura_maxnum"])
+				frame.Auras = Auras
+				
+				if LolzenUIcfg.nameplates["np_aura_show_type"] == "Buffs" then
+					frame.Buffs:SetPoint(LolzenUIcfg.nameplates["np_aura_anchor1"], frame, LolzenUIcfg.nameplates["np_aura_anchor2"], LolzenUIcfg.nameplates["np_aura_posx"], LolzenUIcfg.nameplates["np_aura_posy"])
+					if LolzenUIcfg.nameplates["np_aura_show_only_player"] == true then
+						frame.Buffs.onlyShowPlayer = true
+					end
+					--frame.Buffs.showBuffType = true
+					frame.Buffs["growth-x"] = LolzenUIcfg.nameplates["np_aura_growth_x"]
+					frame.Buffs["growth-y"] = LolzenUIcfg.nameplates["np_aura_growth_y"]
+				elseif LolzenUIcfg.nameplates["np_aura_show_type"] == "Debuffs" then
+					frame.Debuffs:SetPoint(LolzenUIcfg.nameplates["np_aura_anchor1"], frame, LolzenUIcfg.nameplates["np_aura_anchor2"], LolzenUIcfg.nameplates["np_aura_posx"], LolzenUIcfg.nameplates["np_aura_posy"])
+					if LolzenUIcfg.nameplates["np_aura_show_only_player"] == true then
+						frame.Debuffs.onlyShowPlayer = true
+					end
+					--frame.Debuffs.showDebuffType = true
+					frame.Debuffs["growth-x"] = LolzenUIcfg.nameplates["np_aura_growth_x"]
+					frame.Debuffs["growth-y"] = LolzenUIcfg.nameplates["np_aura_growth_y"]
+				elseif LolzenUIcfg.nameplates["np_aura_show_type"] == "Both" then
+					frame.Auras:SetPoint(LolzenUIcfg.nameplates["np_aura_anchor1"], frame, LolzenUIcfg.nameplates["np_aura_anchor2"], LolzenUIcfg.nameplates["np_aura_posx"], LolzenUIcfg.nameplates["np_aura_posy"])
+					if LolzenUIcfg.nameplates["np_aura_show_only_player"] == true then
+						frame.Auras.onlyShowPlayer = true
+					end
+					--frame.Auras.showBuffType = true
+					--frame.Auras.showDebuffType = true
+					frame.Auras["growth-x"] = LolzenUIcfg.nameplates["np_aura_growth_x"]
+					frame.Auras["growth-y"] = LolzenUIcfg.nameplates["np_aura_growth_y"]
+				end
+
 				-- set size and points
 				frame:SetSize(LolzenUIcfg.nameplates["np_width"], LolzenUIcfg.nameplates["np_height"])
 				frame:SetPoint("CENTER", 0, 0)
 
 				Castbar.PostChannelStart = PostCastStart
 				Castbar.PostCastStart = PostCastStart
+				Buffs.PostUpdateIcon = PostUpdateIcon
+				Debuffs.PostUpdateIcon = PostUpdateIcon
+				Auras.PostUpdateIcon = PostUpdateIcon
 			end
 		end)
 		oUF:SpawnNamePlates(nil, UpdateTargetIndicator, cvars)
