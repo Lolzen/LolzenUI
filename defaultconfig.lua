@@ -345,6 +345,7 @@ defaultconfig.tooltip = {
 }
 
 defaultconfig.unitframes = {
+	["uf_testmode"] = false,
 	["uf_use_sivalue"] = true,
 	["uf_use_dot_format"] = false,
 	["uf_use_hp_percent"] = false,
