@@ -570,6 +570,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 					self.Buffs["growth-y"] = LolzenUIcfg.unitframes["uf_target_aura_growth_y"]
 				elseif LolzenUIcfg.unitframes["uf_target_aura_show_type"] == "Debuffs" then
 					self.Debuffs:SetPoint(LolzenUIcfg.unitframes["uf_target_aura_anchor1"], self, LolzenUIcfg.unitframes["uf_target_aura_anchor2"], LolzenUIcfg.unitframes["uf_target_aura_posx"], LolzenUIcfg.unitframes["uf_target_aura_posy"])
+					self.Debuffs.numDebuffs = LolzenUIcfg.unitframes["uf_target_aura_maxnum"]
 					if LolzenUIcfg.unitframes["uf_target_aura_show_only_player"] == true then
 						self.Debuffs.onlyShowPlayer = true
 					end
@@ -578,6 +579,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 					self.Debuffs["growth-y"] = LolzenUIcfg.unitframes["uf_target_aura_growth_y"]
 				elseif LolzenUIcfg.unitframes["uf_target_aura_show_type"] == "Both" then
 					self.Auras:SetPoint(LolzenUIcfg.unitframes["uf_target_aura_anchor1"], self, LolzenUIcfg.unitframes["uf_target_aura_anchor2"], LolzenUIcfg.unitframes["uf_target_aura_posx"], LolzenUIcfg.unitframes["uf_target_aura_posy"])
+					self.Auras.numTotal = LolzenUIcfg.unitframes["uf_target_aura_maxnum"]
 					if LolzenUIcfg.unitframes["uf_target_aura_show_only_player"] == true then
 						self.Auras.onlyShowPlayer = true
 					end
@@ -733,6 +735,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 					self.Buffs["growth-y"] = LolzenUIcfg.unitframes["uf_boss_aura_growth_y"]
 				elseif LolzenUIcfg.unitframes["uf_boss_aura_show_type"] == "Debuffs" then
 					self.Debuffs:SetPoint(LolzenUIcfg.unitframes["uf_boss_aura_anchor1"], self, LolzenUIcfg.unitframes["uf_boss_aura_anchor2"], LolzenUIcfg.unitframes["uf_boss_aura_posx"], LolzenUIcfg.unitframes["uf_boss_aura_posy"])
+					self.Debuffs.numDebuffs = LolzenUIcfg.unitframes["uf_boss_aura_maxnum"]
 					if LolzenUIcfg.unitframes["uf_boss_aura_show_only_player"] == true then
 						self.Debuffs.onlyShowPlayer = true
 					end
@@ -741,6 +744,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 					self.Debuffs["growth-y"] = LolzenUIcfg.unitframes["uf_boss_aura_growth_y"]
 				elseif LolzenUIcfg.unitframes["uf_boss_aura_show_type"] == "Both" then
 					self.Auras:SetPoint(LolzenUIcfg.unitframes["uf_boss_aura_anchor1"], self, LolzenUIcfg.unitframes["uf_boss_aura_anchor2"], LolzenUIcfg.unitframes["uf_boss_aura_posx"], LolzenUIcfg.unitframes["uf_boss_aura_posy"])
+					self.Auras.numTotal = LolzenUIcfg.unitframes["uf_boss_aura_maxnum"]
 					if LolzenUIcfg.unitframes["uf_boss_aura_show_only_player"] == true then
 						self.Auras.onlyShowPlayer = true
 					end
@@ -813,6 +817,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 					self.Buffs["growth-y"] = LolzenUIcfg.unitframes["uf_focus_aura_growth_y"]
 				elseif LolzenUIcfg.unitframes["uf_focus_aura_show_type"] == "Debuffs" then
 					self.Debuffs:SetPoint(LolzenUIcfg.unitframes["uf_focus_aura_anchor1"], self, LolzenUIcfg.unitframes["uf_focus_aura_anchor2"], LolzenUIcfg.unitframes["uf_focus_aura_posx"], LolzenUIcfg.unitframes["uf_focus_aura_posy"])
+					self.Debuffs.numDebuffs = LolzenUIcfg.unitframes["uf_focus_aura_maxnum"]
 					if LolzenUIcfg.unitframes["uf_focus_aura_show_only_player"] == true then
 						self.Debuffs.onlyShowPlayer = true
 					end
@@ -821,6 +826,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 					self.Debuffs["growth-y"] = LolzenUIcfg.unitframes["uf_focus_aura_growth_y"]
 				elseif LolzenUIcfg.unitframes["uf_focus_aura_show_type"] == "Both" then
 					self.Auras:SetPoint(LolzenUIcfg.unitframes["uf_focus_aura_anchor1"], self, LolzenUIcfg.unitframes["uf_focus_aura_anchor2"], LolzenUIcfg.unitframes["uf_focus_aura_posx"], LolzenUIcfg.unitframes["uf_focus_aura_posy"])
+					self.Auras.numTotal = LolzenUIcfg.unitframes["uf_focus_aura_maxnum"]
 					if LolzenUIcfg.unitframes["uf_focus_aura_show_only_player"] == true then
 						self.Auras.onlyShowPlayer = true
 					end
