@@ -151,7 +151,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 
 		local PostUpdateIcon = function(icons, unit, button, index, offset, filter, isDebuff)
-			if LolzenUIcfg.unitframes["uf_target_aura_desature_nonplayer_auras"] == true then
+			if LolzenUIcfg.unitframes["uf_"..unit.."_aura_desature_nonplayer_auras"] == true then
 				local texture = button.icon
 				if button.isPlayer then
 					texture:SetDesaturated(false)
@@ -163,15 +163,17 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		local CreateAura = function(self, num)
 			local Auras = CreateFrame("Frame", nil, self)
+			--local unit = gsub(self.unit, "(%d)", "")
+			local unit = self.unit
 
-			Auras:SetSize(num * (LolzenUIcfg.unitframes["uf_target_aura_size"] + 4), LolzenUIcfg.unitframes["uf_target_aura_size"])
-			if LolzenUIcfg.unitframes["uf_target_aura_show_type"] == "Both" then
-				Auras.numTotal = num
-			else
-				Auras.num = num
+			-- check if SVs exist, otherwise do nothing
+			if LolzenUIcfg.unitframes["uf_"..unit.."_aura_size"] then
+				Auras:SetSize(num * (LolzenUIcfg.unitframes["uf_"..unit.."_aura_size"] + 4), LolzenUIcfg.unitframes["uf_"..unit.."_aura_size"])
+				Auras.size = LolzenUIcfg.unitframes["uf_"..unit.."_aura_size"]
 			end
-			Auras.size = LolzenUIcfg.unitframes["uf_target_aura_size"]
-			Auras.spacing = LolzenUIcfg.unitframes["uf_target_aura_spacing"]
+			if LolzenUIcfg.unitframes["uf_"..unit.."_aura_spacing"] then
+				Auras.spacing = LolzenUIcfg.unitframes["uf_"..unit.."_aura_spacing"]
+			end
 
 			Auras.PostCreateIcon = PostCreateIcon
 
