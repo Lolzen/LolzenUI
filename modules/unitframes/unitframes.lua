@@ -876,6 +876,13 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 			local object = self:Spawn(unit)
 			object:SetPoint(...)
+
+			--test mode
+			if LolzenUIcfg.unitframes["uf_testmode"] == true then
+				object:Disable()
+				object:Show()
+			end
+
 			return object
 		end
 
