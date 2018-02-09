@@ -48,8 +48,10 @@ the Unitframes and Nameplates integrated make use of oUF.
 - [ ] bug: occasional taint: find & fix it
 - [ ] finish Unitframe options
   - [ ] option to enable user placement (shift + click)
+    - [ ] enable a tooltip with placement info (example: "CENTER", -276, 46)
+	- [ ] disable "normal" Saved Variables when used and use it's own)
   - [ ] OOC fading
-  - [ ] focus castbar
+  - [x] focus castbar
   - [x] focus auras
   - [ ] pet castbar
   - [ ] make something with alphachannel to "cut" a hole into pet frame (when player is casting), so the pet unitrame doesn't collide with player castbar time
