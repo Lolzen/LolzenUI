@@ -431,7 +431,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 				self.Castbar.Icon:SetHeight(LolzenUIcfg.unitframes["uf_player_cb_icon_size"])
 				self.Castbar.Icon:SetWidth(LolzenUIcfg.unitframes["uf_player_cb_icon_size"])
 				self.Castbar.Icon:SetPoint(LolzenUIcfg.unitframes["uf_player_cb_icon_anchor1"], self.Castbar, LolzenUIcfg.unitframes["uf_player_cb_icon_anchor2"], LolzenUIcfg.unitframes["uf_player_cb_icon_posx"], LolzenUIcfg.unitframes["uf_player_cb_icon_posy"])
-			
+
+				self.Castbar.Shield:SetSize(icon:GetWidth()*3, self.Castbar.Icon:GetHeight()*3)
+				self.CastbarShield:SetPoint("CENTER", self.Castbar.Icon, 0, 0)
+
 				self.Castbar.Time:SetPoint(LolzenUIcfg.unitframes["uf_player_cb_time_anchor1"], self.Castbar.Icon, LolzenUIcfg.unitframes["uf_player_cb_time_anchor2"], LolzenUIcfg.unitframes["uf_player_cb_time_posx"], LolzenUIcfg.unitframes["uf_player_cb_time_posy"])
 				self.Castbar.Time:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_player_cb_font"]), LolzenUIcfg.unitframes["uf_player_cb_font_size"], LolzenUIcfg.unitframes["uf_player_cb_font_flag"])
 				self.Castbar.Time:SetTextColor(LolzenUIcfg.unitframes["uf_player_cb_font_color"][1], LolzenUIcfg.unitframes["uf_player_cb_font_color"][2], LolzenUIcfg.unitframes["uf_player_cb_font_color"][3])
@@ -552,6 +555,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 				self.Castbar.Icon:SetHeight(LolzenUIcfg.unitframes["uf_target_cb_icon_size"])
 				self.Castbar.Icon:SetWidth(LolzenUIcfg.unitframes["uf_target_cb_icon_size"])
 				self.Castbar.Icon:SetPoint(LolzenUIcfg.unitframes["uf_target_cb_icon_anchor1"], self.Castbar, LolzenUIcfg.unitframes["uf_target_cb_icon_anchor2"], LolzenUIcfg.unitframes["uf_target_cb_icon_posx"], LolzenUIcfg.unitframes["uf_target_cb_icon_posy"])
+
+				self.Castbar.Shield:SetSize(icon:GetWidth()*3, self.Castbar.Icon:GetHeight()*3)
+				self.CastbarShield:SetPoint("CENTER", self.Castbar.Icon, 0, 0)
 
 				self.Castbar.Time:SetPoint(LolzenUIcfg.unitframes["uf_target_cb_time_anchor1"], self.Castbar.Icon, LolzenUIcfg.unitframes["uf_target_cb_time_anchor2"], LolzenUIcfg.unitframes["uf_target_cb_time_posx"], LolzenUIcfg.unitframes["uf_target_cb_time_posy"])
 				self.Castbar.Time:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_target_cb_font"]), LolzenUIcfg.unitframes["uf_target_cb_font_size"], LolzenUIcfg.unitframes["uf_target_cb_font_flag"])
@@ -765,6 +771,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 				self.Castbar.Icon:SetWidth(LolzenUIcfg.unitframes["uf_boss_cb_icon_size"])
 				self.Castbar.Icon:SetPoint(LolzenUIcfg.unitframes["uf_boss_cb_icon_anchor1"], self.Castbar, LolzenUIcfg.unitframes["uf_boss_cb_icon_anchor2"], LolzenUIcfg.unitframes["uf_boss_cb_icon_posx"], LolzenUIcfg.unitframes["uf_boss_cb_icon_posy"])
 
+				self.Castbar.Shield:SetSize(icon:GetWidth()*3, self.Castbar.Icon:GetHeight()*3)
+				self.CastbarShield:SetPoint("CENTER", self.Castbar.Icon, 0, 0)
+
 				self.Castbar.Time:SetPoint(LolzenUIcfg.unitframes["uf_boss_cb_time_anchor1"], self.Castbar.Icon, LolzenUIcfg.unitframes["uf_boss_cb_time_anchor2"], LolzenUIcfg.unitframes["uf_boss_cb_time_posx"], LolzenUIcfg.unitframes["uf_boss_cb_time_posy"])
 				self.Castbar.Time:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_boss_cb_font"]), LolzenUIcfg.unitframes["uf_boss_cb_font_size"], LolzenUIcfg.unitframes["uf_boss_cb_font_flag"])
 				self.Castbar.Time:SetTextColor(LolzenUIcfg.unitframes["uf_boss_cb_font_color"][1], LolzenUIcfg.unitframes["uf_boss_cb_font_color"][2], LolzenUIcfg.unitframes["uf_boss_cb_font_color"][3])
@@ -846,6 +855,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 				self.Castbar.Icon:SetHeight(LolzenUIcfg.unitframes["uf_focus_cb_icon_size"])
 				self.Castbar.Icon:SetWidth(LolzenUIcfg.unitframes["uf_focus_cb_icon_size"])
 				self.Castbar.Icon:SetPoint(LolzenUIcfg.unitframes["uf_focus_cb_icon_anchor1"], self.Castbar, LolzenUIcfg.unitframes["uf_focus_cb_icon_anchor2"], LolzenUIcfg.unitframes["uf_focus_cb_icon_posx"], LolzenUIcfg.unitframes["uf_focus_cb_icon_posy"])
+
+				self.Castbar.Shield:SetSize(icon:GetWidth()*3, self.Castbar.Icon:GetHeight()*3)
+				self.CastbarShield:SetPoint("CENTER", self.Castbar.Icon, 0, 0)
 
 				self.Castbar.Time:SetPoint(LolzenUIcfg.unitframes["uf_focus_cb_time_anchor1"], self.Castbar.Icon, LolzenUIcfg.unitframes["uf_focus_cb_time_anchor2"], LolzenUIcfg.unitframes["uf_focus_cb_time_posx"], LolzenUIcfg.unitframes["uf_focus_cb_time_posy"])
 				self.Castbar.Time:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_focus_cb_font"]), LolzenUIcfg.unitframes["uf_focus_cb_font_size"], LolzenUIcfg.unitframes["uf_focus_cb_font_flag"])
