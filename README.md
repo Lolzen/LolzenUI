@@ -57,7 +57,7 @@ the Unitframes and Nameplates integrated make use of oUF.
   - [ ] uf power colors: make it more efficient
 - [x] nameplates: auras
 - [x] revisit descriptions
-- [ ] inspect: add keybind setting or a button which opens keybinds to the panel to make it useful
+- [x] inspect: add keybind setting or a button which opens keybinds to the panel to make it useful -> couldn't open the settings directly
 - [ ] unify optionpanel formatting as good as possible
 - [ ] itemlevel: add support for more bags
 - [ ] orderhallbar: font option for zonetext
