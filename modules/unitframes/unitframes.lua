@@ -430,7 +430,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				self.Castbar.Icon:SetWidth(LolzenUIcfg.unitframes["uf_player_cb_icon_size"])
 				self.Castbar.Icon:SetPoint(LolzenUIcfg.unitframes["uf_player_cb_icon_anchor1"], self.Castbar, LolzenUIcfg.unitframes["uf_player_cb_icon_anchor2"], LolzenUIcfg.unitframes["uf_player_cb_icon_posx"], LolzenUIcfg.unitframes["uf_player_cb_icon_posy"])
 
-				self.Castbar.Shield:SetSize(self.Castbar.Shield:GetWidth()*3, self.Castbar.Icon:GetHeight()*3)
+				self.Castbar.Shield:SetSize(self.Castbar.Icon:GetWidth()*3, self.Castbar.Icon:GetHeight()*3)
 				self.Castbar.Shield:SetPoint("CENTER", self.Castbar.Icon, 0, 0)
 
 				self.Castbar.Time:SetPoint(LolzenUIcfg.unitframes["uf_player_cb_time_anchor1"], self.Castbar.Icon, LolzenUIcfg.unitframes["uf_player_cb_time_anchor2"], LolzenUIcfg.unitframes["uf_player_cb_time_posx"], LolzenUIcfg.unitframes["uf_player_cb_time_posy"])
@@ -554,7 +554,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				self.Castbar.Icon:SetWidth(LolzenUIcfg.unitframes["uf_target_cb_icon_size"])
 				self.Castbar.Icon:SetPoint(LolzenUIcfg.unitframes["uf_target_cb_icon_anchor1"], self.Castbar, LolzenUIcfg.unitframes["uf_target_cb_icon_anchor2"], LolzenUIcfg.unitframes["uf_target_cb_icon_posx"], LolzenUIcfg.unitframes["uf_target_cb_icon_posy"])
 
-				self.Castbar.Shield:SetSize(self.Castbar.Shield:GetWidth()*3, self.Castbar.Icon:GetHeight()*3)
+				self.Castbar.Shield:SetSize(self.Castbar.Icon:GetWidth()*3, self.Castbar.Icon:GetHeight()*3)
 				self.Castbar.Shield:SetPoint("CENTER", self.Castbar.Icon, 0, 0)
 
 				self.Castbar.Time:SetPoint(LolzenUIcfg.unitframes["uf_target_cb_time_anchor1"], self.Castbar.Icon, LolzenUIcfg.unitframes["uf_target_cb_time_anchor2"], LolzenUIcfg.unitframes["uf_target_cb_time_posx"], LolzenUIcfg.unitframes["uf_target_cb_time_posy"])
@@ -769,7 +769,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				self.Castbar.Icon:SetWidth(LolzenUIcfg.unitframes["uf_boss_cb_icon_size"])
 				self.Castbar.Icon:SetPoint(LolzenUIcfg.unitframes["uf_boss_cb_icon_anchor1"], self.Castbar, LolzenUIcfg.unitframes["uf_boss_cb_icon_anchor2"], LolzenUIcfg.unitframes["uf_boss_cb_icon_posx"], LolzenUIcfg.unitframes["uf_boss_cb_icon_posy"])
 
-				self.Castbar.Shield:SetSize(self.Castbar.Shield:GetWidth()*3, self.Castbar.Icon:GetHeight()*3)
+				self.Castbar.Shield:SetSize(self.Castbar.Icon:GetWidth()*3, self.Castbar.Icon:GetHeight()*3)
 				self.Castbar.Shield:SetPoint("CENTER", self.Castbar.Icon, 0, 0)
 
 				self.Castbar.Time:SetPoint(LolzenUIcfg.unitframes["uf_boss_cb_time_anchor1"], self.Castbar.Icon, LolzenUIcfg.unitframes["uf_boss_cb_time_anchor2"], LolzenUIcfg.unitframes["uf_boss_cb_time_posx"], LolzenUIcfg.unitframes["uf_boss_cb_time_posy"])
@@ -854,7 +854,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				self.Castbar.Icon:SetWidth(LolzenUIcfg.unitframes["uf_focus_cb_icon_size"])
 				self.Castbar.Icon:SetPoint(LolzenUIcfg.unitframes["uf_focus_cb_icon_anchor1"], self.Castbar, LolzenUIcfg.unitframes["uf_focus_cb_icon_anchor2"], LolzenUIcfg.unitframes["uf_focus_cb_icon_posx"], LolzenUIcfg.unitframes["uf_focus_cb_icon_posy"])
 
-				self.Castbar.Shield:SetSize(self.Castbar.Shield:GetWidth()*3, self.Castbar.Icon:GetHeight()*3)
+				self.Castbar.Shield:SetSize(self.Castbar.Icon:GetWidth()*3, self.Castbar.Icon:GetHeight()*3)
 				self.Castbar.Shield:SetPoint("CENTER", self.Castbar.Icon, 0, 0)
 
 				self.Castbar.Time:SetPoint(LolzenUIcfg.unitframes["uf_focus_cb_time_anchor1"], self.Castbar.Icon, LolzenUIcfg.unitframes["uf_focus_cb_time_anchor2"], LolzenUIcfg.unitframes["uf_focus_cb_time_posx"], LolzenUIcfg.unitframes["uf_focus_cb_time_posy"])
