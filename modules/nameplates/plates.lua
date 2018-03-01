@@ -201,7 +201,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 					frame:RegisterEvent("PLAYER_TARGET_CHANGED", UpdateTargetIndicator)
 				end
 
-				-- workaround so we can actually have a glow border
 				if LolzenUIcfg.nameplates["np_threatindicator"] == true then
 					local Glow = CreateFrame("Frame", nil, frame)
 					Glow:SetBackdrop({
