@@ -110,7 +110,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		local PostUpdatePower = function(Power, unit, min, max)
 			-- use custom power colors
-			local color = LolzenUIcfg.unitframes["uf_power_colors"][tostring(UnitPowerType(unit))]
+			local color = LolzenUIcfg.unitframes["uf_power_colors"][UnitPowerType(unit)]
 
 			Power:SetStatusBarColor(color[1], color[2], color[3])
 			Power.value:SetTextColor(color[1], color[2], color[3])
