@@ -33,13 +33,16 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 		end
 
-		local PostUpdateThreat = function(Threat, unit)
-			local Glow = Threat:GetParent()
+		local UpdateThreat = function(frame, event, unit)
 			local status = UnitThreatSituation("player", unit)
 			if status and status > 0 then
-				Glow:Show()
+				if not frame.Glow:IsShown() then
+					frame.Glow:Show()
+				end
 			else
-				Glow:Hide()
+				if frame.Glow:IsShown() then
+					frame.Glow:Hide()
+				end
 			end
 		end
 
@@ -141,8 +144,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 				local levelname = health:CreateFontString(nil, "OVERLAY")
 				levelname:SetPoint(LolzenUIcfg.nameplates["np_lvlname_anchor"], health, LolzenUIcfg.nameplates["np_lvlname_posx"], LolzenUIcfg.nameplates["np_lvlname_posy"]) 
 				levelname:SetFont(LSM:Fetch("font", LolzenUIcfg.nameplates["np_lvlname_font"]), LolzenUIcfg.nameplates["np_lvlname_font_size"], LolzenUIcfg.nameplates["np_lvlname_font_flag"])
-				frame.Level = levelname
 				frame:Tag(levelname, '[lolzen:nplevel][shortclassification] [lolzen:npname]')
+				frame.Level = levelname
 
 				local Castbar = CreateFrame("StatusBar", nil, health)
 				Castbar:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.nameplates["np_cb_texture"]))
@@ -208,10 +211,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 					Glow:SetPoint("TOPLEFT", health, -5, 5)
 					Glow:SetPoint("BOTTOMRIGHT", health, 5, -5)
 					Glow:SetBackdropBorderColor(6, 0, 0)
-
-					local threat = Glow:CreateTexture(nil, "OVERLAY")
-					frame.ThreatIndicator = threat
-					threat.PostUpdate = PostUpdateThreat
+					frame.Glow = Glow
+					table.insert(frame.__elements, UpdateThreat)
+					frame:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE", UpdateThreat)
+					frame:RegisterEvent("UNIT_THREAT_LIST_UPDATE", UpdateThreat)
 				end
 
 				local Buffs = CreateAura(frame, LolzenUIcfg.nameplates["np_aura_maxnum"])
