@@ -16,7 +16,8 @@ timerAnim:SetDuration(1)
 local isCounting = false
 local pullNum = 0
 timer:SetScript("OnFinished", function(self, requested)
-	if requested == true then return end
+	if requested == true or isCounting == true then return end
+	isCounting = true
 	if pullNum-1 <= LolzenUIcfg.pullcount["pull_count_range"] then
 		if LolzenUIcfg.pullcount["pull_sound_"..pullNum -1] then
 			if LolzenUIcfg.pullcount["pull_sound_"..pullNum-1] then
