@@ -346,21 +346,21 @@ f:SetScript("OnEvent", function(self, event, addon)
 			Panelborder:SetFrameLevel(3)
 			Panelborder:SetBackdropColor(0, 0, 0, 0.8)
 
-			local level = self.Health:CreateFontString(nil, "OVERLAY")
+			local level = Health:CreateFontString(nil, "OVERLAY")
 			level:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSans.ttf", 12, "THINOUTLINE")
 			self:Tag(level, "[lolzen:level][shortclassification]")
 			self.Level = level
 
-			local name = self.Health:CreateFontString(nil, "OVERLAY")
+			local name = Health:CreateFontString(nil, "OVERLAY")
 			name:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSans.ttf", 12, "THINOUTLINE")
 			name:SetTextColor(1, 1, 1)
 			self:Tag(name, "[name]")
 			self.Name = name
 
-			local role = self.Health:CreateTexture(nil, "OVERLAY")
+			local role = Health:CreateTexture(nil, "OVERLAY")
 			self.GroupRoleIndicator = role
 
-			local rc = self.Health:CreateTexture(nil, "OVERLAY")
+			local rc = Health:CreateTexture(nil, "OVERLAY")
 			self.ReadyCheckIndicator = rc
 
 			if(isSingle) then
