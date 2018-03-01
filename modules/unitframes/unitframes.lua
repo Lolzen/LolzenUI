@@ -89,13 +89,16 @@ f:SetScript("OnEvent", function(self, event, addon)
 			Health.value:SetTextColor(r,g,b)
 		end
 
-		local PostUpdateThreat = function(Threat, unit)
-			local Glow = Threat:GetParent()
+		local UpdateThreat = function(self, event, unit)
 			local status = UnitThreatSituation(unit)
 			if status and status > 0 then
-				Glow:Show()
+				if not self.Glow:IsShown() then
+					self.Glow:Show()
+				end
 			else
-				Glow:Hide()
+				if self.Glow:IsShown() then
+					self.Glow:Hide()
+				end
 			end
 		end
 
@@ -499,12 +502,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 				Glow:SetPoint("BOTTOMRIGHT", self, 5, -5)
 				Glow:SetBackdropBorderColor(6, 0, 0)
 				Glow:SetFrameLevel(2)
+				self.Glow = Glow
+				table.insert(self.__elements, UpdateThreat)
+				self:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE", UpdateThreat)
+				self:RegisterEvent("UNIT_THREAT_LIST_UPDATE", UpdateThreat)
 
-				-- workaround so we can actually have an glow border
-				local threat = Glow:CreateTexture(nil, "OVERLAY")
-				self.ThreatIndicator = threat
-
-				threat.PostUpdate = PostUpdateThreat
 				ClassPower.PostUpdate = PostUpdateClassPower
 			end,
 
