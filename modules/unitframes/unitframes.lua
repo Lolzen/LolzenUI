@@ -348,14 +348,12 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 			local level = self.Health:CreateFontString(nil, "OVERLAY")
 			level:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSans.ttf", 12, "THINOUTLINE")
-			self.Level = level
 			self:Tag(level, "[lolzen:level][shortclassification]")
 			self.Level = level
 
 			local name = self.Health:CreateFontString(nil, "OVERLAY")
 			name:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSans.ttf", 12, "THINOUTLINE")
 			name:SetTextColor(1, 1, 1)
-			self.Name = name
 			self:Tag(name, "[name]")
 			self.Name = name
 
