@@ -118,10 +118,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		local PostUpdatePower = function(Power, unit, min, max)
 			-- use custom power colors
-			local color = LolzenUIcfg.unitframes["uf_power_colors"][UnitPowerType(unit)]
+			local r, g, b = unpack(LolzenUIcfg.unitframes["uf_power_colors"][UnitPowerType(unit)])
 
-			Power:SetStatusBarColor(color[1], color[2], color[3])
-			Power.value:SetTextColor(color[1], color[2], color[3])
+			Power:SetStatusBarColor(r, g, b)
+			Power.value:SetTextColor(r, g, b)
 			local parent = Power:GetParent()
 			if parent.PowerDivider then
 				if min > 0 then
