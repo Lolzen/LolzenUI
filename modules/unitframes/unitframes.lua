@@ -76,9 +76,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 		local PostCastStart = function(Castbar, unit, spell, spellrank)
 			Castbar.Text:SetText(spell)
 			if Castbar.notInterruptible then
-				Castbar.Icon:SetDesaturated(1)
+				Castbar.Icon:SetDesaturated(true)
 			else
-				Castbar.Icon:SetDesaturated(nil)
+				Castbar.Icon:SetDesaturated(false)
 			end
 		end
 
