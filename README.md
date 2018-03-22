@@ -52,9 +52,8 @@ the Unitframes and Nameplates integrated make use of oUF.
 	- [ ] disable "normal" Saved Variables when used and use it's own)
   - [ ] OOC fading
   - [ ] pet castbar
-  - [ ] make something with alphachannel to "cut" a hole into pet frame (when player is casting), so the pet unitrame doesn't collide with player castbar time
   - [ ] target/focus/boss panel (name & level font, etc) options
-  - [ ] uf power colors: make it more efficient
+  - [x] uf power colors: make it more efficient
 - [ ] unify optionpanel formatting as good as possible
 - [ ] itemlevel: add support for more bags
 - [ ] orderhallbar: font option for zonetext
