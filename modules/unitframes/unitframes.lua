@@ -200,7 +200,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				insets = {left = 4, right = 4, top = 4, bottom = 4},
 			})
 			Border:SetPoint("TOPLEFT", self, -3, 3)
-			Border:SetPoint("BOTTOMRIGHT", self, 3, -2)
+			Border:SetPoint("BOTTOMRIGHT", self, 3, -3)
 			Border:SetBackdropBorderColor(0, 0, 0)
 			Border:SetFrameLevel(3)
 			self.Border = Border
@@ -300,7 +300,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			self.Castbar.Spark = Spark
 
 			local icon = Castbar:CreateTexture(nil, "BACKGROUND")
-			icon:SetTexCoord(.07, .93, .07, .93)
+			icon:SetDrawLayer("OVERLAY", 0)
 			self.Castbar.Icon = icon
 
 			local iconborder = CreateFrame("Frame")
@@ -410,6 +410,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 				self.PowerDivider:SetSize(self:GetWidth(), 1)
 				self.PowerDivider:SetPoint("TOPLEFT", self.Power, 0, 1)
+				self.PowerDivider:SetDrawLayer("BACKGROUND", 1)
 
 				if LolzenUIcfg.unitframes["uf_player_pp_parent"] == "hp" then
 					self.Power.value:SetPoint(LolzenUIcfg.unitframes["uf_player_pp_anchor"], self.Health.value, LolzenUIcfg.unitframes["uf_player_pp_anchor2"], LolzenUIcfg.unitframes["uf_player_pp_posx"], LolzenUIcfg.unitframes["uf_player_pp_posy"])
@@ -431,12 +432,23 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 				self.Castbar.Spark:SetSize(self:GetWidth()/27.5, self:GetHeight()*2)
 
-				self.Castbar.Icon:SetHeight(LolzenUIcfg.unitframes["uf_player_cb_icon_size"])
+				if LolzenUIcfg.unitframes["uf_player_cb_icon_cut"] == true then
+					self.Castbar.Icon:SetHeight(LolzenUIcfg.unitframes["uf_player_height"])
+					-- Get the % point of the texture to show
+					-- We calculate the percentage of the icon which has to be cut, depending on icon size, and unitframe size which are both variables
+					local p1 = (LolzenUIcfg.unitframes["uf_player_cb_icon_size"]-LolzenUIcfg.unitframes["uf_player_height"])/2
+					local p2 = p1+LolzenUIcfg.unitframes["uf_player_height"]
+					self.Castbar.Icon:SetTexCoord(0.1, 0.9, 1/(LolzenUIcfg.unitframes["uf_player_cb_icon_size"]/p1), 0.9/(0.1+(LolzenUIcfg.unitframes["uf_player_cb_icon_size"]/p2)))
+				else
+					self.Castbar.Icon:SetHeight(LolzenUIcfg.unitframes["uf_player_cb_icon_size"])
+					self.Castbar.Icon:SetTexCoord(.07, .93, .07, .93)
+
+					self.Castbar.Shield:SetSize(self.Castbar.Icon:GetWidth()*3, self.Castbar.Icon:GetHeight()*3)
+					self.Castbar.Shield:SetPoint("CENTER", self.Castbar.Icon, 0, 0)
+				end
+
 				self.Castbar.Icon:SetWidth(LolzenUIcfg.unitframes["uf_player_cb_icon_size"])
 				self.Castbar.Icon:SetPoint(LolzenUIcfg.unitframes["uf_player_cb_icon_anchor1"], self.Castbar, LolzenUIcfg.unitframes["uf_player_cb_icon_anchor2"], LolzenUIcfg.unitframes["uf_player_cb_icon_posx"], LolzenUIcfg.unitframes["uf_player_cb_icon_posy"])
-
-				self.Castbar.Shield:SetSize(self.Castbar.Icon:GetWidth()*3, self.Castbar.Icon:GetHeight()*3)
-				self.Castbar.Shield:SetPoint("CENTER", self.Castbar.Icon, 0, 0)
 
 				self.Castbar.Time:SetPoint(LolzenUIcfg.unitframes["uf_player_cb_time_anchor1"], self.Castbar.Icon, LolzenUIcfg.unitframes["uf_player_cb_time_anchor2"], LolzenUIcfg.unitframes["uf_player_cb_time_posx"], LolzenUIcfg.unitframes["uf_player_cb_time_posy"])
 				self.Castbar.Time:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_player_cb_font"]), LolzenUIcfg.unitframes["uf_player_cb_font_size"], LolzenUIcfg.unitframes["uf_player_cb_font_flag"])
@@ -533,6 +545,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 				self.PowerDivider:SetSize(self:GetWidth(), 1)
 				self.PowerDivider:SetPoint("TOPLEFT", self.Power, 0, 1)
+				self.PowerDivider:SetDrawLayer("BACKGROUND", 1)
 
 				if LolzenUIcfg.unitframes["uf_target_pp_parent"] == "hp" then
 					self.Power.value:SetPoint(LolzenUIcfg.unitframes["uf_target_pp_anchor"], self.Health.value, LolzenUIcfg.unitframes["uf_target_pp_anchor2"], LolzenUIcfg.unitframes["uf_target_pp_posx"], LolzenUIcfg.unitframes["uf_target_pp_posy"])
@@ -554,12 +567,23 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 				self.Castbar.Spark:SetSize(self:GetWidth()/27.5, self:GetHeight()*2)
 
-				self.Castbar.Icon:SetHeight(LolzenUIcfg.unitframes["uf_target_cb_icon_size"])
+				if LolzenUIcfg.unitframes["uf_target_cb_icon_cut"] == true then
+					self.Castbar.Icon:SetHeight(LolzenUIcfg.unitframes["uf_target_height"])
+					-- Get the % point of the texture to show
+					-- We calculate the percentage of the icon which has to be cut, depending on icon size, and unitframe size which are both variables
+					local p1 = (LolzenUIcfg.unitframes["uf_target_cb_icon_size"]-LolzenUIcfg.unitframes["uf_target_height"])/2
+					local p2 = p1+LolzenUIcfg.unitframes["uf_target_height"]
+					self.Castbar.Icon:SetTexCoord(0.1, 0.9, 1/(LolzenUIcfg.unitframes["uf_target_cb_icon_size"]/p1), 0.9/(0.1+(LolzenUIcfg.unitframes["uf_target_cb_icon_size"]/p2)))
+				else
+					self.Castbar.Icon:SetHeight(LolzenUIcfg.unitframes["uf_target_cb_icon_size"])
+					self.Castbar.Icon:SetTexCoord(.07, .93, .07, .93)
+
+					self.Castbar.Shield:SetSize(self.Castbar.Icon:GetWidth()*3, self.Castbar.Icon:GetHeight()*3)
+					self.Castbar.Shield:SetPoint("CENTER", self.Castbar.Icon, 0, 0)
+				end
+
 				self.Castbar.Icon:SetWidth(LolzenUIcfg.unitframes["uf_target_cb_icon_size"])
 				self.Castbar.Icon:SetPoint(LolzenUIcfg.unitframes["uf_target_cb_icon_anchor1"], self.Castbar, LolzenUIcfg.unitframes["uf_target_cb_icon_anchor2"], LolzenUIcfg.unitframes["uf_target_cb_icon_posx"], LolzenUIcfg.unitframes["uf_target_cb_icon_posy"])
-
-				self.Castbar.Shield:SetSize(self.Castbar.Icon:GetWidth()*3, self.Castbar.Icon:GetHeight()*3)
-				self.Castbar.Shield:SetPoint("CENTER", self.Castbar.Icon, 0, 0)
 
 				self.Castbar.Time:SetPoint(LolzenUIcfg.unitframes["uf_target_cb_time_anchor1"], self.Castbar.Icon, LolzenUIcfg.unitframes["uf_target_cb_time_anchor2"], LolzenUIcfg.unitframes["uf_target_cb_time_posx"], LolzenUIcfg.unitframes["uf_target_cb_time_posy"])
 				self.Castbar.Time:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_target_cb_font"]), LolzenUIcfg.unitframes["uf_target_cb_font_size"], LolzenUIcfg.unitframes["uf_target_cb_font_flag"])
@@ -725,6 +749,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 					self.PowerDivider:SetSize(self:GetWidth(), 1)
 					self.PowerDivider:SetPoint("TOPLEFT", self.Power, 0, 1)
+					self.PowerDivider:SetDrawLayer("BACKGROUND", 1)
 
 					if LolzenUIcfg.unitframes["uf_boss_pp_parent"] == "hp" then
 						self.Power.value:SetPoint(LolzenUIcfg.unitframes["uf_boss_pp_anchor"], self.Health.value, LolzenUIcfg.unitframes["uf_boss_pp_anchor2"], LolzenUIcfg.unitframes["uf_boss_pp_posx"], LolzenUIcfg.unitframes["uf_boss_pp_posy"])
@@ -769,12 +794,23 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 				self.Castbar.Spark:SetSize(self:GetWidth()/27.5, self:GetHeight()*2)
 
-				self.Castbar.Icon:SetHeight(LolzenUIcfg.unitframes["uf_boss_cb_icon_size"])
+				if LolzenUIcfg.unitframes["uf_boss_cb_icon_cut"] == true then
+					self.Castbar.Icon:SetHeight(LolzenUIcfg.unitframes["uf_boss_height"])
+					-- Get the % point of the texture to show
+					-- We calculate the percentage of the icon which has to be cut, depending on icon size, and unitframe size which are both variables
+					local p1 = (LolzenUIcfg.unitframes["uf_boss_cb_icon_size"]-LolzenUIcfg.unitframes["uf_boss_height"])/2
+					local p2 = p1+LolzenUIcfg.unitframes["uf_boss_height"]
+					self.Castbar.Icon:SetTexCoord(0.1, 0.9, 1/(LolzenUIcfg.unitframes["uf_boss_cb_icon_size"]/p1), 0.9/(0.1+(LolzenUIcfg.unitframes["uf_boss_cb_icon_size"]/p2)))
+				else
+					self.Castbar.Icon:SetHeight(LolzenUIcfg.unitframes["uf_boss_cb_icon_size"])
+					self.Castbar.Icon:SetTexCoord(.07, .93, .07, .93)
+
+					self.Castbar.Shield:SetSize(self.Castbar.Icon:GetWidth()*3, self.Castbar.Icon:GetHeight()*3)
+					self.Castbar.Shield:SetPoint("CENTER", self.Castbar.Icon, 0, 0)
+				end
+
 				self.Castbar.Icon:SetWidth(LolzenUIcfg.unitframes["uf_boss_cb_icon_size"])
 				self.Castbar.Icon:SetPoint(LolzenUIcfg.unitframes["uf_boss_cb_icon_anchor1"], self.Castbar, LolzenUIcfg.unitframes["uf_boss_cb_icon_anchor2"], LolzenUIcfg.unitframes["uf_boss_cb_icon_posx"], LolzenUIcfg.unitframes["uf_boss_cb_icon_posy"])
-
-				self.Castbar.Shield:SetSize(self.Castbar.Icon:GetWidth()*3, self.Castbar.Icon:GetHeight()*3)
-				self.Castbar.Shield:SetPoint("CENTER", self.Castbar.Icon, 0, 0)
 
 				self.Castbar.Time:SetPoint(LolzenUIcfg.unitframes["uf_boss_cb_time_anchor1"], self.Castbar.Icon, LolzenUIcfg.unitframes["uf_boss_cb_time_anchor2"], LolzenUIcfg.unitframes["uf_boss_cb_time_posx"], LolzenUIcfg.unitframes["uf_boss_cb_time_posy"])
 				self.Castbar.Time:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_boss_cb_font"]), LolzenUIcfg.unitframes["uf_boss_cb_font_size"], LolzenUIcfg.unitframes["uf_boss_cb_font_flag"])
@@ -811,6 +847,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 				self.PowerDivider:SetSize(self:GetWidth(), 1)
 				self.PowerDivider:SetPoint("TOPLEFT", self.Power, 0, 1)
+				self.PowerDivider:SetDrawLayer("BACKGROUND", 1)
 
 				if LolzenUIcfg.unitframes["uf_focus_pp_parent"] == "hp" then
 					self.Power.value:SetPoint(LolzenUIcfg.unitframes["uf_focus_pp_anchor"], self.Health.value, LolzenUIcfg.unitframes["uf_focus_pp_anchor2"], LolzenUIcfg.unitframes["uf_focus_pp_posx"], LolzenUIcfg.unitframes["uf_focus_pp_posy"])
@@ -854,12 +891,24 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 				self.Castbar.Spark:SetSize(self:GetWidth()/27.5, self:GetHeight()*2)
 
-				self.Castbar.Icon:SetHeight(LolzenUIcfg.unitframes["uf_focus_cb_icon_size"])
+				if LolzenUIcfg.unitframes["uf_focus_cb_icon_cut"] == true then
+					self.Castbar.Icon:SetHeight(LolzenUIcfg.unitframes["uf_focus_height"])
+					-- Get the % point of the texture to show
+					-- We calculate the percentage of the icon which has to be cut, depending on icon size, and unitframe size which are both variables
+					local p1 = (LolzenUIcfg.unitframes["uf_focus_cb_icon_size"]-LolzenUIcfg.unitframes["uf_focus_height"])/2
+					local p2 = p1+LolzenUIcfg.unitframes["uf_focus_height"]
+					self.Castbar.Icon:SetTexCoord(0.1, 0.9, 1/(LolzenUIcfg.unitframes["uf_focus_cb_icon_size"]/p1), 0.9/(0.1+(LolzenUIcfg.unitframes["uf_focus_cb_icon_size"]/p2)))
+				else
+					self.Castbar.Icon:SetHeight(LolzenUIcfg.unitframes["uf_focus_cb_icon_size"])
+					self.Castbar.Icon:SetTexCoord(.07, .93, .07, .93)
+
+					self.Castbar.Shield:SetSize(self.Castbar.Icon:GetWidth()*3, self.Castbar.Icon:GetHeight()*3)
+					self.Castbar.Shield:SetPoint("CENTER", self.Castbar.Icon, 0, 0)
+				end
+
 				self.Castbar.Icon:SetWidth(LolzenUIcfg.unitframes["uf_focus_cb_icon_size"])
 				self.Castbar.Icon:SetPoint(LolzenUIcfg.unitframes["uf_focus_cb_icon_anchor1"], self.Castbar, LolzenUIcfg.unitframes["uf_focus_cb_icon_anchor2"], LolzenUIcfg.unitframes["uf_focus_cb_icon_posx"], LolzenUIcfg.unitframes["uf_focus_cb_icon_posy"])
 
-				self.Castbar.Shield:SetSize(self.Castbar.Icon:GetWidth()*3, self.Castbar.Icon:GetHeight()*3)
-				self.Castbar.Shield:SetPoint("CENTER", self.Castbar.Icon, 0, 0)
 
 				self.Castbar.Time:SetPoint(LolzenUIcfg.unitframes["uf_focus_cb_time_anchor1"], self.Castbar.Icon, LolzenUIcfg.unitframes["uf_focus_cb_time_anchor2"], LolzenUIcfg.unitframes["uf_focus_cb_time_posx"], LolzenUIcfg.unitframes["uf_focus_cb_time_posy"])
 				self.Castbar.Time:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_focus_cb_font"]), LolzenUIcfg.unitframes["uf_focus_cb_font_size"], LolzenUIcfg.unitframes["uf_focus_cb_font_flag"])
