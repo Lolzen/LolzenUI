@@ -15,11 +15,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 		local eF = CreateFrame("Frame")
 		eF:RegisterEvent("INSPECT_READY")
 		eF:RegisterEvent("UNIT_INVENTORY_CHANGED")
-		eF:RegisterEvent("BAG_OPEN")
-		eF:RegisterEvent("BAG_UPDATE")
+		eF:RegisterEvent("BAG_UPDATE_DELAYED")
 		--eF:RegisterEvent("BANKFRAME_OPENED")
 		eF:RegisterEvent("PLAYER_LOGIN")
-		eF:RegisterEvent("ADDON_LOADED")
 
 		local slots = {
 			"Head", 
@@ -187,7 +185,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 		end
 
-		function eF.BAG_UPDATE()
+		function eF.BAG_UPDATE_DELAYED()
 			if LolzenUIcfg.itemlevel["ilvl_bags"] == true then
 				updateBagSlotInfo()
 			end
@@ -195,13 +193,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 		
 		function eF.PLAYER_LOGIN()
 			eF:UNIT_INVENTORY_CHANGED()
-			eF:BAG_UPDATE()
-		end
-		
-		function eF.ADDON_LOADED(self, event, addon)
-			if addon == "Blizzard_InspectUI" then
-				InspectFrame:HookScript("OnShow", updateInspectSlotInfo)
-			end
 		end
 
 		eF:SetScript("OnEvent", function(self, event, ...)  
