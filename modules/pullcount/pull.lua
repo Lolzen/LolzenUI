@@ -60,6 +60,8 @@ f:SetScript("OnEvent", function(self, event, ...)
 
 		local filter = function(frame, event, message, ...)
 			for i = 1, LolzenUIcfg.pullcount["pull_count_range"] do
+				if isCounting == true then return end
+				isCounting = true
 				local msg = LolzenUIcfg.pullcount["pull_msg_count"]
 				msg = string.gsub(msg, "!n", i)
 				if message:match(msg) then
