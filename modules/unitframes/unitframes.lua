@@ -381,6 +381,12 @@ f:SetScript("OnEvent", function(self, event, addon)
 				}
 			end
 
+			self.CombatFade = {
+				incombatAlpha = 1,
+				outofcombatAlpha = 0.3,
+				elements = {Health, Power, Border, bg, panel},
+			}
+
 			Health.PostUpdate = PostUpdateHealth
 			Power.PostUpdate = PostUpdatePower
 			Castbar.PostChannelStart = PostCastStart
