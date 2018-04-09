@@ -51,7 +51,7 @@ the Unitframes and Nameplates integrated make use of oUF.
     - [ ] enable a tooltip with placement info (example: "CENTER", -276, 46)
 	- [ ] disable "normal" Saved Variables when used and use it's own)
   - [x] OOC fading
-  - [ ] OOC Fading: add options
+  - [x] OOC Fading: add options
   - [ ] target/focus/boss panel (name & level font, etc) options
 - [ ] unify optionpanel formatting as good as possible
 - [ ] itemlevel: add support for more bags
