@@ -383,8 +383,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 			if LolzenUIcfg.unitframes["uf_fade_combat"] == true then
 				self.CombatFade = {
-					incombatAlpha = ["uf_fade_combat_incombat"],
-					outofcombatAlpha = ["uf_fade_combat_outofcombat"],
+					incombatAlpha = LolzenUIcfg.unitframes["uf_fade_combat_incombat"],
+					outofcombatAlpha = LolzenUIcfg.unitframes["uf_fade_combat_outofcombat"],
 					elements = {Health, Power, Border, bg, panel},
 				}
 			end
