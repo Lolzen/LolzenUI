@@ -11,6 +11,31 @@ f:SetScript("OnEvent", function(self, event, addon)
 	if addon == "LolzenUI" then
 		if LolzenUIcfg.modules["buffs"] == false then return end
 
+		BUFF_WARNING_TIME = 0
+
+		local GetFormattedTime = function(seconds)
+			-- Change the timer
+			-- original code from tekkub https://github.com/TekNoLogic/tekBuffTimers
+			if seconds <= 0 then
+				return "" 
+			end
+
+			local days = seconds / 12960000
+			if days >= 1 then
+				return string.format("|cffffffff%.1fd|r", days)
+			end
+
+			local hours = seconds / 3600
+			if hours >= 1 then
+				return string.format("|cffffffff%.02fh|r", hours)
+			end
+
+			local minutes = seconds / 60
+			local seconds = seconds % 60
+			if minutes >= 1 then return string.format("|cffffffff%d:%02d|r", minutes, seconds) end
+			return string.format("|cffffffff%ds|r", seconds)
+		end
+
 		-- Change the position
 		hooksecurefunc(BuffFrame, "SetPoint", function(self)
 			if self.moving == true then return end
@@ -68,6 +93,28 @@ f:SetScript("OnEvent", function(self, event, addon)
 			button.duration:SetFont(LSM:Fetch("font", LolzenUIcfg.buffs["buff_duration_font"]), LolzenUIcfg.buffs["buff_duration_font_size"], LolzenUIcfg.buffs["buff_duration_font_flag"])
 			button.duration:SetDrawLayer("OVERLAY")
 
+			-- Create a timer for the buff duration, as the AuraButton_UpdateDuration() function is overwritten further below
+			-- this proved to be a more efficient way of updating the buff duration, due to not using onUpdate
+			if LolzenUIcfg.buffs["buff_duration_detailed"] == true then
+				if not button.timer then
+					button.timer = button:CreateAnimationGroup()
+					button.timerAnim = button.timer:CreateAnimation()
+					button.timerAnim:SetDuration(0.1)
+
+					button.timer:SetScript("OnFinished", function(self, requested)
+						if not requested then
+							if button.timeLeft then
+								button.duration:SetFormattedText(GetFormattedTime(button.timeLeft))
+							else
+								self:Stop()
+							end
+							self:Play()
+						end
+					end)
+					button.timer:Play()
+				end
+			end
+
 			-- Reposition buffcounters
 			button.count:ClearAllPoints()
 			button.count:SetPoint(LolzenUIcfg.buffs["buff_counter_anchor"], button, LolzenUIcfg.buffs["buff_counter_posx"], LolzenUIcfg.buffs["buff_counter_posy"])
@@ -91,28 +138,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		hooksecurefunc("BuffFrame_UpdateAllBuffAnchors", UpdateAura)
 		hooksecurefunc("DebuffButton_UpdateAnchors", UpdateAura)
-
 		if LolzenUIcfg.buffs["buff_duration_detailed"] == true then
-			-- Change the timer
-			-- original code from tekkub https://github.com/TekNoLogic/tekBuffTimers
-			local SECONDS_PER_MINUTE = 60
-			local SECONDS_PER_HOUR   = 60 * SECONDS_PER_MINUTE
-			local SECONDS_PER_DAY    = 24 * SECONDS_PER_HOUR
-
-			function SecondsToTimeAbbrev(seconds)
-				if seconds <= 0 then return "" end
-
-				local days = seconds / SECONDS_PER_DAY
-				if days >= 1 then return string.format("|cffffffff%.1fd|r", days) end
-
-				local hours = seconds / SECONDS_PER_HOUR
-				if hours >= 1 then return string.format("|cffffffff%.02fh|r", hours) end
-
-				local minutes = seconds / SECONDS_PER_MINUTE
-				local seconds = seconds % SECONDS_PER_MINUTE
-				if minutes >= 1 then return string.format("|cffffffff%d:%02d|r", minutes, seconds) end
-				return string.format("|cffffffff%ds|r", seconds)
-			end
+			-- disable blizz update duration function
+			AuraButton_UpdateDuration = function() end
 		end
 	end
 end)
