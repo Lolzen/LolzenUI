@@ -5,12 +5,16 @@ local LSM = LibStub("LibSharedMedia-3.0")
 
 ns.RegisterModule("orderhallbar")
 
+local function getCoordinates()
+	local x, y = GetPlayerMapPosition("player")
+	return format(" [%.1f/%.1f]",x*100,y*100)
+end
+
 local function getAreaText()
-	if not OrderHallCommandBar then return end
 	if GetRealZoneText() == GetMinimapZoneText() then
-		OrderHallCommandBar.AreaName:SetText(GetZoneText())
+		OrderHallCommandBar.AreaName:SetText(GetZoneText()..getCoordinates())
 	else
-		OrderHallCommandBar.AreaName:SetText(GetZoneText().." ("..GetMinimapZoneText()..")")
+		OrderHallCommandBar.AreaName:SetText(GetZoneText().." ("..GetMinimapZoneText()..")"..getCoordinates())
 	end
 end
 
@@ -89,6 +93,20 @@ local function modifyOHB()
 	if OrderHallCommandBar.modded == true then return end
 	OrderHallCommandBar.AreaName:SetTextColor(unpack(LolzenUIcfg.orderhallbar["ohb_zone_color"]))
 
+	-- Create an AG based timer to update Area text and coordinates
+	local timer = OrderHallCommandBar:CreateAnimationGroup()
+	local timerAnim = timer:CreateAnimation()
+	timerAnim:SetDuration(0.5)
+	timer:SetScript("OnFinished", function(self, requested)
+		getAreaText()
+		self:Play()
+	end)
+	timer:Play()
+
+	-- hide troop info
+	OrderHallCommandBar.RefreshCategories = function() end
+	OrderHallCommandBar.RequestCategoryInfo = function() end
+				
 	OrderHallCommandBar.Background:SetTexture(LSM:Fetch("background", LolzenUIcfg.orderhallbar["ohb_background"]))
 	OrderHallCommandBar.Background:SetVertexColor(unpack(LolzenUIcfg.orderhallbar["ohb_background_color"]))
 	OrderHallCommandBar.Background:SetAlpha(LolzenUIcfg.orderhallbar["ohb_background_alpha"])
@@ -117,11 +135,18 @@ local function modifyOHB()
 		GameTooltip:Hide()
 	end)
 
+	OrderHallCommandBar:RegisterEvent("CHAT_MSG_CURRENCY")
+	OrderHallCommandBar:RegisterEvent("CURRENCY_DISPLAY_UPDATE")
+	OrderHallCommandBar:SetScript("OnEvent", function(self, event)
+		if event == "CHAT_MSG_CURRENCY" or event == "CURRENCY_DISPLAY_UPDATE" then
+			getCurrencies()
+		end
+	end)
+
 	local ohbframe = CreateFrame("Frame")
 	ohbframe:SetAllPoints(OrderHallCommandBar.ClassIcon)
 	ohbframe:EnableMouse(true)
 	ohbframe:SetFrameStrata("HIGH")
-
 	ohbframe:SetScript("OnMouseDown", GarrisonLandingPage_Toggle)
 
 	OrderHallCommandBar.modded = true
@@ -129,11 +154,6 @@ end
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
-f:RegisterEvent("ZONE_CHANGED")
-f:RegisterEvent("ZONE_CHANGED_INDOORS")
-f:RegisterEvent("ZONE_CHANGED_NEW_AREA")
-f:RegisterEvent("CHAT_MSG_CURRENCY")
-f:RegisterEvent("CURRENCY_DISPLAY_UPDATE")
 f:RegisterEvent("CINEMATIC_STOP")
 f:RegisterEvent("PLAYER_ENTERING_WORLD")
 f:SetScript("OnEvent", function(self, event, addon)
@@ -141,36 +161,16 @@ f:SetScript("OnEvent", function(self, event, addon)
 		if addon == "LolzenUI" then
 			if LolzenUIcfg.modules["orderhallbar"] == false then return end
 
-			if OrderHallCommandBar and OrderHallCommandBar.modded == true then return end
-
 			if LolzenUIcfg.orderhallbar["ohb_always_show"] == true then
 				LoadAddOn("Blizzard_OrderHallUI")
 			end
-			if OrderHallCommandBar then
-				if LolzenUIcfg.orderhallbar["ohb_always_show"] == true then
-					-- prevent hiding the bar, show it everywhere
-					OrderHallCommandBar:SetScript("OnHide", OrderHallCommandBar.Show)
-				end
-				-- hide troop info
-				OrderHallCommandBar.RefreshCategories = function() end
-				OrderHallCommandBar.RequestCategoryInfo = function() end
-			end
 		elseif addon == "Blizzard_OrderHallUI" then
 			if LolzenUIcfg.modules["orderhallbar"] == false then return end
-			
-			if OrderHallCommandBar and OrderHallCommandBar.modded == true then return end
-			
+
 			if OrderHallCommandBar then
 				modifyOHB()
-				getAreaText()
 			end
 		end
-	elseif event == "ZONE_CHANGED" or event == "ZONE_CHANGED_INDOORS" or event == "ZONE_CHANGED_NEW_AREA" then
-		if LolzenUIcfg.modules["orderhallbar"] == false then return end
-		getAreaText()
-	elseif event == "CHAT_MSG_CURRENCY" or event == "CURRENCY_DISPLAY_UPDATE" then
-		if LolzenUIcfg.modules["orderhallbar"] == false then return end
-		getCurrencies()
 	elseif event == "CINEMATIC_STOP" or event == "PLAYER_ENTERING_WORLD" then
 		if LolzenUIcfg.modules["orderhallbar"] == false then return end
 		if LolzenUIcfg.orderhallbar["ohb_always_show"] == true then
