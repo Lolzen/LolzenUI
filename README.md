@@ -7,6 +7,10 @@ It is a compilation of different utilities for either information, feature, ease
 
 ------
 ### embedded Libs:
+**CallbackHandler-1.0**
+
+Dependency for LibItemUpgradeInfo and LibSharedMedia.
+
 **LibItemUpgradeInfo-1.0**
 
 As blizzards API doesn't perfectly well work (heirlooms, upgrades, ..) LolzenUI makes use of this lib.
@@ -15,9 +19,21 @@ As blizzards API doesn't perfectly well work (heirlooms, upgrades, ..) LolzenUI 
 
 Can be used to easily add custom fonts and textures to LolzenUI.
 
+**LibStub**
+
+Dependency for LibItemUpgradeInfo and LibSharedMedia.
+
 **oUF**
 
-the Unitframes and Nameplates integrated make use of oUF.
+The Unitframes and Nameplates integrated make use of oUF.
+
+**oUF_CombatFade**
+
+Plugin for oUF based on oUF's range element. Gives a minimal config to fade Unitframes depending on being in combat or out of combat. Alpha values and affected elements are configurable.
+
+**oUF_MovableFrames**
+
+Plugin for oUF from haste. enables /omf to easily move unitframes around. http://www.wowinterface.com/downloads/fileinfo.php?id=15425&so=DESC&page=5#info
 
 ------
 ### Some AddOn Suggestions to complement LolzenUI:
@@ -47,11 +63,7 @@ the Unitframes and Nameplates integrated make use of oUF.
 - [ ] possible bug: buttons get occasionaly blocked (?)
 - [ ] bug: occasional taint: find & fix it
 - [ ] finish Unitframe options
-  - [ ] option to enable user placement (shift + click)
-    - [ ] enable a tooltip with placement info (example: "CENTER", -276, 46)
-	- [ ] disable "normal" Saved Variables when used and use it's own)
-  - [x] OOC fading
-  - [x] OOC Fading: add options
+  - [ ] OOC Fading: exclude party & raid frames
   - [ ] target/focus/boss panel (name & level font, etc) options
 - [ ] unify optionpanel formatting as good as possible
 - [ ] itemlevel: add support for more bags
