@@ -6,9 +6,12 @@
 ## x-Credits: haste, Neal, p3lim, tekkub, Seerah
 ## X-oUF: LolzenUI
 ## SavedVariables: LolzenUIcfg
+## X-SavedVariables: LolzenUIcfgOMF
+## X-SlashCmdList: /omf
 
 libs\oUF\oUF.xml
 libs\oUF_CombatFade\oUF_CombatFade.lua
+libs\oUF_MovableFrames\movable.lua
 libs\LibStub\LibStub.lua
 libs\CallBackHandler-1.0\CallBackHandler-1.0.lua
 libs\LibItemUpgradeInfo-1.0\Core.lua
