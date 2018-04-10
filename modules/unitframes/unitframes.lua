@@ -382,11 +382,13 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 
 			if LolzenUIcfg.unitframes["uf_fade_combat"] == true then
-				self.CombatFade = {
-					incombatAlpha = LolzenUIcfg.unitframes["uf_fade_combat_incombat"],
-					outofcombatAlpha = LolzenUIcfg.unitframes["uf_fade_combat_outofcombat"],
-					elements = {Health, Power, Border, bg, panel},
-				}
+				if unit ~= "party" and unit ~= "raid" then
+					self.CombatFade = {
+						incombatAlpha = LolzenUIcfg.unitframes["uf_fade_combat_incombat"],
+						outofcombatAlpha = LolzenUIcfg.unitframes["uf_fade_combat_outofcombat"],
+						elements = {Health, Power, Border, bg, panel},
+					}
+				end
 			end
 
 			Health.PostUpdate = PostUpdateHealth
