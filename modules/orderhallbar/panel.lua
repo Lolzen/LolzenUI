@@ -7,7 +7,11 @@ ns.RegisterModule("orderhallbar")
 
 local function getCoordinates()
 	local x, y = GetPlayerMapPosition("player")
-	return format(" [%.1f/%.1f]",x*100,y*100)
+	if x ~= nil then
+		return format(" [%.1f/%.1f]",x*100,y*100)
+	else
+		return ""
+	end
 end
 
 local function getAreaText()
