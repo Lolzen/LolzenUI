@@ -721,7 +721,7 @@ function _NS.omf()
 					background:SetPoint'RIGHT'
 					background:SetPoint('BOTTOM', 0, 4)
 
-					background:SetTexture(1, 1, 1, .05)
+					background:SetColorTexture(1, 1, 1, .05)
 
 					editbox:SetScript('OnEscapePressed', OnEscapePressed)
 					editbox:SetScript('OnEnterPressed', OnEnterPressed)
