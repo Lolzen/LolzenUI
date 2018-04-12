@@ -143,10 +143,10 @@ local restoreDefaultPosition = function(style, identifier)
 		end
 
 		-- We don't need this anymore
-		_DB.__INITIAL[style][identifier] = nil
-		if(not next(_DB.__INITIAL[style])) then
-			_DB[style] = nil
-		end
+		--_DB.__INITIAL[style][identifier] = nil
+		--if(not next(_DB.__INITIAL[style])) then
+		--	_DB[style] = nil
+		--end
 	end
 end
 
@@ -587,10 +587,10 @@ function _NS.omf()
 			local OnClick = function(self)
 				local row = self:GetParent()
 				scroll.value = slider:GetValue()
-				_DB[row.style][row.ident] = nil
+				_DB[row.style][row.ident] = _DB.__INITIAL[row.style][row.ident]
 
 				if(not next(_DB[row.style])) then
-					_DB[row.style] = nil
+					_DB[row.style] = _DB.__INITIAL[row.style]
 				end
 
 				restoreDefaultPosition(row.style, row.ident)
@@ -600,7 +600,7 @@ function _NS.omf()
 
 			local OnEnter = function(self)
 				GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
-				GameTooltip:SetText(DELETE)
+				GameTooltip:SetText("Reset")
 			end
 
 			local handleInput = function(label)
