@@ -556,9 +556,7 @@ function _NS.omf()
 			title:SetText("|cff5599ffUnitframes module: Positions [oUF_MovableFrames]|r")
 
 			local subtitle = self:CreateFontString(nil, 'ARTWORK', 'GameFontHighlightSmall')
-			subtitle:SetHeight(40)
 			subtitle:SetPoint('TOPLEFT', title, 'BOTTOMLEFT', 0, -8)
-			subtitle:SetPoint('RIGHT', self, -32, 0)
 			subtitle:SetNonSpaceWrap(true)
 			subtitle:SetWordWrap(true)
 			subtitle:SetJustifyH'LEFT'
