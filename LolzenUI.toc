@@ -5,7 +5,7 @@
 ## Notes: Restyle the whole WoW UI
 ## x-Credits: haste, Neal, p3lim, tekkub, Seerah
 ## X-oUF: LolzenUI
-## SavedVariables: LolzenUIcfg
+## SavedVariables: LolzenUIcfg, LolzenUIcfgOMF
 ## X-SavedVariables: LolzenUIcfgOMF
 ## X-SlashCmdList: /omf
 
