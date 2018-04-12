@@ -978,6 +978,16 @@ function _NS.omf()
 				scrollchild:SetPoint('TOP', 0, val)
 			end)
 
+			-- enable mousewheel scrolling
+			scroll:SetScript("OnMouseWheel", function(self, direction)
+				local current = slider:GetValue()
+				if direction == 1 then -- "up"
+					slider:SetValue(current - 10)
+				elseif direction == -1 then -- "down"
+					slider:SetValue(current + 10)
+				end
+			end)
+		
 			opt:SetScript("OnShow", function()
 				return createOrUpdateMadnessOfGodIhateGUIs()
 			end)
