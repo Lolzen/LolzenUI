@@ -421,6 +421,7 @@ do
 		restorePosition(self.obj)
 		self:ClearAllPoints()
 		self:SetAllPoints(self.header or self.obj)
+		_NS.createOrUpdateMadnessOfGodIhateGUIs()
 	end
 
 	local OnMouseDown = function(self)
@@ -583,7 +584,6 @@ function _NS.omf()
 				insets = {left = 4, right = 4, top = 4, bottom = 4},
 			}
 
-			local createOrUpdateMadnessOfGodIhateGUIs
 			local OnClick = function(self)
 				local row = self:GetParent()
 				scroll.value = slider:GetValue()
@@ -595,7 +595,7 @@ function _NS.omf()
 
 				restoreDefaultPosition(row.style, row.ident)
 
-				return createOrUpdateMadnessOfGodIhateGUIs()
+				return _NS.createOrUpdateMadnessOfGodIhateGUIs()
 			end
 
 			local OnEnter = function(self)
@@ -734,7 +734,7 @@ function _NS.omf()
 				end
 			end
 
-			function createOrUpdateMadnessOfGodIhateGUIs()
+			function _NS.createOrUpdateMadnessOfGodIhateGUIs()
 				local data = self.data or {}
 
 				local slideHeight = 0
@@ -989,10 +989,10 @@ function _NS.omf()
 			end)
 		
 			opt:SetScript("OnShow", function()
-				return createOrUpdateMadnessOfGodIhateGUIs()
+				return _NS.createOrUpdateMadnessOfGodIhateGUIs()
 			end)
 
-			return createOrUpdateMadnessOfGodIhateGUIs()
+			return _NS.createOrUpdateMadnessOfGodIhateGUIs()
 		end)
 
 		InterfaceOptions_AddCategory(opt)
