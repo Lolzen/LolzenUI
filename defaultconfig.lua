@@ -731,6 +731,67 @@ defaultconfig.xpbar = {
 	["xpbar_text_posy"] = 8,
 }
 
+local OMFdefault = {
+	["Lolzen - Player"] = {
+		["oUF_LolzenPlayer"] = "CENTERUIParent-250-2001.000",
+	},
+	["Lolzen - Target"] = {
+		["oUF_LolzenTarget"] = "CENTERUIParent250-2001.000",
+	},
+	["Lolzen - Targettarget"] = {
+		["oUF_LolzenTargetTarget"] = "CENTERUIParent300-1771.000",
+	},
+	["Lolzen - Party"] = {
+		["oUF_LolzenParty"] = "BOTTOMUIParent01401.000",
+	},
+	["Lolzen - Raid"] = {
+		["oUF_LolzenRaid"] = "LEFTUIParent2001.000",
+	},
+	["Lolzen - Pet"] = {
+		["oUF_LolzenPet"] = "CENTERUIParent-300-1771.000",
+	},
+	["Lolzen - Boss"] = {
+		["oUF_LolzenBoss1"] = "CENTERUIParent0-2001.000",
+		["oUF_LolzenBoss2"] = "CENTERUIParent0-1591.000",
+		["oUF_LolzenBoss3"] = "CENTERUIParent0-1181.000",
+		["oUF_LolzenBoss4"] = "CENTERUIParent0-771.000",
+		["oUF_LolzenBoss5"] = "CENTERUIParent0-361.000",
+	},
+	["Lolzen - Focus"] = {
+		["oUF_LolzenFocus"] = "CENTERUIParent-250-2301.000",
+	},
+	["__INITIAL"] = {
+		["Lolzen - Player"] = {
+			["oUF_LolzenPlayer"] = "CENTERUIParent-250-2001.000",
+		},
+		["Lolzen - Target"] = {
+			["oUF_LolzenTarget"] = "CENTERUIParent250-2001.000",
+		},
+		["Lolzen - Targettarget"] = {
+			["oUF_LolzenTargetTarget"] = "CENTERUIParent300-1771.000",
+		},
+		["Lolzen - Party"] = {
+			["oUF_LolzenParty"] = "BOTTOMUIParent01401.000",
+		},
+		["Lolzen - Raid"] = {
+			["oUF_LolzenRaid"] = "LEFTUIParent2001.000",
+		},
+		["Lolzen - Pet"] = {
+			["oUF_LolzenPet"] = "CENTERUIParent-300-1771.000",
+		},
+		["Lolzen - Boss"] = {
+			["oUF_LolzenBoss1"] = "CENTERUIParent0-2001.000",
+			["oUF_LolzenBoss2"] = "CENTERUIParent0-1591.000",
+			["oUF_LolzenBoss3"] = "CENTERUIParent0-1181.000",
+			["oUF_LolzenBoss4"] = "CENTERUIParent0-771.000",
+			["oUF_LolzenBoss5"] = "CENTERUIParent0-361.000",
+		},
+		["Lolzen - Focus"] = {
+			["oUF_LolzenFocus"] = "CENTERUIParent-250-2301.000",
+		},
+	},
+}
+
 -- // check default config and update if necessary // --
 local function updateDB(module)
 	for k, v in pairs(defaultconfig[module]) do
@@ -775,6 +836,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 					updateDB(k)
 				end
 			end
+		end
+		if LolzenUIcfgOMF == nil then
+			LolzenUIcfgOMF = OMFdefault
 		end
 	end
 end)
