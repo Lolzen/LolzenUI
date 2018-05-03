@@ -52,10 +52,10 @@ f:SetScript("OnEvent", function(self, event, ...)
 		-- Register BigWigs and DBM prefixes so we can get their pullcounters too
 		-- but only if we don't run them already
 		if not IsAddOnLoaded("BigWigs") then
-			RegisterAddonMessagePrefix("BigWigs")
+			C_ChatInfo.RegisterAddonMessagePrefix("BigWigs")
 		end
 		if not IsAddOnLoaded("DBM-Core") then
-			RegisterAddonMessagePrefix("D4")
+			C_ChatInfo.RegisterAddonMessagePrefix("D4")
 		end
 
 		local filter = function(frame, event, message, ...)
@@ -114,14 +114,14 @@ end)
 
 local function SendPull(num)
 	if IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
-		SendAddonMessage("D4", "PT\t"..num, "INSTANCE_CHAT") --DBM
-		SendAddonMessage("BigWigs", "P^Pull^"..num, "INSTANCE_CHAT") --BigWigs
+		C_ChatInfo.SendAddonMessage("D4", "PT\t"..num, "INSTANCE_CHAT") --DBM
+		C_ChatInfo.SendAddonMessage("BigWigs", "P^Pull^"..num, "INSTANCE_CHAT") --BigWigs
 	elseif IsInGroup(LE_PARTY_CATEGORY_HOME) then
-		SendAddonMessage("D4", "PT\t"..num, "PARTY") --DBM
-		SendAddonMessage("BigWigs", "P^Pull^"..num, "PARTY") --BigWigs
+		C_ChatInfo.SendAddonMessage("D4", "PT\t"..num, "PARTY") --DBM
+		C_ChatInfo.SendAddonMessage("BigWigs", "P^Pull^"..num, "PARTY") --BigWigs
 	else
-		SendAddonMessage("D4", "PT\t"..num, "WHISPER", UnitName("player")) --DBM
-		SendAddonMessage("BigWigs", "P^Pull^"..num, "WHISPER", UnitName("player")) --BigWigs
+		C_ChatInfo.SendAddonMessage("D4", "PT\t"..num, "WHISPER", UnitName("player")) --DBM
+		C_ChatInfo.SendAddonMessage("BigWigs", "P^Pull^"..num, "WHISPER", UnitName("player")) --BigWigs
 	end
 end
 
