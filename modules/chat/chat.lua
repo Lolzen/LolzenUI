@@ -71,12 +71,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 		end
 
-		local buttons = {
-			"ButtonFrameUpButton",
-			"ButtonFrameDownButton",
-			"ButtonFrameBottomButton",
-		}
-
 		local editboxTextures = {
 			"EditBoxRight",
 			"EditBoxLeft",
@@ -91,20 +85,17 @@ f:SetScript("OnEvent", function(self, event, addon)
 		for i=1, NUM_CHAT_WINDOWS do
 			local cf = _G["ChatFrame"..i]
 			local eb = _G["ChatFrame"..i.."EditBox"]
+			local s2bb = cf["ScrollToBottomButton"]
+			local sb = cf["ScrollBar"]
+			local tt =_G["ChatFrame"..i.."ThumbTexture"]
 			
-			-- hide editbox textures, chat buttons and chat textures
+			-- hide editbox textures and chat textures
 			for k, v in pairs(editboxTextures) do
 				_G["ChatFrame"..i..v]:SetAlpha(0)
 			end
 			eb.focusLeft:SetAlpha(0)
 			eb.focusRight:SetAlpha(0)
 			eb.focusMid:SetAlpha(0)
-
-			for k, button in pairs(buttons) do
-				button = _G["ChatFrame"..i..button]
-				button:Hide()
-				button.Show = function() end
-			end
 
 			for _, n in pairs(CHAT_FRAME_TEXTURES) do
 				local t = _G['ChatFrame'..i..n]
@@ -123,11 +114,33 @@ f:SetScript("OnEvent", function(self, event, addon)
 				cf:SetFading(false)
 			end
 
+			-- hide quickjointoasts and chat buttons
+			-- TODO: do something to access 
+			-- ChatFrameChannelButton, ChatFrameToggleVoiceDeafenButton and ChatFrameToggleVoiceMuteButton
+			-- maybe unhide scrollbar and reshape/reskin
 			QuickJoinToastButton:Hide()
 			QuickJoinToastButton.Show = function() end
 
 			ChatFrameMenuButton:Hide()
 			ChatFrameMenuButton.Show = function() end
+
+			ChatFrameChannelButton:Hide()
+			ChatFrameChannelButton.Show = function() end
+
+			ChatFrameToggleVoiceDeafenButton:Hide()
+			ChatFrameToggleVoiceDeafenButton.Show = function() end
+
+			ChatFrameToggleVoiceMuteButton:Hide()
+			ChatFrameToggleVoiceMuteButton.Show = function() end
+
+			tt:Hide()
+			tt.Show = function() end
+
+			s2bb:Hide()
+			s2bb.Show = function() end
+
+			sb:Hide()
+			sb.Show = function() end
 
 			-- move editbox above the chat
 			eb:ClearAllPoints()
