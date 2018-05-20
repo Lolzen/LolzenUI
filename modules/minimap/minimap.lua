@@ -75,7 +75,7 @@ local function modifyMinimap()
 	end
 
 	-- let's make our own CalendarFrame =]
-	local _, _, day, _ = CalendarGetDate()
+	local date = C_Calendar.GetDate()
 
 	local CalFrame = CreateFrame("Button", "CalFrame", Minimap)
 	if LolzenUIcfg.minimap["minimap_square"] == true then
@@ -90,7 +90,7 @@ local function modifyMinimap()
 	CalFont:SetPoint("CENTER", CalFrame, "CENTER")
 	CalFont:SetFont("Fonts\\FRIZQT__.TTF", 20, "OUTLINE")
 	CalFont:SetTextColor(1,1,1)
-	CalFont:SetText(day)
+	CalFont:SetText(date.monthDay)
 
 	--Now we want to click the numbers to open the calendarframe, don't we?
 	CalFrame:SetScript("OnClick", function()
