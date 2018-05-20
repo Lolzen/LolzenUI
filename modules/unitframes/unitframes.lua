@@ -178,6 +178,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 			if LolzenUIcfg.unitframes["uf_"..unit.."_aura_size"] then
 				Auras:SetSize(num * (LolzenUIcfg.unitframes["uf_"..unit.."_aura_size"] + 4), LolzenUIcfg.unitframes["uf_"..unit.."_aura_size"])
 				Auras.size = LolzenUIcfg.unitframes["uf_"..unit.."_aura_size"]
+			-- create a fallback to prevent getting errors in BfA
+			else
+				Auras:SetSize(num * (23 + 4) , 23)
+				Auras.size = 23
 			end
 			if LolzenUIcfg.unitframes["uf_"..unit.."_aura_spacing"] then
 				Auras.spacing = LolzenUIcfg.unitframes["uf_"..unit.."_aura_spacing"]
