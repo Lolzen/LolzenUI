@@ -99,14 +99,13 @@ f:SetScript("OnEvent", function(self, event, addon)
 			-- Priority #2: Show REP when ticked on
 			-- Priority #3: Show XP
 			if select(2,IsInInstance()) == "pvp" or select(2,IsInInstance()) == "arena" then
-				local prestige = UnitPrestige("player")
 				local level = UnitHonorLevel("player")
 				local current = UnitHonor("player")
 				local max = UnitHonorMax("player")
 				xpbar:SetMinMaxValues(0, max)
 				xpbar:SetValue(current)
 				xpbar:SetStatusBarColor(unpack(LolzenUIcfg.xpbar["xpbar_pvp_color"]))
-				xptext:SetFormattedText("%s (%.0f%%)", "[P:"..prestige.."L:"..level.."] "..current.."/"..max, current/max*100)
+				xptext:SetFormattedText("%s (%.0f%%)", "[L:"..level.."] "..current.."/"..max, current/max*100)
 			elseif GetWatchedFactionInfo() ~= nil then
 				-- Reputation (including Paragon)
 				for i = 1, GetNumFactions() do
@@ -164,7 +163,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 		xpbar.UPDATE_FACTION = xpbar.Update
 		xpbar.HONOR_LEVEL_UPDATE = xpbar.Update
 		xpbar.HONOR_XP_UPDATE = xpbar.Update
-		xpbar.HONOR_PRESTIGE_UPDATE = xpbar.Update
 		xpbar.UPDATE_EXHAUSTION = xpbar.Update
 
 		xpbar:RegisterEvent("PLAYER_XP_UPDATE")
@@ -172,7 +170,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 		xpbar:RegisterEvent("UPDATE_FACTION")
 		xpbar:RegisterEvent("HONOR_XP_UPDATE")
 		xpbar:RegisterEvent("HONOR_LEVEL_UPDATE")
-		xpbar:RegisterEvent("HONOR_PRESTIGE_UPDATE")
 		xpbar:RegisterEvent("UPDATE_EXHAUSTION")
 		xpbar:RegisterEvent("PLAYER_ENTERING_WORLD")
 		xpbar:SetScript("OnEvent", function(self, event, ...) self[event](self, event, ...) end)
