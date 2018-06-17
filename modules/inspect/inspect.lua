@@ -63,25 +63,16 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 			elseif cache[id] then  -- retrieved from cache
 				GameTooltip:SetHyperlink(cache[id])
+
 			else  -- empty slot
 				GameTooltip:SetText((self.checkRelic and UnitHasRelicSlot(unit) and _G.RELICSLOT) or _G[strupper(strsub(self:GetName(), 8))])
 			end
 			CursorUpdate(self)
 		end
 
-		local function onclick(self, button)
-			local unit, id = InspectFrame.unit, self:GetID()
-			if UnitExists(unit) and CheckInteractDistance(unit, 1) then
-				HandleModifiedItemClick(GetInventoryItemLink(unit, id))
-			elseif cache[id] then  -- retrieved from cache
-				HandleModifiedItemClick(cache[id])
-			end
-		end
-
 		local GetFrameType = frame.GetFrameType or frame.GetObjectType
 		for _, frame in ipairs({ InspectPaperDollFrame:GetChildren() }) do
 			if GetFrameType(frame) == "Button" and strmatch(frame:GetName() or "", "Inspect(.+)Slot") then
-				frame:SetScript("OnClick", onclick)
 				frame:SetScript("OnEnter", InspectPaperDollItemSlotButton_OnEnter)
 			end
 		end
@@ -98,6 +89,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 			if UnitExists(InspectFrame.unit) then
 				oInspectPaperDollFrame_SetLevel(...)
 			end
+		end
+
+		local oInspectPaperDollItemSlotButton_OnClick = InspectPaperDollItemSlotButton_OnClick
+		InspectPaperDollItemSlotButton_OnClick = function(...)
+			modInspectPaperDollItemSlotButton_OnClick(...)
 		end
 
 		local oInspectPVPFrame_Update = InspectPVPFrame_Update
@@ -118,6 +114,26 @@ f:SetScript("OnEvent", function(self, event, addon)
 		InspectGuildFrame_Update = function(...)
 			if UnitExists(InspectFrame.unit) then
 				oInspectGuildFrame_Update(...)
+			end
+		end
+
+		-- mod this function so we can link cached items
+		function modInspectPaperDollItemSlotButton_OnClick(self, button)
+			local unit, id = InspectFrame.unit, self:GetID()
+			local itemLink = GetInventoryItemLink(unit, id)
+			if itemLink and IsModifiedClick("EXPANDITEM") then
+				local _, _, classID = UnitClass(unit)
+				if C_AzeriteEmpoweredItem.IsAzeriteEmpoweredItemByID(itemLink) and C_AzeriteEmpoweredItem.IsAzeritePreviewSourceDisplayable(itemLink, classID) then
+					local azeritePowerIDs = C_PaperDollInfo.GetInspectAzeriteItemEmpoweredChoices(InspectFrame.unit, self:GetID());
+					OpenAzeriteEmpoweredItemUIFromLink(itemLink, classID, azeritePowerIDs);
+					return;
+				end
+			end
+
+			if UnitExists(unit) and CheckInteractDistance(unit, 1) then
+				HandleModifiedItemClick(GetInventoryItemLink(unit, id))
+			elseif cache[id] then  -- retrieved from cache
+				HandleModifiedItemClick(cache[id])
 			end
 		end
 
