@@ -40,23 +40,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 			return r1 + (r2-r1)*relperc, g1 + (g2-g1)*relperc, b1 + (b2-b1)*relperc
 		end
 
-		local function TimeFormat(time)
-			local t = format("%.1ds",floor(mod(time,60)))
-			if (time > 60) then
-				time = floor(time / 60)
-				t = format("%.1dm ",mod(time,60))..t
-				if (time > 60) then
-					time = floor(time / 60)
-					t = format("%.1dh ",mod(time,24))..t
-					if (time > 24) then
-						time = floor(time / 24)
-						t = format("%dd ",time)..t
-					end
-				end
-			end
-			return t
-		end
-
 		local function ColorizeLatency(v)
 			if (v < 100) then
 				return {r = 0, g = 1, b = 0}
