@@ -23,15 +23,13 @@ timer:SetScript("OnFinished", function(self, requested)
 			end
 		elseif pullNum-1 == 0 then
 			PlaySoundFile("Interface\\AddOns\\LolzenUI\\sounds\\"..LolzenUIcfg.pullcount["pull_sound_pull"], "master")
+			isCounting = false
 		end
 	end
-	pullNum = pullNum -1
-	if pullNum ~= 0 then
+	if pullNum -1 ~= 0 then
 		self:Play()
 	end
-	if pullNum == 0 then
-		isCounting = false
-	end	
+	pullNum = pullNum -1
 end)
 
 local function initiateCountdown(num)
