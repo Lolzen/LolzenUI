@@ -148,7 +148,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 			local cr, cg, cb = ColorGradient((entry.memory / 800), 0, 1, 0, 1, 1, 0, 1, 0, 0) 
 			GameTooltip:AddLine(" ")
 			GameTooltip:AddDoubleLine("Total", Memory(total), LolzenUIcfg.clock["clock_color"].r, LolzenUIcfg.clock["clock_color"].g, LolzenUIcfg.clock["clock_color"].b, cr, cg, cb)
-			--GameTooltip:AppendText("")
 			GameTooltip:Show()
 		end)
 
@@ -157,14 +156,12 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end)
 
 		clockFrame:SetScript("OnClick", function()
-			if (not IsAltKeyDown()) then
-				UpdateAddOnMemoryUsage()
-				local memBefore = gcinfo()
-				collectgarbage()
-				UpdateAddOnMemoryUsage()
-				local memAfter = gcinfo()
-				DEFAULT_CHAT_FRAME:AddMessage("Memory cleaned: |cff00FF00"..Memory(memBefore - memAfter))
-			end
+			UpdateAddOnMemoryUsage()
+			local memBefore = gcinfo()
+			collectgarbage()
+			UpdateAddOnMemoryUsage()
+			local memAfter = gcinfo()
+			DEFAULT_CHAT_FRAME:AddMessage("Memory cleaned: |cff00FF00"..Memory(memBefore - memAfter))
 		end)
 	end
 end)
