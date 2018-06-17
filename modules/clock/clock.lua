@@ -84,11 +84,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 		timerAnim:SetDuration(1)
 
 		timer:SetScript("OnFinished", function(self, requested)
-			local time, sec = date("%H|c00ffffff\46|r%M|c00ffffff|r"), date("%S")
-
-			text:SetText(time)
+			text:SetText(date("%H|c00ffffff\46|r%M|c00ffffff|r"))
 			if LolzenUIcfg.clock["clock_seconds_enabled"] == true then
-				seconds:SetText(sec)
+				seconds:SetText(date("%S"))
 			end
 
 			self:Play()
