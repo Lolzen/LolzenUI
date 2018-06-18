@@ -956,9 +956,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 			--test mode
 			if LolzenUIcfg.unitframes["uf_testmode"] == true then
-				for k, v in next, oUF.objects do
-					v.unit = 'player'
-				end
 				object:Disable()
 				object:Show()
 			end
