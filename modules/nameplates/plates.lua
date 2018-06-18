@@ -263,6 +263,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				Auras.PostUpdateIcon = PostUpdateIcon
 			end
 		end)
+		oUF:SetActiveStyle("Lolzen - Nameplates")
 		oUF:SpawnNamePlates(nil, UpdateTargetIndicator, cvars)
 	end
 end)
