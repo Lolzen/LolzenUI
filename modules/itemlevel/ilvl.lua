@@ -11,7 +11,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 	if addon == "LolzenUI" then
 		if LolzenUIcfg.modules["itemlevel"] == false then return end
 
-		local ItemUpgradeInfo = LibStub("LibItemUpgradeInfo-1.0")
 		local eF = CreateFrame("Frame")
 		eF:RegisterEvent("INSPECT_READY")
 		eF:RegisterEvent("UNIT_INVENTORY_CHANGED")
@@ -44,7 +43,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			if unit and UnitExists(unit) then
 				local itemLink = GetInventoryItemLink(unit, GetInventorySlotInfo(("%sSlot"):format(slot)))
 				if itemLink then
-					return ItemUpgradeInfo:GetUpgradedItemLevel(itemLink)
+					return GetDetailedItemLevelInfo(itemLink)
 				end
 			end
 		end
@@ -52,7 +51,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		local function getItemlvlBags(bagID, slotID)
 			local itemLink = GetContainerItemLink(bagID, slotID)
 			if itemLink and IsEquippableItem(itemLink) then
-				return ItemUpgradeInfo:GetUpgradedItemLevel(itemLink)
+				return GetDetailedItemLevelInfo(itemLink)
 			end
 		end
 
