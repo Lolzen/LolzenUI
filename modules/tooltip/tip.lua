@@ -28,6 +28,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		GAME_TOOLTIP_BACKDROP_STYLE_DEFAULT = {
 			bgFile = "Interface\\Buttons\\WHITE8x8",
 			edgeFile = LSM:Fetch("border", LolzenUIcfg.tooltip["tip_border"]),
+			--edgeFile = "Interface\\AddOns\\LolzenUI\\media\\border_round",
 			tile = false,
 			tileEdge = true,
 			tileSize = 16,
@@ -36,6 +37,29 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 			backdropBorderColor = CreateColor(1, 1, 1),
 			backdropColor = CreateColor(0, 0, 0),
+		}
+		GAME_TOOLTIP_BACKDROP_STYLE_EMBEDDED = GAME_TOOLTIP_BACKDROP_STYLE_DEFAULT
+		GAME_TOOLTIP_BACKDROP_STYLE_AZERITE_ITEM  = {
+			--bgFile = "Interface\\Buttons\\WHITE8x8",
+			bgFile = "Interface\\AddOns\\LolzenUI\\media\\tooltip-azerite-bg",
+			--edgeFile = "Interface/Tooltips/UI-Tooltip-Border-Azerite",
+			edgeFile = "Interface\\AddOns\\LolzenUI\\media\\border-azerite",
+			--edgeFile = LSM:Fetch("border", LolzenUIcfg.tooltip["tip_border"]),
+			tile = false,
+			tileEdge = true,
+			tileSize = 16,
+			--edgeSize = 19,
+			edgeSize = 16,
+			--insets = { left = 4, right = 4, top = 4, bottom = 4 },
+			insets = { left = 3, right = 3, top = 3, bottom = 3 },
+
+			backdropBorderColor = CreateColor(1, 1, 1),
+			backdropColor = CreateColor(1, 1, 1),
+			
+			overlayAtlasTop = "AzeriteTooltip-Topper";
+			overlayAtlasTopScale = .75,
+			overlayAtlasBottom = "AzeriteTooltip-Bottom";
+			--overlayAtlasBottomScale = 1.5,
 		}
 
 		-- customize the mobClassification
@@ -141,12 +165,14 @@ f:SetScript("OnEvent", function(self, event, addon)
 		-- colorize tooltipBorder accordingly to itemQuality
 		local function colorItemQuality(self)
 			local _, link = self:GetItem()
-
 			if link then
 				local quality = link and select(3, GetItemInfo(link))
 				if quality then
 					local r, g, b = GetItemQualityColor(quality)
 					self:SetBackdropBorderColor(r, g, b)
+					if self.TopOverlay:IsShown() then
+						self:SetBackdropColor(r, g, b)
+					end
 				end
 			end
 		end
@@ -303,10 +329,14 @@ f:SetScript("OnEvent", function(self, event, addon)
 		-- clear textures when the tooltip is hidden
 		GameTooltip:HookScript("OnHide", function(self)
 			if LolzenUIcfg.tooltip["tip_show_raidmark"] == true then
-				ricon:SetTexture(nil)
+				if ricon:GetTexture() ~= nil then
+					ricon:SetTexture(nil)
+				end
 			end
 			if LolzenUIcfg.tooltip["tip_show_factionicons"] == true then
-				factionbg:SetTexture(nil)
+				if factionbg:GetTexture() ~= nil then
+					factionbg:SetTexture(nil)
+				end
 			end
 		end)
 
