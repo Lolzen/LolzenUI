@@ -93,7 +93,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 				afbar:SetValue(artifactXP)
 				afbar:SetAlpha(LolzenUIcfg.artifactbar["artifactbar_alpha"])
 				-- use tostring to prevent integer overflow
-				xptext:SetFormattedText("%s / %s (%.0f%%)", tostring(artifactXP), tostring(xpForNextPoint), tostring(artifactXP/xpForNextPoint*100) )
+				if xpForNextPoint ~= 0 then
+					xptext:SetFormattedText("%s / %s (%.0f%%)", tostring(artifactXP), tostring(xpForNextPoint), tostring(artifactXP/xpForNextPoint*100))
+				else
+					afbar:SetAlpha(0)
+				end
 			else
 				afbar:SetAlpha(0)
 			end
