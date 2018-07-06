@@ -60,10 +60,10 @@ function ns.createButtons()
 			end
 
 			button[i].text = _G["tickbox"..i.."Text"]
-			button[i].text:SetText(ns.modules[i])
+			button[i].text:SetText(ns.modules[i].name)
 
 			-- get status from saved vars
-			if LolzenUIcfg.modules[ns.modules[i]] == true then
+			if LolzenUIcfg.modules[ns.modules[i].name] == true then
 				button[i]:SetChecked(true)
 				button[i].text:SetTextColor(51/255, 181/255, 229/225)
 			else
@@ -76,14 +76,14 @@ end
 
 ns.panel.okay = function(self)
 	for i=1, #ns.modules do
-		LolzenUIcfg.modules[ns.modules[i]] = button[i]:GetChecked()
+		LolzenUIcfg.modules[ns.modules[i].name] = button[i]:GetChecked()
 	end
 	ReloadUI()
 end
 
 ns.panel.default = function(self)
 	for i=1, #ns.modules do
-		LolzenUIcfg.modules[ns.modules[i]] = true
+		LolzenUIcfg.modules[ns.modules[i].name] = true
 	end
 	ReloadUI()
 end
