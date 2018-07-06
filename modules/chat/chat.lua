@@ -3,7 +3,7 @@
 local _, ns = ...
 local LSM = LibStub("LibSharedMedia-3.0")
 
-ns.RegisterModule("chat")
+ns.RegisterModule("chat", true)
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")

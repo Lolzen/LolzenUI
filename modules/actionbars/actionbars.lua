@@ -1,7 +1,7 @@
 --// actionbars //--
 
 local _, ns = ...
-ns.RegisterModule("actionbars")
+ns.RegisterModule("actionbars", true)
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")

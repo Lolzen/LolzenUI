@@ -3,7 +3,7 @@
 
 local _, ns = ...
 
-ns.RegisterModule("inspect")
+ns.RegisterModule("inspect", false)
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")

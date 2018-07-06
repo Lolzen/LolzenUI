@@ -4,7 +4,7 @@ local _, ns = ...
 local LSM = LibStub("LibSharedMedia-3.0")
 local oUF = ns.oUF
 
-ns.RegisterModule("unitframes")
+ns.RegisterModule("unitframes", true)
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")

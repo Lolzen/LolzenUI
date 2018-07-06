@@ -2,7 +2,7 @@
 
 local _, ns = ...
 
-ns.RegisterModule("pullcount")
+ns.RegisterModule("pullcount", true)
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")

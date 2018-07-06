@@ -2,7 +2,7 @@
 
 local _, ns = ...
 
-ns.RegisterModule("buffwatcher")
+ns.RegisterModule("buffwatcher", true)
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")

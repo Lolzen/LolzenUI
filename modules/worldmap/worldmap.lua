@@ -2,7 +2,7 @@
 
 local _, ns = ...
 
-ns.RegisterModule("worldmap")
+ns.RegisterModule("worldmap", true)
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")

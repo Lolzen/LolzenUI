@@ -3,7 +3,7 @@
 local _, ns = ...
 local LSM = LibStub("LibSharedMedia-3.0")
 
-ns.RegisterModule("orderhallbar")
+ns.RegisterModule("orderhallbar", true)
 
 local function getCoordinates()
 	local x, y = GetPlayerMapPosition("player")
