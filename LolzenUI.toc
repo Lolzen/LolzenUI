@@ -16,25 +16,4 @@ defaultconfig.lua
 core.lua
 optionpanel.lua
 
-modules/actionbars/actionbars.lua
-modules/artifactbar/artifact.lua
-modules/buffs/buffs.lua
-modules/buffwatcher/buffwatcher.lua
-modules/chat/chat.lua
-modules/chat/chattabs.lua
-modules/clock/clock.lua
-modules/fonts/fonts.lua
-modules/itemlevel/ilvl.lua
-modules/inspect/inspect.lua
-modules/interruptannouncer/interrupt.lua
-modules/minimap/minimap.lua
-modules/nameplates/plates.lua
-modules/objectivetrackerframe/objective.lua
-modules/orderhallbar/panel.lua
-modules/pullcount/pull.lua
-modules/slashcommands/slashcmds.lua
-modules/tooltip/tip.lua
-modules/unitframes/unitframes.lua
-modules/versioncheck/versioncheck.lua
-modules/worldmap/worldmap.lua
-modules/xpbar/xp.lua
+modules.xml
