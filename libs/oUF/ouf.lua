@@ -1,6 +1,6 @@
 local parent, ns = ...
 local global = GetAddOnMetadata(parent, 'X-oUF')
-local _VERSION = '7.0.14'
+local _VERSION = '@project-version@'
 if(_VERSION:find('project%-version')) then
 	_VERSION = 'devel'
 end
@@ -18,6 +18,11 @@ local callback, objects, headers = {}, {}, {}
 
 local elements = {}
 local activeElements = {}
+
+local PetBattleFrameHider = CreateFrame('Frame', (global or parent) .. '_PetBattleFrameHider', UIParent, 'SecureHandlerStateTemplate')
+PetBattleFrameHider:SetAllPoints()
+PetBattleFrameHider:SetFrameStrata('LOW')
+RegisterStateDriver(PetBattleFrameHider, 'visibility', '[petbattle] hide; show')
 
 -- updating of "invalid" units.
 local function enableTargetUpdate(object)
@@ -179,7 +184,13 @@ for k, v in next, {
 		UnregisterUnitWatch(self)
 		self:Hide()
 	end,
+	--[[ frame:IsEnabled()
+	Used to check if a unit frame is registered with the unit existence monitor. This is a reference to
+	`UnitWatchRegistered`.
 
+	* self - unit frame
+	--]]
+	IsEnabled = UnitWatchRegistered,
 	--[[ frame:UpdateAllElements(event)
 	Used to update all enabled elements on the given frame.
 
@@ -450,13 +461,15 @@ end
 local function generateName(unit, ...)
 	local name = 'oUF_' .. style:gsub('^oUF_?', ''):gsub('[^%a%d_]+', '')
 
-	local raid, party, groupFilter
+	local raid, party, groupFilter, unitsuffix
 	for i = 1, select('#', ...), 2 do
 		local att, val = select(i, ...)
-		if(att == 'showRaid') then
-			raid = true
+		if(att == 'oUF-initialConfigFunction') then
+			unitsuffix = val:match('unitsuffix[%p%s]+(%a+)')
+		elseif(att == 'showRaid') then
+			raid = val ~= false and val ~= nil
 		elseif(att == 'showParty') then
-			party = true
+			party = val ~= false and val ~= nil
 		elseif(att == 'groupFilter') then
 			groupFilter = val
 		end
@@ -466,10 +479,10 @@ local function generateName(unit, ...)
 	if(raid) then
 		if(groupFilter) then
 			if(type(groupFilter) == 'number' and groupFilter > 0) then
-				append = groupFilter
-			elseif(groupFilter:match('TANK')) then
+				append = 'Raid' .. groupFilter
+			elseif(groupFilter:match('MAINTANK')) then
 				append = 'MainTank'
-			elseif(groupFilter:match('ASSIST')) then
+			elseif(groupFilter:match('MAINASSIST')) then
 				append = 'MainAssist'
 			else
 				local _, count = groupFilter:gsub(',', '')
@@ -489,13 +502,15 @@ local function generateName(unit, ...)
 	end
 
 	if(append) then
-		name = name .. append
+		name = name .. append .. (unitsuffix or '')
 	end
 
 	-- Change oUF_LilyRaidRaid into oUF_LilyRaid
 	name = name:gsub('(%u%l+)([%u%l]*)%1', '%1')
 	-- Change oUF_LilyTargettarget into oUF_LilyTargetTarget
 	name = name:gsub('t(arget)', 'T%1')
+	name = name:gsub('p(et)', 'P%1')
+	name = name:gsub('f(ocus)', 'F%1')
 
 	local base = name
 	local i = 2
@@ -586,7 +601,7 @@ do
 	* template     - name of a template to be used for creating the header. Defaults to `'SecureGroupHeaderTemplate'`
 	                 (string?)
 	* visibility   - macro conditional(s) which define when to display the header (string).
-	* ...          - further argument pairs. Consult [Group Headers](http://wowprogramming.com/docs/secure_template/Group_Headers)
+	* ...          - further argument pairs. Consult [Group Headers](http://wowprogramming.com/docs/secure_template/Group_Headers.html)
 	                 for possible values.
 
 	In addition to the standard group headers, oUF implements some of its own attributes. These can be supplied by the
@@ -603,7 +618,7 @@ do
 
 		local isPetHeader = template:match('PetHeader')
 		local name = overrideName or generateName(nil, ...)
-		local header = CreateFrame('Frame', name, oUF_PetBattleFrameHider, template)
+		local header = CreateFrame('Frame', name, PetBattleFrameHider, template)
 
 		header:SetAttribute('template', 'oUF_ClickCastUnitTemplate')
 		for i = 1, select('#', ...), 2 do
@@ -727,7 +742,7 @@ function oUF:Spawn(unit, overrideName)
 	unit = unit:lower()
 
 	local name = overrideName or generateName(unit)
-	local object = CreateFrame('Button', name, oUF_PetBattleFrameHider, 'SecureUnitButtonTemplate')
+	local object = CreateFrame('Button', name, PetBattleFrameHider, 'SecureUnitButtonTemplate')
 	Private.UpdateUnits(object, unit)
 
 	self:DisableBlizzard(unit)
@@ -870,7 +885,9 @@ oUF.headers = headers
 
 if(global) then
 	if(parent ~= 'oUF' and global == 'oUF') then
-		error('%s is doing it wrong and setting its global to oUF.', parent)
+		error('%s is doing it wrong and setting its global to "oUF".', parent)
+	elseif(_G[global]) then
+		error('%s is setting its global to an existing name "%s".', parent, global)
 	else
 		_G[global] = oUF
 	end

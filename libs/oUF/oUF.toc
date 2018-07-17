@@ -1,7 +1,7 @@
-## Interface: 70200
+## Interface: 70300
 ## Title: oUF
 ## Author: Haste, lightspark, p3lim, Rainrider
-## Version: 7.0.14
+## Version: @project-version@
 ## Notes: Unit frame framework. Does nothing by itself.
 ## OptionalDeps: Clique
 ## X-oUF: oUF
