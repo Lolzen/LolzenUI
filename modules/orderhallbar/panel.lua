@@ -5,12 +5,27 @@ local LSM = LibStub("LibSharedMedia-3.0")
 
 ns.RegisterModule("orderhallbar", true)
 
-local function getCoordinates()
-	local x, y = GetPlayerMapPosition("player")
-	if x ~= nil then
-		return format(" [%.1f/%.1f]",x*100,y*100)
-	else
+-- thanks to elcius for this
+-- http://www.wowinterface.com/forums/showpost.php?p=328355&postcount=3
+local MapRects = {}
+local TempVec2D = CreateVector2D(0, 0)
+function getCoordinates()
+	local inInstance, instanceType = IsInInstance()
+	if inInstance and (instanceType == "party" or "raid") then
 		return ""
+	else
+		local MapID = C_Map.GetBestMapForUnit("player")
+		local R, P, _ = MapRects[MapID], TempVec2D
+		if not R then
+			R = {};
+			_, R[1] = C_Map.GetWorldPosFromMapPos(MapID, CreateVector2D(0, 0))
+			_, R[2] = C_Map.GetWorldPosFromMapPos(MapID, CreateVector2D(1, 1))
+			R[2]:Subtract(R[1])
+			MapRects[MapID] = R
+		end
+		P.x, P.y = UnitPosition("Player")
+		P:Subtract(R[1])
+		return format(" [%.1f/%.1f]", (1/R[2].y)*P.y*100, (1/R[2].x)*P.x*100)
 	end
 end
 
@@ -41,10 +56,10 @@ local function getCurrencies()
 			if not currency[i].frame then
 				currency[i].frame = CreateFrame("Frame", nil, OrderHallCommandBar)
 				currency[i].frame:SetAllPoints(currency[i])
-				currency[i].frame:SetScript("OnEnter", function(self) 
+				currency[i].frame:SetScript("OnEnter", function(self)
 					GameTooltip:SetOwner(currency[i], "ANCHOR_BOTTOMRIGHT")
-					if currency[i].tooltipinfo ~= nil then
-						GameTooltip:SetCurrencyByID(currency[i].tooltipinfo)
+					if currency[i].id ~= nil then
+						GameTooltip:SetCurrencyByID(currency[i].id)
 						GameTooltip:Show()
 					end
 				end)
@@ -54,7 +69,7 @@ local function getCurrencies()
 			end
 
 			if i == 1 then
-				currency[i]:SetPoint("LEFT", OrderHallCommandBar.Currency, "RIGHT", 10, 0)
+				currency[i]:SetPoint("LEFT", OrderHallCommandBar.ClassIcon, "RIGHT", 10, 0)
 			else
 				currency[i]:SetPoint("LEFT", currency[i-1].text, "RIGHT", 10, 0)
 			end
@@ -62,19 +77,19 @@ local function getCurrencies()
 	end
 	local counter = 1
 	for i=1, GetCurrencyListSize() do
-		local name, _, _, _, isWatched, count = GetCurrencyListInfo(i)
+		local name, _, _, _, isWatched, count, icon = GetCurrencyListInfo(i)
 		if isWatched then
 			local link = GetCurrencyListLink(i)
-			local _, _, icon = GetCurrencyInfo(link:match("|Hcurrency:(%d+)|"))
+			local id = tonumber(strmatch(link, "currency:(%d+)"))
 			if currency[counter] then
 				currency[counter]:SetTexture(icon)
 				currency[counter].text:SetText(count)
 				if not currency[counter].name then
 					currency[counter].name = name
 				end
-				-- make the link available
-				if not currency[counter].tooltipinfo then
-					currency[counter].tooltipinfo = link:match("|Hcurrency:(%d+)|")
+				-- make the currency id available
+				if not currency[counter].id then
+					currency[counter].id = id
 				end
 				currency[counter]:Show()
 				currency[counter].text:Show()
@@ -84,7 +99,7 @@ local function getCurrencies()
 			for int=counter, #currency do
 				if currency[int] then
 					currency[int].text:SetText(nil)
-					currency[int].tooltipinfo = nil
+					currency[int].id = nil
 					currency[int]:Hide()
 				end
 			end
@@ -105,7 +120,6 @@ local function modifyOHB()
 		getAreaText()
 		self:Play()
 	end)
-	timer:Play()
 
 	-- hide troop info
 	OrderHallCommandBar.RefreshCategories = function() end
@@ -116,34 +130,21 @@ local function modifyOHB()
 	OrderHallCommandBar.Background:SetAlpha(LolzenUIcfg.orderhallbar["ohb_background_alpha"])
 
 	OrderHallCommandBar.WorldMapButton:Hide()
-
-	OrderHallCommandBar.CurrencyIcon:ClearAllPoints()
-	OrderHallCommandBar.CurrencyIcon:SetPoint("LEFT", OrderHallCommandBar.ClassIcon, "RIGHT", 5, 0)
-
-	OrderHallCommandBar.Currency:ClearAllPoints()
-	OrderHallCommandBar.Currency:SetPoint("LEFT", OrderHallCommandBar.CurrencyIcon, "RIGHT", 0, 0)
-	OrderHallCommandBar.Currency:SetFont(LSM:Fetch("font", LolzenUIcfg.orderhallbar["ohb_currency_font"]), LolzenUIcfg.orderhallbar["ohb_currency_font_size"], LolzenUIcfg.orderhallbar["ohb_currency_font_flag"])
-	OrderHallCommandBar.Currency:SetTextColor(1, 1, 1)
-	OrderHallCommandBar.Currency:SetShadowOffset(0, 0)
-
-	-- as the mouseover tooltip isn't available anymore, since we overlap it with the currency info
-	-- create our own and mimic the original's behaviour
-	local cF = CreateFrame("Frame", nil, OrderHallCommandBar)
-	cF:SetAllPoints(OrderHallCommandBar.CurrencyIcon)
-	cF:SetScript("OnEnter", function(self) 
-		GameTooltip:SetOwner(OrderHallCommandBar.CurrencyIcon, "ANCHOR_BOTTOMRIGHT")
-		GameTooltip:SetCurrencyByID(1220)
-		GameTooltip:Show()
-	end)
-	cF:SetScript("OnLeave", function(self)
-		GameTooltip:Hide()
-	end)
+	OrderHallCommandBar.CurrencyIcon:Hide()
+	OrderHallCommandBar.CurrencyHitTest:Hide() -- the area which popups the order resource info tooltip
+	OrderHallCommandBar.Currency:Hide()
 
 	OrderHallCommandBar:RegisterEvent("CHAT_MSG_CURRENCY")
 	OrderHallCommandBar:RegisterEvent("CURRENCY_DISPLAY_UPDATE")
+	OrderHallCommandBar:RegisterEvent("PLAYER_STARTED_MOVING")
+	OrderHallCommandBar:RegisterEvent("PLAYER_STOPPED_MOVING")
 	OrderHallCommandBar:SetScript("OnEvent", function(self, event)
 		if event == "CHAT_MSG_CURRENCY" or event == "CURRENCY_DISPLAY_UPDATE" then
 			getCurrencies()
+		elseif event == "PLAYER_STOPPED_MOVING" then
+			timer:Stop()
+		elseif event == "PLAYER_STARTED_MOVING" then
+			timer:Play()
 		end
 	end)
 
@@ -180,6 +181,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		if LolzenUIcfg.orderhallbar["ohb_always_show"] == true then
 			if not OrderHallCommandBar:IsShown() then
 				OrderHallCommandBar:Show()
+				getAreaText()
 			end
 		end
 	end
