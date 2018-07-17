@@ -86,26 +86,29 @@ f:SetScript("OnEvent", function(self, event, addon)
 		-- get artifact power data
 		function afbar:ARTIFACT_XP_UPDATE()
 			local hasArtifact = HasArtifactEquipped("player")
-			if hasArtifact then
-				local _, _, _, _, totalXP, pointsSpent, _, _, _, _, _, _, artifactTier = C_ArtifactUI.GetEquippedArtifactInfo()
-				local numPoints, artifactXP, xpForNextPoint = MainMenuBar_GetNumArtifactTraitsPurchasableFromXP(pointsSpent, totalXP, artifactTier)
-				afbar:SetMinMaxValues(0, xpForNextPoint)
+			local hasHeartOfAzeroth = C_AzeriteItem.HasActiveAzeriteItem()
+			local artifactDisabled = C_ArtifactUI.IsEquippedArtifactDisabled()
+			-- prioritize Heart of Azeroth over Artifact Weapon
+			if hasHeartOfAzeroth then
+				local azeriteItemLocation = C_AzeriteItem.FindActiveAzeriteItem()
+				local artifactXP, totalXP = C_AzeriteItem.GetAzeriteItemXPInfo(azeriteItemLocation)
+				local xpForNextPoint = totalXP - artifactXP
+				local currentLevel = C_AzeriteItem.GetPowerLevel(azeriteItemLocation)
+				afbar:SetMinMaxValues(0, totalXP)
 				afbar:SetValue(artifactXP)
 				afbar:SetAlpha(LolzenUIcfg.artifactbar["artifactbar_alpha"])
 				-- use tostring to prevent integer overflow
-				if xpForNextPoint ~= 0 then
-					xptext:SetFormattedText("%s / %s (%.0f%%)", tostring(artifactXP), tostring(xpForNextPoint), tostring(artifactXP/xpForNextPoint*100))
-				else
-					afbar:SetAlpha(0)
-				end
+				xptext:SetFormattedText("[Level: %d] %s / %s (%.0f%%)", currentLevel, tostring(artifactXP), tostring(totalXP), tostring(artifactXP/totalXP*100))
 			else
 				afbar:SetAlpha(0)
 			end
 		end
 		afbar.PLAYER_ENTERING_WORLD = afbar.ARTIFACT_XP_UPDATE
 		afbar.UNIT_INVENTORY_CHANGED = afbar.ARTIFACT_XP_UPDATE
+		afbar.AZERITE_ITEM_EXPERIENCE_CHANGED  = afbar.ARTIFACT_XP_UPDATE
 
 		afbar:RegisterEvent("ARTIFACT_XP_UPDATE")
+		afbar:RegisterEvent("AZERITE_ITEM_EXPERIENCE_CHANGED")
 		afbar:RegisterEvent("UNIT_INVENTORY_CHANGED")
 		afbar:RegisterEvent("PLAYER_ENTERING_WORLD")
 		afbar:SetScript("OnEvent", function(self, event, ...) self[event](self, event, ...) end)
