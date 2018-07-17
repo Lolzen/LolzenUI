@@ -24,19 +24,18 @@ f:SetScript("OnEvent", function(self, event, addon)
 			ShoppingTooltip3,
 		}
 
-		-- the backdrop of our Tooltips along with a beautiful border
-		local backdrop = { 
+		-- overwrite the default tooltip style
+		GAME_TOOLTIP_BACKDROP_STYLE_DEFAULT = {
 			bgFile = "Interface\\Buttons\\WHITE8x8",
-			edgeFile = LSM:Fetch("border", LolzenUIcfg.tooltip["tip_border"]), 
+			edgeFile = LSM:Fetch("border", LolzenUIcfg.tooltip["tip_border"]),
 			tile = false,
-			tileSize = 8,
+			tileEdge = true,
+			tileSize = 16,
 			edgeSize = 16,
-			insets = {
-				left = 3,
-				right = 3,
-				top = 3,
-				bottom = 3
-			}
+			insets = { left = 3, right = 3, top = 3, bottom = 3 },
+
+			backdropBorderColor = CreateColor(1, 1, 1),
+			backdropColor = CreateColor(0, 0, 0),
 		}
 
 		-- customize the mobClassification
@@ -77,7 +76,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 		
 		-- return the unit which is mouseovered
 		local function getTooltipUnit()
-			return select(2, GameTooltip:GetUnit())
+			local _, unit = GameTooltip:GetUnit()
+			return unit
 		end
 
 		-- return the unitClassColor values
@@ -155,7 +155,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		local function InspectTalents(inspect, unit)
 			-- by default the PvP line is hidden in the modyfyTip function, if we just add a line it would look messy as the talents displayed are halfway outside of the border,
 			-- while the hidden PvP line is an empty space. So we use the PvP line and set our text there instead of adding a new one, if the target has PvP activated
-			if UnitIsPlayer(unit) and UnitLevel(unit) > 9 then
+			if UnitIsPlayer(unit) then
 				local _, name, _, icon, role, _ = GetSpecializationInfoByID(GetInspectSpecialization(unit))
 				if icon then
 					if UnitIsPVP(unit) then
@@ -318,7 +318,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		-- also modify more tooltip types
 		for i=1, #tooltips, 1 do
 			tooltips[i]:HookScript("OnTooltipSetItem", colorItemQuality)
-			tooltips[i]:SetBackdrop(backdrop)
+			tooltips[i]:SetBackdrop(GAME_TOOLTIP_BACKDROP_STYLE_DEFAULT)
 			hooksecurefunc(tooltips[i], "SetOwner", colorBG)
 		end
 
