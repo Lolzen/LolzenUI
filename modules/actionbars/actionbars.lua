@@ -16,14 +16,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 		invisible:Hide()
 
 		local BlizzArt = {
-			MainMenuBarTexture0, MainMenuBarTexture1,
-			MainMenuBarTexture2,MainMenuBarTexture3,
-			MainMenuBarLeftEndCap, MainMenuBarRightEndCap,
-			MainMenuBarPageNumber, ActionBarUpButton, ActionBarDownButton,
-			CharacterBag0Slot, CharacterBag1Slot, CharacterBag2Slot, CharacterBag3Slot,
-			MainMenuBarBackpackButton,
-			StanceBarFrame,
-			ReputationWatchBar, MainMenuExpBar, ArtifactWatchBar, HonorWatchBar,
+			MainMenuBarArtFrameBackground,
+			MainMenuBarArtFrame.LeftEndCap, MainMenuBarArtFrame.RightEndCap,
+			MainMenuBarArtFrame.PageNumber, ActionBarUpButton, ActionBarDownButton,
+			StanceBarFrame, SlidingActionBarTexture0, SlidingActionBarTexture1,
+			MicroButtonAndBagsBar,
 		}
 
 		for _, frame in pairs(BlizzArt) do
@@ -48,6 +45,103 @@ f:SetScript("OnEvent", function(self, event, addon)
 			frame:Hide()
 		end
 
+		-- Hide the StatusbarMixins by overwriting the ShouldBeVisible() functions
+		-- thanks for not giving these bars a name blizzard ~.~
+		function ExpBarMixin:ShouldBeVisible()
+			return false
+		end
+
+		function ArtifactBarMixin:ShouldBeVisible()
+			return false
+		end
+
+		function HonorBarMixin:ShouldBeVisivle()
+			return false
+		end
+
+		function ReputationBarMixin:ShouldBeVisible()
+			return false
+		end
+
+		function AzeriteBarMixin:ShouldBeVisible()
+			return false
+		end
+
+		-- overwrite PetActionBar_Update, so it doesn't interfer with SetNormalTexture()
+		PetActionBar_Update = function(...)
+			local petActionButton, petActionIcon, petAutoCastableTexture, petAutoCastShine, petActionHotkey
+			for i=1, NUM_PET_ACTION_SLOTS, 1 do
+				local buttonName = "PetActionButton" .. i
+				petActionButton = _G[buttonName]
+				petActionIcon = _G[buttonName.."Icon"]
+				petAutoCastableTexture = _G[buttonName.."AutoCastable"]
+				petAutoCastShine = _G[buttonName.."Shine"]
+				petActionHotkey = _G[buttonName.."HotKey"]
+				local name, texture, isToken, isActive, autoCastAllowed, autoCastEnabled, spellID = GetPetActionInfo(i)
+				if ( not isToken ) then
+					petActionIcon:SetTexture(texture)
+					petActionButton.tooltipName = name
+				else
+					petActionIcon:SetTexture(_G[texture])
+					petActionButton.tooltipName = _G[name]
+				end
+				petActionButton.isToken = isToken
+				if spellID then
+					local spell = Spell:CreateFromSpellID(spellID)
+					petActionButton.spellDataLoadedCancelFunc = spell:ContinueWithCancelOnSpellLoad(function()
+						petActionButton.tooltipSubtext = spell:GetSpellSubtext()
+					end)
+				end
+				if ( isActive ) then
+					if ( IsPetAttackAction(i) ) then
+						PetActionButton_StartFlash(petActionButton)
+						-- the checked texture looks a little confusing at full alpha (looks like you have an extra ability selected)
+						petActionButton:GetCheckedTexture():SetAlpha(0.5)
+					else
+						PetActionButton_StopFlash(petActionButton)
+						petActionButton:GetCheckedTexture():SetAlpha(1.0)
+					end
+					petActionButton:SetChecked(true)
+				else
+					PetActionButton_StopFlash(petActionButton)
+					petActionButton:SetChecked(false)
+				end
+				if ( autoCastAllowed ) then
+					petAutoCastableTexture:Show()
+				else
+					petAutoCastableTexture:Hide()
+				end
+				if ( autoCastEnabled ) then
+					AutoCastShine_AutoCastStart(petAutoCastShine)
+				else
+					AutoCastShine_AutoCastStop(petAutoCastShine)
+				end
+				if ( name ) then
+					petActionButton:Show()
+				else
+					if ( PetActionBarFrame.showgrid == 0 ) then
+						petActionButton:Hide()
+					end
+				end
+				if ( texture ) then
+					if ( GetPetActionSlotUsable(i) ) then
+						petActionIcon:SetVertexColor(1, 1, 1)
+					else
+						petActionIcon:SetVertexColor(0.4, 0.4, 0.4)
+					end
+					petActionIcon:Show()
+					--petActionButton:SetNormalTexture("Interface\\Buttons\\UI-Quickslot2")
+					if LolzenUIcfg.actionbar["actionbar_show_keybinds"] == false then
+						petActionHotkey:Hide()
+					end
+				else
+					petActionIcon:Hide()
+					--petActionButton:SetNormalTexture("Interface\\Buttons\\UI-Quickslot")
+				end
+			end
+			SharedActionButton_RefreshSpellHighlight(petActionButton, HasPetActionHighlightMark(i))
+		end
+
 		--// Bar sizes, positions & styling//--
 
 		-- Make the MainMenuBar clickthrough, so it doesn't interfere with other frames placed at the bottom
@@ -58,7 +152,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		local holder = CreateFrame("Frame", "MainMenuBarHolderFrame", UIParent, "SecureHandlerStateTemplate")
 		holder:SetSize(LolzenUIcfg.actionbar["actionbar_button_size"]*12+LolzenUIcfg.actionbar["actionbar_button_spacing"]*11, LolzenUIcfg.actionbar["actionbar_button_size"])
 		holder:SetPoint(LolzenUIcfg.actionbar["actionbar_mmb_anchor1"], LolzenUIcfg.actionbar["actionbar_mmb_parent"], LolzenUIcfg.actionbar["actionbar_mmb_anchor1"], LolzenUIcfg.actionbar["actionbar_mmb_posx"], LolzenUIcfg.actionbar["actionbar_mmb_posy"])
-		
+
 		local actionbars = {
 			"ActionButton",
 			"MultiBarBottomLeftButton",
@@ -67,8 +161,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			"MultiBarRightButton",
 			"PetActionButton",
 		}
-		
-		
+
 		local function applyTheme(name)
 			_G[name.."Icon"]:SetTexCoord(.08, .92, .08, .92)
 			_G[name.."Icon"]:SetPoint("TOPLEFT", _G[name], "TOPLEFT", 2, -2)
@@ -107,10 +200,19 @@ f:SetScript("OnEvent", function(self, event, addon)
 				_G[name.."NormalTexture"]:SetAllPoints(_G[name])
 			end
 
-			-- Autocast stuff on petbar
+			-- petbar specific
+			if _G[name.."NormalTexture2"] then
+				_G[name.."NormalTexture2"]:SetAllPoints(_G[name])
+			end
+
 			if _G[name.."Shine"] then
 				_G[name.."Shine"]:SetPoint("TOPLEFT", _G[name], "TOPLEFT", 2, -2)
 				_G[name.."Shine"]:SetPoint("BOTTOMRIGHT", _G[name], "BOTTOMRIGHT", -2, 2)
+			end
+
+			if _G[name.."AutoCastable"] then
+				_G[name.."AutoCastable"]:SetPoint("TOPLEFT", _G[name], "TOPLEFT", -2, 2)
+				_G[name.."AutoCastable"]:SetPoint("BOTTOMRIGHT", _G[name], "BOTTOMRIGHT", 2, -2)
 			end
 		end
 
@@ -121,7 +223,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				_G[name.."HotKey"]:Hide()
 			end
 		end)
-		
+
 		local function setActionBarPosition(name)
 			for i = 1, NUM_ACTIONBAR_BUTTONS do
 				local button = _G[name..i]
@@ -167,29 +269,5 @@ f:SetScript("OnEvent", function(self, event, addon)
 		for _, name in pairs(actionbars) do
 			setActionBarPosition(name)
 		end
-
-		--// (re)skinning petbar on PetActionBar_Update //--
-		local function applyPetBarTheme(self, i)
-			local button = self..i
-
-			_G[button]:SetNormalTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.actionbar["actionbar_normal_texture"])
-
-			_G[button.."NormalTexture2"]:SetPoint("TOPLEFT", button, "TOPLEFT", -0, 0)
-			_G[button.."NormalTexture2"]:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 0, -0)
-
-			if _G[button.."AutoCastable"] then
-				_G[button.."AutoCastable"]:SetPoint("TOPLEFT", button, "TOPLEFT", -12, 12)
-				_G[button.."AutoCastable"]:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 12, -12)
-			end
-
-		end
-
-		local function applyThemeToPetBar()
-			for i = 1, NUM_PET_ACTION_SLOTS do
-				applyPetBarTheme("PetActionButton", i)
-			end
-		end
-
-		hooksecurefunc("PetActionBar_Update", applyThemeToPetBar)
 	end
 end)
