@@ -9,11 +9,7 @@ It is a compilation of different utilities for either information, feature, ease
 ### embedded Libs:
 **CallbackHandler-1.0**
 
-Dependency for LibItemUpgradeInfo and LibSharedMedia.
-
-**LibItemUpgradeInfo-1.0**
-
-As blizzards API doesn't perfectly well work (heirlooms, upgrades, ..) LolzenUI makes use of this lib.
+Dependency for LibSharedMedia.
 
 **LibSharedMedia-3.0**
 
@@ -21,7 +17,7 @@ Can be used to easily add custom fonts and textures to LolzenUI.
 
 **LibStub**
 
-Dependency for LibItemUpgradeInfo and LibSharedMedia.
+Dependency for LibSharedMedia.
 
 **oUF**
 
@@ -60,10 +56,8 @@ Plugin for oUF from haste. enables /omf to easily move unitframes around. http:/
 
 ------
 ### ToDo:
-- [ ] possible bug: buttons get occasionaly blocked (?)
 - [ ] bug: occasional taint: find & fix it
 - [ ] finish Unitframe options
-  - [ ] OOC Fading: exclude party & raid frames
   - [ ] target/focus/boss panel (name & level font, etc) options
 - [ ] unify optionpanel formatting as good as possible
 - [ ] itemlevel: add support for more bags
