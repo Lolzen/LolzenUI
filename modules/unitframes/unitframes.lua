@@ -971,10 +971,14 @@ f:SetScript("OnEvent", function(self, event, addon)
 			local frame = CreateFrame("Frame", nil, UIParent)
 			frame:RegisterEvent("PLAYER_ENTERING_WORLD")
 			frame:SetScript("OnEvent", function(self, event)
-				CompactRaidFrameManager:UnregisterAllEvents()
-				CompactRaidFrameManager:Hide()
-				CompactRaidFrameContainer:UnregisterAllEvents()
-				CompactRaidFrameContainer:Hide()
+				if CompactRaidFrameManager then
+					CompactRaidFrameManager:UnregisterAllEvents()
+					CompactRaidFrameManager:Hide()
+				end
+				if CompactRaidFrameContainer then
+					CompactRaidFrameContainer:UnregisterAllEvents()
+					CompactRaidFrameContainer:Hide()
+				end
 			end)
 		end
 
