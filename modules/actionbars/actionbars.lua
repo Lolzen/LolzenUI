@@ -67,81 +67,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 			return false
 		end
 
-		-- overwrite PetActionBar_Update, so it doesn't interfer with SetNormalTexture()
-		PetActionBar_Update = function(...)
-			local petActionButton, petActionIcon, petAutoCastableTexture, petAutoCastShine, petActionHotkey
-			for i=1, NUM_PET_ACTION_SLOTS, 1 do
-				local buttonName = "PetActionButton" .. i
-				petActionButton = _G[buttonName]
-				petActionIcon = _G[buttonName.."Icon"]
-				petAutoCastableTexture = _G[buttonName.."AutoCastable"]
-				petAutoCastShine = _G[buttonName.."Shine"]
-				petActionHotkey = _G[buttonName.."HotKey"]
-				local name, texture, isToken, isActive, autoCastAllowed, autoCastEnabled, spellID = GetPetActionInfo(i)
-				if ( not isToken ) then
-					petActionIcon:SetTexture(texture)
-					petActionButton.tooltipName = name
-				else
-					petActionIcon:SetTexture(_G[texture])
-					petActionButton.tooltipName = _G[name]
-				end
-				petActionButton.isToken = isToken
-				if spellID then
-					local spell = Spell:CreateFromSpellID(spellID)
-					petActionButton.spellDataLoadedCancelFunc = spell:ContinueWithCancelOnSpellLoad(function()
-						petActionButton.tooltipSubtext = spell:GetSpellSubtext()
-					end)
-				end
-				if ( isActive ) then
-					if ( IsPetAttackAction(i) ) then
-						PetActionButton_StartFlash(petActionButton)
-						-- the checked texture looks a little confusing at full alpha (looks like you have an extra ability selected)
-						petActionButton:GetCheckedTexture():SetAlpha(0.5)
-					else
-						PetActionButton_StopFlash(petActionButton)
-						petActionButton:GetCheckedTexture():SetAlpha(1.0)
-					end
-					petActionButton:SetChecked(true)
-				else
-					PetActionButton_StopFlash(petActionButton)
-					petActionButton:SetChecked(false)
-				end
-				if ( autoCastAllowed ) then
-					petAutoCastableTexture:Show()
-				else
-					petAutoCastableTexture:Hide()
-				end
-				if ( autoCastEnabled ) then
-					AutoCastShine_AutoCastStart(petAutoCastShine)
-				else
-					AutoCastShine_AutoCastStop(petAutoCastShine)
-				end
-				if ( name ) then
-					petActionButton:Show()
-				else
-					if ( PetActionBarFrame.showgrid == 0 ) then
-						petActionButton:Hide()
-					end
-				end
-				if ( texture ) then
-					if ( GetPetActionSlotUsable(i) ) then
-						petActionIcon:SetVertexColor(1, 1, 1)
-					else
-						petActionIcon:SetVertexColor(0.4, 0.4, 0.4)
-					end
-					petActionIcon:Show()
-					--petActionButton:SetNormalTexture("Interface\\Buttons\\UI-Quickslot2")
-					if LolzenUIcfg.actionbar["actionbar_show_keybinds"] == false then
-						petActionHotkey:Hide()
-					end
-				else
-					petActionIcon:Hide()
-					--petActionButton:SetNormalTexture("Interface\\Buttons\\UI-Quickslot")
-				end
-			end
-			SharedActionButton_RefreshSpellHighlight(petActionButton, HasPetActionHighlightMark(i))
-		end
-
 		--// Bar sizes, positions & styling//--
 
 		-- Make the MainMenuBar clickthrough, so it doesn't interfere with other frames placed at the bottom
@@ -221,6 +146,13 @@ f:SetScript("OnEvent", function(self, event, addon)
 			local name = self:GetName()
 			if LolzenUIcfg.actionbar["actionbar_show_keybinds"] == false then
 				_G[name.."HotKey"]:Hide()
+			end
+		end)
+
+		--hook PetActionBar_Update, so it doesn't interfer with SetNormalTexture()
+		hooksecurefunc("PetActionBar_Update", function(self)
+			for i=1, NUM_PET_ACTION_SLOTS do
+				_G["PetActionButton"..i]:SetNormalTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.actionbar["actionbar_normal_texture"])
 			end
 		end)
 
