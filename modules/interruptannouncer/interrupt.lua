@@ -14,7 +14,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		eF:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 
 		function eF.COMBAT_LOG_EVENT_UNFILTERED(timestamp, event, ...)
-			local _, eventType, _, _, sourceName, _, _, _, destName, _, _, _, _, _, destSpellId = ...
+			local _, eventType, _, _, sourceName, _, _, _, destName, _, _, _, _, _, destSpellId = CombatLogGetCurrentEventInfo()
 			if sourceName == UnitName("Player") then
 				if string.find(eventType, "_INTERRUPT") then
 					local msg = LolzenUIcfg.interruptannouncer["interruptannouncer_msg"]
