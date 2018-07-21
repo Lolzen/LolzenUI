@@ -64,10 +64,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 			return false
 		end
 
-		function HonorBarMixin:OnLoad() 
-			self:UnregisterAllEvents()
-		end
-
 		function ReputationBarMixin:ShouldBeVisible()
 			return false
 		end
