@@ -41,9 +41,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 		
 		-- do NOT show this again, ffs
-		hooksecurefunc("StoreMicroButton_OnEvent", function(self)
-			self:Hide()
-		end)
+		StoreMicroButton.Show = function() end
 
 		for _, frame in pairs(MicroButtons) do
 			frame:SetParent(invisible)
