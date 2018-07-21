@@ -39,6 +39,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 		if not _G['AchievementMicroButton_Update'] then
 			_G['AchievementMicroButton_Update'] = function() end
 		end
+		
+		-- do NOT show this again, ffs
+		hooksecurefunc("StoreMicroButton_OnEvent", function(self)
+			self:Hide()
+		end)
 
 		for _, frame in pairs(MicroButtons) do
 			frame:SetParent(invisible)
@@ -55,7 +60,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			return false
 		end
 
-		function HonorBarMixin:ShouldBeVisivle()
+		function HonorBarMixin:ShouldBeVisible()
 			return false
 		end
 
