@@ -154,6 +154,9 @@ local function modifyOHB()
 	ohbframe:SetFrameStrata("HIGH")
 	ohbframe:SetScript("OnMouseDown", GarrisonLandingPage_Toggle)
 
+	--reposition BG display
+	UIWidgetTopCenterContainerFrame:SetPoint("TOP", OrderHallCommandBar, "BOTTOM", 0, -10)
+
 	OrderHallCommandBar.modded = true
 end
 
