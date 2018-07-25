@@ -77,7 +77,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 				-- do the timer stuff when Play() is called
 				icon[i].timer:SetScript("OnPlay", function(self)
-					local name, _, _, count, _, _, expirationTime = UnitAura("player", icon[i].name)
+					local name, _, count, _, _, expirationTime =  AuraUtil.FindAuraByName(icon[i].name, "player")
 					if name then
 						if icon[i]:GetAlpha() ~= 1 then
 							icon[i]:SetAlpha(1)
@@ -115,7 +115,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		local function AuraDetect()
 			for i=1, #LolzenUIcfg.buffwatcher["buffwatchlist"][UnitName("player")] do
-				if UnitAura("player", icon[i].name) then
+				if not icon[i] then return end
+				if AuraUtil.FindAuraByName(icon[i].name, "player") then
 					icon[i].timer:Play()
 				else
 					icon[i].timer:Stop()
@@ -128,7 +129,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				AuraDetect()
 				-- hide the buttons and their children on login, if they aren't active
 				for i=1, #LolzenUIcfg.buffwatcher["buffwatchlist"][UnitName("player")] do
-					local name, _, _, count, _, _, expirationTime = UnitAura("player", icon[i].name)
+					local name, _, count, _, _, expirationTime =  AuraUtil.FindAuraByName(icon[i].name, "player")
 					if not expirationTime then
 						if icon[i]:GetAlpha() ~= 0 then
 							icon[i]:SetAlpha(0)
