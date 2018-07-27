@@ -44,6 +44,19 @@ local checkboxes = ns.panel:CreateFontString(nil, "ARTWORK", "GameFontHighlightS
 checkboxes:SetPoint("TOPLEFT", slash, "BOTTOMLEFT", 0, -12)
 checkboxes:SetText("|cff5599ffModules:|r to load:")
 
+StaticPopupDialogs["LolzenUI_reloadnotice"] = {
+	text = "activating or deactivating LolzenUI modules requires a /reload to take effect.\n Would you like to perform a /reload now?\n \n (multiple modules can be activated or deactivated at a time)",
+	button1 = "Yes",
+	button2 = "No",
+	OnAccept = function()
+		ReloadUI()
+	end,
+	timeout = 0,
+	whileDead = true,
+	hideOnEscape = true,
+	preferredIndex = 3,  -- avoid some UI taint, see http://www.wowace.com/announcements/how-to-avoid-some-ui-taint/
+}
+
 -- create the buttons
 local button = {}
 local column = 15
@@ -70,22 +83,13 @@ function ns.createButtons()
 				button[i]:SetChecked(false)
 				button[i].text:SetTextColor(1, 1, 1)
 			end
+			
+			button[i]:SetScript("OnClick", function(self)
+				LolzenUIcfg.modules[ns.modules[i].name] = button[i]:GetChecked()
+				StaticPopup_Show("LolzenUI_reloadnotice")
+			end)
 		end
 	end
-end
-
-ns.panel.okay = function(self)
-	for i=1, #ns.modules do
-		LolzenUIcfg.modules[ns.modules[i].name] = button[i]:GetChecked()
-	end
-	ReloadUI()
-end
-
-ns.panel.default = function(self)
-	for i=1, #ns.modules do
-		LolzenUIcfg.modules[ns.modules[i].name] = true
-	end
-	ReloadUI()
 end
 
 ns.panel:RegisterEvent("ADDON_LOADED")
