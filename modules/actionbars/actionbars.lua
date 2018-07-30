@@ -204,5 +204,13 @@ f:SetScript("OnEvent", function(self, event, addon)
 		for _, name in pairs(actionbars) do
 			setActionBarPosition(name)
 		end
+
+		ns.UpdateVariables_actionbars = function(self)
+			holder:ClearAllPoints()
+			holder:SetPoint(LolzenUIcfg.actionbar["actionbar_mmb_anchor1"], LolzenUIcfg.actionbar["actionbar_mmb_parent"], LolzenUIcfg.actionbar["actionbar_mmb_anchor1"], LolzenUIcfg.actionbar["actionbar_mmb_posx"], LolzenUIcfg.actionbar["actionbar_mmb_posy"])
+			for _, name in pairs(actionbars) do
+				setActionBarPosition(name)
+			end
+		end
 	end
 end)
