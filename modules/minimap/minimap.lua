@@ -122,7 +122,7 @@ end
 local f = CreateFrame("Frame")
 f:RegisterEvent("PLAYER_LOGIN")
 f:SetScript("OnEvent", function(self, event, addon)
-	if LolzenUIcfg.modules["minimap"] == false then return end
+	if LolzenUIcfg.modules["minimap"] == false then Minimap:SetMaskTexture("Textures\\MinimapMask"); return end
 
 	modifyMinimap()
 end)
