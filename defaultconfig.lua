@@ -773,22 +773,18 @@ local function updateDB(module)
 		if not LolzenUIcfg[module][k] and v ~= nil then
 			if type(v) == "table" then
 				LolzenUIcfg[module][k] = {unpack(v)}
-				print("|cff5599ffLolzenUI:|r new option in |cff00ff99"..module.."|r (|cffff8888"..k.." = "..unpack(v).."|r)")
 			elseif type(v) == "boolean" then
 				local bool
 				if v == true and LolzenUIcfg[module][k] == nil then
 					bool = "true"
 					LolzenUIcfg[module][k] = true
-					print("|cff5599ffLolzenUI:|r new option in |cff00ff99"..module.."|r (|cffff8888"..k.." = "..bool.."|r)")
 				elseif v == false and LolzenUIcfg[module][k] == nil then
 					bool = "false"
 					LolzenUIcfg[module][k] = false
-					print("|cff5599ffLolzenUI:|r new option in |cff00ff99"..module.."|r (|cffff8888"..k.." = "..bool.."|r)")
 				end
 				
 			else
 				LolzenUIcfg[module][k] = v
-				print("|cff5599ffLolzenUI:|r new option in |cff00ff99"..module.."|r (|cffff8888"..k.." = "..v.."|r)")
 			end
 		end
 	end
@@ -800,13 +796,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 		-- create new defaults on first login
 		if LolzenUIcfg == nil then
 			LolzenUIcfg = defaultconfig
-			print("|cff5599ffLolzenUI:|r first login detected! n\default values written to saved vars")
 		else
 			-- update saved variables upon finding new entries
 			for k, v in pairs(defaultconfig) do
 				if not LolzenUIcfg[k] then
 					LolzenUIcfg[k] = v
-					print("|cff5599ffLolzenUI:|r Updated Saved vars ("..k..")")
 				else
 					updateDB(k)
 				end
