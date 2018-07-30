@@ -172,6 +172,26 @@ f:SetScript("OnEvent", function(self, event, addon)
 			if LolzenUIcfg.orderhallbar["ohb_always_show"] == true then
 				LoadAddOn("Blizzard_OrderHallUI")
 			end
+			ns.UpdateVariables_ohb = function(self)
+				for i=1, MAX_WATCHED_TOKENS do
+					currency[i]:SetSize(LolzenUIcfg.orderhallbar["ohb_currency_icon_size"], LolzenUIcfg.orderhallbar["ohb_currency_icon_size"])
+					currency[i].text:SetFont(LSM:Fetch("font", LolzenUIcfg.orderhallbar["ohb_currency_font"]), LolzenUIcfg.orderhallbar["ohb_currency_font_size"] ,LolzenUIcfg.orderhallbar["ohb_currency_font_flag"])
+				end
+				OrderHallCommandBar.AreaName:SetTextColor(unpack(LolzenUIcfg.orderhallbar["ohb_zone_color"]))
+
+				OrderHallCommandBar.Background:SetTexture(LSM:Fetch("background", LolzenUIcfg.orderhallbar["ohb_background"]))
+				OrderHallCommandBar.Background:SetVertexColor(unpack(LolzenUIcfg.orderhallbar["ohb_background_color"]))
+				OrderHallCommandBar.Background:SetAlpha(LolzenUIcfg.orderhallbar["ohb_background_alpha"])
+
+				if LolzenUIcfg.orderhallbar["ohb_always_show"] == true then
+					if not OrderHallCommandBar:IsShown() then
+						OrderHallCommandBar:Show()
+						getAreaText()
+					end
+				else
+					OrderHallCommandBar:Hide()
+				end
+			end
 		elseif addon == "Blizzard_OrderHallUI" then
 			if LolzenUIcfg.modules["orderhallbar"] == false then return end
 
