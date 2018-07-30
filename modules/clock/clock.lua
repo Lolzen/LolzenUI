@@ -78,7 +78,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		seconds:SetShadowOffset(1, -1)
 		seconds:SetTextColor(unpack(LolzenUIcfg.clock["clock_seconds_color"]))
 
-		local timer = clockFrame:CreateAnimationGroup()
+		local timer = f:CreateAnimationGroup()
 
 		local timerAnim = timer:CreateAnimation()
 		timerAnim:SetDuration(1)
@@ -161,5 +161,16 @@ f:SetScript("OnEvent", function(self, event, addon)
 			local memAfter = gcinfo()
 			DEFAULT_CHAT_FRAME:AddMessage("Memory cleaned: |cff00FF00"..Memory(memBefore - memAfter))
 		end)
+		
+		ns.UpdateVariables_clock = function(self)
+			clockFrame:ClearAllPoints()
+			clockFrame:SetPoint(LolzenUIcfg.clock["clock_anchor1"], UIParent, LolzenUIcfg.clock["clock_anchor2"], LolzenUIcfg.clock["clock_posx"], LolzenUIcfg.clock["clock_posy"])
+
+			text:SetFont(LSM:Fetch("font", LolzenUIcfg.clock["clock_font"]), LolzenUIcfg.clock["clock_font_size"], LolzenUIcfg.clock["clock_font_flag"])
+			text:SetTextColor(unpack(LolzenUIcfg.clock["clock_color"]))
+
+			seconds:SetFont(LSM:Fetch("font", LolzenUIcfg.clock["clock_font_seconds"]), LolzenUIcfg.clock["clock_seconds_font_size"], LolzenUIcfg.clock["clock_seconds_font_flag"])
+			seconds:SetTextColor(unpack(LolzenUIcfg.clock["clock_seconds_color"]))
+		end
 	end
 end)
