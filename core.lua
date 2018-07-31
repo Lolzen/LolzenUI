@@ -7,10 +7,11 @@ _G[addon] = ns
 -- Create an empty table which will be filled by modules
 ns.modules = {}
 
-ns.RegisterModule = function(module, hasOptions)
+ns.RegisterModule = function(module, desc, hasOptions)
 	if not ns.modules[module] then
 		ns.modules[#ns.modules+1] = {
 			["name"] = module,
+			["desc"] = desc,
 			["hasOptions"] = hasOptions
 		}
 	end
