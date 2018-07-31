@@ -2,7 +2,7 @@
 
 local _, ns = ...
 
-ns.RegisterModule("objectivetracker", true)
+ns.RegisterModule("objectivetracker", "Modify behaviour and position of the ObjectiveTrackerFrame", true)
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")

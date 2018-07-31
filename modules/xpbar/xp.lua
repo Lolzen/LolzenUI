@@ -3,7 +3,7 @@
 local _, ns = ...
 local LSM = LibStub("LibSharedMedia-3.0")
 
-ns.RegisterModule("xpbar", true)
+ns.RegisterModule("xpbar", "A bar which shows pretige/honor in bgs, rep at the watched faction or alternatively experience", true)
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
@@ -198,6 +198,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		xpbar:SetScript("OnEvent", function(self, event, ...) self[event](self, event, ...) end)
 		
 		ns.UpdateVariables_xpbar = function(self)
+			xpbar:ClearAllPoints()
 			xpbar:SetPoint(LolzenUIcfg.xpbar["xpbar_anchor"], LolzenUIcfg.xpbar["xpbar_parent"], LolzenUIcfg.xpbar["xpbar_posx"], LolzenUIcfg.xpbar["xpbar_posy"])
 			xpbar:SetHeight(LolzenUIcfg.xpbar["xpbar_height"])
 			xpbar:SetWidth(LolzenUIcfg.xpbar["xpbar_width"])
@@ -207,12 +208,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 			bg:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.xpbar["xpbar_texture"])
 			bg:SetVertexColor(0, 0, 0, LolzenUIcfg.xpbar["xpbar_bg_alpha"])
 
-			xpbar:Update()
-
 			xptext:SetPoint(LolzenUIcfg.xpbar["xpbar_text_anchor1"], xpbar, LolzenUIcfg.xpbar["xpbar_text_posx"], LolzenUIcfg.xpbar["xpbar_text_posy"])
-			xptext:SetParent(UIParent)
 			xptext:SetFont(LSM:Fetch("font", LolzenUIcfg.xpbar["xpbar_font"]), LolzenUIcfg.xpbar["xpbar_font_size"], LolzenUIcfg.xpbar["xpbar_font_flag"])
 			xptext:SetTextColor(unpack(LolzenUIcfg.xpbar["xpbar_font_color"]))
+
+			xpbar:Update()
 		end
 	end
 end)

@@ -2,7 +2,7 @@
 
 local _, ns = ...
 
-ns.RegisterModule("slashcommands", true)
+ns.RegisterModule("slashcommands", "adds convinient slashcommnads", true)
 
 -- Open up the option panel
 SLASH_LOLZENUI1 = "/lolzen"

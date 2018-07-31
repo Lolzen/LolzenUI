@@ -2,7 +2,7 @@
 
 local _, ns = ...
 
-ns.RegisterModule("minimap", true)
+ns.RegisterModule("minimap", "A clean Minimap", true)
 
 local frames = {
 	MinimapZoomIn,

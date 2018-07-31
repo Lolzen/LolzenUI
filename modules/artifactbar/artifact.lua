@@ -3,7 +3,7 @@
 local _, ns = ...
 local LSM = LibStub("LibSharedMedia-3.0")
 
-ns.RegisterModule("artifactbar", true)
+ns.RegisterModule("artifactbar", "A bar which shows artifact power progress", true)
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")

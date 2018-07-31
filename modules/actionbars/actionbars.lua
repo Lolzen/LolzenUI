@@ -1,7 +1,7 @@
 --// actionbars //--
 
 local _, ns = ...
-ns.RegisterModule("actionbars", true)
+ns.RegisterModule("actionbars", "Skins the Actionbars and alters their positions", true)
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")

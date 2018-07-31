@@ -2,7 +2,7 @@
 
 local _, ns = ...
 
-ns.RegisterModule("versioncheck", true)
+ns.RegisterModule("versioncheck", "Gives a warning if the verion seems outdated", true)
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
