@@ -3,7 +3,7 @@
 local _, ns = ...
 local LSM = LibStub("LibSharedMedia-3.0")
 
-ns.RegisterModule("buffs", true)
+ns.RegisterModule("buffs", "Skins the buffs/debuffs along with a more detailed timer", true)
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")

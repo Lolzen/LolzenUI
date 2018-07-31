@@ -3,7 +3,7 @@
 
 local _, ns = ...
 
-ns.RegisterModule("inspect", false)
+ns.RegisterModule("inspect", "enables inspect per keybind & caches items for out of range viewing", false)
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")

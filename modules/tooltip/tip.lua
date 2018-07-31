@@ -3,7 +3,7 @@
 local _, ns = ...
 local LSM = LibStub("LibSharedMedia-3.0")
 
-ns.RegisterModule("tooltip", true)
+ns.RegisterModule("tooltip", "Modifies the look of the Tooltip and adds a few features", true)
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")

@@ -3,7 +3,7 @@
 local _, ns = ...
 local LSM = LibStub("LibSharedMedia-3.0")
 
-ns.RegisterModule("xpbar", true)
+ns.RegisterModule("xpbar", "A bar which shows pretige/honor in bgs, rep at the watched faction or alternatively experience", true)
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")

@@ -2,7 +2,7 @@
 
 local _, ns = ...
 
-ns.RegisterModule("interruptannouncer", true)
+ns.RegisterModule("interruptannouncer", "Announces interrupts", true)
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")

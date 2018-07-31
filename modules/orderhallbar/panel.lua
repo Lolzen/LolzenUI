@@ -3,7 +3,7 @@
 local _, ns = ...
 local LSM = LibStub("LibSharedMedia-3.0")
 
-ns.RegisterModule("orderhallbar", true)
+ns.RegisterModule("orderhallbar", "Modify the OrderHallBar and show currencies marked as \"Show in Backpack\"", true)
 
 -- thanks to elcius for this
 -- http://www.wowinterface.com/forums/showpost.php?p=328355&postcount=3
