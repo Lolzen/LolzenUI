@@ -13,10 +13,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 		if LolzenUIcfg.modules["objectivetracker"] == false then return end
 
 		local of = ObjectiveTrackerFrame
-
+		of.origClearAllPoints = of.ClearAllPoints
 		of:ClearAllPoints()
 		of.ClearAllPoints = function() end
 		of:SetPoint(LolzenUIcfg.objectivetracker["objectivetracker_anchor"], UIParent, LolzenUIcfg.objectivetracker["objectivetracker_anchor"], LolzenUIcfg.objectivetracker["objectivetracker_posx"], LolzenUIcfg.objectivetracker["objectivetracker_posy"])
+		of.origSetPoint = of.SetPoint
 		of.SetPoint = function() end
 		of:SetHeight(650)
 		if LolzenUIcfg.objectivetracker["objectivetracker_logincollapse"] == true then
