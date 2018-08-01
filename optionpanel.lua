@@ -70,6 +70,21 @@ function ns.createButtons()
 				button[i]:SetChecked(false)
 				button[i].text:SetTextColor(1, 1, 1)
 			end
+
+			button[i]:SetScript("OnClick", function(self)
+				LolzenUIcfg.modules[ns.modules[i].name] = button[i]:GetChecked()
+				StaticPopup_Show("LolzenUI_reloadnotice")
+			end)
+
+			button[i]:SetScript("OnEnter", function(self)
+				GameTooltip:SetOwner(button[i], "ANCHOR_BOTTOMRIGHT")
+				GameTooltip:SetText(ns.modules[i].desc, 1, 1, 1, 1, true)
+				GameTooltip:Show()
+			end)
+
+			button[i]:SetScript("OnLeave", function(self)
+				GameTooltip:Hide()
+			end)
 		end
 	end
 end
