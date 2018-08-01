@@ -11,6 +11,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 	if addon == "LolzenUI" then
 		if LolzenUIcfg.modules["buffs"] == false then return end
 
+		-- make a local copy for switching between updatetime
+		local origAuraButton_UpdateDuration = AuraButton_UpdateDuration
+
 		BUFF_WARNING_TIME = 0
 
 		local GetFormattedTime = function(seconds)
@@ -48,8 +51,12 @@ f:SetScript("OnEvent", function(self, event, addon)
 			self.moving = nil
 		end)
 
-		local function StyleBuffs(buttonName, index)
+		local function StyleBuffs(buttonName, index, requestUpdate)
 			local button = _G[buttonName..index]
+			-- permit realtimechanges, while maintaining efficiency
+			if requestUpdate == true and button and button.modded then
+				button.modded = false
+			end
 			if not button or button.modded then return end
 
 			-- Size
@@ -93,9 +100,17 @@ f:SetScript("OnEvent", function(self, event, addon)
 			button.duration:SetFont(LSM:Fetch("font", LolzenUIcfg.buffs["buff_duration_font"]), LolzenUIcfg.buffs["buff_duration_font_size"], LolzenUIcfg.buffs["buff_duration_font_flag"])
 			button.duration:SetDrawLayer("OVERLAY")
 
+			-- Reposition buffcounters
+			button.count:ClearAllPoints()
+			button.count:SetPoint(LolzenUIcfg.buffs["buff_counter_anchor"], button, LolzenUIcfg.buffs["buff_counter_posx"], LolzenUIcfg.buffs["buff_counter_posy"])
+			button.count:SetFont(LSM:Fetch("font", LolzenUIcfg.buffs["buff_counter_font"]), LolzenUIcfg.buffs["buff_counter_size"], LolzenUIcfg.buffs["buff_counter_font_flag"])
+			button.count:SetDrawLayer("OVERLAY")
+
 			-- Create a timer for the buff duration, as the AuraButton_UpdateDuration() function is overwritten further below
 			-- this proved to be a more efficient way of updating the buff duration, due to not using onUpdate
+			-- however, make it optional only for the Buff_duration_detailed option
 			if LolzenUIcfg.buffs["buff_duration_detailed"] == true then
+				AuraButton_UpdateDuration = function() end
 				if not button.timer then
 					button.timer = button:CreateAnimationGroup()
 					button.timerAnim = button.timer:CreateAnimation()
@@ -112,35 +127,50 @@ f:SetScript("OnEvent", function(self, event, addon)
 						end
 					end)
 					button.timer:Play()
+				else
+					button.timer:Play()
+				end
+			else
+				if button.timer then
+					button.timer:Stop()
+				end
+				if button.timeLeft then
+					button.duration:SetText(SecondsToTimeAbbrev(button.timeLeft))
+					-- reactivate AuraButton_UpdateDuration
+					AuraButton_UpdateDuration = origAuraButton_UpdateDuration
+					securecall("AuraButton_UpdateDuration", button, button.timeLeft)
 				end
 			end
-
-			-- Reposition buffcounters
-			button.count:ClearAllPoints()
-			button.count:SetPoint(LolzenUIcfg.buffs["buff_counter_anchor"], button, LolzenUIcfg.buffs["buff_counter_posx"], LolzenUIcfg.buffs["buff_counter_posy"])
-			button.count:SetFont(LSM:Fetch("font", LolzenUIcfg.buffs["buff_counter_font"]), LolzenUIcfg.buffs["buff_counter_size"], LolzenUIcfg.buffs["buff_counter_font_flag"])
-			button.count:SetDrawLayer("OVERLAY")
 
 			button.modded = true
 		end
 
-		local function UpdateAura()
+		local function UpdateAura(bool)
 			for i = 1, BUFF_ACTUAL_DISPLAY do
-				StyleBuffs("BuffButton", i)
+				StyleBuffs("BuffButton", i, bool)
 			end
 			for i = 1, DEBUFF_MAX_DISPLAY do
-				StyleBuffs("DebuffButton", i)
+				StyleBuffs("DebuffButton", i, bool)
 			end
 			for i = 1, NUM_TEMP_ENCHANT_FRAMES do
-				StyleBuffs("TempEnchant", i)
+				StyleBuffs("TempEnchant", i, bool)
 			end
 		end
 
 		hooksecurefunc("BuffFrame_UpdateAllBuffAnchors", UpdateAura)
 		hooksecurefunc("DebuffButton_UpdateAnchors", UpdateAura)
-		if LolzenUIcfg.buffs["buff_duration_detailed"] == true then
-			-- disable blizz update duration function
-			AuraButton_UpdateDuration = function() end
+		
+		LolzenUI.UpdateVariables_buffs = function(self)
+			UpdateAura(true)
+
+			if BuffFrame.moving == true then return end
+			BuffFrame.moving = true
+			BuffFrame:SetMovable(true)
+			BuffFrame:SetUserPlaced(true)
+			BuffFrame:ClearAllPoints()
+			BuffFrame:SetPoint(LolzenUIcfg.buffs["buff_anchor1"], LolzenUIcfg.buffs["buff_parent"], LolzenUIcfg.buffs["buff_anchor2"], LolzenUIcfg.buffs["buff_posx"], LolzenUIcfg.buffs["buff_posy"])
+			BuffFrame:SetMovable(false)
+			BuffFrame.moving = nil
 		end
 	end
 end)
