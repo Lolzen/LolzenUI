@@ -14,8 +14,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 		-- make a local copy for switching between updatetime
 		local origAuraButton_UpdateDuration = AuraButton_UpdateDuration
 
-		BUFF_WARNING_TIME = 0
-
 		local GetFormattedTime = function(seconds)
 			-- Change the timer
 			-- original code from tekkub https://github.com/TekNoLogic/tekBuffTimers
@@ -40,15 +38,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 
 		-- Change the position
-		hooksecurefunc(BuffFrame, "SetPoint", function(self)
-			if self.moving == true then return end
-			self.moving = true
-			self:SetMovable(true)
-			self:SetUserPlaced(true)
-			self:ClearAllPoints()
-			self:SetPoint(LolzenUIcfg.buffs["buff_anchor1"], LolzenUIcfg.buffs["buff_parent"], LolzenUIcfg.buffs["buff_anchor2"], LolzenUIcfg.buffs["buff_posx"], LolzenUIcfg.buffs["buff_posy"])
-			self:SetMovable(false)
-			self.moving = nil
+		hooksecurefunc(BuffFrame, "SetPoint", function(self, anchor1, parent, anchor2, x, y)
+			if x ~= LolzenUIcfg.buffs["buff_posx"] then
+				self:SetPoint(LolzenUIcfg.buffs["buff_anchor1"], LolzenUIcfg.buffs["buff_parent"], LolzenUIcfg.buffs["buff_anchor2"], LolzenUIcfg.buffs["buff_posx"], LolzenUIcfg.buffs["buff_posy"])
+			end
 		end)
 
 		local function StyleBuffs(buttonName, index, requestUpdate)
@@ -163,14 +156,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 		LolzenUI.UpdateVariables_buffs = function(self)
 			UpdateAura(true)
 
-			if BuffFrame.moving == true then return end
-			BuffFrame.moving = true
-			BuffFrame:SetMovable(true)
-			BuffFrame:SetUserPlaced(true)
-			BuffFrame:ClearAllPoints()
-			BuffFrame:SetPoint(LolzenUIcfg.buffs["buff_anchor1"], LolzenUIcfg.buffs["buff_parent"], LolzenUIcfg.buffs["buff_anchor2"], LolzenUIcfg.buffs["buff_posx"], LolzenUIcfg.buffs["buff_posy"])
-			BuffFrame:SetMovable(false)
-			BuffFrame.moving = nil
+			hooksecurefunc(BuffFrame, "SetPoint", function(self, anchor1, parent, anchor2, x, y)
+				if x ~= LolzenUIcfg.buffs["buff_posx"] then
+					self:SetPoint(LolzenUIcfg.buffs["buff_anchor1"], LolzenUIcfg.buffs["buff_parent"], LolzenUIcfg.buffs["buff_anchor2"], LolzenUIcfg.buffs["buff_posx"], LolzenUIcfg.buffs["buff_posy"])
+				end
+			end)
 		end
 	end
 end)
