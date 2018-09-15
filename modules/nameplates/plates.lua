@@ -35,14 +35,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		local UpdateThreat = function(frame, event, unit)
 			local status = UnitThreatSituation("player", unit)
-			if status and status > 0 then
-				if not frame.Glow:IsShown() then
-					frame.Glow:Show()
-				end
+			if status and status ~= nil then
+				frame.Glow:Show()
 			else
-				if frame.Glow:IsShown() then
-					frame.Glow:Hide()
-				end
+				frame.Glow:Hide()
 			end
 		end
 
