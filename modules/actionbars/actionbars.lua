@@ -21,6 +21,13 @@ f:SetScript("OnEvent", function(self, event, addon)
 			MainMenuBarArtFrame.PageNumber, ActionBarUpButton, ActionBarDownButton,
 			StanceBarFrame, SlidingActionBarTexture0, SlidingActionBarTexture1,
 			MicroButtonAndBagsBar,
+			-- Vehicle Textures
+			OverrideActionBarBG, OverrideActionBarEndCapL, OverrideActionBarEndCapR, OverrideActionBarBorder,
+			OverrideActionBarDivider1, OverrideActionBarDivider2, OverrideActionBarDivider3,
+			OverrideActionBarExitBG, OverrideActionBarMicroBGL, OverrideActionBarMicroBGR, OverrideActionBarMicroBGMid,
+			OverrideActionBarButtonBGL, OverrideActionBarButtonBGR, OverrideActionBarButtonBGMid,
+			OverrideActionBarExpBar, OverrideActionBarHealthBar, 
+			OverrideActionBarPowerBar, OverrideActionBarPitchFrame,
 		}
 
 		for _, frame in pairs(BlizzArt) do
@@ -48,32 +55,36 @@ f:SetScript("OnEvent", function(self, event, addon)
 			frame:Hide()
 		end
 
-		-- Hide the StatusbarMixins by overwriting the ShouldBeVisible() functions
+		-- Hide the StatusbarMixins by calling StatusTrackingBarManager:HideStatusBars() on every ShouldBeVisible() call
 		-- thanks for not giving these bars a name blizzard ~.~
-		function ExpBarMixin:ShouldBeVisible()
-			return false
-		end
-
-		function ArtifactBarMixin:ShouldBeVisible()
-			return false
-		end
-
-		function HonorBarMixin:ShouldBeVisible()
-			return false
-		end
-
-		function ReputationBarMixin:ShouldBeVisible()
-			return false
-		end
-
-		function AzeriteBarMixin:ShouldBeVisible()
-			return false
-		end
+		hooksecurefunc(ExpBarMixin, "ShouldBeVisible", function(self)
+			StatusTrackingBarManager:HideStatusBars()
+		end)
+		
+		hooksecurefunc(ArtifactBarMixin, "ShouldBeVisible", function(self)
+			StatusTrackingBarManager:HideStatusBars()
+		end)
+		
+		hooksecurefunc(HonorBarMixin, "ShouldBeVisible", function(self)
+			StatusTrackingBarManager:HideStatusBars()
+		end)
+		
+		hooksecurefunc(ReputationBarMixin, "ShouldBeVisible", function(self)
+			StatusTrackingBarManager:HideStatusBars()
+		end)
+		
+		hooksecurefunc(AzeriteBarMixin, "ShouldBeVisible", function(self)
+			StatusTrackingBarManager:HideStatusBars()
+		end)
 
 		--// Bar sizes, positions & styling//--
 
 		-- Make the MainMenuBar clickthrough, so it doesn't interfere with other frames placed at the bottom
 		MainMenuBar:EnableMouse(false)
+
+		-- move the VehicleExitButton
+		OverrideActionBar.LeaveButton:ClearAllPoints()
+		OverrideActionBar.LeaveButton:SetPoint("BOTTOMRIGHT", ActionButton12)
 
 		-- Create a holder frame, which the Main Menu Bar can refer to when positioning;
 		-- per default it wouldn't be centered
@@ -88,6 +99,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			"MultiBarLeftButton",
 			"MultiBarRightButton",
 			"PetActionButton",
+			"OverrideActionBarButton",
 		}
 
 		local function applyTheme(name)
@@ -181,6 +193,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 							button:SetPoint(LolzenUIcfg.actionbar["actionbar_mbr_anchor1"], LolzenUIcfg.actionbar["actionbar_mbr_parent"], LolzenUIcfg.actionbar["actionbar_mbr_anchor2"], LolzenUIcfg.actionbar["actionbar_mbr_posx"], LolzenUIcfg.actionbar["actionbar_mbr_posy"])
 						elseif button == _G["PetActionButton"..i] then
 							button:SetPoint(LolzenUIcfg.actionbar["actionbar_petb_anchor1"], LolzenUIcfg.actionbar["actionbar_petb_parent"], LolzenUIcfg.actionbar["actionbar_petb_anchor2"], LolzenUIcfg.actionbar["actionbar_petb_posx"], LolzenUIcfg.actionbar["actionbar_petb_posy"])
+						elseif button == _G["OverrideActionBarButton"..i] then
+							button:SetPoint("BOTTOMLEFT", ActionButton1)
 						end
 					else
 						if button == _G["ActionButton"..i] then
@@ -195,6 +209,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 							button:SetPoint("BOTTOM", _G["MultiBarRightButton"..i-1], "BOTTOM", 0, - LolzenUIcfg.actionbar["actionbar_button_size"] - LolzenUIcfg.actionbar["actionbar_button_spacing"])
 						elseif button == _G["PetActionButton"..i] then
 							button:SetPoint("LEFT", _G["PetActionButton"..i-1], "RIGHT", LolzenUIcfg.actionbar["actionbar_button_spacing"], 0)
+						elseif button == _G["OverrideActionBarButton"..i] then
+							button:SetPoint("LEFT", _G["OverrideActionBarButton"..i-1], "RIGHT", LolzenUIcfg.actionbar["actionbar_button_spacing"], 0)
 						end
 					end
 				end
