@@ -12,7 +12,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		if LolzenUIcfg.modules["xpbar"] == false then return end
 
 		-- Change the rep colors slightly
-		FACTION_BAR_COLORS = {
+		FACTION_BAR_COLORS_MOD = {
 			[1] = {r = 1, g = 0.2, b = 0.15},	-- Hated
 			[2] = {r = 0.8, g = 0.3, b = 0.22},	-- Hostile		}
 			[3] = {r = 0.75, g = 0.27, b = 0},	-- Unfriendly	} same as default
@@ -124,7 +124,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 						else
 							local name, standing, min, max, value = GetWatchedFactionInfo()
 							max, min = (max-min), (value-min)
-							local baseColor = FACTION_BAR_COLORS[standing]
+							local baseColor = FACTION_BAR_COLORS_MOD[standing]
 							local color = {}
 							for key, value in pairs(baseColor) do 
 								color[key] = math.min(1, value * 1.25)
