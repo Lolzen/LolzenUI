@@ -5,8 +5,15 @@ ns.RegisterModule("actionbars", "Skins the Actionbars and alters their positions
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
+f:RegisterEvent("PLAYER_LOGIN")
 f:SetScript("OnEvent", function(self, event, addon)
-	if addon == "LolzenUI" then
+	if event == "PLAYER_LOGIN" then
+		-- Hide the StatusbarMixins
+		local sbtm = StatusTrackingBarManager
+		sbtm:UnregisterAllEvents()
+		sbtm:Hide()
+		sbtm.Show = nil
+	elseif event == "ADDON_LOADED" and addon == "LolzenUI" then
 		if LolzenUIcfg.modules["actionbars"] == false then return end
 
 		--// hide blizz art //--
@@ -54,28 +61,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 			frame:SetParent(invisible)
 			frame:Hide()
 		end
-
-		-- Hide the StatusbarMixins by calling StatusTrackingBarManager:HideStatusBars() on every ShouldBeVisible() call
-		-- thanks for not giving these bars a name blizzard ~.~
-		hooksecurefunc(ExpBarMixin, "ShouldBeVisible", function(self)
-			StatusTrackingBarManager:HideStatusBars()
-		end)
-		
-		hooksecurefunc(ArtifactBarMixin, "ShouldBeVisible", function(self)
-			StatusTrackingBarManager:HideStatusBars()
-		end)
-		
-		hooksecurefunc(HonorBarMixin, "ShouldBeVisible", function(self)
-			StatusTrackingBarManager:HideStatusBars()
-		end)
-		
-		hooksecurefunc(ReputationBarMixin, "ShouldBeVisible", function(self)
-			StatusTrackingBarManager:HideStatusBars()
-		end)
-		
-		hooksecurefunc(AzeriteBarMixin, "ShouldBeVisible", function(self)
-			StatusTrackingBarManager:HideStatusBars()
-		end)
 
 		--// Bar sizes, positions & styling//--
 
