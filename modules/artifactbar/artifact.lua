@@ -46,6 +46,24 @@ f:SetScript("OnEvent", function(self, event, addon)
 					lines[i]:SetPoint("BOTTOMRIGHT", afbar, 0, -1)
 				elseif i == 3 then
 					lines[i]:SetWidth(1)
+				elseif i == 4 then
+					lines[i]:SetWidth(1)
+				end
+			end
+		end
+
+		function afbar:UpdateBorder()
+			for i = 1, 4 do
+				if LolzenUIcfg.artifactbar["artifactbar_1px_border"] == true then
+					if lines[i] then
+						lines[i]:Show()
+					end
+				else
+					if lines[i] then
+						lines[i]:Hide()
+					end
+				end
+				if i == 3 then
 					if LolzenUIcfg.artifactbar["artifactbar_1px_border_round"] == true then
 						lines[i]:SetPoint("TOPLEFT", afbar, -1, 0)
 						lines[i]:SetPoint("BOTTOMLEFT", afbar, -1, 0)
@@ -54,7 +72,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 						lines[i]:SetPoint("BOTTOMLEFT", afbar, 0, 0)
 					end
 				elseif i == 4 then
-					lines[i]:SetWidth(1)
 					if LolzenUIcfg.artifactbar["artifactbar_1px_border_round"] == true then
 						lines[i]:SetPoint("TOPRIGHT", afbar, 1, 0)
 						lines[i]:SetPoint("BOTTOMRIGHT", afbar, 1, 0)
@@ -73,18 +90,24 @@ f:SetScript("OnEvent", function(self, event, addon)
 		xptext:SetFont(LSM:Fetch("font", LolzenUIcfg.artifactbar["artifactbar_font"]), LolzenUIcfg.artifactbar["artifactbar_font_size"], LolzenUIcfg.artifactbar["artifactbar_font_flag"])
 		xptext:SetTextColor(unpack(LolzenUIcfg.artifactbar["artifactbar_font_color"]))
 
-		if LolzenUIcfg.artifactbar["artifactbar_mouseover_text"] == true then
-			xptext:Hide()
-			afbar:SetScript("OnEnter", function(self)
-				xptext:Show()
-			end)
-			afbar:SetScript("OnLeave", function(self)
+		function afbar:UpdateText()
+			if LolzenUIcfg.artifactbar["artifactbar_mouseover_text"] == true then
 				xptext:Hide()
-			end)
+				afbar:SetScript("OnEnter", function(self)
+					xptext:Show()
+				end)
+				afbar:SetScript("OnLeave", function(self)
+					xptext:Hide()
+				end)
+			else
+				xptext:Show()
+				xpbar:SetScript("OnEnter", nil)
+				xpbar:SetScript("OnLeave", nil)
+			end
 		end
 
 		-- get artifact power data
-		function afbar:ARTIFACT_XP_UPDATE()
+		function afbar:Update()
 			local hasArtifact = HasArtifactEquipped("player")
 			local hasHeartOfAzeroth = C_AzeriteItem.HasActiveAzeriteItem()
 			local artifactDisabled = C_ArtifactUI.IsEquippedArtifactDisabled()
@@ -102,15 +125,36 @@ f:SetScript("OnEvent", function(self, event, addon)
 			else
 				afbar:SetAlpha(0)
 			end
+			afbar:UpdateBorder()
+			afbar:UpdateText()
 		end
-		afbar.PLAYER_ENTERING_WORLD = afbar.ARTIFACT_XP_UPDATE
-		afbar.UNIT_INVENTORY_CHANGED = afbar.ARTIFACT_XP_UPDATE
-		afbar.AZERITE_ITEM_EXPERIENCE_CHANGED  = afbar.ARTIFACT_XP_UPDATE
+		afbar.PLAYER_ENTERING_WORLD = afbar.Update
+		afbar.UNIT_INVENTORY_CHANGED = afbar.Update
+		afbar.AZERITE_ITEM_EXPERIENCE_CHANGED  = afbar.Update
+		afbar:ARTIFACT_XP_UPDATE = afbar.Update
 
 		afbar:RegisterEvent("ARTIFACT_XP_UPDATE")
 		afbar:RegisterEvent("AZERITE_ITEM_EXPERIENCE_CHANGED")
 		afbar:RegisterEvent("UNIT_INVENTORY_CHANGED")
 		afbar:RegisterEvent("PLAYER_ENTERING_WORLD")
 		afbar:SetScript("OnEvent", function(self, event, ...) self[event](self, event, ...) end)
+		
+		ns.UpdateVariables_afbar = function(self)
+			afbar:ClearAllPoints()
+			afbar:SetPoint(LolzenUIcfg.artifactbar["artifactbar_anchor"], LolzenUIcfg.artifactbar["artifactbar_parent"], LolzenUIcfg.artifactbar["artifactbar_posx"], LolzenUIcfg.artifactbar["artifactbar_posy"])
+			afbar:SetHeight(LolzenUIcfg.artifactbar["artifactbar_height"])
+			afbar:SetWidth(LolzenUIcfg.artifactbar["artifactbar_width"])
+			afbar:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.artifactbar["artifactbar_texture"]))
+			afbar:SetAlpha(LolzenUIcfg.artifactbar["artifactbar_alpha"])
+
+			bg:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.artifactbar["artifactbar_texture"])
+			bg:SetVertexColor(0, 0, 0, LolzenUIcfg.artifactbar["artifactbar_bg_alpha"])
+
+			xptext:SetPoint(LolzenUIcfg.artifactbar["artifactbar_text_anchor1"], afbar, LolzenUIcfg.artifactbar["artifactbar_text_posx"], LolzenUIcfg.artifactbar["artifactbar_text_posy"])
+			xptext:SetFont(LSM:Fetch("font", LolzenUIcfg.artifactbar["artifactbar_font"]), LolzenUIcfg.artifactbar["artifactbar_font_size"], LolzenUIcfg.artifactbar["artifactbar_font_flag"])
+			xptext:SetTextColor(unpack(LolzenUIcfg.artifactbar["artifactbar_font_color"]))
+
+			afbar:Update()
+		end
 	end
 end)
