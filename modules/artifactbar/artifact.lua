@@ -28,27 +28,25 @@ f:SetScript("OnEvent", function(self, event, addon)
 		bg:SetVertexColor(0, 0, 0, LolzenUIcfg.artifactbar["artifactbar_bg_alpha"])
 
 		--1px "border"
-		if LolzenUIcfg.artifactbar["artifactbar_1px_border"] == true then
-			local lines = {}
-			for i = 1, 4 do
-				if not lines[i] then
-					lines[i] = afbar:CreateTexture(nil, "OVERLAY")
-					lines[i]:SetTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
-					lines[i]:SetVertexColor(0, 0, 0, 1)
-				end
-				if i == 1 then
-					lines[i]:SetHeight(1)
-					lines[i]:SetPoint("TOPLEFT", afbar, 0, 1)
-					lines[i]:SetPoint("TOPRIGHT", afbar, 0, 1)
-				elseif i == 2 then
-					lines[i]:SetHeight(1)
-					lines[i]:SetPoint("BOTTOMLEFT", afbar, 0, -1)
-					lines[i]:SetPoint("BOTTOMRIGHT", afbar, 0, -1)
-				elseif i == 3 then
-					lines[i]:SetWidth(1)
-				elseif i == 4 then
-					lines[i]:SetWidth(1)
-				end
+		local lines = {}
+		for i = 1, 4 do
+			if not lines[i] then
+				lines[i] = afbar:CreateTexture(nil, "OVERLAY")
+				lines[i]:SetTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
+				lines[i]:SetVertexColor(0, 0, 0, 1)
+			end
+			if i == 1 then
+				lines[i]:SetHeight(1)
+				lines[i]:SetPoint("TOPLEFT", afbar, 0, 1)
+				lines[i]:SetPoint("TOPRIGHT", afbar, 0, 1)
+			elseif i == 2 then
+				lines[i]:SetHeight(1)
+				lines[i]:SetPoint("BOTTOMLEFT", afbar, 0, -1)
+				lines[i]:SetPoint("BOTTOMRIGHT", afbar, 0, -1)
+			elseif i == 3 then
+				lines[i]:SetWidth(1)
+			elseif i == 4 then
+				lines[i]:SetWidth(1)
 			end
 		end
 
@@ -131,7 +129,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		afbar.PLAYER_ENTERING_WORLD = afbar.Update
 		afbar.UNIT_INVENTORY_CHANGED = afbar.Update
 		afbar.AZERITE_ITEM_EXPERIENCE_CHANGED  = afbar.Update
-		afbar:ARTIFACT_XP_UPDATE = afbar.Update
+		afbar.ARTIFACT_XP_UPDATE = afbar.Update
 
 		afbar:RegisterEvent("ARTIFACT_XP_UPDATE")
 		afbar:RegisterEvent("AZERITE_ITEM_EXPERIENCE_CHANGED")
