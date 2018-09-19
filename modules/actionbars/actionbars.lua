@@ -143,23 +143,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		-- hide those pesky hotkeys, ffs
 		hooksecurefunc("ActionButton_UpdateHotkeys", function(self, actionButtonType)
+			local name = self:GetName()
 			if LolzenUIcfg.actionbar["actionbar_show_keybinds"] == false then
-				self.HotKey:Hide()
+				_G[name.."HotKey"]:Hide()
 			end
-		end)
-
-		-- Hook RangeIndicator
-		hooksecurefunc("ActionButton_UpdateRangeIndicator", function(self, checksRange, inRange)
-			if checksRange then
-				if inRange then
-					self.icon:SetVertexColor(1, 1, 1)
-				else
-					self.icon:SetVertexColor(RED_FONT_COLOR:GetRGB())
-				end
-			else
-				self.icon:SetVertexColor(1, 1, 1)
-			end
-
 		end)
 
 		--hook PetActionBar_Update, so it doesn't interfer with SetNormalTexture()
@@ -175,7 +162,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 				if button then
 					applyTheme(name..i)
-					if InCombatLockdown() then return end
 					button:SetSize(LolzenUIcfg.actionbar["actionbar_button_size"], LolzenUIcfg.actionbar["actionbar_button_size"])
 					button:ClearAllPoints()
 
