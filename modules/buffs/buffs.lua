@@ -11,8 +11,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 	if addon == "LolzenUI" then
 		if LolzenUIcfg.modules["buffs"] == false then return end
 
-		BUFF_WARNING_TIME = 0
-
 		local GetFormattedTime = function(seconds)
 			-- Change the timer
 			-- original code from tekkub https://github.com/TekNoLogic/tekBuffTimers
