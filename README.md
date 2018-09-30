@@ -1,4 +1,4 @@
-![Alt text](http://abload.de/img/wowscrnshot_112417_185tsk5.jpg "Screenshot1")
+![Alt text](https://abload.de/img/pvw70595e6i5r.jpg "Screenshot1")
 
 ## LolzenUI
 This is my personal User Interface for World of Warcraft.
