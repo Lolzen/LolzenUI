@@ -28,3 +28,11 @@ if GetCVar("useuiscale") == "0" then
 	SetCVar("uiScale", 768/string.match(({GetScreenResolutions()})[GetCurrentResolution()], "%d+x(%d+)"))
 	SetCVar("useuiscale", 1)
 end
+
+local version, build, date, tocversion = GetBuildInfo()
+local addonversion = GetAddOnMetadata(addon, "Version")
+if not string.find(addonversion, version) then
+	print("|cff5599ffLolzenUI|r: Version numbers don't match!")
+	print("Please look for an update at: http://www.wowinterface.com/downloads/info24512-LolzenUI.html or https://github.com/Lolzen/LolzenUI (dev version)")
+	print("WoW patch version: "..version..", LolzenUI version: "..addonversion)
+end

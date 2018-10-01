@@ -19,7 +19,6 @@
 	<Script file="modules/slashcommands/slashcmds.lua"/>
 	<Script file="modules/tooltip/tip.lua"/>
 	<Script file="modules/unitframes/unitframes.lua"/>
-	<Script file="modules/versioncheck/versioncheck.lua"/>
 	<Script file="modules/worldmap/worldmap.lua"/>
 	<Script file="modules/xpbar/xp.lua"/>
 </Ui>
