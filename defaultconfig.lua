@@ -678,6 +678,10 @@ defaultconfig.unitframes = {
 
 defaultconfig.worldmap = {
 	["worldmap_scale"] = 1,
+	["worldmap_coordinates"] = true,
+	["worldmap_title_color"] = {51/255, 181/255, 229/255},
+	["worldmap_save_position"] = true,
+	["worldmap_saved_position"] = {"BOTTOM", UIParent, "BOTTOM", 0, 320}
 }
 
 defaultconfig.xpbar = {
