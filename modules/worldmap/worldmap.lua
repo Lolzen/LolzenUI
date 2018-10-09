@@ -10,14 +10,33 @@ f:SetScript("OnEvent", function(self, event, addon)
 	if addon == "LolzenUI" then
 		if LolzenUIcfg.modules["worldmap"] == false then return end
 
+		local addonversion = GetAddOnMetadata(addon, "Version")
+
 		-- Hide some stuff
-		WorldMapFrame.BorderFrame.NineSlice:Hide()
+		if addonversion == "8.0.1" then
+			print("nice")
+			WorldMapFramePortraitFrame:SetAlpha(0)
+			WorldMapFrameTopBorder:SetAlpha(0)
+			WorldMapFrameLeftBorder:SetAlpha(0)
+			WorldMapFrameRightBorder:SetAlpha(0)
+			WorldMapFrameBottomBorder:SetAlpha(0)
+			WorldMapFrameBotLeftCorner:SetAlpha(0)
+			WorldMapFrameBotRightCorner:SetAlpha(0)
+			WorldMapFrameTopRightCorner:SetAlpha(0)
+			WorldMapFrame.BorderFrame.ButtonFrameEdge:SetAlpha(0)
+		else
+			WorldMapFrame.BorderFrame.NineSlice:Hide()
+		end
 		WorldMapFramePortrait:SetAlpha(0)
 		WorldMapFrame.BorderFrame.Tutorial:SetAlpha(0)
 		WorldMapFrame.BorderFrame.Tutorial:EnableMouse(false)
 
 		-- Change Text Color
 		WorldMapFrameTitleText:SetTextColor(unpack(LolzenUIcfg.worldmap["worldmap_title_color"]))
+		if addonversion == "8.0.1" then
+			WorldMapFrameTitleText:ClearAllPoints()
+			WorldMapFrameTitleText:SetPoint("CENTER", WorldMapFrame.BorderFrame.TitleBg, "CENTER", 0, 0)
+		end
 
 		-- reposition the minMax button
 		WorldMapFrame.BorderFrame.MaximizeMinimizeFrame.MaximizeButton:SetPoint("TOPRIGHT", WorldMapFrame.BorderFrame, "TOPRIGHT", -50, 5)
@@ -28,8 +47,14 @@ f:SetScript("OnEvent", function(self, event, addon)
 		WorldMapFrameCloseButton:SetPoint("TOPRIGHT", WorldMapFrame.BorderFrame, "TOPRIGHT", 4, 5)
 
 		-- Stretch the TitleBg out
-		WorldMapFrame.BorderFrame.TitleBg:SetPoint("TOPLEFT", WorldMapFrame, 3, -3)
-		WorldMapFrame.BorderFrame.TitleBg:SetPoint("TOPRIGHT", WorldMapFrame, -3, -3)
+		if addonversion == "8.0.1" then
+			WorldMapFrame.BorderFrame.TitleBg:SetPoint("TOPLEFT", WorldMapFrame, 3, -3)
+			WorldMapFrame.BorderFrame.TitleBg:SetPoint("TOPRIGHT", WorldMapFrame, -3, -3)
+			WorldMapFrame.BorderFrame.TitleBg:SetHeight(22)
+		else
+			WorldMapFrame.BorderFrame.TitleBg:SetPoint("TOPLEFT", WorldMapFrame, 3, -3)
+			WorldMapFrame.BorderFrame.TitleBg:SetPoint("TOPRIGHT", WorldMapFrame, -3, -3)
+		end
 
 		-- Cutsom border
 		local border = CreateFrame("Frame")
