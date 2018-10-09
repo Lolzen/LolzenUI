@@ -13,7 +13,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		local addonversion = GetAddOnMetadata(addon, "Version")
 
 		-- Hide some stuff
-		if addonversion == "8.0.1" then
+		if string.find(addonversion, "8.0.1") then
 			print("nice")
 			WorldMapFramePortraitFrame:SetAlpha(0)
 			WorldMapFrameTopBorder:SetAlpha(0)
@@ -33,7 +33,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		-- Change Text Color
 		WorldMapFrameTitleText:SetTextColor(unpack(LolzenUIcfg.worldmap["worldmap_title_color"]))
-		if addonversion == "8.0.1" then
+		if string.find(addonversion, "8.0.1") then
 			WorldMapFrameTitleText:ClearAllPoints()
 			WorldMapFrameTitleText:SetPoint("CENTER", WorldMapFrame.BorderFrame.TitleBg, "CENTER", 0, 0)
 		end
@@ -47,7 +47,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		WorldMapFrameCloseButton:SetPoint("TOPRIGHT", WorldMapFrame.BorderFrame, "TOPRIGHT", 4, 5)
 
 		-- Stretch the TitleBg out
-		if addonversion == "8.0.1" then
+		if string.find(addonversion, "8.0.1") then
 			WorldMapFrame.BorderFrame.TitleBg:SetPoint("TOPLEFT", WorldMapFrame, 3, -3)
 			WorldMapFrame.BorderFrame.TitleBg:SetPoint("TOPRIGHT", WorldMapFrame, -3, -3)
 			WorldMapFrame.BorderFrame.TitleBg:SetHeight(22)
