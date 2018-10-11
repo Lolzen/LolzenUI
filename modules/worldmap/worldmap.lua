@@ -14,7 +14,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		-- Hide some stuff
 		if string.find(addonversion, "8.0.1") then
-			print("nice")
 			WorldMapFramePortraitFrame:SetAlpha(0)
 			WorldMapFrameTopBorder:SetAlpha(0)
 			WorldMapFrameLeftBorder:SetAlpha(0)
