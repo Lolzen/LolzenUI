@@ -8,7 +8,7 @@
 	<Script file="modules/chat/chattabs.lua"/>
 	<Script file="modules/clock/clock.lua"/>
 	<Script file="modules/fonts/fonts.lua"/>
-	<Script file="modules/itemlevel/ilvl.lua"/>
+	<Include file="modules/itemlevel/ilvl.xml"/>
 	<Script file="modules/inspect/inspect.lua"/>
 	<Script file="modules/interruptannouncer/interrupt.lua"/>
 	<Script file="modules/minimap/minimap.lua"/>
