@@ -63,11 +63,13 @@ f:SetScript("OnEvent", function(self, event, addon)
 				end
 			end
 		end
-		hooksecurefunc("ContainerFrame_Update", updateBagSlotInfoTest)
-		hooksecurefunc("BankFrameItemButton_Update", function(button)
-			if not button.isBag then
-				updateBagSlotInfoTest(BankFrame)
-			end
-		end)
+		if LolzenUIcfg.itemlevel["ilvl_bags"] == true then
+			hooksecurefunc("ContainerFrame_Update", updateBagSlotInfoTest)
+			hooksecurefunc("BankFrameItemButton_Update", function(button)
+				if not button.isBag then
+					updateBagSlotInfoTest(BankFrame)
+				end
+			end)
+		end
 	end
 end)
