@@ -15,31 +15,34 @@ f:SetScript("OnEvent", function(self, event, addon)
 		eF:RegisterEvent("INSPECT_READY")
 
 		local slots = {
-			"Head", 
-			"Neck", 
-			"Shoulder", 
-			"Back", 
-			"Chest", 
-			"Shirt", 
-			"Tabard", 
-			"Wrist", 
-			"Hands",
-			"Waist", 
-			"Legs", 
-			"Feet", 
-			"Finger0", 
-			"Finger1", 
-			"Trinket0", 
-			"Trinket1", 
-			"MainHand", 
-			"SecondaryHand",
+			"Head", -- 1
+			"Neck", -- 2
+			"Shoulder", -- 3
+			"Shirt", -- 4
+			"Chest", -- 5
+			"Waist", -- 6
+			"Legs", --7
+			"Feet", -- 8
+			"Wrist", -- 9
+			"Hands", -- 10
+			"Finger0", -- 11
+			"Finger1", -- 12
+			"Trinket0", -- 13
+			"Trinket1", --14
+			"Back", --15
+			"MainHand", --16
+			"SecondaryHand", --17
+			"Tabard", --19
 		}
 
-		local function getItemlvl(unit, slot)
+		local function getItemlvl(unit, slotIndex)
+			if slotIndex == 18 then
+				slotIndex = 19
+			end
 			if unit and UnitExists(unit) then
-				local itemLink = GetInventoryItemLink(unit, GetInventorySlotInfo(("%sSlot"):format(slot)))
-				if itemLink then
-					return GetDetailedItemLevelInfo(itemLink)
+				local item = Item:CreateFromEquipmentSlot(slotIndex)
+				if item then
+					return item:GetCurrentItemLevel()
 				end
 			end
 		end
@@ -66,14 +69,14 @@ f:SetScript("OnEvent", function(self, event, addon)
 						s.str = s:CreateFontString(nil, "OVERLAY")
 						s.str:SetFont(LSM:Fetch("font", LolzenUIcfg.itemlevel["ilvl_font"]), LolzenUIcfg.itemlevel["ilvl_font_size"], LolzenUIcfg.itemlevel["ilvl_font_flag"])
 						s.str:SetPoint(LolzenUIcfg.itemlevel["ilvl_anchor"], s, LolzenUIcfg.itemlevel["ilvl_font_posx"], LolzenUIcfg.itemlevel["ilvl_font_posy"])
-						s.str:SetText(getItemlvl(InspectFrame.unit, slots[i]))
+						s.str:SetText(getItemlvl(InspectFrame.unit, i))
 						if LolzenUIcfg.itemlevel["ilvl_use_itemquality_color"] == true then
 							s.str:SetTextColor(getColorItemQuality(InspectFrame.unit, slots[i]))
 						else
 							s.str:SetTextColor(unpack(LolzenUIcfg.itemlevel["ilvl_font_color"]))
 						end
 					else
-						s.str:SetText(getItemlvl(InspectFrame.unit, slots[i]))
+						s.str:SetText(getItemlvl(InspectFrame.unit, i))
 						if LolzenUIcfg.itemlevel["ilvl_use_itemquality_color"] == true then
 							s.str:SetTextColor(getColorItemQuality(InspectFrame.unit, slots[i]))
 						end

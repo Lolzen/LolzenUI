@@ -18,8 +18,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		local function getItemlvlBags(bagID, slotID)
 			local itemLink = GetContainerItemLink(bagID, slotID)
-			if itemLink and IsEquippableItem(itemLink) then
-				return GetDetailedItemLevelInfo(itemLink)
+			local item = Item:CreateFromBagAndSlot(bagID, slotID)
+			if item and IsEquippableItem(itemLink) then
+				return item:GetCurrentItemLevel()
 			end
 		end
 
