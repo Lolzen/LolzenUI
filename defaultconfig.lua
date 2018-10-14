@@ -23,7 +23,6 @@ defaultconfig.modules = {
 	["slashcommands"] = true,
 	["tooltip"] = true,
 	["unitframes"] = true,
-	["versioncheck"] = true,
 	["worldmap"] = true,
 	["xpbar"] = true,
 }
