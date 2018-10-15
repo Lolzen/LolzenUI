@@ -112,10 +112,18 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		-- return the unitReactionColor values
 		local function getReactionColor(unit)
-			local reactioncolor = LolzenUIcfg.miscellaneous["misc_faction_colors"][UnitReaction(unit, "player")]
-			if reactioncolor then
-				return unpack(reactioncolor)
+			if LolzenUIcfg.modules["miscellaneous"] == true and LolzenUIcfg.miscellaneous["misc_alternative_faction_colors"] == true then
+				local reactioncolor = LolzenUIcfg.miscellaneous["misc_faction_colors"][UnitReaction(unit, "player")]
+				if reactioncolor then
+					return unpack(reactioncolor)
+				end
+			else
+				local reactioncolor = FACTION_BAR_COLORS[UnitReaction(unit, "player")]
+				if reactioncolor then
+					return reactioncolor.r, reactioncolor.g, reactioncolor.b
+				end
 			end
+			
 		end
 
 		-- return hex value of color values and the unitname
