@@ -20,5 +20,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			factionBar:SetStatusBarColor(unpack(color))
 		end
 	end
-	hooksecurefunc("ReputationFrame_Update", customizeReputationColors)
+	if LolzenUIcfg.miscellaneous["misc_alternative_faction_colors"] == true then
+		hooksecurefunc("ReputationFrame_Update", customizeReputationColors)
+	end
 end)
