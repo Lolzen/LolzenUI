@@ -199,7 +199,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 			self:RegisterForClicks("AnyUp")
 
 			-- use custom reaction colors
-			self.colors.reaction = LolzenUIcfg.miscellaneous["misc_faction_colors"]
+			if LolzenUIcfg.modules["miscellaneous"] == true and LolzenUIcfg.miscellaneous["misc_alternative_faction_colors"] == true then
+				self.colors.reaction = LolzenUIcfg.miscellaneous["misc_faction_colors"]
+			end
 
 			local Border = CreateFrame("Frame", nil, self)
 			Border:SetBackdrop({
