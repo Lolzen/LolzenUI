@@ -16,6 +16,7 @@ defaultconfig.modules = {
 	["inspect"] = true,
 	["interruptannouncer"] = true,
 	["minimap"] = true,
+	["miscellaneous"] = true,
 	["nameplates"] = true,
 	["objectivetracker"] = true,
 	["orderhallbar"] = true,
@@ -219,6 +220,20 @@ defaultconfig.interruptannouncer = {
 
 defaultconfig.minimap = {
 	["minimap_square"] = true,
+}
+
+defaultconfig.miscellaneous = {
+	["misc_alternative_faction_colors"] = true,
+	["misc_faction_colors"] = {
+		[1] = {1, 0.2, 0.15},	-- Hated
+		[2] = {0.8, 0.3, 0.22},	-- Hostile		}
+		[3] = {0.75, 0.27, 0},	-- Unfriendly	} same as default
+		[4] = {0.9, 0.7, 0},	-- Neutral		}
+		[5] = {0, 0.6, 0.1},	-- Friendly		}
+		[6] = {0, 0.6, 0.33},	-- Honored
+		[7] = {0, 0.7, 0.5},	-- Revered
+		[8] = {0, 0.7, 0.7},	-- Exalted
+	}
 }
 
 defaultconfig.nameplates = {

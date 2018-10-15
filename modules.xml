@@ -12,6 +12,7 @@
 	<Script file="modules/inspect/inspect.lua"/>
 	<Script file="modules/interruptannouncer/interrupt.lua"/>
 	<Script file="modules/minimap/minimap.lua"/>
+	<Script file="modules/miscellaneous/miscellaneous.lua"/>
 	<Script file="modules/nameplates/plates.lua"/>
 	<Script file="modules/objectivetrackerframe/objective.lua"/>
 	<Script file="modules/orderhallbar/panel.lua"/>
