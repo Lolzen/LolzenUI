@@ -198,6 +198,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 			self:RegisterForClicks("AnyUp")
 
+			-- use custom reaction colors
+			self.colors.reaction = LolzenUIcfg.miscellaneous["misc_faction_colors"]
+
 			local Border = CreateFrame("Frame", nil, self)
 			Border:SetBackdrop({
 				edgeFile = LSM:Fetch("border", LolzenUIcfg.unitframes["uf_border"]), edgeSize = 12,
