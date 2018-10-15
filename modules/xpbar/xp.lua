@@ -124,10 +124,19 @@ f:SetScript("OnEvent", function(self, event, addon)
 						else
 							local name, standing, min, max, value = GetWatchedFactionInfo()
 							max, min = (max-min), (value-min)
-							local color = LolzenUIcfg.miscellaneous["misc_faction_colors"][standing]
+							if LolzenUIcfg.modules["miscellaneous"] == true and LolzenUIcfg.miscellaneous["misc_alternative_faction_colors"] == true then
+								local color = LolzenUIcfg.miscellaneous["misc_faction_colors"][standing]
+								xpbar:SetStatusBarColor(unpack(color))
+							else
+								local baseColor = FACTION_BAR_COLORS[standing]
+								local color = {}
+								for key, value in pairs(baseColor) do 
+									color[key] = math.min(1, value * 1.25)
+								end
+								xpbar:SetStatusBarColor(color.r, color.g, color.b)
+							end
 							xpbar:SetMinMaxValues(0, max)
 							xpbar:SetValue(min)
-							xpbar:SetStatusBarColor(unpack(color))
 							xptext:SetText("("..name..") "..min.." / "..max)
 						end
 					end
