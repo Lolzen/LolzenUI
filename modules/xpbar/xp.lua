@@ -135,8 +135,14 @@ f:SetScript("OnEvent", function(self, event, addon)
 								end
 								xpbar:SetStatusBarColor(color.r, color.g, color.b)
 							end
-							xpbar:SetMinMaxValues(0, max)
-							xpbar:SetValue(min)
+							
+							if max == 0 then
+								xpbar:SetMinMaxValues(0, 1)
+								xpbar:SetValue(1)
+							else
+								xpbar:SetMinMaxValues(0, max)
+								xpbar:SetValue(min)
+							end
 							xptext:SetText("("..name..") "..min.." / "..max)
 						end
 					end
