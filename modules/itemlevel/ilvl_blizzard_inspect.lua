@@ -12,6 +12,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 		local eF = CreateFrame("Frame")
 		eF:RegisterEvent("INSPECT_READY")
 
+		local scantt = CreateFrame("GameTooltip", "ILvLScanToolTip", UIParent, "GameTooltipTemplate")
+
 		local slots = {
 			"Head", -- 1
 			"Neck", -- 2
@@ -33,15 +35,32 @@ f:SetScript("OnEvent", function(self, event, addon)
 			"Tabard", --19
 		}
 
+		-- tooltipscanning from LibItemInfo
+		local pattern = gsub(ITEM_LEVEL, "%%d", "(%%d+)")
 		local function getItemlvl(unit, slotIndex)
 			if slotIndex == 18 then
 				slotIndex = 19
 			end
 			if unit and UnitExists(unit) then
-				local item = Item:CreateFromEquipmentSlot(slotIndex)
-				if item then
-					return item:GetCurrentItemLevel()
+				scantt:SetOwner(UIParent, "ANCHOR_NONE")
+				scantt:SetInventoryItem(unit, slotIndex)
+			
+				local itemLink = GetInventoryItemLink(unit, slotIndex)
+				
+				local tooltipLevel
+				for i=2, 5 do
+					tooltipLevel = string.match(_G[scantt:GetName().."TextLeft"..i]:GetText() or "", pattern)
+					if tooltipLevel then
+						break
+					end
 				end
+				return tooltipLevel
+--				if itemLink then
+--					local item = Item:CreateFromItemLink(itemLink)
+--					if item then
+--						return item:GetCurrentItemLevel()
+--					end
+--				end
 			end
 		end
 
