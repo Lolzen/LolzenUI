@@ -218,14 +218,16 @@ f:SetScript("OnEvent", function(self, event, addon)
 			
 			cf:SetClampedToScreen(false)
 			if cf.isDocked then
-				cf:ClearAllPoints()
 				if i == 1 then
+					cf:SetMovable(true)
+					cf:SetUserPlaced(true)
+					cf:ClearAllPoints()
 					cf:SetPoint(LolzenUIcfg.chat["chat_anchor1"], UIParent, LolzenUIcfg.chat["chat_anchor2"], LolzenUIcfg.chat["chat_posx"], LolzenUIcfg.chat["chat_posy"])
-				else
-					cf:SetAllPoints(_G["ChatFrame1"])
 				end
 			else
 				if i == 1 then
+					cf:SetMovable(true)
+					cf:SetUserPlaced(true)
 					cf:ClearAllPoints()
 					cf:SetPoint(LolzenUIcfg.chat["chat_anchor1"], UIParent, LolzenUIcfg.chat["chat_anchor2"], LolzenUIcfg.chat["chat_posx"], LolzenUIcfg.chat["chat_posy"])
 				end
