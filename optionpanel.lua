@@ -89,12 +89,16 @@ function ns.createButtons()
 	end
 end
 
-ns.panel.okay = function(self)
+local applyButton = CreateFrame("Button", "LolzenUI_ApplyButton", ns.panel, "UIPanelButtonTemplate")
+applyButton:SetSize(120, 23) -- width, height
+applyButton:SetText("Apply Settings")
+applyButton:SetPoint("BOTTOMRIGHT", ns.panel, "BOTTOMRIGHT", -186, -37)
+applyButton:SetScript("OnClick", function()
 	for i=1, #ns.modules do
 		LolzenUIcfg.modules[ns.modules[i].name] = button[i]:GetChecked()
 	end
 	ReloadUI()
-end
+end)
 
 ns.panel.default = function(self)
 	for i=1, #ns.modules do
