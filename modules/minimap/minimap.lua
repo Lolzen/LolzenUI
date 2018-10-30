@@ -15,7 +15,7 @@ local frames = {
 }
 
 local function modifyMinimap()
-	Minimap:SetPoint("TOPRIGHT", OrderHallClassBar, -15, -40)
+	Minimap:SetPoint(LolzenUIcfg.minimap["minimap_anchor"], OrderHallClassBar, LolzenUIcfg.minimap["minimap_posx"], LolzenUIcfg.minimap["minimap_posy"])
 
 	if LolzenUIcfg.minimap["minimap_square"] == true then
 		local overlay = Minimap:CreateTexture(nil,"OVERLAY")
