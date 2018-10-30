@@ -220,6 +220,9 @@ defaultconfig.interruptannouncer = {
 
 defaultconfig.minimap = {
 	["minimap_square"] = true,
+	["minimap_anchor"] = "TOPRIGHT",
+	["minimap_posx"] = -15,
+	["minimap_posy"] = -40,
 }
 
 defaultconfig.miscellaneous = {
