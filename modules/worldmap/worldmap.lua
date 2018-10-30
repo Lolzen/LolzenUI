@@ -11,6 +11,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		if LolzenUIcfg.modules["worldmap"] == false then return end
 
 		UIPanelWindows["WorldMapFrame"] = nil
+		tinsert(UISpecialFrames, "WorldMapFrame") 
 
 		local addonversion = GetAddOnMetadata(addon, "Version")
 		local version, build, date, tocversion = GetBuildInfo()
