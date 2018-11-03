@@ -395,6 +395,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 					self.CombatFade = {
 						incombatAlpha = LolzenUIcfg.unitframes["uf_fade_combat_incombat"],
 						outofcombatAlpha = LolzenUIcfg.unitframes["uf_fade_combat_outofcombat"],
+						smoothFade = true,
+						fadeTime = 0.3,
 						elements = {Health, Power, Border, bg, panel},
 					}
 				end
