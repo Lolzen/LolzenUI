@@ -15,6 +15,10 @@ Based on oUF Range element.
 
 .outofcombatAlpha - Opacity when the unit is out of combat. Defaults to 0.3 (number)[0-1].
 .incombatAlpha  - Opacity when the unit is in combat. Defaults to 1 (number)[0-1].
+.smoothFade  - Enables smooth Transition fading (boolean).
+.fadeTime  - Time which it take to fade in/out depending on combatsituation (number).
+.elements  - Elements which are faded (table).
+
 
 ## Examples
 
@@ -22,6 +26,8 @@ Based on oUF Range element.
     self.CombatFade = {
         incombatAlpha = 1,
         outofcombatAlpha = 0.3,
+		smoothFade = true,
+		fadeTime = 0.3,
 		elements = {Health, Power},
     }
 --]]
@@ -30,7 +36,7 @@ local _, ns = ...
 local oUF = ns.oUF
 
 local _FRAMES = {}
-local onCombatFrame
+local OnCombatFrame
 local UnitAffectingCombat = UnitAffectingCombat
 
 local function Update(self, event)
@@ -49,9 +55,17 @@ local function Update(self, event)
 	local inCombat = UnitAffectingCombat(unit)
 	for _, elements in pairs(element.elements) do
 		if(inCombat) then
-			elements:SetAlpha(element.incombatAlpha)
+			if element.smoothFade then
+				UIFrameFadeIn(elements, element.fadeTime, elements:GetAlpha(), element.incombatAlpha)
+			else
+				elements:SetAlpha(element.incombatAlpha)
+			end
 		else
-			elements:SetAlpha(element.outofcombatAlpha)
+			if element.smoothFade then
+				UIFrameFadeOut(elements, element.fadeTime, elements:GetAlpha(), element.outofcombatAlpha)
+			else
+				elements:SetAlpha(element.outofcombatAlpha)
+			end
 		end
 	end
 
