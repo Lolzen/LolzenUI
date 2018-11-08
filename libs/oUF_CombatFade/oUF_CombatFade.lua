@@ -9,7 +9,7 @@ CombatFade - A table containing opacity values.
 
 ## Notes
 
-Based on oUF Range element.
+Based on oUF_Fader by p3lim.
 
 ## Options
 
@@ -35,8 +35,6 @@ Based on oUF Range element.
 local _, ns = ...
 local oUF = ns.oUF
 
-local _FRAMES = {}
-local OnCombatFrame
 local UnitAffectingCombat = UnitAffectingCombat
 
 local function Update(self, event)
@@ -81,46 +79,27 @@ local function Update(self, event)
 	end
 end
 
-local function Path(self, ...)
-	--[[ Override: CombatFade.Override(self, event)
-	Used to completely override the internal update function.
-
-	* self  - the parent object
-	* event - the event triggering the update (string)
-	--]]
-	return (self.CombatFade.Override or Update) (self, ...)
-end
-
--- Internal updating method
-local timer = 0
-local function OnCombatUpdate(_, elapsed)
-	timer = timer + elapsed
-
-	if(timer >= .20) then
-		for _, object in next, _FRAMES do
-			if(object:IsShown()) then
-				Path(object, 'OnUpdate')
-			end
-		end
-
-		timer = 0
-	end
+local function ForceUpdate(element)
+	return Update(element.__owner, 'ForceUpdate')
 end
 
 local function Enable(self)
 	local element = self.CombatFade
 	if(element) then
 		element.__owner = self
+		element.ForceUpdate = ForceUpdate
 		element.incombatAlpha = element.incombatAlpha or 1
 		element.outofcombatAlpha = element.outofcombatAlpha or 0.3
 
-		if(not OnCombatFrame) then
-			OnCombatFrame = CreateFrame('Frame')
-			OnCombatFrame:SetScript('OnUpdate', OnCombatUpdate)
+		self:RegisterEvent('PLAYER_REGEN_ENABLED', Update)
+		self:RegisterEvent('PLAYER_REGEN_DISABLED', Update)
+		self:RegisterEvent('PLAYER_TARGET_CHANGED', Update)
+		if self.unit == "targettarget" then
+			self:HookScript('OnShow', Update)
 		end
+		self:RegisterEvent('UNIT_TARGET', Update)
 
-		table.insert(_FRAMES, self)
-		OnCombatFrame:Show()
+		Update(self)
 
 		return true
 	end
@@ -129,17 +108,10 @@ end
 local function Disable(self)
 	local element = self.CombatFade
 	if(element) then
-		for index, frame in next, _FRAMES do
-			if(frame == self) then
-				table.remove(_FRAMES, index)
-				break
-			end
-		end
-		self.elements:SetAlpha(element.incombatAlpha)
-
-		if(#_FRAMES == 0) then
-			OnCombatFrame:Hide()
-		end
+		self:UnregisterEvent('PLAYER_REGEN_ENABLED', Update)
+		self:UnregisterEvent('PLAYER_REGEN_DISABLED', Update)
+		self:UnregisterEvent('PLAYER_TARGET_CHANGED', Update)
+		self:UnregisterEvent('UNIT_TARGET', Update)
 	end
 end
 
