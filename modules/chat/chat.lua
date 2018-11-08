@@ -46,8 +46,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 					text = text:gsub("|H(.-)|h%[(.-)%]|h", "|H%1|h%2|h")
 				end
 
-				-- shorten channel names (implement option)
-				text = text:gsub('|h(%d+)%. .-|h', '|h%1.|h')
+				-- shorten channel names
+				if LolzenUIcfg.chat["chat_shorten_channels"] == true then
+					text = text:gsub('|h(%d+)%. .-|h', '|h%1.|h')
+				end
 
 				-- custom timestamp
 				if LolzenUIcfg.chat["chat_timestamp"] == true then
