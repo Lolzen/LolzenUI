@@ -143,6 +143,7 @@ defaultconfig.buffwatcher ={
 defaultconfig.chat = {
 	["chat_custom_channel_stamps"] = true,
 	["chat_strip_brackets"] = true,
+	["chat_shorten_channels"] = true,
 	["chat_timestamp"] = true,
 	["chat_disable_fading"] = true,
 	["chat_flag_afk"] = "AFK |",
