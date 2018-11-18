@@ -53,12 +53,14 @@ local function Update(self, event)
 	local inCombat = UnitAffectingCombat(unit)
 	for _, elements in pairs(element.elements) do
 		if(inCombat) then
+			if elements:GetAlpha() == element.incombatAlpha then return end
 			if element.smoothFade then
 				UIFrameFadeIn(elements, element.fadeTime, elements:GetAlpha(), element.incombatAlpha)
 			else
 				elements:SetAlpha(element.incombatAlpha)
 			end
 		else
+			if elements:GetAlpha() == element.outofcombatAlpha then return end
 			if element.smoothFade then
 				UIFrameFadeOut(elements, element.fadeTime, elements:GetAlpha(), element.outofcombatAlpha)
 			else
@@ -94,9 +96,7 @@ local function Enable(self)
 		self:RegisterEvent('PLAYER_REGEN_ENABLED', Update)
 		self:RegisterEvent('PLAYER_REGEN_DISABLED', Update)
 		self:RegisterEvent('PLAYER_TARGET_CHANGED', Update)
-		if self.unit == "targettarget" then
-			self:HookScript('OnShow', Update)
-		end
+		self:HookScript('OnShow', Update)
 		self:RegisterEvent('UNIT_TARGET', Update)
 
 		Update(self)
