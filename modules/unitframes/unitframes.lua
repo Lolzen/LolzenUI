@@ -117,14 +117,17 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 
 		local PostUpdatePower = function(Power, unit, min, max)
+			-- use custom power colors
+			local r, g, b = unpack(LolzenUIcfg.unitframes["uf_power_colors"][UnitPowerType(unit)])
+
+			Power:SetStatusBarColor(r, g, b)
+			Power.value:SetTextColor(r, g, b)
 			local parent = Power:GetParent()
 			if parent.PowerDivider then
-				if min > 0 and not parent.PowerDivider:IsShown() then
+				if min > 0 then
 					parent.PowerDivider:Show()
 				else
-					if parent.PowerDivider:IsShown() then
-						parent.PowerDivider:Hide()
-					end
+					parent.PowerDivider:Hide()
 				end
 			end
 		end
@@ -200,9 +203,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 				self.colors.reaction = LolzenUIcfg.miscellaneous["misc_faction_colors"]
 			end
 
-			-- use custom powercolors
-			self.colors.power = LolzenUIcfg.unitframes["uf_power_colors"]
-			
 			local Border = CreateFrame("Frame", nil, self)
 			Border:SetBackdrop({
 				edgeFile = LSM:Fetch("border", LolzenUIcfg.unitframes["uf_border"]), edgeSize = 12,
@@ -250,7 +250,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 			Power:SetHeight(2)
 			Power:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes["uf_statusbar_texture"]))
 			Power:SetFrameStrata("MEDIUM")
-			Power.colorPower = true
 
 			Power.frequentUpdates = true
 
@@ -263,7 +262,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 			local PowerPoints = Power:CreateFontString(nil, "OVERLAY")
 			PowerPoints:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 18, "THINOUTLINE")
-			self:Tag(PowerPoints, "[powercolor][lolzen:power]")
+			self:Tag(PowerPoints, "[lolzen:power]")
 			self.Power.value = PowerPoints
 
 			local bg = self:CreateTexture(nil, "BORDER")
