@@ -35,10 +35,19 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		local UpdateThreat = function(frame, event, unit)
 			local status = UnitThreatSituation("player", unit)
-			if status and status > 0 then
-				frame.Glow:Show()
+			-- do a different behaviour on Tank specc
+			if UnitGroupRolesAssigned("player") == "TANK" then
+				if status and status > 1 then
+					frame.Glow:Show()
+				else
+					frame.Glow:Hide()
+				end
 			else
-				frame.Glow:Hide()
+				if status and status > 0 then
+					frame.Glow:Show()
+				else
+					frame.Glow:Hide()
+				end
 			end
 		end
 
