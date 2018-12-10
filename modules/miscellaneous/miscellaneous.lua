@@ -23,4 +23,28 @@ f:SetScript("OnEvent", function(self, event, addon)
 	if LolzenUIcfg.miscellaneous["misc_alternative_faction_colors"] == true then
 		hooksecurefunc("ReputationFrame_Update", customizeReputationColors)
 	end
+
+	-- MicroButtons
+	local MicroButtons = {
+		CharacterMicroButton, SpellbookMicroButton, TalentMicroButton, 
+		AchievementMicroButton, QuestLogMicroButton, GuildMicroButton, 
+		PVPMicroButton, LFDMicroButton, CompanionsMicroButton,
+		EJMicroButton, HelpMicroButton, MainMenuMicroButton,
+		CollectionsMicroButton, StoreMicroButton,
+	}
+
+	if LolzenUIcfg.miscellaneous["misc_hide_microbuttons"] == true then
+		--fix a blizz bug; thx tuller
+		if not _G['AchievementMicroButton_Update'] then
+			_G['AchievementMicroButton_Update'] = function() end
+		end
+
+		-- do NOT show this again, ffs
+		StoreMicroButton.Show = function() end
+
+		for _, frame in pairs(MicroButtons) do
+			frame:SetParent(invisible)
+			frame:Hide()
+		end
+	end
 end)
