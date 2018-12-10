@@ -228,6 +228,7 @@ defaultconfig.minimap = {
 
 defaultconfig.miscellaneous = {
 	["misc_alternative_faction_colors"] = true,
+	["misc_hide_microbuttons"] = true,
 	["misc_faction_colors"] = {
 		[1] = {1, 0.2, 0.15},	-- Hated
 		[2] = {0.8, 0.3, 0.22},	-- Hostile		}
