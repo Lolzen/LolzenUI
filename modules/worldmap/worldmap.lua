@@ -10,8 +10,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 	if addon == "LolzenUI" then
 		if LolzenUIcfg.modules["worldmap"] == false then return end
 
-		UIPanelWindows["WorldMapFrame"] = nil
-		tinsert(UISpecialFrames, "WorldMapFrame") 
+		UIPanelWindows["WorldMapFrame"] = { area = nil, pushable = 0, xoffset = 0, yoffset = 0, whileDead = 1, minYOffset = 0, maximizePoint = "TOP" }
+		tinsert(UISpecialFrames, "WorldMapFrame")
 
 		WorldMapFrame.BorderFrame.NineSlice:Hide()
 		WorldMapFramePortrait:SetAlpha(0)
