@@ -26,6 +26,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 		}
 
 		local UpdateTargetIndicator = function(frame, event)
+			-- prevent bar from showing
+			if ClassNameplateManaBarFrame then
+				ClassNameplateManaBarFrame:Hide()
+			end
 			if UnitIsUnit(frame.unit, "target") then
 				frame.Targetindicator:SetAlpha(1)
 			else
@@ -112,6 +116,13 @@ f:SetScript("OnEvent", function(self, event, addon)
 			return Auras
 		end
 
+		local PostUpdatePower = function(Power, unit, min, max)
+			-- use custom power colors from unitframes
+			local r, g, b = unpack(LolzenUIcfg.unitframes["uf_power_colors"][UnitPowerType(unit)])
+
+			Power:SetStatusBarColor(r, g, b)
+		end
+
 		local tags = oUF.Tags.Methods or oUF.Tags
 		local tagevents = oUF.TagEvents or oUF.Tags.Events
 
@@ -128,6 +139,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 
 		oUF:RegisterStyle("Lolzen - Nameplates", function(frame, unit)
+			local playerplate = C_NamePlate.GetNamePlateForUnit("player")
 			if unit:match("nameplate") then
 				-- health bar
 				local health = CreateFrame("StatusBar", nil, frame)
@@ -140,6 +152,22 @@ f:SetScript("OnEvent", function(self, event, addon)
 				health.colorClass = true
 				health.colorReaction = true
 				frame.Health = health
+
+				local Power = CreateFrame("StatusBar", nil, frame)
+				Power:SetHeight(2)
+				Power:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.nameplates["np_texture"]))
+
+				Power.frequentUpdates = true
+
+				frame.Power = Power
+
+				if playerplate then
+					Power:SetPoint("LEFT")
+					Power:SetPoint("RIGHT")
+					Power:SetPoint("TOP", frame.Health, "BOTTOM", 0, 0)
+					
+					Power.PostUpdate = PostUpdatePower
+				end
 
 				-- frame background
 				local bg = frame:CreateTexture(nil, "BACKGROUND")
@@ -268,6 +296,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				Auras.PostUpdateIcon = PostUpdateIcon
 			end
 		end)
+		oUF:SetActiveStyle("Lolzen - Nameplates")
 		oUF:SpawnNamePlates(nil, UpdateTargetIndicator, cvars)
 	end
 end)
