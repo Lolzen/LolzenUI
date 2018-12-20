@@ -107,6 +107,28 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 		end
 
+		local CombatFade = function(self, event)
+			local unit = self.unit
+			-- the elements which are to be faded
+			local elements = {
+				self.Health,
+				self.Power,
+				self.Border,
+				self.Panel,
+				self.Background,
+			}
+			local combat = UnitAffectingCombat(unit)
+			for _, element in pairs(elements) do
+				if combat then
+					if element:GetAlpha() == LolzenUIcfg.unitframes["uf_fade_combat_incombat"] then return end
+					UIFrameFadeIn(element, 0.3, element:GetAlpha(), LolzenUIcfg.unitframes["uf_fade_combat_incombat"])
+				else
+					if element:GetAlpha() == LolzenUIcfg.unitframes["uf_fade_combat_outofcombat"] then return end
+					UIFrameFadeOut(element, 0.3, element:GetAlpha(), LolzenUIcfg.unitframes["uf_fade_combat_outofcombat"])
+				end
+			end
+		end
+
 		local PostUpdateClassPower = function(element, power, maxPower, maxPowerChanged)
 			if not maxPower or not maxPowerChanged then return end
 
@@ -192,6 +214,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 			return Auras
 		end
 
+		local PostUpdateCombatFade = function(self, parent, inCombat)
+			print(self:GetName())
+		end
+		
 		local shared = function(self, unit, isSingle)
 			self:SetScript("OnEnter", UnitFrame_OnEnter)
 			self:SetScript("OnLeave", UnitFrame_OnLeave)
@@ -392,13 +418,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 			if LolzenUIcfg.unitframes["uf_fade_combat"] == true then
 				if unit ~= "party" and unit ~= "raid" then
-					self.CombatFade = {
-						incombatAlpha = LolzenUIcfg.unitframes["uf_fade_combat_incombat"],
-						outofcombatAlpha = LolzenUIcfg.unitframes["uf_fade_combat_outofcombat"],
-						smoothFade = true,
-						fadeTime = 0.3,
-						elements = {Health, Power, Border, bg, panel},
-					}
+					table.insert(self.__elements, CombatFade)
+					self:RegisterEvent("PLAYER_REGEN_ENABLED", CombatFade)
+					self:RegisterEvent('PLAYER_REGEN_DISABLED', CombatFade)
+					self:RegisterEvent("PLAYER_TARGET_CHANGED", CombatFade)
+					self:RegisterEvent("UNIT_TARGET", CombatFade)
 				end
 			end
 
