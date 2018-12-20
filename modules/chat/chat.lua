@@ -55,10 +55,31 @@ f:SetScript("OnEvent", function(self, event, addon)
 				if LolzenUIcfg.chat["chat_timestamp"] == true then
 					text = string.format("|cff888888"..date("%H.%M").."| |r %s", text)
 				end
+
+				--url
+				text = text:gsub('([wWhH][wWtT][wWtT][%.pP]%S+[^%p%s])', '|cff33b5e5|Hurl:%1|h%1|h|r')
 			end
 
 			return origs[self](self, text, ...)
 		end
+
+		local oSetItemRef = SetItemRef
+		local function LolzenSetItemRef(link, ...)
+			if strsub(link, 1, 3) == "url" then
+				local url = strsub(link, 5)
+				local eb = LAST_ACTIVE_CHAT_EDIT_BOX or ChatFrame1EditBox
+				if not eb then return end
+				eb:SetText(url)
+				eb:SetFocus()
+				eb:HighlightText()
+				if not eb:IsShown() then
+					eb:Show()
+				end
+			else
+				return oSetItemRef(link, ...)
+			end
+		end
+		SetItemRef = LolzenSetItemRef
 
 		FloatingChatFrame_OnMouseScroll = function(self, dir)
 			if dir > 0 then
