@@ -1,7 +1,6 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\FrameXML\UI.xsd">
 	<Include file="oUF\oUF.xml"/>
-	<Script file="oUF_CombatFade\oUF_CombatFade.lua"/>
 	<Script file="oUF_MovableFrames\movable.lua"/>
 	<Script file="LibStub\LibStub.lua"/>
 	<Script file="CallBackHandler-1.0\CallBackHandler-1.0.lua"/>

@@ -1,8 +1,0 @@
-## Interface: 80100
-## Author: Lolzen
-## Version: 1.2.1
-## Title: oUF_CombatFade
-## Notes: combatfade plugin for oUF
-## RequiredDeps: oUF
-
-oUF_CombatFade.lua
