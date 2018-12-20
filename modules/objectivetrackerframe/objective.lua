@@ -19,6 +19,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		of:SetPoint(LolzenUIcfg.objectivetracker["objectivetracker_anchor"], UIParent, LolzenUIcfg.objectivetracker["objectivetracker_anchor"], LolzenUIcfg.objectivetracker["objectivetracker_posx"], LolzenUIcfg.objectivetracker["objectivetracker_posy"])
 		of.SetPoint = function() end
 		of:SetHeight(650)
+		of:SetScale(LolzenUIcfg.objectivetracker["objectivetracker_scale"])
 		if LolzenUIcfg.objectivetracker["objectivetracker_logincollapse"] == true then
 			ObjectiveTracker_Collapse()
 		end
