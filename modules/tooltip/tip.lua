@@ -191,7 +191,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			-- by default the PvP line is hidden in the modyfyTip function, if we just add a line it would look messy as the talents displayed are halfway outside of the border,
 			-- while the hidden PvP line is an empty space. So we use the PvP line and set our text there instead of adding a new one, if the target has PvP activated
 			if UnitIsPlayer(unit) then
-				if talentCache[UnitName(unit)] then
+				if talentCache[UnitName(unit)] and select(5, GetSpecializationInfoByID(GetInspectSpecialization(unit))) == talentCache[UnitName(unit)].role then
 					if UnitIsPVP(unit) then
 						_G["GameTooltipTextLeft"..GameTooltip:NumLines()]:SetText((string.format("|T%s:%d:%d:0:-1|t", talentCache[UnitName(unit)].icon, 16, 16)).." |cFFFFFFFF"..talentCache[UnitName(unit)].name.." ("..talentCache[UnitName(unit)].role..")|r")
 						_G["GameTooltipTextLeft"..GameTooltip:NumLines()]:Show()
@@ -203,13 +203,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 					local _, name, _, icon, role, _ = GetSpecializationInfoByID(GetInspectSpecialization(unit))
 					if icon then
 						-- store talents in cache
-						--if not talentCache[unit] then
-							talentCache[UnitName(unit)] = {
-								["icon"] = icon,
-								["name"] = name,
-								["role"] = string.sub(role, 1, 1)..string.lower(string.sub(role, 2)),
-							}
-						--end
+						talentCache[UnitName(unit)] = {
+							["icon"] = icon,
+							["name"] = name,
+							["role"] = string.sub(role, 1, 1)..string.lower(string.sub(role, 2)),
+						}
 						if UnitIsPVP(unit) then
 							_G["GameTooltipTextLeft"..GameTooltip:NumLines()]:SetText((string.format("|T%s:%d:%d:0:-1|t", icon, 16, 16)).." |cFFFFFFFF"..name.." ("..string.sub(role, 1, 1)..string.lower(string.sub(role, 2))..")|r")
 							_G["GameTooltipTextLeft"..GameTooltip:NumLines()]:Show()
