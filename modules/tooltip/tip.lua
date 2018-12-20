@@ -186,19 +186,38 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 
 		-- talents
+		local talentCache = {}
 		local function InspectTalents(inspect, unit)
 			-- by default the PvP line is hidden in the modyfyTip function, if we just add a line it would look messy as the talents displayed are halfway outside of the border,
 			-- while the hidden PvP line is an empty space. So we use the PvP line and set our text there instead of adding a new one, if the target has PvP activated
 			if UnitIsPlayer(unit) then
-				local _, name, _, icon, role, _ = GetSpecializationInfoByID(GetInspectSpecialization(unit))
-				if icon then
+				if talentCache[UnitName(unit)] then
 					if UnitIsPVP(unit) then
-						_G["GameTooltipTextLeft"..GameTooltip:NumLines()]:SetText((string.format("|T%s:%d:%d:0:-1|t", icon, 16, 16)).." |cFFFFFFFF"..name.." ("..string.sub(role, 1, 1)..string.lower(string.sub(role, 2))..")|r")
+						_G["GameTooltipTextLeft"..GameTooltip:NumLines()]:SetText((string.format("|T%s:%d:%d:0:-1|t", talentCache[UnitName(unit)].icon, 16, 16)).." |cFFFFFFFF"..talentCache[UnitName(unit)].name.." ("..talentCache[UnitName(unit)].role..")|r")
 						_G["GameTooltipTextLeft"..GameTooltip:NumLines()]:Show()
 					else
-						GameTooltip:AddLine((string.format("|T%s:%d:%d:0:-1|t", icon, 16, 16)).." |cFFFFFFFF"..name.." ("..string.sub(role, 1, 1)..string.lower(string.sub(role, 2))..")|r")
+						GameTooltip:AddLine((string.format("|T%s:%d:%d:0:-1|t", talentCache[UnitName(unit)].icon, 16, 16)).." |cFFFFFFFF"..talentCache[UnitName(unit)].name.." ("..talentCache[UnitName(unit)].role..")|r")
 					end
 					GameTooltip:AppendText("")
+				else
+					local _, name, _, icon, role, _ = GetSpecializationInfoByID(GetInspectSpecialization(unit))
+					if icon then
+						-- store talents in cache
+						--if not talentCache[unit] then
+							talentCache[UnitName(unit)] = {
+								["icon"] = icon,
+								["name"] = name,
+								["role"] = string.sub(role, 1, 1)..string.lower(string.sub(role, 2)),
+							}
+						--end
+						if UnitIsPVP(unit) then
+							_G["GameTooltipTextLeft"..GameTooltip:NumLines()]:SetText((string.format("|T%s:%d:%d:0:-1|t", icon, 16, 16)).." |cFFFFFFFF"..name.." ("..string.sub(role, 1, 1)..string.lower(string.sub(role, 2))..")|r")
+							_G["GameTooltipTextLeft"..GameTooltip:NumLines()]:Show()
+						else
+							GameTooltip:AddLine((string.format("|T%s:%d:%d:0:-1|t", icon, 16, 16)).." |cFFFFFFFF"..name.." ("..string.sub(role, 1, 1)..string.lower(string.sub(role, 2))..")|r")
+						end
+						GameTooltip:AppendText("")
+					end
 				end
 			end
 		end
@@ -260,9 +279,13 @@ f:SetScript("OnEvent", function(self, event, addon)
 				if LolzenUIcfg.tooltip["tip_display_talents"] == true then
 					if UnitLevel(unit) > 9 then
 						if not InspectFrame or not InspectFrame:IsShown() then
-							if CheckInteractDistance(unit,1) and CanInspect(unit) then
-								GameTooltip:RegisterEvent("INSPECT_READY")
-								NotifyInspect(unit)
+							if talentCache[UnitName(unit)] and talentCache[UnitName(unit)] == unit then
+								InspectTalents(1, unit)
+							else
+								if CheckInteractDistance(unit, 1) and CanInspect(unit) then
+									GameTooltip:RegisterEvent("INSPECT_READY")
+									NotifyInspect(unit)
+								end
 							end
 						end
 					end
