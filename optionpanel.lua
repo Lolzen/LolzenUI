@@ -66,7 +66,7 @@ function ns.createButtons()
 			-- get status from saved vars
 			if LolzenUIcfg.modules[ns.modules[i].name] == true then
 				button[i]:SetChecked(true)
-				button[i].text:SetTextColor(51/255, 181/255, 229/225)
+				button[i].text:SetTextColor(51/255, 181/255, 229/255)
 			else
 				button[i]:SetChecked(false)
 				button[i].text:SetTextColor(1, 1, 1)
