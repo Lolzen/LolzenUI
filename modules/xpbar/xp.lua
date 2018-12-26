@@ -1,9 +1,10 @@
 ﻿--// xpbar // --
 
 local _, ns = ...
+local L = ns.L
 local LSM = LibStub("LibSharedMedia-3.0")
 
-ns.RegisterModule("xpbar", "A bar which shows pretige/honor in bgs, rep at the watched faction or alternatively experience", true)
+ns.RegisterModule("xpbar", L["desc_xpbar"], true)
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")

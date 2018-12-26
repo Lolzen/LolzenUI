@@ -2,8 +2,9 @@
 -- this module is based on Snoopy Inspect by TotalPackage
 
 local _, ns = ...
+local L = ns.L
 
-ns.RegisterModule("inspect", "enables inspect per keybind & caches items for out of range viewing", false)
+ns.RegisterModule("inspect", L["desc_inspect"], false)
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")

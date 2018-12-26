@@ -1,9 +1,10 @@
 --// buffs // --
 
 local _, ns = ...
+local L = ns.L
 local LSM = LibStub("LibSharedMedia-3.0")
 
-ns.RegisterModule("buffs", "Skins the buffs/debuffs along with a more detailed timer", true)
+ns.RegisterModule("buffs", L["desc_buffs"], true)
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")

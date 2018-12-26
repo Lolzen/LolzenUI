@@ -1,9 +1,10 @@
 --// fonts // --
 
 local _, ns = ...
+local L = ns.L
 local LSM = LibStub("LibSharedMedia-3.0")
 
-ns.RegisterModule("fonts", "Changes the fonts used in WoW", true)
+ns.RegisterModule("fonts", L["desc_fonts"], true)
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")

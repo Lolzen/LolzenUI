@@ -1,9 +1,10 @@
 --// clock // --
 
 local _, ns = ...
+local L = ns.L
 local LSM = LibStub("LibSharedMedia-3.0")
 
-ns.RegisterModule("clock", "A clock with Addon stats along with fps and latency overwiev on mouseover", true)
+ns.RegisterModule("clock", L["desc_clock"], true)
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")

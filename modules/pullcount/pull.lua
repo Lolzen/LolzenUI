@@ -1,8 +1,9 @@
 --// pullcount // --
 
 local _, ns = ...
+local L = ns.L
 
-ns.RegisterModule("pullcount", "Built-in /pull [num] ; works with DBM/BigWigs and plays sounds (optional)", true)
+ns.RegisterModule("pullcount", L["desc_pullcount"] , true)
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")

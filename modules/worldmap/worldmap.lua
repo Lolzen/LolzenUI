@@ -1,8 +1,9 @@
 ﻿--// worldmap // --
 
 local _, ns = ...
+local L = ns.L
 
-ns.RegisterModule("worldmap", "Modifies & Enhances the WorldMap", true)
+ns.RegisterModule("worldmap", L["desc_worldmap"], true)
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")

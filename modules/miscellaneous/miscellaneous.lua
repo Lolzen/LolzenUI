@@ -1,8 +1,9 @@
 --// miscellaneous // --
 
 local _, ns = ...
+local L = ns.L
 
-ns.RegisterModule("miscellaneous", "Miscellaneous options", true)
+ns.RegisterModule("miscellaneous", L["desc_miscellaneous"], true)
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("PLAYER_LOGIN")

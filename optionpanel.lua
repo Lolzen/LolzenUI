@@ -1,6 +1,7 @@
 ﻿--//optionpanel//--
 
 local addon, ns = ...
+local L = ns.L
 
 ns.panel = CreateFrame("Frame", "LolzenUIPanel")
 ns.panel.name = addon
@@ -22,7 +23,7 @@ title:SetText("|cff5599ff"..addon.."|r")
 
 local about = ns.panel:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 about:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8)
-about:SetText("Modify or add some UI Elements")
+about:SetText(L["desc_LolzenUI"])
 
 local version = ns.panel:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 version:SetPoint("TOPLEFT", about, "BOTTOMLEFT", 5, -20)
@@ -38,11 +39,11 @@ github:SetText("|cff5599ffGithub:|r https://github.com/Lolzen/LolzenUI")
 
 local slash = ns.panel:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 slash:SetPoint("TOPLEFT", github, "BOTTOMLEFT", 0, -8)
-slash:SetText("|cff5599ff/lolzen|r |cffffffffor|r |cff5599ff/lolzenui|r |cffffffffopens up this panel|r")
+slash:SetText(L["LolzenUI_slash"])
 
 local checkboxes = ns.panel:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 checkboxes:SetPoint("TOPLEFT", slash, "BOTTOMLEFT", 0, -12)
-checkboxes:SetText("|cff5599ffModules:|r to load:")
+checkboxes:SetText(L["modules_to_load"])
 
 -- create the buttons
 local button = {}
@@ -60,7 +61,7 @@ function ns.createButtons()
 			end
 
 			button[i].text = _G["tickbox"..i.."Text"]
-			button[i].text:SetText(ns.modules[i].name)
+			button[i].text:SetText(L[ns.modules[i].name])
 
 			-- get status from saved vars
 			if LolzenUIcfg.modules[ns.modules[i].name] == true then
@@ -91,7 +92,7 @@ end
 
 local applyButton = CreateFrame("Button", "LolzenUI_ApplyButton", ns.panel, "UIPanelButtonTemplate")
 applyButton:SetSize(120, 23) -- width, height
-applyButton:SetText("Apply Settings")
+applyButton:SetText(L["apply_button"])
 applyButton:SetPoint("BOTTOMRIGHT", ns.panel, "BOTTOMRIGHT", -186, -37)
 applyButton:SetScript("OnClick", function()
 	for i=1, #ns.modules do

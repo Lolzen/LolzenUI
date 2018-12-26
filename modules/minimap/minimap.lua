@@ -1,8 +1,9 @@
 --// minimap // --
 
 local _, ns = ...
+local L = ns.L
 
-ns.RegisterModule("minimap", "A clean Minimap", true)
+ns.RegisterModule("minimap", L["desc_minimap"], true)
 
 local frames = {
 	MinimapZoomIn,

@@ -1,5 +1,6 @@
 --// itemlevel (core) // --
 
 local _, ns = ...
+local L = ns.L
 
-ns.RegisterModule("itemlevel", "Displays item level on equippable items", true)
+ns.RegisterModule("itemlevel", L["desc_itemlevel"], true)

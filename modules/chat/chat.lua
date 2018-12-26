@@ -1,9 +1,10 @@
 --// chat // --
 
 local _, ns = ...
+local L = ns.L
 local LSM = LibStub("LibSharedMedia-3.0")
 
-ns.RegisterModule("chat", "Modifies Chat look & feel", true)
+ns.RegisterModule("chat", L["desc_chat"], true)
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")

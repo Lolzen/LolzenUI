@@ -1,9 +1,10 @@
 --// tooltip // --
 
 local _, ns = ...
+local L = ns.L
 local LSM = LibStub("LibSharedMedia-3.0")
 
-ns.RegisterModule("tooltip", "Modifies the look of the Tooltip and adds a few features", true)
+ns.RegisterModule("tooltip", L["desc_tooltip"], true)
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")

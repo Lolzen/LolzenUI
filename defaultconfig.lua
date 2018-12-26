@@ -1,6 +1,7 @@
 ﻿--// config defaults //--
 
 local _, ns = ...
+local L = ns.L
 
 local defaultconfig = {}
 
@@ -216,7 +217,7 @@ defaultconfig.interruptannouncer = {
 	["interruptannoucer_say"] = true,
 	["interruptannoucer_party"] = true,
 	["interruptannoucer_instance"] = true,
-	["interruptannouncer_msg"] = "Unterbrochen: !spell von >>!name<<",
+	["interruptannouncer_msg"] = L["ia_announce_message_text_interrupted"],
 }
 
 defaultconfig.minimap = {

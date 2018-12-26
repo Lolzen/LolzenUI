@@ -1,8 +1,9 @@
 --// interruptannouncer // --
 
 local _, ns = ...
+local L = ns.L
 
-ns.RegisterModule("interruptannouncer", "Announces interrupts", true)
+ns.RegisterModule("interruptannouncer", L["desc_interruptannouncer"], true)
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")

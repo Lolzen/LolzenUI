@@ -9,6 +9,7 @@
 ## X-SavedVariables: LolzenUIcfgOMF
 ## X-SlashCmdList: /omf
 
+locales.xml
 libs\libs.xml
 
 sharedmedia.lua

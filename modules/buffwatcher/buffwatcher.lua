@@ -1,8 +1,9 @@
 --// buffwatcher // --
 
 local _, ns = ...
+local L = ns.L
 
-ns.RegisterModule("buffwatcher", "Displays nice icons along with the duration if up", true)
+ns.RegisterModule("buffwatcher", L["desc_buffwatcher"], true)
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")

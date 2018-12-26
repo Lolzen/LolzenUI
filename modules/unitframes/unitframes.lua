@@ -1,10 +1,11 @@
 --// unitframes // --
 
 local _, ns = ...
+local L = ns.L
 local LSM = LibStub("LibSharedMedia-3.0")
 local oUF = ns.oUF
 
-ns.RegisterModule("unitframes", "Highly customizable unitframes based on oUF", true)
+ns.RegisterModule("unitframes", L["desc_unitframes"], true)
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")

@@ -1,11 +1,17 @@
 ﻿--// core //--
 
 local addon, ns = ...
+local L = ns.L
 -- make the ns available to the seperate options addon
 _G[addon] = ns
 
 -- Create an empty table which will be filled by modules
 ns.modules = {}
+
+local sortTable = {}
+local sort_func = function(a, b)
+	return L[a.name] < L[b.name] 
+end
 
 ns.RegisterModule = function(module, desc, hasOptions)
 	if not ns.modules[module] then
@@ -15,6 +21,8 @@ ns.RegisterModule = function(module, desc, hasOptions)
 			["hasOptions"] = hasOptions
 		}
 	end
+	-- sort localized module names alphabethically
+	table.sort(LolzenUI.modules, sort_func)
 end
 
 ns.customModuleOptions = function(module, defaults)

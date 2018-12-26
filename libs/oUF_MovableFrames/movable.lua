@@ -546,22 +546,38 @@ end
 
 function _NS.omf()
 	do
-		local opt = CreateFrame("Frame", "unitframe_omf", LolzenUI_Options["unitframes"])
-		opt.parent = "unitframes"
-		opt:Hide()
+		local opt
+		if IsAddOnLoaded("LolzenUI_Options") then
+			opt = CreateFrame("Frame", "unitframe_omf", LolzenUI_Options["unitframes"])
+			opt.parent = _NS.L["unitframes"]
+			opt:Hide()
+			opt.name = "   "..LolzenUI_Options.L["sub_panel_unitframes_omf"]
+		else
+			opt = CreateFrame("Frame", "omf", InterfaceOptionsFramePanelContainer)
+			opt:Hide()
+			opt.name = "oUF_MovableFrames"
+		end
 
-		opt.name = "   Positions"
+		
 		opt:SetScript("OnShow", function(self)
 			local title = self:CreateFontString(nil, 'ARTWORK', 'GameFontNormalLarge')
 			title:SetPoint('TOPLEFT', 16, -16)
-			title:SetText("|cff5599ffUnitframes module: Positions [oUF_MovableFrames]|r")
+			if IsAddOnLoaded("LolzenUI_Options") then
+				title:SetText("|cff5599ff"..LolzenUI_Options.L["sub_panel_unitframes_omf_title"].."|r")
+			else
+				title:SetText("oUF_MovableFrames")
+			end
 
 			local subtitle = self:CreateFontString(nil, 'ARTWORK', 'GameFontHighlightSmall')
 			subtitle:SetPoint('TOPLEFT', title, 'BOTTOMLEFT', 0, -8)
 			subtitle:SetNonSpaceWrap(true)
 			subtitle:SetWordWrap(true)
 			subtitle:SetJustifyH'LEFT'
-			subtitle:SetFormattedText('Type %s to toggle frame anchors.', _G['SLASH_' .. slashGlobal .. 1])
+			if IsAddOnLoaded("LolzenUI_Options") then
+				subtitle:SetFormattedText(LolzenUI_Options.L["sub_panel_unitframes_omf_about"], _G['SLASH_' .. slashGlobal .. 1])
+			else
+				subtitle:SetFormattedText('Type %s to toggle frame anchors.', _G['SLASH_' .. slashGlobal .. 1])
+			end
 
 			local scroll = CreateFrame("ScrollFrame", nil, self)
 			scroll:SetPoint('TOPLEFT', subtitle, 'BOTTOMLEFT', 0, -8)
@@ -1014,13 +1030,22 @@ SlashCmdList[slashGlobal] = function(inp)
 	end
 
 	if(inp:match("%S+")) then
-		-- load LolzenUI_Options
+		-- attepmt to load LolzenUI_Options
 		LoadAddOn("LolzenUI_Options")
-		-- go to subcategory unitframes; do it double becaus eof blizz bug
-		InterfaceOptionsFrame_OpenToCategory(LolzenUI_Options.unitframes.name)
-		InterfaceOptionsFrame_OpenToCategory(LolzenUI_Options.unitframes.name)
-		-- now go to sub-subpanel of oUF_MovableFrames
-		InterfaceOptionsFrame_OpenToCategory(unitframe_omf)
+		if IsAddOnLoaded("LolzenUI_Options") then
+			-- go to subcategory unitframes; do it double becaus eof blizz bug
+			InterfaceOptionsFrame_OpenToCategory(LolzenUI_Options.L[LolzenUI_Options.unitframes.name])
+			InterfaceOptionsFrame_OpenToCategory(LolzenUI_Options.L[LolzenUI_Options.unitframes.name])
+			-- now go to sub-subpanel of oUF_MovableFrames
+			InterfaceOptionsFrame_OpenToCategory(unitframe_omf)
+		else
+			if not omf then
+				_NS.omf()
+			end
+			InterfaceOptionsFrame_OpenToCategory(omf)
+			InterfaceOptionsFrame_OpenToCategory(omf)
+		end
+		
 	else
 		if(not _LOCK) then
 			for k, obj in next, oUF.objects do
