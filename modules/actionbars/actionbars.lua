@@ -35,6 +35,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 		for _, frame in pairs(BlizzArt) do
 			frame:SetParent(invisible)
 		end
+		
+		MainMenuBarArtFrame:UnregisterAllEvents()
 
 		-- Hide the StatusbarMixins by calling StatusTrackingBarManager:HideStatusBars() on every ShouldBeVisible() call
 		-- thanks for not giving these bars a name blizzard ~.~
@@ -81,6 +83,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			"MultiBarRightButton",
 			"PetActionButton",
 			"OverrideActionBarButton",
+			"ExtraActionButton",
 		}
 
 		local function applyTheme(name)
@@ -158,7 +161,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 				if button then
 					applyTheme(name..i)
-					button:SetSize(LolzenUIcfg.actionbar["actionbar_button_size"], LolzenUIcfg.actionbar["actionbar_button_size"])
+					if button ~= _G["ExtraActionButton"..i] then
+						button:SetSize(LolzenUIcfg.actionbar["actionbar_button_size"], LolzenUIcfg.actionbar["actionbar_button_size"])
+					end
 					button:ClearAllPoints()
 
 					if i == 1 then
@@ -176,6 +181,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 							button:SetPoint(LolzenUIcfg.actionbar["actionbar_petb_anchor1"], LolzenUIcfg.actionbar["actionbar_petb_parent"], LolzenUIcfg.actionbar["actionbar_petb_anchor2"], LolzenUIcfg.actionbar["actionbar_petb_posx"], LolzenUIcfg.actionbar["actionbar_petb_posy"])
 						elseif button == _G["OverrideActionBarButton"..i] then
 							button:SetPoint("BOTTOMLEFT", ActionButton1)
+						elseif button == _G["ExtraActionButton"..i] then
+							button:SetPoint("BOTTOM", UIParent, 0, 200)
 						end
 					else
 						if button == _G["ActionButton"..i] then
