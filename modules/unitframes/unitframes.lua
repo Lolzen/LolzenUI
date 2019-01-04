@@ -420,9 +420,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 			if LolzenUIcfg.unitframes["uf_fade_combat"] == true then
 				if unit ~= "party" and unit ~= "raid" then
 					table.insert(self.__elements, CombatFade)
-					self:RegisterEvent("PLAYER_REGEN_ENABLED", CombatFade)
-					self:RegisterEvent('PLAYER_REGEN_DISABLED', CombatFade)
-					self:RegisterEvent("PLAYER_TARGET_CHANGED", CombatFade)
+					self:RegisterEvent("PLAYER_REGEN_ENABLED", CombatFade, true)
+					self:RegisterEvent('PLAYER_REGEN_DISABLED', CombatFade, true)
+					self:RegisterEvent("PLAYER_TARGET_CHANGED", CombatFade, true)
 					self:RegisterEvent("UNIT_TARGET", CombatFade)
 				end
 			end
