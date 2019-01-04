@@ -31,6 +31,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			if ClassNameplateManaBarFrame then
 				ClassNameplateManaBarFrame:Hide()
 			end
+			if not frame then return end
 			if UnitIsUnit(frame.unit, "target") then
 				frame.Targetindicator:SetAlpha(1)
 			else
@@ -41,9 +42,23 @@ f:SetScript("OnEvent", function(self, event, addon)
 		local UpdateThreat = function(frame, event, unit)
 			local status = UnitThreatSituation("player", unit)
 			-- do a different behaviour on Tank specc
-			if UnitGroupRolesAssigned("player") == "TANK" then
-				if status and status > 1 then
+			local _, _, _, _, role = GetSpecializationInfoByID(GetInspectSpecialization("player"))
+			if UnitGroupRolesAssigned("player") == "TANK" or role == "TANK" then
+				if status and status > 0 then
 					frame.Glow:Show()
+					-- tanking securely
+					if status == 3 then
+						frame.Glow:SetBackdropBorderColor(0, 6, 0)
+					--insecurely tanking
+					elseif status == 2 then
+						frame.Glow:SetBackdropBorderColor(6, 6, 0)
+					--not tanking
+					elseif status == 1 then
+						frame.Glow:SetBackdropBorderColor(6, 0, 0)
+					-- infight, not tanking
+					elseif status == 0 then
+						frame.Glow:SetBackdropBorderColor(1, 1, 1)
+					end
 				else
 					frame.Glow:Hide()
 				end
@@ -163,11 +178,14 @@ f:SetScript("OnEvent", function(self, event, addon)
 				frame.Power = Power
 
 				if playerplate then
+					Power:SetAlpha(1)
 					Power:SetPoint("LEFT")
 					Power:SetPoint("RIGHT")
 					Power:SetPoint("TOP", frame.Health, "BOTTOM", 0, 0)
 					
 					Power.PostUpdate = PostUpdatePower
+				else
+					Power:SetAlpha(0)
 				end
 
 				-- frame background
@@ -232,7 +250,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 					targetindicator:SetSize(LolzenUIcfg.nameplates["np_width"], 5*cvars.nameplateSelectedScale)
 					targetindicator:SetVertexColor(48/255, 113/255, 191/255)
 					frame.Targetindicator = targetindicator
-					frame:RegisterEvent("PLAYER_TARGET_CHANGED", UpdateTargetIndicator)
+					frame:RegisterEvent("PLAYER_TARGET_CHANGED", UpdateTargetIndicator, true)
 				end
 
 				if LolzenUIcfg.nameplates["np_threatindicator"] == true then
