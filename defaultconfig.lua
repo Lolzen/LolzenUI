@@ -792,6 +792,9 @@ local OMFdefault = {
 	},
 }
 
+-- make the defaults globally available
+_G["LolzenUIdefaultcfg"] = defaultconfig
+
 -- // check default config and update if necessary // --
 local function updateDB(module)
 	for k, v in pairs(defaultconfig[module]) do
