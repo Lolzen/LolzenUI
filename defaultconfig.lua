@@ -288,7 +288,7 @@ defaultconfig.nameplates = {
 	["np_cbtext_font"] = "DroidSansBold",
 	["np_cbtext_font_size"] = 6,
 	["np_cbtext_font_flag"] = "THINOUTLINE",
-	["np_aura_show_type"] = "None",
+	["np_aura_show_type"] = "Buffs",
 	["np_aura_posx"] = 0,
 	["np_aura_posy"] = 10,
 	["np_aura_anchor1"] = "BOTTOM",
@@ -298,8 +298,8 @@ defaultconfig.nameplates = {
 	["np_aura_spacing"] = 4,
 	["np_aura_growth_x"] = "RIGHT",
 	["np_aura_growth_y"] = "UP",
-	["np_aura_show_only_player"] = true,
-	["np_aura_desature_nonplayer_auras"] = true,
+	["np_aura_show_only_player"] = false,
+	["np_aura_desature_nonplayer_auras"] = false,
 }
 
 defaultconfig.objectivetracker = {
