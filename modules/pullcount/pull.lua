@@ -24,7 +24,7 @@ timer:SetScript("OnFinished", function(self, requested)
 			end
 		elseif pullNum-1 == 0 then
 			PlaySoundFile("Interface\\AddOns\\LolzenUI\\sounds\\"..LolzenUIcfg.pullcount["pull_sound_pull"], "master")
-			isCounting = false
+			C_Timer.After(1, function(self) isCounting = false end)
 		end
 	end
 	if pullNum -1 ~= 0 then
