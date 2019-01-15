@@ -89,10 +89,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 			elseif UnitIsGhost(unit) then
 				Health:SetValue(0)
 			end
-			local gradient = {1, 1, 0, 0, 1, 1, 0, 0, 1, 0}
 
-			local r, g, b = oUF.ColorGradient(min / max, unpack(gradient))
-			Health.value:SetTextColor(r,g,b)
+			local r, g, b = oUF:ColorGradient(min / max, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0)
+			Health.value:SetTextColor(r, g, b)
 		end
 
 		local UpdateThreat = function(self, event, unit)
