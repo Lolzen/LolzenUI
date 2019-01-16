@@ -15,13 +15,13 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		local siValue = function(val)
 			if val >= 1e6 then
-				if LolzenUIcfg.unitframes["uf_use_dot_format"] == true then
+				if LolzenUIcfg.unitframes.general["uf_use_dot_format"] == true then
 					return ("%.1fm"):format(val / 1e6)
 				else
 					return ("%.1f"):format(val / 1e6):gsub('%.', 'm')
 				end
 			elseif val >= 1e4 then
-				if LolzenUIcfg.unitframes["uf_use_dot_format"] == true then
+				if LolzenUIcfg.unitframes.general["uf_use_dot_format"] == true then
 					return ("%.1fk"):format(val / 1e3)
 				else
 					return ("%.1f"):format(val / 1e3):gsub('%.', 'k')
@@ -39,7 +39,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			if not UnitIsConnected(unit) or UnitIsDead(unit) or UnitIsGhost(unit) then return end
 
 			local min, max = UnitHealth(unit), UnitHealthMax(unit)
-			if LolzenUIcfg.unitframes["uf_use_sivalue"] == true then
+			if LolzenUIcfg.unitframes.general["uf_use_sivalue"] == true then
 				return siValue(min)
 			else
 				return min
@@ -57,7 +57,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			local min, max = UnitPower(unit), UnitPowerMax(unit)
 			if min == 0 or max == 0 or not UnitIsConnected(unit) or UnitIsDead(unit) or UnitIsGhost(unit) then return end
 
-			if LolzenUIcfg.unitframes["uf_use_sivalue"] == true then
+			if LolzenUIcfg.unitframes.general["uf_use_sivalue"] == true then
 				return siValue(min)
 			else
 				return min
@@ -120,11 +120,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 			local combat = UnitAffectingCombat(unit)
 			for _, element in pairs(elements) do
 				if combat then
-					if element:GetAlpha() == LolzenUIcfg.unitframes["uf_fade_combat_incombat"] then return end
-					UIFrameFadeIn(element, 0.3, element:GetAlpha(), LolzenUIcfg.unitframes["uf_fade_combat_incombat"])
+					if element:GetAlpha() == LolzenUIcfg.unitframes.general["uf_fade_combat_incombat"] then return end
+					UIFrameFadeIn(element, 0.3, element:GetAlpha(), LolzenUIcfg.unitframes.general["uf_fade_combat_incombat"])
 				else
-					if element:GetAlpha() == LolzenUIcfg.unitframes["uf_fade_combat_outofcombat"] then return end
-					UIFrameFadeOut(element, 0.3, element:GetAlpha(), LolzenUIcfg.unitframes["uf_fade_combat_outofcombat"])
+					if element:GetAlpha() == LolzenUIcfg.unitframes.general["uf_fade_combat_outofcombat"] then return end
+					UIFrameFadeOut(element, 0.3, element:GetAlpha(), LolzenUIcfg.unitframes.general["uf_fade_combat_outofcombat"])
 				end
 			end
 		end
@@ -134,13 +134,13 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 			for i = 1, maxPower do
 				local parent = element[i]:GetParent()
-				element[i]:SetSize((parent:GetWidth()/maxPower) - ((LolzenUIcfg.unitframes["uf_player_classpower_spacing"]*maxPower-1)/(maxPower+1)), 8)
+				element[i]:SetSize((parent:GetWidth()/maxPower) - ((LolzenUIcfg.unitframes.player["uf_player_classpower_spacing"]*maxPower-1)/(maxPower+1)), 8)
 			end
 		end
 
 		local PostUpdatePower = function(Power, unit, min, max)
 			-- use custom power colors
-			local r, g, b = unpack(LolzenUIcfg.unitframes["uf_power_colors"][UnitPowerType(unit)])
+			local r, g, b = unpack(LolzenUIcfg.unitframes.powercolors[UnitPowerType(unit)])
 
 			Power:SetStatusBarColor(r, g, b)
 			Power.value:SetTextColor(r, g, b)
@@ -181,7 +181,19 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 
 		local PostUpdateIcon = function(icons, unit, button, index, offset, filter, isDebuff)
-			if LolzenUIcfg.unitframes["uf_"..unit.."_aura_desature_nonplayer_auras"] == true then
+			if not unit then return end
+			
+			-- fix for boss, party & raid
+			-- these have a number attached to their names
+			if string.find(unit, "boss") then
+				unit = "boss"
+			elseif string.find(unit, "party") then
+				unit = "party"
+			elseif string.find(unit, "raid") then
+				unit = "raid"
+			end
+
+			if LolzenUIcfg.unitframes[unit]["uf_"..unit.."_aura_desature_nonplayer_auras"] == true then
 				local texture = button.icon
 				if button.isPlayer then
 					texture:SetDesaturated(false)
@@ -195,18 +207,29 @@ f:SetScript("OnEvent", function(self, event, addon)
 			local Auras = CreateFrame("Frame", nil, self)
 			--local unit = gsub(self.unit, "(%d)", "")
 			local unit = self.unit
+			if not unit then return end
+
+			-- fix for boss, party & raid
+			-- these have a number attached to their names
+			if string.find(unit, "boss") then
+				unit = "boss"
+			elseif string.find(unit, "party") then
+				unit = "party"
+			elseif string.find(unit, "raid") then
+				unit = "raid"
+			end
 
 			-- check if SVs exist, otherwise do nothing
-			if LolzenUIcfg.unitframes["uf_"..unit.."_aura_size"] then
-				Auras:SetSize(num * (LolzenUIcfg.unitframes["uf_"..unit.."_aura_size"] + 4), LolzenUIcfg.unitframes["uf_"..unit.."_aura_size"])
-				Auras.size = LolzenUIcfg.unitframes["uf_"..unit.."_aura_size"]
+			if LolzenUIcfg.unitframes[unit]["uf_"..unit.."_aura_size"] then
+				Auras:SetSize(num * (LolzenUIcfg.unitframes[unit]["uf_"..unit.."_aura_size"] + 4), LolzenUIcfg.unitframes[unit]["uf_"..unit.."_aura_size"])
+				Auras.size = LolzenUIcfg.unitframes[unit]["uf_"..unit.."_aura_size"]
 			-- create a fallback to prevent getting errors in BfA
 			else
 				Auras:SetSize(num * (23 + 4) , 23)
 				Auras.size = 23
 			end
-			if LolzenUIcfg.unitframes["uf_"..unit.."_aura_spacing"] then
-				Auras.spacing = LolzenUIcfg.unitframes["uf_"..unit.."_aura_spacing"]
+			if LolzenUIcfg.unitframes[unit]["uf_"..unit.."_aura_spacing"] then
+				Auras.spacing = LolzenUIcfg.unitframes[unit]["uf_"..unit.."_aura_spacing"]
 			end
 
 			Auras.PostCreateIcon = PostCreateIcon
@@ -231,7 +254,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 			local Border = CreateFrame("Frame", nil, self)
 			Border:SetBackdrop({
-				edgeFile = LSM:Fetch("border", LolzenUIcfg.unitframes["uf_border"]), edgeSize = 12,
+				edgeFile = LSM:Fetch("border", LolzenUIcfg.unitframes.general["uf_border"]), edgeSize = 12,
 				insets = {left = 4, right = 4, top = 4, bottom = 4},
 			})
 			Border:SetPoint("TOPLEFT", self, -3, 3)
@@ -241,7 +264,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			self.Border = Border
 
 			local Health = CreateFrame("StatusBar", nil, self)
-			Health:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes["uf_statusbar_texture"]))
+			Health:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes.general["uf_statusbar_texture"]))
 			Health:SetFrameStrata("LOW")
 
 			Health.frequentUpdates = true
@@ -256,15 +279,15 @@ f:SetScript("OnEvent", function(self, event, addon)
 			self.Health = Health
 
 			local HealthPoints = Health:CreateFontString(nil, "OVERLAY")
-			HealthPoints:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_general_hp_font"]), LolzenUIcfg.unitframes["uf_general_hp_font_size"], LolzenUIcfg.unitframes["uf_general_hp_font_flag"])
-			HealthPoints:SetPoint(LolzenUIcfg.unitframes["uf_general_hp_anchor"], LolzenUIcfg.unitframes["uf_general_hp_posx"], LolzenUIcfg.unitframes["uf_general_hp_posy"])
-			if LolzenUIcfg.unitframes["uf_use_val_and_perc"] == true then
-				if LolzenUIcfg.unitframes["uf_perc_first"] == true then
-					self:Tag(HealthPoints, "[|cffc41f3b>dead<|r][|cff999999>offline<|r][lolzen:perhp]"..LolzenUIcfg.unitframes["uf_val_perc_divider"].."[lolzen:health]")
+			HealthPoints:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.general["uf_general_hp_font"]), LolzenUIcfg.unitframes.general["uf_general_hp_font_size"], LolzenUIcfg.unitframes.general["uf_general_hp_font_flag"])
+			HealthPoints:SetPoint(LolzenUIcfg.unitframes.general["uf_general_hp_anchor"], LolzenUIcfg.unitframes.general["uf_general_hp_posx"], LolzenUIcfg.unitframes.general["uf_general_hp_posy"])
+			if LolzenUIcfg.unitframes.general["uf_use_val_and_perc"] == true then
+				if LolzenUIcfg.unitframes.general["uf_perc_first"] == true then
+					self:Tag(HealthPoints, "[|cffc41f3b>dead<|r][|cff999999>offline<|r][lolzen:perhp]"..LolzenUIcfg.unitframes.general["uf_val_perc_divider"].."[lolzen:health]")
 				else
-					self:Tag(HealthPoints, "[|cffc41f3b>dead<|r][|cff999999>offline<|r][lolzen:health]"..LolzenUIcfg.unitframes["uf_val_perc_divider"].."[lolzen:perhp]")
+					self:Tag(HealthPoints, "[|cffc41f3b>dead<|r][|cff999999>offline<|r][lolzen:health]"..LolzenUIcfg.unitframes.general["uf_val_perc_divider"].."[lolzen:perhp]")
 				end
-			elseif LolzenUIcfg.unitframes["uf_use_hp_percent"] == true and LolzenUIcfg.unitframes["uf_use_val_and_perc"] == false then
+			elseif LolzenUIcfg.unitframes.general["uf_use_hp_percent"] == true and LolzenUIcfg.unitframes.general["uf_use_val_and_perc"] == false then
 				self:Tag(HealthPoints, "[|cffc41f3b>dead<|r][|cff999999>offline<|r][lolzen:perhp]")
 			else
 				self:Tag(HealthPoints, "[|cffc41f3b>dead<|r][|cff999999>offline<|r][lolzen:health]")
@@ -274,7 +297,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 			local Power = CreateFrame("StatusBar", nil, self)
 			Power:SetHeight(2)
-			Power:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes["uf_statusbar_texture"]))
+			Power:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes.general["uf_statusbar_texture"]))
 			Power:SetFrameStrata("MEDIUM")
 
 			Power.frequentUpdates = true
@@ -293,36 +316,36 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 			local bg = self:CreateTexture(nil, "BORDER")
 			bg:SetAllPoints(self)
-			bg:SetTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes["uf_statusbar_texture"]))
+			bg:SetTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes.general["uf_statusbar_texture"]))
 			bg:SetVertexColor(0.3, 0.3, 0.3)
 			bg:SetAlpha(1)
 			self.Background = bg
 
 			local RaidTargetIndicator = Health:CreateTexture(nil, "OVERLAY")
-			RaidTargetIndicator:SetSize(LolzenUIcfg.unitframes["uf_ri_size"], LolzenUIcfg.unitframes["uf_ri_size"])
-			RaidTargetIndicator:SetPoint(LolzenUIcfg.unitframes["uf_ri_anchor"], Health, LolzenUIcfg.unitframes["uf_ri_posx"], LolzenUIcfg.unitframes["uf_ri_posy"])
+			RaidTargetIndicator:SetSize(LolzenUIcfg.unitframes.general["uf_ri_size"], LolzenUIcfg.unitframes.general["uf_ri_size"])
+			RaidTargetIndicator:SetPoint(LolzenUIcfg.unitframes.general["uf_ri_anchor"], Health, LolzenUIcfg.unitframes.general["uf_ri_posx"], LolzenUIcfg.unitframes.general["uf_ri_posy"])
 			self.RaidTargetIndicator = RaidTargetIndicator
 
 			local lead = Health:CreateTexture(nil, "OVERLAY")
-			lead:SetSize(LolzenUIcfg.unitframes["uf_lead_size"], LolzenUIcfg.unitframes["uf_lead_size"])
-			lead:SetPoint(LolzenUIcfg.unitframes["uf_lead_anchor"], Health, LolzenUIcfg.unitframes["uf_lead_posx"], LolzenUIcfg.unitframes["uf_lead_posy"])
+			lead:SetSize(LolzenUIcfg.unitframes.general["uf_lead_size"], LolzenUIcfg.unitframes.general["uf_lead_size"])
+			lead:SetPoint(LolzenUIcfg.unitframes.general["uf_lead_anchor"], Health, LolzenUIcfg.unitframes.general["uf_lead_posx"], LolzenUIcfg.unitframes.general["uf_lead_posy"])
 			self.LeaderIndicator = lead
 
 			local Castbar = CreateFrame("StatusBar", nil, self)
-			Castbar:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes["uf_statusbar_texture"]))
+			Castbar:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes.general["uf_statusbar_texture"]))
 			Castbar:SetFrameStrata("MEDIUM")
 			Castbar:SetParent(self)
 			self.Castbar = Castbar
 
 			local cbbg = Castbar:CreateTexture(nil, "BORDER")
-			cbbg:SetTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes["uf_statusbar_texture"]))
+			cbbg:SetTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes.general["uf_statusbar_texture"]))
 			cbbg:SetVertexColor(0.3, 0.3, 0.3)
 			cbbg:SetAlpha(1)
 			self.Castbar.background = cbbg
 
 			local cbborder = CreateFrame("Frame")
 			cbborder:SetBackdrop({
-				edgeFile = LSM:Fetch("border", LolzenUIcfg.unitframes["uf_border"]), edgeSize = 12,
+				edgeFile = LSM:Fetch("border", LolzenUIcfg.unitframes.general["uf_border"]), edgeSize = 12,
 				insets = {left = 4, right = 4, top = 4, bottom = 4},
 			})
 			cbborder:SetParent(Castbar)
@@ -340,7 +363,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 			local iconborder = CreateFrame("Frame")
 			iconborder:SetBackdrop({
-				edgeFile = LSM:Fetch("border", LolzenUIcfg.unitframes["uf_border"]), edgeSize = 12,
+				edgeFile = LSM:Fetch("border", LolzenUIcfg.unitframes.general["uf_border"]), edgeSize = 12,
 				insets = {left = 4, right = 4, top = 4, bottom = 4},
 			})
 			iconborder:SetParent(Castbar)
@@ -379,7 +402,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			local Panelborder = CreateFrame("Frame", nil, self)
 			Panelborder:SetBackdrop({
 				bgFile = "Interface\\AddOns\\LolzenUI\\media\\statusbar",
-				edgeFile = LSM:Fetch("border", LolzenUIcfg.unitframes["uf_border"]), edgeSize = 12,
+				edgeFile = LSM:Fetch("border", LolzenUIcfg.unitframes.general["uf_border"]), edgeSize = 12,
 				insets = {left = 2, right = 2, top = 3, bottom = 2},
 			})
 			Panelborder:SetPoint("TOPLEFT", panel, -3, 3)
@@ -409,14 +432,14 @@ f:SetScript("OnEvent", function(self, event, addon)
 				self:SetSize(220, 21)
 			end
 
-			if LolzenUIcfg.unitframes["uf_fade_outofreach"] == true then
+			if LolzenUIcfg.unitframes.general["uf_fade_outofreach"] == true then
 				self.Range = {
 					insideAlpha = 1,
-					outsideAlpha = LolzenUIcfg.unitframes["uf_fade_outofreach_alpha"],
+					outsideAlpha = LolzenUIcfg.unitframes.general["uf_fade_outofreach_alpha"],
 				}
 			end
 
-			if LolzenUIcfg.unitframes["uf_fade_combat"] == true then
+			if LolzenUIcfg.unitframes.general["uf_fade_combat"] == true then
 				if unit ~= "party" and unit ~= "raid" then
 					table.insert(self.__elements, CombatFade)
 					self:RegisterEvent("PLAYER_REGEN_ENABLED", CombatFade, true)
@@ -439,15 +462,15 @@ f:SetScript("OnEvent", function(self, event, addon)
 			player = function(self, ...)
 				shared(self, ...)
 
-				if LolzenUIcfg.unitframes["uf_player_use_own_hp_font_settings"] == true then
-					self.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_player_hp_font"]), LolzenUIcfg.unitframes["uf_player_hp_font_size"], LolzenUIcfg.unitframes["uf_player_hp_font_flag"])
-					self.Health.value:SetPoint(LolzenUIcfg.unitframes["uf_player_hp_anchor"], LolzenUIcfg.unitframes["uf_player_hp_posx"], LolzenUIcfg.unitframes["uf_player_hp_posy"])
+				if LolzenUIcfg.unitframes.player["uf_player_use_own_hp_font_settings"] == true then
+					self.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.player["uf_player_hp_font"]), LolzenUIcfg.unitframes.player["uf_player_hp_font_size"], LolzenUIcfg.unitframes.player["uf_player_hp_font_flag"])
+					self.Health.value:SetPoint(LolzenUIcfg.unitframes.player["uf_player_hp_anchor"], LolzenUIcfg.unitframes.player["uf_player_hp_posx"], LolzenUIcfg.unitframes.player["uf_player_hp_posy"])
 				end
 
 				self.Border:SetPoint("TOPLEFT", self, -3, 3)
 				self.Border:SetPoint("BOTTOMRIGHT", self, 3, -2)
 
-				self:SetSize(LolzenUIcfg.unitframes["uf_player_width"], LolzenUIcfg.unitframes["uf_player_height"])
+				self:SetSize(LolzenUIcfg.unitframes.player["uf_player_width"], LolzenUIcfg.unitframes.player["uf_player_height"])
 
 				self.Power:SetPoint("LEFT")
 				self.Power:SetPoint("RIGHT")
@@ -457,66 +480,66 @@ f:SetScript("OnEvent", function(self, event, addon)
 				self.PowerDivider:SetPoint("TOPLEFT", self.Power, 0, 1)
 				self.PowerDivider:SetDrawLayer("BACKGROUND", 1)
 
-				if LolzenUIcfg.unitframes["uf_player_pp_parent"] == "hp" then
-					self.Power.value:SetPoint(LolzenUIcfg.unitframes["uf_player_pp_anchor"], self.Health.value, LolzenUIcfg.unitframes["uf_player_pp_anchor2"], LolzenUIcfg.unitframes["uf_player_pp_posx"], LolzenUIcfg.unitframes["uf_player_pp_posy"])
-				elseif LolzenUIcfg.unitframes["uf_player_pp_parent"] == "self" then
-					self.Power.value:SetPoint(LolzenUIcfg.unitframes["uf_player_pp_anchor"], self, LolzenUIcfg.unitframes["uf_player_pp_anchor2"], LolzenUIcfg.unitframes["uf_player_pp_posx"], LolzenUIcfg.unitframes["uf_player_pp_posy"])
+				if LolzenUIcfg.unitframes.player["uf_player_pp_parent"] == "hp" then
+					self.Power.value:SetPoint(LolzenUIcfg.unitframes.player["uf_player_pp_anchor"], self.Health.value, LolzenUIcfg.unitframes.player["uf_player_pp_anchor2"], LolzenUIcfg.unitframes.player["uf_player_pp_posx"], LolzenUIcfg.unitframes.player["uf_player_pp_posy"])
+				elseif LolzenUIcfg.unitframes.player["uf_player_pp_parent"] == "self" then
+					self.Power.value:SetPoint(LolzenUIcfg.unitframes.player["uf_player_pp_anchor"], self, LolzenUIcfg.unitframes.player["uf_player_pp_anchor2"], LolzenUIcfg.unitframes.player["uf_player_pp_posx"], LolzenUIcfg.unitframes.player["uf_player_pp_posy"])
 				end
-				self.Power.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_player_pp_font"]), LolzenUIcfg.unitframes["uf_player_pp_font_size"], LolzenUIcfg.unitframes["uf_player_pp_font_flag"])
+				self.Power.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.player["uf_player_pp_font"]), LolzenUIcfg.unitframes.player["uf_player_pp_font_size"], LolzenUIcfg.unitframes.player["uf_player_pp_font_flag"])
 
-				if LolzenUIcfg.unitframes["uf_player_cb_standalone"] == true then
-					self.Castbar:SetPoint(LolzenUIcfg.unitframes["uf_player_cb_anchor1"], UIParent, LolzenUIcfg.unitframes["uf_player_cb_anchor2"], LolzenUIcfg.unitframes["uf_player_cb_posx"], LolzenUIcfg.unitframes["uf_player_cb_posy"])
-					self.Castbar:SetSize(LolzenUIcfg.unitframes["uf_player_cb_width"], LolzenUIcfg.unitframes["uf_player_cb_height"])
+				if LolzenUIcfg.unitframes.player["uf_player_cb_standalone"] == true then
+					self.Castbar:SetPoint(LolzenUIcfg.unitframes.player["uf_player_cb_anchor1"], UIParent, LolzenUIcfg.unitframes.player["uf_player_cb_anchor2"], LolzenUIcfg.unitframes.player["uf_player_cb_posx"], LolzenUIcfg.unitframes.player["uf_player_cb_posy"])
+					self.Castbar:SetSize(LolzenUIcfg.unitframes.player["uf_player_cb_width"], LolzenUIcfg.unitframes.player["uf_player_cb_height"])
 					self.Castbar.background:SetAllPoints(self.Castbar)
 					self.Castbar.border:SetPoint("TOPLEFT", self.Castbar, -2, 3)
 					self.Castbar.border:SetPoint("BOTTOMRIGHT", self.Castbar, 3, -2)
 				else
 					self.Castbar:SetAllPoints(self.Health)
 				end
-				self.Castbar:SetStatusBarColor(LolzenUIcfg.unitframes["uf_player_cb_color"][1], LolzenUIcfg.unitframes["uf_player_cb_color"][2], LolzenUIcfg.unitframes["uf_player_cb_color"][3], LolzenUIcfg.unitframes["uf_player_cb_alpha"])
+				self.Castbar:SetStatusBarColor(LolzenUIcfg.unitframes.player["uf_player_cb_color"][1], LolzenUIcfg.unitframes.player["uf_player_cb_color"][2], LolzenUIcfg.unitframes.player["uf_player_cb_color"][3], LolzenUIcfg.unitframes.player["uf_player_cb_alpha"])
 
 				self.Castbar.Spark:SetSize(self:GetWidth()/27.5, self:GetHeight()*2)
 
-				if LolzenUIcfg.unitframes["uf_player_cb_icon_cut"] == true then
-					self.Castbar.Icon:SetHeight(LolzenUIcfg.unitframes["uf_player_height"])
+				if LolzenUIcfg.unitframes.player["uf_player_cb_icon_cut"] == true then
+					self.Castbar.Icon:SetHeight(LolzenUIcfg.unitframes.player["uf_player_height"])
 					-- Get the % point of the texture to show
 					-- We calculate the percentage of the icon which has to be cut, depending on icon size, and unitframe size which are both variables
-					local p1 = (LolzenUIcfg.unitframes["uf_player_cb_icon_size"]-LolzenUIcfg.unitframes["uf_player_height"])/2
-					local p2 = p1+LolzenUIcfg.unitframes["uf_player_height"]
-					self.Castbar.Icon:SetTexCoord(0.1, 0.9, 1/(LolzenUIcfg.unitframes["uf_player_cb_icon_size"]/p1), 0.9/(0.1+(LolzenUIcfg.unitframes["uf_player_cb_icon_size"]/p2)))
+					local p1 = (LolzenUIcfg.unitframes.player["uf_player_cb_icon_size"]-LolzenUIcfg.unitframes.player["uf_player_height"])/2
+					local p2 = p1+LolzenUIcfg.unitframes.player["uf_player_height"]
+					self.Castbar.Icon:SetTexCoord(0.1, 0.9, 1/(LolzenUIcfg.unitframes.player["uf_player_cb_icon_size"]/p1), 0.9/(0.1+(LolzenUIcfg.unitframes.player["uf_player_cb_icon_size"]/p2)))
 				else
-					self.Castbar.Icon:SetHeight(LolzenUIcfg.unitframes["uf_player_cb_icon_size"])
+					self.Castbar.Icon:SetHeight(LolzenUIcfg.unitframes.player["uf_player_cb_icon_size"])
 					self.Castbar.Icon:SetTexCoord(.07, .93, .07, .93)
 
 					self.Castbar.Shield:SetSize(self.Castbar.Icon:GetWidth()*3, self.Castbar.Icon:GetHeight()*3)
 					self.Castbar.Shield:SetPoint("CENTER", self.Castbar.Icon, 0, 0)
 				end
 
-				self.Castbar.Icon:SetWidth(LolzenUIcfg.unitframes["uf_player_cb_icon_size"])
-				self.Castbar.Icon:SetPoint(LolzenUIcfg.unitframes["uf_player_cb_icon_anchor1"], self.Castbar, LolzenUIcfg.unitframes["uf_player_cb_icon_anchor2"], LolzenUIcfg.unitframes["uf_player_cb_icon_posx"], LolzenUIcfg.unitframes["uf_player_cb_icon_posy"])
+				self.Castbar.Icon:SetWidth(LolzenUIcfg.unitframes.player["uf_player_cb_icon_size"])
+				self.Castbar.Icon:SetPoint(LolzenUIcfg.unitframes.player["uf_player_cb_icon_anchor1"], self.Castbar, LolzenUIcfg.unitframes.player["uf_player_cb_icon_anchor2"], LolzenUIcfg.unitframes.player["uf_player_cb_icon_posx"], LolzenUIcfg.unitframes.player["uf_player_cb_icon_posy"])
 
-				self.Castbar.Time:SetPoint(LolzenUIcfg.unitframes["uf_player_cb_time_anchor1"], self.Castbar.Icon, LolzenUIcfg.unitframes["uf_player_cb_time_anchor2"], LolzenUIcfg.unitframes["uf_player_cb_time_posx"], LolzenUIcfg.unitframes["uf_player_cb_time_posy"])
-				self.Castbar.Time:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_player_cb_font"]), LolzenUIcfg.unitframes["uf_player_cb_font_size"], LolzenUIcfg.unitframes["uf_player_cb_font_flag"])
-				self.Castbar.Time:SetTextColor(LolzenUIcfg.unitframes["uf_player_cb_font_color"][1], LolzenUIcfg.unitframes["uf_player_cb_font_color"][2], LolzenUIcfg.unitframes["uf_player_cb_font_color"][3])
+				self.Castbar.Time:SetPoint(LolzenUIcfg.unitframes.player["uf_player_cb_time_anchor1"], self.Castbar.Icon, LolzenUIcfg.unitframes.player["uf_player_cb_time_anchor2"], LolzenUIcfg.unitframes.player["uf_player_cb_time_posx"], LolzenUIcfg.unitframes.player["uf_player_cb_time_posy"])
+				self.Castbar.Time:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.player["uf_player_cb_font"]), LolzenUIcfg.unitframes.player["uf_player_cb_font_size"], LolzenUIcfg.unitframes.player["uf_player_cb_font_flag"])
+				self.Castbar.Time:SetTextColor(LolzenUIcfg.unitframes.player["uf_player_cb_font_color"][1], LolzenUIcfg.unitframes.player["uf_player_cb_font_color"][2], LolzenUIcfg.unitframes.player["uf_player_cb_font_color"][3])
 
-				self.Castbar.Text:SetPoint(LolzenUIcfg.unitframes["uf_player_cb_text_anchor1"], self.Castbar, LolzenUIcfg.unitframes["uf_player_cb_text_anchor2"], LolzenUIcfg.unitframes["uf_player_cb_text_posx"], LolzenUIcfg.unitframes["uf_player_cb_text_posy"])
-				self.Castbar.Text:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_player_cb_font"]), LolzenUIcfg.unitframes["uf_player_cb_font_size"], LolzenUIcfg.unitframes["uf_player_cb_font_flag"])
-				self.Castbar.Text:SetTextColor(LolzenUIcfg.unitframes["uf_player_cb_font_color"][1], LolzenUIcfg.unitframes["uf_player_cb_font_color"][2], LolzenUIcfg.unitframes["uf_player_cb_font_color"][3])
+				self.Castbar.Text:SetPoint(LolzenUIcfg.unitframes.player["uf_player_cb_text_anchor1"], self.Castbar, LolzenUIcfg.unitframes.player["uf_player_cb_text_anchor2"], LolzenUIcfg.unitframes.player["uf_player_cb_text_posx"], LolzenUIcfg.unitframes.player["uf_player_cb_text_posy"])
+				self.Castbar.Text:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.player["uf_player_cb_font"]), LolzenUIcfg.unitframes.player["uf_player_cb_font_size"], LolzenUIcfg.unitframes.player["uf_player_cb_font_flag"])
+				self.Castbar.Text:SetTextColor(LolzenUIcfg.unitframes.player["uf_player_cb_font_color"][1], LolzenUIcfg.unitframes.player["uf_player_cb_font_color"][2], LolzenUIcfg.unitframes.player["uf_player_cb_font_color"][3])
 
 				-- ClassPower (Combo Points, etc)
 				local ClassPower = {}
 				for i=1, 10 do
 					ClassPower[i] = CreateFrame("StatusBar", "ClassPower"..i.."Bar", self)
-					ClassPower[i]:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes["uf_statusbar_texture"]))
+					ClassPower[i]:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes.general["uf_statusbar_texture"]))
 					if i == 1 then
-						ClassPower[i]:SetPoint(LolzenUIcfg.unitframes["uf_player_classpower_anchor1"], self, LolzenUIcfg.unitframes["uf_player_classpower_anchor2"], LolzenUIcfg.unitframes["uf_player_classpower_posx"], LolzenUIcfg.unitframes["uf_player_classpower_posy"])
+						ClassPower[i]:SetPoint(LolzenUIcfg.unitframes.player["uf_player_classpower_anchor1"], self, LolzenUIcfg.unitframes.player["uf_player_classpower_anchor2"], LolzenUIcfg.unitframes.player["uf_player_classpower_posx"], LolzenUIcfg.unitframes.player["uf_player_classpower_posy"])
 					else
-						ClassPower[i]:SetPoint("LEFT", ClassPower[i-1], "RIGHT", LolzenUIcfg.unitframes["uf_player_classpower_spacing"], 0)
+						ClassPower[i]:SetPoint("LEFT", ClassPower[i-1], "RIGHT", LolzenUIcfg.unitframes.player["uf_player_classpower_spacing"], 0)
 					end
 
 					ClassPower[i].border = CreateFrame("Frame", nil, ClassPower[i])
 					ClassPower[i].border:SetBackdrop({
-						edgeFile = LSM:Fetch("border", LolzenUIcfg.unitframes["uf_player_classpower_border"]),
+						edgeFile = LSM:Fetch("border", LolzenUIcfg.unitframes.player["uf_player_classpower_border"]),
 						tile=true, tileSize=4, edgeSize=4,
 						insets={left=0.5, right=0.5, top=0.5, bottom=0.5}
 					})
@@ -532,17 +555,17 @@ f:SetScript("OnEvent", function(self, event, addon)
 					local Runes = {}
 					for i = 1, 6 do
 						Runes[i] = CreateFrame("StatusBar", "Rune"..i.."Bar", self)
-						Runes[i]:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes["uf_statusbar_texture"]))
-						Runes[i]:SetSize((self:GetWidth()/6) - ((LolzenUIcfg.unitframes["uf_player_classpower_spacing"]*5)/(6)), 8)
+						Runes[i]:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes.general["uf_statusbar_texture"]))
+						Runes[i]:SetSize((self:GetWidth()/6) - ((LolzenUIcfg.unitframes.player["uf_player_classpower_spacing"]*5)/(6)), 8)
 						if i == 1 then
-							Runes[i]:SetPoint(LolzenUIcfg.unitframes["uf_player_classpower_anchor1"], self, LolzenUIcfg.unitframes["uf_player_classpower_anchor2"], LolzenUIcfg.unitframes["uf_player_classpower_posx"], LolzenUIcfg.unitframes["uf_player_classpower_posy"])
+							Runes[i]:SetPoint(LolzenUIcfg.unitframes.player["uf_player_classpower_anchor1"], self, LolzenUIcfg.unitframes.player["uf_player_classpower_anchor2"], LolzenUIcfg.unitframes.player["uf_player_classpower_posx"], LolzenUIcfg.unitframes.player["uf_player_classpower_posy"])
 						else
-							Runes[i]:SetPoint("LEFT", Runes[i-1], "RIGHT", LolzenUIcfg.unitframes["uf_player_classpower_spacing"], 0)
+							Runes[i]:SetPoint("LEFT", Runes[i-1], "RIGHT", LolzenUIcfg.unitframes.player["uf_player_classpower_spacing"], 0)
 						end
 
 						Runes[i].border = CreateFrame("Frame", nil, Runes[i])
 						Runes[i].border:SetBackdrop({
-							edgeFile = LSM:Fetch("border", LolzenUIcfg.unitframes["uf_player_classpower_border"]),
+							edgeFile = LSM:Fetch("border", LolzenUIcfg.unitframes.player["uf_player_classpower_border"]),
 							tile=true, tileSize=4, edgeSize=4,
 							--insets={left=0, right=1, top=0, bottom=0}
 						})
@@ -574,15 +597,15 @@ f:SetScript("OnEvent", function(self, event, addon)
 			target = function(self, ...)
 				shared(self, ...)
 
-				if LolzenUIcfg.unitframes["uf_target_use_own_hp_font_settings"] == true then
-					self.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_target_hp_font"]), LolzenUIcfg.unitframes["uf_target_hp_font_size"], LolzenUIcfg.unitframes["uf_target_hp_font_flag"])
-					self.Health.value:SetPoint(LolzenUIcfg.unitframes["uf_target_hp_anchor"], LolzenUIcfg.unitframes["uf_target_hp_posx"], LolzenUIcfg.unitframes["uf_target_hp_posy"])
+				if LolzenUIcfg.unitframes.target["uf_target_use_own_hp_font_settings"] == true then
+					self.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.target["uf_target_hp_font"]), LolzenUIcfg.unitframes.target["uf_target_hp_font_size"], LolzenUIcfg.unitframes.target["uf_target_hp_font_flag"])
+					self.Health.value:SetPoint(LolzenUIcfg.unitframes.target["uf_target_hp_anchor"], LolzenUIcfg.unitframes.target["uf_target_hp_posx"], LolzenUIcfg.unitframes.target["uf_target_hp_posy"])
 				end
 
 				self.Border:SetPoint("TOPLEFT", self, -3, 3)
 				self.Border:SetPoint("BOTTOMRIGHT", self, 3, -2)
 
-				self:SetSize(LolzenUIcfg.unitframes["uf_target_width"], LolzenUIcfg.unitframes["uf_target_height"])
+				self:SetSize(LolzenUIcfg.unitframes.target["uf_target_width"], LolzenUIcfg.unitframes.target["uf_target_height"])
 
 				self.Power:SetPoint("LEFT")
 				self.Power:SetPoint("RIGHT")
@@ -592,80 +615,80 @@ f:SetScript("OnEvent", function(self, event, addon)
 				self.PowerDivider:SetPoint("TOPLEFT", self.Power, 0, 1)
 				self.PowerDivider:SetDrawLayer("BACKGROUND", 1)
 
-				if LolzenUIcfg.unitframes["uf_target_pp_parent"] == "hp" then
-					self.Power.value:SetPoint(LolzenUIcfg.unitframes["uf_target_pp_anchor"], self.Health.value, LolzenUIcfg.unitframes["uf_target_pp_anchor2"], LolzenUIcfg.unitframes["uf_target_pp_posx"], LolzenUIcfg.unitframes["uf_target_pp_posy"])
-				elseif LolzenUIcfg.unitframes["uf_target_pp_parent"] == "self" then
-					self.Power.value:SetPoint(LolzenUIcfg.unitframes["uf_target_pp_anchor"], self, LolzenUIcfg.unitframes["uf_target_pp_anchor2"], LolzenUIcfg.unitframes["uf_target_pp_posx"], LolzenUIcfg.unitframes["uf_target_pp_posy"])
+				if LolzenUIcfg.unitframes.target["uf_target_pp_parent"] == "hp" then
+					self.Power.value:SetPoint(LolzenUIcfg.unitframes.target["uf_target_pp_anchor"], self.Health.value, LolzenUIcfg.unitframes.target["uf_target_pp_anchor2"], LolzenUIcfg.unitframes.target["uf_target_pp_posx"], LolzenUIcfg.unitframes.target["uf_target_pp_posy"])
+				elseif LolzenUIcfg.unitframes.target["uf_target_pp_parent"] == "self" then
+					self.Power.value:SetPoint(LolzenUIcfg.unitframes.target["uf_target_pp_anchor"], self, LolzenUIcfg.unitframes.target["uf_target_pp_anchor2"], LolzenUIcfg.unitframes.target["uf_target_pp_posx"], LolzenUIcfg.unitframes.target["uf_target_pp_posy"])
 				end
-				self.Power.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_target_pp_font"]), LolzenUIcfg.unitframes["uf_target_pp_font_size"], LolzenUIcfg.unitframes["uf_target_pp_font_flag"])
+				self.Power.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.target["uf_target_pp_font"]), LolzenUIcfg.unitframes.target["uf_target_pp_font_size"], LolzenUIcfg.unitframes.target["uf_target_pp_font_flag"])
 
-				if LolzenUIcfg.unitframes["uf_target_cb_standalone"] == true then
-					self.Castbar:SetPoint(LolzenUIcfg.unitframes["uf_target_cb_anchor1"], UIParent, LolzenUIcfg.unitframes["uf_target_cb_anchor2"], LolzenUIcfg.unitframes["uf_target_cb_posx"], LolzenUIcfg.unitframes["uf_target_cb_posy"])
-					self.Castbar:SetSize(LolzenUIcfg.unitframes["uf_target_cb_width"], LolzenUIcfg.unitframes["uf_target_cb_height"])
+				if LolzenUIcfg.unitframes.target["uf_target_cb_standalone"] == true then
+					self.Castbar:SetPoint(LolzenUIcfg.unitframes.target["uf_target_cb_anchor1"], UIParent, LolzenUIcfg.unitframes.target["uf_target_cb_anchor2"], LolzenUIcfg.unitframes.target["uf_target_cb_posx"], LolzenUIcfg.unitframes.target["uf_target_cb_posy"])
+					self.Castbar:SetSize(LolzenUIcfg.unitframes.target["uf_target_cb_width"], LolzenUIcfg.unitframes.target["uf_target_cb_height"])
 					self.Castbar.background:SetAllPoints(self.Castbar)
 					self.Castbar.border:SetPoint("TOPLEFT", self.Castbar, -2, 3)
 					self.Castbar.border:SetPoint("BOTTOMRIGHT", self.Castbar, 3, -2)
 				else
 					self.Castbar:SetAllPoints(self.Health)
 				end
-				self.Castbar:SetStatusBarColor(LolzenUIcfg.unitframes["uf_target_cb_color"][1], LolzenUIcfg.unitframes["uf_target_cb_color"][2], LolzenUIcfg.unitframes["uf_target_cb_color"][3], LolzenUIcfg.unitframes["uf_target_cb_alpha"])
+				self.Castbar:SetStatusBarColor(LolzenUIcfg.unitframes.target["uf_target_cb_color"][1], LolzenUIcfg.unitframes.target["uf_target_cb_color"][2], LolzenUIcfg.unitframes.target["uf_target_cb_color"][3], LolzenUIcfg.unitframes.target["uf_target_cb_alpha"])
 
 				self.Castbar.Spark:SetSize(self:GetWidth()/27.5, self:GetHeight()*2)
 
-				if LolzenUIcfg.unitframes["uf_target_cb_icon_cut"] == true then
-					self.Castbar.Icon:SetHeight(LolzenUIcfg.unitframes["uf_target_height"])
+				if LolzenUIcfg.unitframes.target["uf_target_cb_icon_cut"] == true then
+					self.Castbar.Icon:SetHeight(LolzenUIcfg.unitframes.target["uf_target_height"])
 					-- Get the % point of the texture to show
 					-- We calculate the percentage of the icon which has to be cut, depending on icon size, and unitframe size which are both variables
-					local p1 = (LolzenUIcfg.unitframes["uf_target_cb_icon_size"]-LolzenUIcfg.unitframes["uf_target_height"])/2
-					local p2 = p1+LolzenUIcfg.unitframes["uf_target_height"]
-					self.Castbar.Icon:SetTexCoord(0.1, 0.9, 1/(LolzenUIcfg.unitframes["uf_target_cb_icon_size"]/p1), 0.9/(0.1+(LolzenUIcfg.unitframes["uf_target_cb_icon_size"]/p2)))
+					local p1 = (LolzenUIcfg.unitframes.target["uf_target_cb_icon_size"]-LolzenUIcfg.unitframes.target["uf_target_height"])/2
+					local p2 = p1+LolzenUIcfg.unitframes.target["uf_target_height"]
+					self.Castbar.Icon:SetTexCoord(0.1, 0.9, 1/(LolzenUIcfg.unitframes.target["uf_target_cb_icon_size"]/p1), 0.9/(0.1+(LolzenUIcfg.unitframes.target["uf_target_cb_icon_size"]/p2)))
 				else
-					self.Castbar.Icon:SetHeight(LolzenUIcfg.unitframes["uf_target_cb_icon_size"])
+					self.Castbar.Icon:SetHeight(LolzenUIcfg.unitframes.target["uf_target_cb_icon_size"])
 					self.Castbar.Icon:SetTexCoord(.07, .93, .07, .93)
 
 					self.Castbar.Shield:SetSize(self.Castbar.Icon:GetWidth()*3, self.Castbar.Icon:GetHeight()*3)
 					self.Castbar.Shield:SetPoint("CENTER", self.Castbar.Icon, 0, 0)
 				end
 
-				self.Castbar.Icon:SetWidth(LolzenUIcfg.unitframes["uf_target_cb_icon_size"])
-				self.Castbar.Icon:SetPoint(LolzenUIcfg.unitframes["uf_target_cb_icon_anchor1"], self.Castbar, LolzenUIcfg.unitframes["uf_target_cb_icon_anchor2"], LolzenUIcfg.unitframes["uf_target_cb_icon_posx"], LolzenUIcfg.unitframes["uf_target_cb_icon_posy"])
+				self.Castbar.Icon:SetWidth(LolzenUIcfg.unitframes.target["uf_target_cb_icon_size"])
+				self.Castbar.Icon:SetPoint(LolzenUIcfg.unitframes.target["uf_target_cb_icon_anchor1"], self.Castbar, LolzenUIcfg.unitframes.target["uf_target_cb_icon_anchor2"], LolzenUIcfg.unitframes.target["uf_target_cb_icon_posx"], LolzenUIcfg.unitframes.target["uf_target_cb_icon_posy"])
 
-				self.Castbar.Time:SetPoint(LolzenUIcfg.unitframes["uf_target_cb_time_anchor1"], self.Castbar.Icon, LolzenUIcfg.unitframes["uf_target_cb_time_anchor2"], LolzenUIcfg.unitframes["uf_target_cb_time_posx"], LolzenUIcfg.unitframes["uf_target_cb_time_posy"])
-				self.Castbar.Time:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_target_cb_font"]), LolzenUIcfg.unitframes["uf_target_cb_font_size"], LolzenUIcfg.unitframes["uf_target_cb_font_flag"])
-				self.Castbar.Time:SetTextColor(LolzenUIcfg.unitframes["uf_target_cb_font_color"][1], LolzenUIcfg.unitframes["uf_target_cb_font_color"][2], LolzenUIcfg.unitframes["uf_target_cb_font_color"][3])
+				self.Castbar.Time:SetPoint(LolzenUIcfg.unitframes.target["uf_target_cb_time_anchor1"], self.Castbar.Icon, LolzenUIcfg.unitframes.target["uf_target_cb_time_anchor2"], LolzenUIcfg.unitframes.target["uf_target_cb_time_posx"], LolzenUIcfg.unitframes.target["uf_target_cb_time_posy"])
+				self.Castbar.Time:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.target["uf_target_cb_font"]), LolzenUIcfg.unitframes.target["uf_target_cb_font_size"], LolzenUIcfg.unitframes.target["uf_target_cb_font_flag"])
+				self.Castbar.Time:SetTextColor(LolzenUIcfg.unitframes.target["uf_target_cb_font_color"][1], LolzenUIcfg.unitframes.target["uf_target_cb_font_color"][2], LolzenUIcfg.unitframes.target["uf_target_cb_font_color"][3])
 
-				self.Castbar.Text:SetPoint(LolzenUIcfg.unitframes["uf_target_cb_text_anchor1"], self.Castbar, LolzenUIcfg.unitframes["uf_target_cb_text_anchor2"], LolzenUIcfg.unitframes["uf_target_cb_text_posx"], LolzenUIcfg.unitframes["uf_target_cb_text_posy"])
-				self.Castbar.Text:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_target_cb_font"]), LolzenUIcfg.unitframes["uf_target_cb_font_size"], LolzenUIcfg.unitframes["uf_target_cb_font_flag"])
-				self.Castbar.Text:SetTextColor(LolzenUIcfg.unitframes["uf_target_cb_font_color"][1], LolzenUIcfg.unitframes["uf_target_cb_font_color"][2], LolzenUIcfg.unitframes["uf_target_cb_font_color"][3])
+				self.Castbar.Text:SetPoint(LolzenUIcfg.unitframes.target["uf_target_cb_text_anchor1"], self.Castbar, LolzenUIcfg.unitframes.target["uf_target_cb_text_anchor2"], LolzenUIcfg.unitframes.target["uf_target_cb_text_posx"], LolzenUIcfg.unitframes.target["uf_target_cb_text_posy"])
+				self.Castbar.Text:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.target["uf_target_cb_font"]), LolzenUIcfg.unitframes.target["uf_target_cb_font_size"], LolzenUIcfg.unitframes.target["uf_target_cb_font_flag"])
+				self.Castbar.Text:SetTextColor(LolzenUIcfg.unitframes.target["uf_target_cb_font_color"][1], LolzenUIcfg.unitframes.target["uf_target_cb_font_color"][2], LolzenUIcfg.unitframes.target["uf_target_cb_font_color"][3])
 
-				if LolzenUIcfg.unitframes["uf_target_aura_show_type"] == "Buffs" then
-					self.Buffs:SetPoint(LolzenUIcfg.unitframes["uf_target_aura_anchor1"], self, LolzenUIcfg.unitframes["uf_target_aura_anchor2"], LolzenUIcfg.unitframes["uf_target_aura_posx"], LolzenUIcfg.unitframes["uf_target_aura_posy"])
-					self.Buffs.numBuffs = LolzenUIcfg.unitframes["uf_target_aura_maxnum"]
-					if LolzenUIcfg.unitframes["uf_target_aura_show_only_player"] == true then
+				if LolzenUIcfg.unitframes.target["uf_target_aura_show_type"] == "Buffs" then
+					self.Buffs:SetPoint(LolzenUIcfg.unitframes.target["uf_target_aura_anchor1"], self, LolzenUIcfg.unitframes.target["uf_target_aura_anchor2"], LolzenUIcfg.unitframes.target["uf_target_aura_posx"], LolzenUIcfg.unitframes.target["uf_target_aura_posy"])
+					self.Buffs.numBuffs = LolzenUIcfg.unitframes.target["uf_target_aura_maxnum"]
+					if LolzenUIcfg.unitframes.target["uf_target_aura_show_only_player"] == true then
 						self.Buffs.onlyShowPlayer = true
 					end
 					--self.Buffs.showBuffType = true
-					self.Buffs["growth-x"] = LolzenUIcfg.unitframes["uf_target_aura_growth_x"]
-					self.Buffs["growth-y"] = LolzenUIcfg.unitframes["uf_target_aura_growth_y"]
-				elseif LolzenUIcfg.unitframes["uf_target_aura_show_type"] == "Debuffs" then
-					self.Debuffs:SetPoint(LolzenUIcfg.unitframes["uf_target_aura_anchor1"], self, LolzenUIcfg.unitframes["uf_target_aura_anchor2"], LolzenUIcfg.unitframes["uf_target_aura_posx"], LolzenUIcfg.unitframes["uf_target_aura_posy"])
-					self.Debuffs.numDebuffs = LolzenUIcfg.unitframes["uf_target_aura_maxnum"]
-					if LolzenUIcfg.unitframes["uf_target_aura_show_only_player"] == true then
+					self.Buffs["growth-x"] = LolzenUIcfg.unitframes.target["uf_target_aura_growth_x"]
+					self.Buffs["growth-y"] = LolzenUIcfg.unitframes.target["uf_target_aura_growth_y"]
+				elseif LolzenUIcfg.unitframes.target["uf_target_aura_show_type"] == "Debuffs" then
+					self.Debuffs:SetPoint(LolzenUIcfg.unitframes.target["uf_target_aura_anchor1"], self, LolzenUIcfg.unitframes.target["uf_target_aura_anchor2"], LolzenUIcfg.unitframes.target["uf_target_aura_posx"], LolzenUIcfg.unitframes.target["uf_target_aura_posy"])
+					self.Debuffs.numDebuffs = LolzenUIcfg.unitframes.target["uf_target_aura_maxnum"]
+					if LolzenUIcfg.unitframes.target["uf_target_aura_show_only_player"] == true then
 						self.Debuffs.onlyShowPlayer = true
 					end
 					--self.Debuffs.showDebuffType = true
-					self.Debuffs["growth-x"] = LolzenUIcfg.unitframes["uf_target_aura_growth_x"]
-					self.Debuffs["growth-y"] = LolzenUIcfg.unitframes["uf_target_aura_growth_y"]
-				elseif LolzenUIcfg.unitframes["uf_target_aura_show_type"] == "Both" then
-					self.Auras:SetPoint(LolzenUIcfg.unitframes["uf_target_aura_anchor1"], self, LolzenUIcfg.unitframes["uf_target_aura_anchor2"], LolzenUIcfg.unitframes["uf_target_aura_posx"], LolzenUIcfg.unitframes["uf_target_aura_posy"])
-					self.Auras.numTotal = LolzenUIcfg.unitframes["uf_target_aura_maxnum"]
-					if LolzenUIcfg.unitframes["uf_target_aura_show_only_player"] == true then
+					self.Debuffs["growth-x"] = LolzenUIcfg.unitframes.target["uf_target_aura_growth_x"]
+					self.Debuffs["growth-y"] = LolzenUIcfg.unitframes.target["uf_target_aura_growth_y"]
+				elseif LolzenUIcfg.unitframes.target["uf_target_aura_show_type"] == "Both" then
+					self.Auras:SetPoint(LolzenUIcfg.unitframes.target["uf_target_aura_anchor1"], self, LolzenUIcfg.unitframes.target["uf_target_aura_anchor2"], LolzenUIcfg.unitframes.target["uf_target_aura_posx"], LolzenUIcfg.unitframes.target["uf_target_aura_posy"])
+					self.Auras.numTotal = LolzenUIcfg.unitframes.target["uf_target_aura_maxnum"]
+					if LolzenUIcfg.unitframes.target["uf_target_aura_show_only_player"] == true then
 						self.Auras.onlyShowPlayer = true
 					end
 					--self.Auras.showBuffType = true
 					--self.Auras.showDebuffType = true
-					self.Auras["growth-x"] = LolzenUIcfg.unitframes["uf_target_aura_growth_x"]
-					self.Auras["growth-y"] = LolzenUIcfg.unitframes["uf_target_aura_growth_y"]
+					self.Auras["growth-x"] = LolzenUIcfg.unitframes.target["uf_target_aura_growth_x"]
+					self.Auras["growth-y"] = LolzenUIcfg.unitframes.target["uf_target_aura_growth_y"]
 				end
 
 				self.Panel:SetSize(self:GetWidth(), 20)
@@ -679,120 +702,120 @@ f:SetScript("OnEvent", function(self, event, addon)
 			targettarget = function(self, ...)
 				shared(self, ...)
 
-				if LolzenUIcfg.unitframes["uf_targettarget_use_own_hp_font_settings"] == true then
-					self.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_targettarget_hp_font"]), LolzenUIcfg.unitframes["uf_targettarget_hp_font_size"], LolzenUIcfg.unitframes["uf_targettarget_hp_font_flag"])
-					self.Health.value:SetPoint(LolzenUIcfg.unitframes["uf_targettarget_hp_anchor"], LolzenUIcfg.unitframes["uf_targettarget_hp_posx"], LolzenUIcfg.unitframes["uf_targettarget_hp_posy"])
+				if LolzenUIcfg.unitframes.targettarget["uf_targettarget_use_own_hp_font_settings"] == true then
+					self.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.targettarget["uf_targettarget_hp_font"]), LolzenUIcfg.unitframes.targettarget["uf_targettarget_hp_font_size"], LolzenUIcfg.unitframes.targettarget["uf_targettarget_hp_font_flag"])
+					self.Health.value:SetPoint(LolzenUIcfg.unitframes.targettarget["uf_targettarget_hp_anchor"], LolzenUIcfg.unitframes.targettarget["uf_targettarget_hp_posx"], LolzenUIcfg.unitframes.targettarget["uf_targettarget_hp_posy"])
 				end
 
 				self.Border:SetPoint("TOPLEFT", self, -3, 3)
 				self.Border:SetPoint("BOTTOMRIGHT", self, 3, -3)
 
-				self:SetSize(LolzenUIcfg.unitframes["uf_targettarget_width"], LolzenUIcfg.unitframes["uf_targettarget_height"])
+				self:SetSize(LolzenUIcfg.unitframes.targettarget["uf_targettarget_width"], LolzenUIcfg.unitframes.targettarget["uf_targettarget_height"])
 			end,
 
 			party = function(self, ...)
 				shared(self, ...)
 
-				if LolzenUIcfg.unitframes["uf_party_use_own_hp_font_settings"] == true then
-					self.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_party_hp_font"]), LolzenUIcfg.unitframes["uf_party_hp_font_size"], LolzenUIcfg.unitframes["uf_party_hp_font_flag"])
-					self.Health.value:SetPoint(LolzenUIcfg.unitframes["uf_party_hp_anchor"], LolzenUIcfg.unitframes["uf_party_hp_posx"], LolzenUIcfg.unitframes["uf_party_hp_posy"])
+				if LolzenUIcfg.unitframes.party["uf_party_use_own_hp_font_settings"] == true then
+					self.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.party["uf_party_hp_font"]), LolzenUIcfg.unitframes.party["uf_party_hp_font_size"], LolzenUIcfg.unitframes.party["uf_party_hp_font_flag"])
+					self.Health.value:SetPoint(LolzenUIcfg.unitframes.party["uf_party_hp_anchor"], LolzenUIcfg.unitframes.party["uf_party_hp_posx"], LolzenUIcfg.unitframes.party["uf_party_hp_posy"])
 				end
 
 				self.Border:SetPoint("TOPLEFT", self, -3, 3)
 				self.Border:SetPoint("BOTTOMRIGHT", self, 3, -3)
 
-				self:SetSize(LolzenUIcfg.unitframes["uf_party_width"], LolzenUIcfg.unitframes["uf_party_height"])
+				self:SetSize(LolzenUIcfg.unitframes.party["uf_party_width"], LolzenUIcfg.unitframes.party["uf_party_height"])
 
-				if LolzenUIcfg.unitframes["uf_party_showroleindicator"] == true then
-					self.GroupRoleIndicator:SetSize(LolzenUIcfg.unitframes["uf_party_ri_size"], LolzenUIcfg.unitframes["uf_party_ri_size"])
-					self.GroupRoleIndicator:SetPoint(LolzenUIcfg.unitframes["uf_party_ri_anchor"], self.Health, LolzenUIcfg.unitframes["uf_party_ri_posx"], LolzenUIcfg.unitframes["uf_party_ri_posy"])
+				if LolzenUIcfg.unitframes.party["uf_party_showroleindicator"] == true then
+					self.GroupRoleIndicator:SetSize(LolzenUIcfg.unitframes.party["uf_party_ri_size"], LolzenUIcfg.unitframes.party["uf_party_ri_size"])
+					self.GroupRoleIndicator:SetPoint(LolzenUIcfg.unitframes.party["uf_party_ri_anchor"], self.Health, LolzenUIcfg.unitframes.party["uf_party_ri_posx"], LolzenUIcfg.unitframes.party["uf_party_ri_posy"])
 				end
 
-				self.ReadyCheckIndicator:SetSize(LolzenUIcfg.unitframes["uf_party_rc_size"], LolzenUIcfg.unitframes["uf_party_rc_size"])
-				self.ReadyCheckIndicator:SetPoint(LolzenUIcfg.unitframes["uf_party_rc_anchor"], self.Health, LolzenUIcfg.unitframes["uf_party_rc_posx"], LolzenUIcfg.unitframes["uf_party_rc_posy"])
+				self.ReadyCheckIndicator:SetSize(LolzenUIcfg.unitframes.party["uf_party_rc_size"], LolzenUIcfg.unitframes.party["uf_party_rc_size"])
+				self.ReadyCheckIndicator:SetPoint(LolzenUIcfg.unitframes.party["uf_party_rc_anchor"], self.Health, LolzenUIcfg.unitframes.party["uf_party_rc_posx"], LolzenUIcfg.unitframes.party["uf_party_rc_posy"])
 			end,
 
 			raid = function(self, ...)
 				shared(self, ...)
 
-				if LolzenUIcfg.unitframes["uf_raid_use_own_hp_font_settings"] == true then
-					self.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_raid_hp_font"]), LolzenUIcfg.unitframes["uf_raid_hp_font_size"], LolzenUIcfg.unitframes["uf_raid_hp_font_flag"])
-					self.Health.value:SetPoint(LolzenUIcfg.unitframes["uf_raid_hp_anchor"], LolzenUIcfg.unitframes["uf_raid_hp_posx"], LolzenUIcfg.unitframes["uf_raid_hp_posy"])
+				if LolzenUIcfg.unitframes.raid["uf_raid_use_own_hp_font_settings"] == true then
+					self.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.raid["uf_raid_hp_font"]), LolzenUIcfg.unitframes.raid["uf_raid_hp_font_size"], LolzenUIcfg.unitframes.raid["uf_raid_hp_font_flag"])
+					self.Health.value:SetPoint(LolzenUIcfg.unitframes.raid["uf_raid_hp_anchor"], LolzenUIcfg.unitframes.raid["uf_raid_hp_posx"], LolzenUIcfg.unitframes.raid["uf_raid_hp_posy"])
 				end
 
 				self.Border:SetPoint("TOPLEFT", self, -3, 3)
 				self.Border:SetPoint("BOTTOMRIGHT", self, 3, -2)
 
-				self:SetSize(LolzenUIcfg.unitframes["uf_raid_width"], LolzenUIcfg.unitframes["uf_raid_height"])
+				self:SetSize(LolzenUIcfg.unitframes.raid["uf_raid_width"], LolzenUIcfg.unitframes.raid["uf_raid_height"])
 
-				if LolzenUIcfg.unitframes["uf_raid_showroleindicator"] == true then
-					self.GroupRoleIndicator:SetSize(LolzenUIcfg.unitframes["uf_raid_ri_size"], LolzenUIcfg.unitframes["uf_raid_ri_size"])
-					self.GroupRoleIndicator:SetPoint(LolzenUIcfg.unitframes["uf_raid_ri_anchor"], self.Health, LolzenUIcfg.unitframes["uf_raid_ri_posx"], LolzenUIcfg.unitframes["uf_raid_ri_posy"])
+				if LolzenUIcfg.unitframes.raid["uf_raid_showroleindicator"] == true then
+					self.GroupRoleIndicator:SetSize(LolzenUIcfg.unitframes.raid["uf_raid_ri_size"], LolzenUIcfg.unitframes.raid["uf_raid_ri_size"])
+					self.GroupRoleIndicator:SetPoint(LolzenUIcfg.unitframes.raid["uf_raid_ri_anchor"], self.Health, LolzenUIcfg.unitframes.raid["uf_raid_ri_posx"], LolzenUIcfg.unitframes.raid["uf_raid_ri_posy"])
 				end
 
-				self.ReadyCheckIndicator:SetSize(LolzenUIcfg.unitframes["uf_raid_rc_size"], LolzenUIcfg.unitframes["uf_raid_rc_size"])
-				self.ReadyCheckIndicator:SetPoint(LolzenUIcfg.unitframes["uf_raid_rc_anchor"], self.Health, LolzenUIcfg.unitframes["uf_raid_rc_posx"], LolzenUIcfg.unitframes["uf_raid_rc_posy"])
+				self.ReadyCheckIndicator:SetSize(LolzenUIcfg.unitframes.raid["uf_raid_rc_size"], LolzenUIcfg.unitframes.raid["uf_raid_rc_size"])
+				self.ReadyCheckIndicator:SetPoint(LolzenUIcfg.unitframes.raid["uf_raid_rc_anchor"], self.Health, LolzenUIcfg.unitframes.raid["uf_raid_rc_posx"], LolzenUIcfg.unitframes.raid["uf_raid_rc_posy"])
 			end,
 
 			pet = function(self, ...)
 				shared(self, ...)
 
-				if LolzenUIcfg.unitframes["uf_pet_use_own_hp_font_settings"] == true then
-					self.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_pet_hp_font"]), LolzenUIcfg.unitframes["uf_pet_hp_font_size"], LolzenUIcfg.unitframes["uf_pet_hp_font_flag"])
-					self.Health.value:SetPoint(LolzenUIcfg.unitframes["uf_pet_hp_anchor"], LolzenUIcfg.unitframes["uf_pet_hp_posx"], LolzenUIcfg.unitframes["uf_pet_hp_posy"])
+				if LolzenUIcfg.unitframes.pet["uf_pet_use_own_hp_font_settings"] == true then
+					self.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.pet["uf_pet_hp_font"]), LolzenUIcfg.unitframes.pet["uf_pet_hp_font_size"], LolzenUIcfg.unitframes.pet["uf_pet_hp_font_flag"])
+					self.Health.value:SetPoint(LolzenUIcfg.unitframes.pet["uf_pet_hp_anchor"], LolzenUIcfg.unitframes.pet["uf_pet_hp_posx"], LolzenUIcfg.unitframes.pet["uf_pet_hp_posy"])
 				end
 
 				self.Border:SetPoint("TOPLEFT", self, -3, 3)
 				self.Border:SetPoint("BOTTOMRIGHT", self, 3, -3)
 
-				self:SetSize(LolzenUIcfg.unitframes["uf_pet_width"], LolzenUIcfg.unitframes["uf_pet_height"])
+				self:SetSize(LolzenUIcfg.unitframes.pet["uf_pet_width"], LolzenUIcfg.unitframes.pet["uf_pet_height"])
 
 				self.Castbar:SetAllPoints(self.Health)
-				self.Castbar:SetStatusBarColor(LolzenUIcfg.unitframes["uf_pet_cb_color"][1], LolzenUIcfg.unitframes["uf_pet_cb_color"][2], LolzenUIcfg.unitframes["uf_pet_cb_color"][3], LolzenUIcfg.unitframes["uf_pet_cb_alpha"])
+				self.Castbar:SetStatusBarColor(LolzenUIcfg.unitframes.pet["uf_pet_cb_color"][1], LolzenUIcfg.unitframes.pet["uf_pet_cb_color"][2], LolzenUIcfg.unitframes.pet["uf_pet_cb_color"][3], LolzenUIcfg.unitframes.pet["uf_pet_cb_alpha"])
 
 				self.Castbar.Spark:SetSize(self:GetWidth()/27.5, self:GetHeight()*2)
 
-				if LolzenUIcfg.unitframes["uf_pet_cb_icon_cut"] == true then
-					self.Castbar.Icon:SetHeight(LolzenUIcfg.unitframes["uf_pet_height"])
+				if LolzenUIcfg.unitframes.pet["uf_pet_cb_icon_cut"] == true then
+					self.Castbar.Icon:SetHeight(LolzenUIcfg.unitframes.pet["uf_pet_height"])
 					-- Get the % point of the texture to show
 					-- We calculate the percentage of the icon which has to be cut, depending on icon size, and unitframe size which are both variables
-					local p1 = (LolzenUIcfg.unitframes["uf_pet_cb_icon_size"]-LolzenUIcfg.unitframes["uf_pet_height"])/2
-					local p2 = p1+LolzenUIcfg.unitframes["uf_pet_height"]
-					self.Castbar.Icon:SetTexCoord(0.1, 0.9, 1/(LolzenUIcfg.unitframes["uf_pet_cb_icon_size"]/p1), 0.9/(0.1+(LolzenUIcfg.unitframes["uf_pet_cb_icon_size"]/p2)))
+					local p1 = (LolzenUIcfg.unitframes.pet["uf_pet_cb_icon_size"]-LolzenUIcfg.unitframes.pet["uf_pet_height"])/2
+					local p2 = p1+LolzenUIcfg.unitframes.pet["uf_pet_height"]
+					self.Castbar.Icon:SetTexCoord(0.1, 0.9, 1/(LolzenUIcfg.unitframes.pet["uf_pet_cb_icon_size"]/p1), 0.9/(0.1+(LolzenUIcfg.unitframes.pet["uf_pet_cb_icon_size"]/p2)))
 				else
-					self.Castbar.Icon:SetHeight(LolzenUIcfg.unitframes["uf_pet_cb_icon_size"])
+					self.Castbar.Icon:SetHeight(LolzenUIcfg.unitframes.pet["uf_pet_cb_icon_size"])
 					self.Castbar.Icon:SetTexCoord(.07, .93, .07, .93)
 
 					self.Castbar.Shield:SetSize(self.Castbar.Icon:GetWidth()*3, self.Castbar.Icon:GetHeight()*3)
 					self.Castbar.Shield:SetPoint("CENTER", self.Castbar.Icon, 0, 0)
 				end
 
-				self.Castbar.Icon:SetWidth(LolzenUIcfg.unitframes["uf_pet_cb_icon_size"])
-				self.Castbar.Icon:SetPoint(LolzenUIcfg.unitframes["uf_pet_cb_icon_anchor1"], self.Castbar, LolzenUIcfg.unitframes["uf_pet_cb_icon_anchor2"], LolzenUIcfg.unitframes["uf_pet_cb_icon_posx"], LolzenUIcfg.unitframes["uf_pet_cb_icon_posy"])
+				self.Castbar.Icon:SetWidth(LolzenUIcfg.unitframes.pet["uf_pet_cb_icon_size"])
+				self.Castbar.Icon:SetPoint(LolzenUIcfg.unitframes.pet["uf_pet_cb_icon_anchor1"], self.Castbar, LolzenUIcfg.unitframes.pet["uf_pet_cb_icon_anchor2"], LolzenUIcfg.unitframes.pet["uf_pet_cb_icon_posx"], LolzenUIcfg.unitframes.pet["uf_pet_cb_icon_posy"])
 
-				self.Castbar.Time:SetPoint(LolzenUIcfg.unitframes["uf_pet_cb_time_anchor1"], self.Castbar.Icon, LolzenUIcfg.unitframes["uf_pet_cb_time_anchor2"], LolzenUIcfg.unitframes["uf_pet_cb_time_posx"], LolzenUIcfg.unitframes["uf_pet_cb_time_posy"])
-				self.Castbar.Time:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_pet_cb_font"]), LolzenUIcfg.unitframes["uf_pet_cb_font_size"], LolzenUIcfg.unitframes["uf_pet_cb_font_flag"])
-				self.Castbar.Time:SetTextColor(LolzenUIcfg.unitframes["uf_pet_cb_font_color"][1], LolzenUIcfg.unitframes["uf_pet_cb_font_color"][2], LolzenUIcfg.unitframes["uf_pet_cb_font_color"][3])
+				self.Castbar.Time:SetPoint(LolzenUIcfg.unitframes.pet["uf_pet_cb_time_anchor1"], self.Castbar.Icon, LolzenUIcfg.unitframes.pet["uf_pet_cb_time_anchor2"], LolzenUIcfg.unitframes.pet["uf_pet_cb_time_posx"], LolzenUIcfg.unitframes.pet["uf_pet_cb_time_posy"])
+				self.Castbar.Time:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.pet["uf_pet_cb_font"]), LolzenUIcfg.unitframes.pet["uf_pet_cb_font_size"], LolzenUIcfg.unitframes.pet["uf_pet_cb_font_flag"])
+				self.Castbar.Time:SetTextColor(LolzenUIcfg.unitframes.pet["uf_pet_cb_font_color"][1], LolzenUIcfg.unitframes.pet["uf_pet_cb_font_color"][2], LolzenUIcfg.unitframes.pet["uf_pet_cb_font_color"][3])
 
-				self.Castbar.Text:SetPoint(LolzenUIcfg.unitframes["uf_pet_cb_text_anchor1"], self.Castbar, LolzenUIcfg.unitframes["uf_pet_cb_text_anchor2"], LolzenUIcfg.unitframes["uf_pet_cb_text_posx"], LolzenUIcfg.unitframes["uf_pet_cb_text_posy"])
-				self.Castbar.Text:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_pet_cb_font"]), LolzenUIcfg.unitframes["uf_pet_cb_font_size"], LolzenUIcfg.unitframes["uf_pet_cb_font_flag"])
-				self.Castbar.Text:SetTextColor(LolzenUIcfg.unitframes["uf_pet_cb_font_color"][1], LolzenUIcfg.unitframes["uf_pet_cb_font_color"][2], LolzenUIcfg.unitframes["uf_pet_cb_font_color"][3])
+				self.Castbar.Text:SetPoint(LolzenUIcfg.unitframes.pet["uf_pet_cb_text_anchor1"], self.Castbar, LolzenUIcfg.unitframes.pet["uf_pet_cb_text_anchor2"], LolzenUIcfg.unitframes.pet["uf_pet_cb_text_posx"], LolzenUIcfg.unitframes.pet["uf_pet_cb_text_posy"])
+				self.Castbar.Text:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.pet["uf_pet_cb_font"]), LolzenUIcfg.unitframes.pet["uf_pet_cb_font_size"], LolzenUIcfg.unitframes.pet["uf_pet_cb_font_flag"])
+				self.Castbar.Text:SetTextColor(LolzenUIcfg.unitframes.pet["uf_pet_cb_font_color"][1], LolzenUIcfg.unitframes.pet["uf_pet_cb_font_color"][2], LolzenUIcfg.unitframes.pet["uf_pet_cb_font_color"][3])
 			end,
 
 			boss = function(self, ...)
 				shared(self, ...)
 			
-				if LolzenUIcfg.unitframes["uf_boss_use_own_hp_font_settings"] == true then
-					self.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_boss_hp_font"]), LolzenUIcfg.unitframes["uf_boss_hp_font_size"], LolzenUIcfg.unitframes["uf_boss_hp_font_flag"])
-					self.Health.value:SetPoint(LolzenUIcfg.unitframes["uf_boss_hp_anchor"], LolzenUIcfg.unitframes["uf_boss_hp_posx"], LolzenUIcfg.unitframes["uf_boss_hp_posy"])
+				if LolzenUIcfg.unitframes.boss["uf_boss_use_own_hp_font_settings"] == true then
+					self.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.boss["uf_boss_hp_font"]), LolzenUIcfg.unitframes.boss["uf_boss_hp_font_size"], LolzenUIcfg.unitframes.boss["uf_boss_hp_font_flag"])
+					self.Health.value:SetPoint(LolzenUIcfg.unitframes.boss["uf_boss_hp_anchor"], LolzenUIcfg.unitframes.boss["uf_boss_hp_posx"], LolzenUIcfg.unitframes.boss["uf_boss_hp_posy"])
 				end
 
 				self.Border:SetPoint("TOPLEFT", self, -3, 3)
 				self.Border:SetPoint("BOTTOMRIGHT", self, 3, -2)
 
-				self:SetSize(LolzenUIcfg.unitframes["uf_boss_width"], LolzenUIcfg.unitframes["uf_boss_height"])
+				self:SetSize(LolzenUIcfg.unitframes.boss["uf_boss_width"], LolzenUIcfg.unitframes.boss["uf_boss_height"])
 
-				if LolzenUIcfg.unitframes["uf_boss_show_power"] == true then
+				if LolzenUIcfg.unitframes.boss["uf_boss_show_power"] == true then
 					self.Power:SetPoint("LEFT")
 					self.Power:SetPoint("RIGHT")
 					self.Power:SetPoint("TOP", self.Health, "BOTTOM", 0, 2)
@@ -801,74 +824,74 @@ f:SetScript("OnEvent", function(self, event, addon)
 					self.PowerDivider:SetPoint("TOPLEFT", self.Power, 0, 1)
 					self.PowerDivider:SetDrawLayer("BACKGROUND", 1)
 
-					if LolzenUIcfg.unitframes["uf_boss_pp_parent"] == "hp" then
-						self.Power.value:SetPoint(LolzenUIcfg.unitframes["uf_boss_pp_anchor"], self.Health.value, LolzenUIcfg.unitframes["uf_boss_pp_anchor2"], LolzenUIcfg.unitframes["uf_boss_pp_posx"], LolzenUIcfg.unitframes["uf_boss_pp_posy"])
-					elseif LolzenUIcfg.unitframes["uf_boss_pp_parent"] == "self" then
-						self.Power.value:SetPoint(LolzenUIcfg.unitframes["uf_boss_pp_anchor"], self, LolzenUIcfg.unitframes["uf_boss_pp_anchor2"], LolzenUIcfg.unitframes["uf_boss_pp_posx"], LolzenUIcfg.unitframes["uf_boss_pp_posy"])
+					if LolzenUIcfg.unitframes.boss["uf_boss_pp_parent"] == "hp" then
+						self.Power.value:SetPoint(LolzenUIcfg.unitframes.boss["uf_boss_pp_anchor"], self.Health.value, LolzenUIcfg.unitframes.boss["uf_boss_pp_anchor2"], LolzenUIcfg.unitframes.boss["uf_boss_pp_posx"], LolzenUIcfg.unitframes.boss["uf_boss_pp_posy"])
+					elseif LolzenUIcfg.unitframes.boss["uf_boss_pp_parent"] == "self" then
+						self.Power.value:SetPoint(LolzenUIcfg.unitframes.boss["uf_boss_pp_anchor"], self, LolzenUIcfg.unitframes.boss["uf_boss_pp_anchor2"], LolzenUIcfg.unitframes.boss["uf_boss_pp_posx"], LolzenUIcfg.unitframes.boss["uf_boss_pp_posy"])
 					end
-					self.Power.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_boss_pp_font"]), LolzenUIcfg.unitframes["uf_boss_pp_font_size"], LolzenUIcfg.unitframes["uf_boss_pp_font_flag"])
+					self.Power.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.boss["uf_boss_pp_font"]), LolzenUIcfg.unitframes.boss["uf_boss_pp_font_size"], LolzenUIcfg.unitframes.boss["uf_boss_pp_font_flag"])
 				end
 
-				if LolzenUIcfg.unitframes["uf_boss_aura_show_type"] == "Buffs" then
-					self.Buffs:SetPoint(LolzenUIcfg.unitframes["uf_boss_aura_anchor1"], self, LolzenUIcfg.unitframes["uf_boss_aura_anchor2"], LolzenUIcfg.unitframes["uf_boss_aura_posx"], LolzenUIcfg.unitframes["uf_boss_aura_posy"])
-					self.Buffs.numBuffs = LolzenUIcfg.unitframes["uf_boss_aura_maxnum"]
-					if LolzenUIcfg.unitframes["uf_boss_aura_show_only_player"] == true then
+				if LolzenUIcfg.unitframes.boss["uf_boss_aura_show_type"] == "Buffs" then
+					self.Buffs:SetPoint(LolzenUIcfg.unitframes.boss["uf_boss_aura_anchor1"], self, LolzenUIcfg.unitframes.boss["uf_boss_aura_anchor2"], LolzenUIcfg.unitframes.boss["uf_boss_aura_posx"], LolzenUIcfg.unitframes.boss["uf_boss_aura_posy"])
+					self.Buffs.numBuffs = LolzenUIcfg.unitframes.boss["uf_boss_aura_maxnum"]
+					if LolzenUIcfg.unitframe.bosss["uf_boss_aura_show_only_player"] == true then
 						self.Buffs.onlyShowPlayer = true
 					end
 					--self.Buffs.showBuffType = true
-					self.Buffs["growth-x"] = LolzenUIcfg.unitframes["uf_boss_aura_growth_x"]
-					self.Buffs["growth-y"] = LolzenUIcfg.unitframes["uf_boss_aura_growth_y"]
-				elseif LolzenUIcfg.unitframes["uf_boss_aura_show_type"] == "Debuffs" then
-					self.Debuffs:SetPoint(LolzenUIcfg.unitframes["uf_boss_aura_anchor1"], self, LolzenUIcfg.unitframes["uf_boss_aura_anchor2"], LolzenUIcfg.unitframes["uf_boss_aura_posx"], LolzenUIcfg.unitframes["uf_boss_aura_posy"])
-					self.Debuffs.numDebuffs = LolzenUIcfg.unitframes["uf_boss_aura_maxnum"]
-					if LolzenUIcfg.unitframes["uf_boss_aura_show_only_player"] == true then
+					self.Buffs["growth-x"] = LolzenUIcfg.unitframes.boss["uf_boss_aura_growth_x"]
+					self.Buffs["growth-y"] = LolzenUIcfg.unitframes.boss["uf_boss_aura_growth_y"]
+				elseif LolzenUIcfg.unitframes.boss["uf_boss_aura_show_type"] == "Debuffs" then
+					self.Debuffs:SetPoint(LolzenUIcfg.unitframes.boss["uf_boss_aura_anchor1"], self, LolzenUIcfg.unitframes.boss["uf_boss_aura_anchor2"], LolzenUIcfg.unitframes.boss["uf_boss_aura_posx"], LolzenUIcfg.unitframes.boss["uf_boss_aura_posy"])
+					self.Debuffs.numDebuffs = LolzenUIcfg.unitframes.boss["uf_boss_aura_maxnum"]
+					if LolzenUIcfg.unitframes.boss["uf_boss_aura_show_only_player"] == true then
 						self.Debuffs.onlyShowPlayer = true
 					end
 					--self.Debuffs.showDebuffType = true
-					self.Debuffs["growth-x"] = LolzenUIcfg.unitframes["uf_boss_aura_growth_x"]
-					self.Debuffs["growth-y"] = LolzenUIcfg.unitframes["uf_boss_aura_growth_y"]
-				elseif LolzenUIcfg.unitframes["uf_boss_aura_show_type"] == "Both" then
-					self.Auras:SetPoint(LolzenUIcfg.unitframes["uf_boss_aura_anchor1"], self, LolzenUIcfg.unitframes["uf_boss_aura_anchor2"], LolzenUIcfg.unitframes["uf_boss_aura_posx"], LolzenUIcfg.unitframes["uf_boss_aura_posy"])
-					self.Auras.numTotal = LolzenUIcfg.unitframes["uf_boss_aura_maxnum"]
-					if LolzenUIcfg.unitframes["uf_boss_aura_show_only_player"] == true then
+					self.Debuffs["growth-x"] = LolzenUIcfg.unitframes.boss["uf_boss_aura_growth_x"]
+					self.Debuffs["growth-y"] = LolzenUIcfg.unitframes.boss["uf_boss_aura_growth_y"]
+				elseif LolzenUIcfg.unitframes.boss["uf_boss_aura_show_type"] == "Both" then
+					self.Auras:SetPoint(LolzenUIcfg.unitframes.boss["uf_boss_aura_anchor1"], self, LolzenUIcfg.unitframes.boss["uf_boss_aura_anchor2"], LolzenUIcfg.unitframes.boss["uf_boss_aura_posx"], LolzenUIcfg.unitframes.boss["uf_boss_aura_posy"])
+					self.Auras.numTotal = LolzenUIcfg.unitframes.boss["uf_boss_aura_maxnum"]
+					if LolzenUIcfg.unitframes.boss["uf_boss_aura_show_only_player"] == true then
 						self.Auras.onlyShowPlayer = true
 					end
 					--self.Auras.showBuffType = true
 					--self.Auras.showDebuffType = true
-					self.Auras["growth-x"] = LolzenUIcfg.unitframes["uf_boss_aura_growth_x"]
-					self.Auras["growth-y"] = LolzenUIcfg.unitframes["uf_boss_aura_growth_y"]
+					self.Auras["growth-x"] = LolzenUIcfg.unitframes.boss["uf_boss_aura_growth_x"]
+					self.Auras["growth-y"] = LolzenUIcfg.unitframes.boss["uf_boss_aura_growth_y"]
 				end
 
 				self.Castbar:SetAllPoints(self.Health)
-				self.Castbar:SetStatusBarColor(LolzenUIcfg.unitframes["uf_boss_cb_color"][1], LolzenUIcfg.unitframes["uf_boss_cb_color"][2], LolzenUIcfg.unitframes["uf_boss_cb_color"][3], LolzenUIcfg.unitframes["uf_boss_cb_alpha"])
+				self.Castbar:SetStatusBarColor(LolzenUIcfg.unitframes.boss["uf_boss_cb_color"][1], LolzenUIcfg.unitframes.boss["uf_boss_cb_color"][2], LolzenUIcfg.unitframes.boss["uf_boss_cb_color"][3], LolzenUIcfg.unitframes.boss["uf_boss_cb_alpha"])
 
 				self.Castbar.Spark:SetSize(self:GetWidth()/27.5, self:GetHeight()*2)
 
-				if LolzenUIcfg.unitframes["uf_boss_cb_icon_cut"] == true then
-					self.Castbar.Icon:SetHeight(LolzenUIcfg.unitframes["uf_boss_height"])
+				if LolzenUIcfg.unitframes.boss["uf_boss_cb_icon_cut"] == true then
+					self.Castbar.Icon:SetHeight(LolzenUIcfg.unitframes.boss["uf_boss_height"])
 					-- Get the % point of the texture to show
 					-- We calculate the percentage of the icon which has to be cut, depending on icon size, and unitframe size which are both variables
-					local p1 = (LolzenUIcfg.unitframes["uf_boss_cb_icon_size"]-LolzenUIcfg.unitframes["uf_boss_height"])/2
-					local p2 = p1+LolzenUIcfg.unitframes["uf_boss_height"]
-					self.Castbar.Icon:SetTexCoord(0.1, 0.9, 1/(LolzenUIcfg.unitframes["uf_boss_cb_icon_size"]/p1), 0.9/(0.1+(LolzenUIcfg.unitframes["uf_boss_cb_icon_size"]/p2)))
+					local p1 = (LolzenUIcfg.unitframes.boss["uf_boss_cb_icon_size"]-LolzenUIcfg.unitframes.boss["uf_boss_height"])/2
+					local p2 = p1+LolzenUIcfg.unitframes.boss["uf_boss_height"]
+					self.Castbar.Icon:SetTexCoord(0.1, 0.9, 1/(LolzenUIcfg.unitframes.boss["uf_boss_cb_icon_size"]/p1), 0.9/(0.1+(LolzenUIcfg.unitframes.boss["uf_boss_cb_icon_size"]/p2)))
 				else
-					self.Castbar.Icon:SetHeight(LolzenUIcfg.unitframes["uf_boss_cb_icon_size"])
+					self.Castbar.Icon:SetHeight(LolzenUIcfg.unitframes.boss["uf_boss_cb_icon_size"])
 					self.Castbar.Icon:SetTexCoord(.07, .93, .07, .93)
 
 					self.Castbar.Shield:SetSize(self.Castbar.Icon:GetWidth()*3, self.Castbar.Icon:GetHeight()*3)
 					self.Castbar.Shield:SetPoint("CENTER", self.Castbar.Icon, 0, 0)
 				end
 
-				self.Castbar.Icon:SetWidth(LolzenUIcfg.unitframes["uf_boss_cb_icon_size"])
-				self.Castbar.Icon:SetPoint(LolzenUIcfg.unitframes["uf_boss_cb_icon_anchor1"], self.Castbar, LolzenUIcfg.unitframes["uf_boss_cb_icon_anchor2"], LolzenUIcfg.unitframes["uf_boss_cb_icon_posx"], LolzenUIcfg.unitframes["uf_boss_cb_icon_posy"])
+				self.Castbar.Icon:SetWidth(LolzenUIcfg.unitframes.boss["uf_boss_cb_icon_size"])
+				self.Castbar.Icon:SetPoint(LolzenUIcfg.unitframes.boss["uf_boss_cb_icon_anchor1"], self.Castbar, LolzenUIcfg.unitframes.boss["uf_boss_cb_icon_anchor2"], LolzenUIcfg.unitframes.boss["uf_boss_cb_icon_posx"], LolzenUIcfg.unitframes.boss["uf_boss_cb_icon_posy"])
 
-				self.Castbar.Time:SetPoint(LolzenUIcfg.unitframes["uf_boss_cb_time_anchor1"], self.Castbar.Icon, LolzenUIcfg.unitframes["uf_boss_cb_time_anchor2"], LolzenUIcfg.unitframes["uf_boss_cb_time_posx"], LolzenUIcfg.unitframes["uf_boss_cb_time_posy"])
-				self.Castbar.Time:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_boss_cb_font"]), LolzenUIcfg.unitframes["uf_boss_cb_font_size"], LolzenUIcfg.unitframes["uf_boss_cb_font_flag"])
-				self.Castbar.Time:SetTextColor(LolzenUIcfg.unitframes["uf_boss_cb_font_color"][1], LolzenUIcfg.unitframes["uf_boss_cb_font_color"][2], LolzenUIcfg.unitframes["uf_boss_cb_font_color"][3])
+				self.Castbar.Time:SetPoint(LolzenUIcfg.unitframes.boss["uf_boss_cb_time_anchor1"], self.Castbar.Icon, LolzenUIcfg.unitframes.boss["uf_boss_cb_time_anchor2"], LolzenUIcfg.unitframes.boss["uf_boss_cb_time_posx"], LolzenUIcfg.unitframes.boss["uf_boss_cb_time_posy"])
+				self.Castbar.Time:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.boss["uf_boss_cb_font"]), LolzenUIcfg.unitframes.boss["uf_boss_cb_font_size"], LolzenUIcfg.unitframes.boss["uf_boss_cb_font_flag"])
+				self.Castbar.Time:SetTextColor(LolzenUIcfg.unitframes.boss["uf_boss_cb_font_color"][1], LolzenUIcfg.unitframes.boss["uf_boss_cb_font_color"][2], LolzenUIcfg.unitframes.boss["uf_boss_cb_font_color"][3])
 
-				self.Castbar.Text:SetPoint(LolzenUIcfg.unitframes["uf_boss_cb_text_anchor1"], self.Castbar, LolzenUIcfg.unitframes["uf_boss_cb_text_anchor2"], LolzenUIcfg.unitframes["uf_boss_cb_text_posx"], LolzenUIcfg.unitframes["uf_boss_cb_text_posy"])
-				self.Castbar.Text:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_boss_cb_font"]), LolzenUIcfg.unitframes["uf_boss_cb_font_size"], LolzenUIcfg.unitframes["uf_boss_cb_font_flag"])
-				self.Castbar.Text:SetTextColor(LolzenUIcfg.unitframes["uf_boss_cb_font_color"][1], LolzenUIcfg.unitframes["uf_boss_cb_font_color"][2], LolzenUIcfg.unitframes["uf_boss_cb_font_color"][3])
+				self.Castbar.Text:SetPoint(LolzenUIcfg.unitframes.boss["uf_boss_cb_text_anchor1"], self.Castbar, LolzenUIcfg.unitframes.boss["uf_boss_cb_text_anchor2"], LolzenUIcfg.unitframes.boss["uf_boss_cb_text_posx"], LolzenUIcfg.unitframes.boss["uf_boss_cb_text_posy"])
+				self.Castbar.Text:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.boss["uf_boss_cb_font"]), LolzenUIcfg.unitframes.boss["uf_boss_cb_font_size"], LolzenUIcfg.unitframes.boss["uf_boss_cb_font_flag"])
+				self.Castbar.Text:SetTextColor(LolzenUIcfg.unitframes.boss["uf_boss_cb_font_color"][1], LolzenUIcfg.unitframes.boss["uf_boss_cb_font_color"][2], LolzenUIcfg.unitframes.boss["uf_boss_cb_font_color"][3])
 
 				self.Panel:SetSize(self:GetWidth(), 20)
 				self.Panel:SetPoint("TOP", self.Health, "BOTTOM", 0, -4)
@@ -881,15 +904,15 @@ f:SetScript("OnEvent", function(self, event, addon)
 			focus = function(self, ...)
 				shared(self, ...)
 
-				if LolzenUIcfg.unitframes["uf_focus_use_own_hp_font_settings"] == true then
-					self.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_focus_hp_font"]), LolzenUIcfg.unitframes["uf_focus_hp_font_size"], LolzenUIcfg.unitframes["uf_focus_hp_font_flag"])
-					self.Health.value:SetPoint(LolzenUIcfg.unitframes["uf_focus_hp_anchor"], LolzenUIcfg.unitframes["uf_focus_hp_posx"], LolzenUIcfg.unitframes["uf_focus_hp_posy"])
+				if LolzenUIcfg.unitframes.focus["uf_focus_use_own_hp_font_settings"] == true then
+					self.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.focus["uf_focus_hp_font"]), LolzenUIcfg.unitframes.focus["uf_focus_hp_font_size"], LolzenUIcfg.unitframes.focus["uf_focus_hp_font_flag"])
+					self.Health.value:SetPoint(LolzenUIcfg.unitframes.focus["uf_focus_hp_anchor"], LolzenUIcfg.unitframes.focus["uf_focus_hp_posx"], LolzenUIcfg.unitframes.focus["uf_focus_hp_posy"])
 				end
 
 				self.Border:SetPoint("TOPLEFT", self, -3, 3)
 				self.Border:SetPoint("BOTTOMRIGHT", self, 3, -2)
 
-				self:SetSize(LolzenUIcfg.unitframes["uf_focus_width"], LolzenUIcfg.unitframes["uf_focus_height"])
+				self:SetSize(LolzenUIcfg.unitframes.focus["uf_focus_width"], LolzenUIcfg.unitframes.focus["uf_focus_height"])
 				
 				self.Power:SetPoint("LEFT")
 				self.Power:SetPoint("RIGHT")
@@ -899,73 +922,73 @@ f:SetScript("OnEvent", function(self, event, addon)
 				self.PowerDivider:SetPoint("TOPLEFT", self.Power, 0, 1)
 				self.PowerDivider:SetDrawLayer("BACKGROUND", 1)
 
-				if LolzenUIcfg.unitframes["uf_focus_pp_parent"] == "hp" then
-					self.Power.value:SetPoint(LolzenUIcfg.unitframes["uf_focus_pp_anchor"], self.Health.value, LolzenUIcfg.unitframes["uf_focus_pp_anchor2"], LolzenUIcfg.unitframes["uf_focus_pp_posx"], LolzenUIcfg.unitframes["uf_focus_pp_posy"])
-				elseif LolzenUIcfg.unitframes["uf_focus_pp_parent"] == "self" then
-					self.Power.value:SetPoint(LolzenUIcfg.unitframes["uf_focus_pp_anchor"], self, LolzenUIcfg.unitframes["uf_focus_pp_anchor2"], LolzenUIcfg.unitframes["uf_focus_pp_posx"], LolzenUIcfg.unitframes["uf_focus_pp_posy"])
+				if LolzenUIcfg.unitframes.focus["uf_focus_pp_parent"] == "hp" then
+					self.Power.value:SetPoint(LolzenUIcfg.unitframes.focus["uf_focus_pp_anchor"], self.Health.value, LolzenUIcfg.unitframes.focus["uf_focus_pp_anchor2"], LolzenUIcfg.unitframes.focus["uf_focus_pp_posx"], LolzenUIcfg.unitframes.focus["uf_focus_pp_posy"])
+				elseif LolzenUIcfg.unitframes.focus["uf_focus_pp_parent"] == "self" then
+					self.Power.value:SetPoint(LolzenUIcfg.unitframes.focus["uf_focus_pp_anchor"], self, LolzenUIcfg.unitframes.focus["uf_focus_pp_anchor2"], LolzenUIcfg.unitframes.focus["uf_focus_pp_posx"], LolzenUIcfg.unitframes.focus["uf_focus_pp_posy"])
 				end
-				self.Power.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_focus_pp_font"]), LolzenUIcfg.unitframes["uf_focus_pp_font_size"], LolzenUIcfg.unitframes["uf_focus_pp_font_flag"])
+				self.Power.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.focus["uf_focus_pp_font"]), LolzenUIcfg.unitframes.focus["uf_focus_pp_font_size"], LolzenUIcfg.unitframes.focus["uf_focus_pp_font_flag"])
 
-				if LolzenUIcfg.unitframes["uf_focus_aura_show_type"] == "Buffs" then
-					self.Buffs:SetPoint(LolzenUIcfg.unitframes["uf_focus_aura_anchor1"], self, LolzenUIcfg.unitframes["uf_focus_aura_anchor2"], LolzenUIcfg.unitframes["uf_focus_aura_posx"], LolzenUIcfg.unitframes["uf_focus_aura_posy"])
-					self.Buffs.numBuffs = LolzenUIcfg.unitframes["uf_focus_aura_maxnum"]
-					if LolzenUIcfg.unitframes["uf_focus_aura_show_only_player"] == true then
+				if LolzenUIcfg.unitframes.focus["uf_focus_aura_show_type"] == "Buffs" then
+					self.Buffs:SetPoint(LolzenUIcfg.unitframes.focus["uf_focus_aura_anchor1"], self, LolzenUIcfg.unitframes.focus["uf_focus_aura_anchor2"], LolzenUIcfg.unitframes.focus["uf_focus_aura_posx"], LolzenUIcfg.unitframes.focus["uf_focus_aura_posy"])
+					self.Buffs.numBuffs = LolzenUIcfg.unitframes.focus["uf_focus_aura_maxnum"]
+					if LolzenUIcfg.unitframes.focus["uf_focus_aura_show_only_player"] == true then
 						self.Buffs.onlyShowPlayer = true
 					end
 					--self.Buffs.showBuffType = true
-					self.Buffs["growth-x"] = LolzenUIcfg.unitframes["uf_focus_aura_growth_x"]
-					self.Buffs["growth-y"] = LolzenUIcfg.unitframes["uf_focus_aura_growth_y"]
-				elseif LolzenUIcfg.unitframes["uf_focus_aura_show_type"] == "Debuffs" then
-					self.Debuffs:SetPoint(LolzenUIcfg.unitframes["uf_focus_aura_anchor1"], self, LolzenUIcfg.unitframes["uf_focus_aura_anchor2"], LolzenUIcfg.unitframes["uf_focus_aura_posx"], LolzenUIcfg.unitframes["uf_focus_aura_posy"])
-					self.Debuffs.numDebuffs = LolzenUIcfg.unitframes["uf_focus_aura_maxnum"]
-					if LolzenUIcfg.unitframes["uf_focus_aura_show_only_player"] == true then
+					self.Buffs["growth-x"] = LolzenUIcfg.unitframes.focus["uf_focus_aura_growth_x"]
+					self.Buffs["growth-y"] = LolzenUIcfg.unitframes.focus["uf_focus_aura_growth_y"]
+				elseif LolzenUIcfg.unitframes.focus["uf_focus_aura_show_type"] == "Debuffs" then
+					self.Debuffs:SetPoint(LolzenUIcfg.unitframes.focus["uf_focus_aura_anchor1"], self, LolzenUIcfg.unitframes.focus["uf_focus_aura_anchor2"], LolzenUIcfg.unitframes.focus["uf_focus_aura_posx"], LolzenUIcfg.unitframes.focus["uf_focus_aura_posy"])
+					self.Debuffs.numDebuffs = LolzenUIcfg.unitframes.focus["uf_focus_aura_maxnum"]
+					if LolzenUIcfg.unitframes.focus["uf_focus_aura_show_only_player"] == true then
 						self.Debuffs.onlyShowPlayer = true
 					end
 					--self.Debuffs.showDebuffType = true
-					self.Debuffs["growth-x"] = LolzenUIcfg.unitframes["uf_focus_aura_growth_x"]
-					self.Debuffs["growth-y"] = LolzenUIcfg.unitframes["uf_focus_aura_growth_y"]
-				elseif LolzenUIcfg.unitframes["uf_focus_aura_show_type"] == "Both" then
-					self.Auras:SetPoint(LolzenUIcfg.unitframes["uf_focus_aura_anchor1"], self, LolzenUIcfg.unitframes["uf_focus_aura_anchor2"], LolzenUIcfg.unitframes["uf_focus_aura_posx"], LolzenUIcfg.unitframes["uf_focus_aura_posy"])
-					self.Auras.numTotal = LolzenUIcfg.unitframes["uf_focus_aura_maxnum"]
-					if LolzenUIcfg.unitframes["uf_focus_aura_show_only_player"] == true then
+					self.Debuffs["growth-x"] = LolzenUIcfg.unitframes.focus["uf_focus_aura_growth_x"]
+					self.Debuffs["growth-y"] = LolzenUIcfg.unitframes.focus["uf_focus_aura_growth_y"]
+				elseif LolzenUIcfg.unitframes.focus["uf_focus_aura_show_type"] == "Both" then
+					self.Auras:SetPoint(LolzenUIcfg.unitframes.focus["uf_focus_aura_anchor1"], self, LolzenUIcfg.unitframes.focus["uf_focus_aura_anchor2"], LolzenUIcfg.unitframes.focus["uf_focus_aura_posx"], LolzenUIcfg.unitframes.focus["uf_focus_aura_posy"])
+					self.Auras.numTotal = LolzenUIcfg.unitframes.focus["uf_focus_aura_maxnum"]
+					if LolzenUIcfg.unitframes.focus["uf_focus_aura_show_only_player"] == true then
 						self.Auras.onlyShowPlayer = true
 					end
 					--self.Auras.showBuffType = true
 					--self.Auras.showDebuffType = true
-					self.Auras["growth-x"] = LolzenUIcfg.unitframes["uf_focus_aura_growth_x"]
-					self.Auras["growth-y"] = LolzenUIcfg.unitframes["uf_focus_aura_growth_y"]
+					self.Auras["growth-x"] = LolzenUIcfg.unitframes.focus["uf_focus_aura_growth_x"]
+					self.Auras["growth-y"] = LolzenUIcfg.unitframes.focus["uf_focus_aura_growth_y"]
 				end
 
 				self.Castbar:SetAllPoints(self.Health)
-				self.Castbar:SetStatusBarColor(LolzenUIcfg.unitframes["uf_focus_cb_color"][1], LolzenUIcfg.unitframes["uf_focus_cb_color"][2], LolzenUIcfg.unitframes["uf_focus_cb_color"][3], LolzenUIcfg.unitframes["uf_focus_cb_alpha"])
+				self.Castbar:SetStatusBarColor(LolzenUIcfg.unitframes.focus["uf_focus_cb_color"][1], LolzenUIcfg.unitframes.focus["uf_focus_cb_color"][2], LolzenUIcfg.unitframes.focus["uf_focus_cb_color"][3], LolzenUIcfg.unitframes.focus["uf_focus_cb_alpha"])
 
 				self.Castbar.Spark:SetSize(self:GetWidth()/27.5, self:GetHeight()*2)
 
-				if LolzenUIcfg.unitframes["uf_focus_cb_icon_cut"] == true then
-					self.Castbar.Icon:SetHeight(LolzenUIcfg.unitframes["uf_focus_height"])
+				if LolzenUIcfg.unitframes.focus["uf_focus_cb_icon_cut"] == true then
+					self.Castbar.Icon:SetHeight(LolzenUIcfg.unitframes.focus["uf_focus_height"])
 					-- Get the % point of the texture to show
 					-- We calculate the percentage of the icon which has to be cut, depending on icon size, and unitframe size which are both variables
-					local p1 = (LolzenUIcfg.unitframes["uf_focus_cb_icon_size"]-LolzenUIcfg.unitframes["uf_focus_height"])/2
-					local p2 = p1+LolzenUIcfg.unitframes["uf_focus_height"]
-					self.Castbar.Icon:SetTexCoord(0.1, 0.9, 1/(LolzenUIcfg.unitframes["uf_focus_cb_icon_size"]/p1), 0.9/(0.1+(LolzenUIcfg.unitframes["uf_focus_cb_icon_size"]/p2)))
+					local p1 = (LolzenUIcfg.unitframes.focus["uf_focus_cb_icon_size"]-LolzenUIcfg.unitframes.focus["uf_focus_height"])/2
+					local p2 = p1+LolzenUIcfg.unitframes.focus["uf_focus_height"]
+					self.Castbar.Icon:SetTexCoord(0.1, 0.9, 1/(LolzenUIcfg.unitframes.focus["uf_focus_cb_icon_size"]/p1), 0.9/(0.1+(LolzenUIcfg.unitframes.focus["uf_focus_cb_icon_size"]/p2)))
 				else
-					self.Castbar.Icon:SetHeight(LolzenUIcfg.unitframes["uf_focus_cb_icon_size"])
+					self.Castbar.Icon:SetHeight(LolzenUIcfg.unitframes.focus["uf_focus_cb_icon_size"])
 					self.Castbar.Icon:SetTexCoord(.07, .93, .07, .93)
 
 					self.Castbar.Shield:SetSize(self.Castbar.Icon:GetWidth()*3, self.Castbar.Icon:GetHeight()*3)
 					self.Castbar.Shield:SetPoint("CENTER", self.Castbar.Icon, 0, 0)
 				end
 
-				self.Castbar.Icon:SetWidth(LolzenUIcfg.unitframes["uf_focus_cb_icon_size"])
-				self.Castbar.Icon:SetPoint(LolzenUIcfg.unitframes["uf_focus_cb_icon_anchor1"], self.Castbar, LolzenUIcfg.unitframes["uf_focus_cb_icon_anchor2"], LolzenUIcfg.unitframes["uf_focus_cb_icon_posx"], LolzenUIcfg.unitframes["uf_focus_cb_icon_posy"])
+				self.Castbar.Icon:SetWidth(LolzenUIcfg.unitframes.focus["uf_focus_cb_icon_size"])
+				self.Castbar.Icon:SetPoint(LolzenUIcfg.unitframes.focus["uf_focus_cb_icon_anchor1"], self.Castbar, LolzenUIcfg.unitframes.focus["uf_focus_cb_icon_anchor2"], LolzenUIcfg.unitframes.focus["uf_focus_cb_icon_posx"], LolzenUIcfg.unitframes.focus["uf_focus_cb_icon_posy"])
 
-				self.Castbar.Time:SetPoint(LolzenUIcfg.unitframes["uf_focus_cb_time_anchor1"], self.Castbar.Icon, LolzenUIcfg.unitframes["uf_focus_cb_time_anchor2"], LolzenUIcfg.unitframes["uf_focus_cb_time_posx"], LolzenUIcfg.unitframes["uf_focus_cb_time_posy"])
-				self.Castbar.Time:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_focus_cb_font"]), LolzenUIcfg.unitframes["uf_focus_cb_font_size"], LolzenUIcfg.unitframes["uf_focus_cb_font_flag"])
-				self.Castbar.Time:SetTextColor(LolzenUIcfg.unitframes["uf_focus_cb_font_color"][1], LolzenUIcfg.unitframes["uf_focus_cb_font_color"][2], LolzenUIcfg.unitframes["uf_focus_cb_font_color"][3])
+				self.Castbar.Time:SetPoint(LolzenUIcfg.unitframes.focus["uf_focus_cb_time_anchor1"], self.Castbar.Icon, LolzenUIcfg.unitframes.focus["uf_focus_cb_time_anchor2"], LolzenUIcfg.unitframes.focus["uf_focus_cb_time_posx"], LolzenUIcfg.unitframes.focus["uf_focus_cb_time_posy"])
+				self.Castbar.Time:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.focus["uf_focus_cb_font"]), LolzenUIcfg.unitframes.focus["uf_focus_cb_font_size"], LolzenUIcfg.unitframes.focus["uf_focus_cb_font_flag"])
+				self.Castbar.Time:SetTextColor(LolzenUIcfg.unitframes.focus["uf_focus_cb_font_color"][1], LolzenUIcfg.unitframes.focus["uf_focus_cb_font_color"][2], LolzenUIcfg.unitframes.focus["uf_focus_cb_font_color"][3])
 
-				self.Castbar.Text:SetPoint(LolzenUIcfg.unitframes["uf_focus_cb_text_anchor1"], self.Castbar, LolzenUIcfg.unitframes["uf_focus_cb_text_anchor2"], LolzenUIcfg.unitframes["uf_focus_cb_text_posx"], LolzenUIcfg.unitframes["uf_focus_cb_text_posy"])
-				self.Castbar.Text:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes["uf_focus_cb_font"]), LolzenUIcfg.unitframes["uf_focus_cb_font_size"], LolzenUIcfg.unitframes["uf_focus_cb_font_flag"])
-				self.Castbar.Text:SetTextColor(LolzenUIcfg.unitframes["uf_focus_cb_font_color"][1], LolzenUIcfg.unitframes["uf_focus_cb_font_color"][2], LolzenUIcfg.unitframes["uf_focus_cb_font_color"][3])
+				self.Castbar.Text:SetPoint(LolzenUIcfg.unitframes.focus["uf_focus_cb_text_anchor1"], self.Castbar, LolzenUIcfg.unitframes.focus["uf_focus_cb_text_anchor2"], LolzenUIcfg.unitframes.focus["uf_focus_cb_text_posx"], LolzenUIcfg.unitframes.focus["uf_focus_cb_text_posy"])
+				self.Castbar.Text:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.focus["uf_focus_cb_font"]), LolzenUIcfg.unitframes.focus["uf_focus_cb_font_size"], LolzenUIcfg.unitframes.focus["uf_focus_cb_font_flag"])
+				self.Castbar.Text:SetTextColor(LolzenUIcfg.unitframes.focus["uf_focus_cb_font_color"][1], LolzenUIcfg.unitframes.focus["uf_focus_cb_font_color"][2], LolzenUIcfg.unitframes.focus["uf_focus_cb_font_color"][3])
 
 				self.Panel:SetSize(self:GetWidth(), 20)
 				self.Panel:SetPoint("TOP", self.Health, "BOTTOM", 0, -4)
@@ -998,7 +1021,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 
 		-- Hide the standard raid frames
-		if LolzenUIcfg.unitframes["uf_raid_enabled"] == true then
+		if LolzenUIcfg.unitframes.raid["uf_raid_enabled"] == true then
 			local frame = CreateFrame("Frame", nil, UIParent)
 			frame:RegisterEvent("PLAYER_ENTERING_WORLD")
 			frame:SetScript("OnEvent", function(self, event)
@@ -1021,21 +1044,21 @@ f:SetScript("OnEvent", function(self, event, addon)
 			spawnHelper(self, "targettarget", "CENTER", 300, -177)
 
 			for n=1, MAX_BOSS_FRAMES or 5 do
-				if LolzenUIcfg.unitframes["uf_boss_additional_pos"] == "ABOVE" then
-					spawnHelper(self, "boss" .. n, "CENTER", 0, -200 - LolzenUIcfg.unitframes["uf_boss_height"] + (LolzenUIcfg.unitframes["uf_boss_height"] * n) - LolzenUIcfg.unitframes["uf_boss_additional_spacing"] + (LolzenUIcfg.unitframes["uf_boss_additional_spacing"] * n))
-				elseif LolzenUIcfg.unitframes["uf_boss_additional_pos"] == "BELOW" then
-					spawnHelper(self, "boss" .. n, "CENTER", 0, -200 + LolzenUIcfg.unitframes["uf_boss_height"] - (LolzenUIcfg.unitframes["uf_boss_height"] * n) + LolzenUIcfg.unitframes["uf_boss_additional_spacing"] - (LolzenUIcfg.unitframes["uf_boss_additional_spacing"] * n))
-				elseif 	LolzenUIcfg.unitframes["uf_boss_additional_pos"] == "LEFT" then
-					spawnHelper(self, "boss" .. n, "CENTER", (0 + LolzenUIcfg.unitframes["uf_boss_width"]) - (LolzenUIcfg.unitframes["uf_boss_width"] * n) + LolzenUIcfg.unitframes["uf_boss_additional_spacing"] - (LolzenUIcfg.unitframes["uf_boss_additional_spacing"] * n), -200)
-				elseif 	LolzenUIcfg.unitframes["uf_boss_additional_pos"] == "RIGHT" then
-					spawnHelper(self, "boss" .. n, "CENTER", (0 - LolzenUIcfg.unitframes["uf_boss_width"]) + (LolzenUIcfg.unitframes["uf_boss_width"] * n) - LolzenUIcfg.unitframes["uf_boss_additional_spacing"] + (LolzenUIcfg.unitframes["uf_boss_additional_spacing"] * n), -200)
+				if LolzenUIcfg.unitframes.boss["uf_boss_additional_pos"] == "ABOVE" then
+					spawnHelper(self, "boss" .. n, "CENTER", 0, -200 - LolzenUIcfg.unitframes.boss["uf_boss_height"] + (LolzenUIcfg.unitframes.boss["uf_boss_height"] * n) - LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] + (LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] * n))
+				elseif LolzenUIcfg.unitframes.boss["uf_boss_additional_pos"] == "BELOW" then
+					spawnHelper(self, "boss" .. n, "CENTER", 0, -200 + LolzenUIcfg.unitframes.boss["uf_boss_height"] - (LolzenUIcfg.unitframes.boss["uf_boss_height"] * n) + LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] - (LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] * n))
+				elseif 	LolzenUIcfg.unitframes.boss["uf_boss_additional_pos"] == "LEFT" then
+					spawnHelper(self, "boss" .. n, "CENTER", (0 + LolzenUIcfg.unitframes.boss["uf_boss_width"]) - (LolzenUIcfg.unitframes.boss["uf_boss_width"] * n) + LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] - (LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] * n), -200)
+				elseif 	LolzenUIcfg.unitframes.boss["uf_boss_additional_pos"] == "RIGHT" then
+					spawnHelper(self, "boss" .. n, "CENTER", (0 - LolzenUIcfg.unitframes.boss["uf_boss_width"]) + (LolzenUIcfg.unitframes.boss["uf_boss_width"] * n) - LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] + (LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] * n), -200)
 				end
 			end
 
-			if LolzenUIcfg.unitframes["uf_party_enabled"] == true then
+			if LolzenUIcfg.unitframes.party["uf_party_enabled"] == true then
 				self:SetActiveStyle("Lolzen - Party")
 
-				if LolzenUIcfg.unitframes["uf_party_use_vertical_layout"] == true then
+				if LolzenUIcfg.unitframes.party["uf_party_use_vertical_layout"] == true then
 					local party = self:SpawnHeader(
 						nil, nil, 'party,solo',
 						'showParty', true,
@@ -1074,7 +1097,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				end
 			end
 
-			if LolzenUIcfg.unitframes["uf_raid_enabled"] == true then
+			if LolzenUIcfg.unitframes.raid["uf_raid_enabled"] == true then
 				self:SetActiveStyle("Lolzen - Raid")
 
 				local raid = self:SpawnHeader(
