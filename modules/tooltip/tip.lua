@@ -116,7 +116,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			if LolzenUIcfg.modules["miscellaneous"] == true and LolzenUIcfg.miscellaneous["misc_alternative_faction_colors"] == true then
 				local reactioncolor = LolzenUIcfg.miscellaneous["misc_faction_colors"][UnitReaction(unit, "player")]
 				if reactioncolor then
-					return unpack(reactioncolor)
+					return reactioncolor[1], reactioncolor[2], reactioncolor[3]
 				end
 			else
 				local reactioncolor = FACTION_BAR_COLORS[UnitReaction(unit, "player")]
