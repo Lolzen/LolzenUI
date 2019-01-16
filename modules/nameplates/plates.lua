@@ -22,7 +22,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			nameplateLargerScale = 1,
 			nameplateMaxScale = 1,
 			nameplateMinScale = 1,
-			nameplateSelectedScale = LolzenUIcfg.nameplates["np_selected_scale"],
+			nameplateSelectedScale = LolzenUIcfg.nameplates.general["np_selected_scale"],
 			nameplateSelfScale = 1,
 		}
 
@@ -105,7 +105,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 
 		local PostUpdateIcon = function(icons, unit, button, index, offset, filter, isDebuff)
-			if LolzenUIcfg.nameplates["np_aura_desature_nonplayer_auras"] == true then
+			if LolzenUIcfg.nameplates.general["np_aura_desature_nonplayer_auras"] == true then
 				local texture = button.icon
 				if button.isPlayer then
 					texture:SetDesaturated(false)
@@ -118,14 +118,14 @@ f:SetScript("OnEvent", function(self, event, addon)
 		local CreateAura = function(self, num)
 			local Auras = CreateFrame("Frame", nil, self)
 
-			Auras:SetSize(num * (LolzenUIcfg.nameplates["np_aura_size"] + 4), LolzenUIcfg.nameplates["np_aura_size"])
-			if LolzenUIcfg.nameplates["np_aura_show_type"] == "Both" then
+			Auras:SetSize(num * (LolzenUIcfg.nameplates.general["np_aura_size"] + 4), LolzenUIcfg.nameplates.general["np_aura_size"])
+			if LolzenUIcfg.nameplates.general["np_aura_show_type"] == "Both" then
 				Auras.numTotal = num
 			else
 				Auras.num = num
 			end
-			Auras.size = LolzenUIcfg.nameplates["np_aura_size"]
-			Auras.spacing = LolzenUIcfg.nameplates["np_aura_spacing"]
+			Auras.size = LolzenUIcfg.nameplates.general["np_aura_size"]
+			Auras.spacing = LolzenUIcfg.nameplates.general["np_aura_spacing"]
 
 			Auras.PostCreateIcon = PostCreateIcon
 
@@ -160,7 +160,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				-- health bar
 				local health = CreateFrame("StatusBar", nil, frame)
 				health:SetAllPoints()
-				health:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.nameplates["np_texture"]))
+				health:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.nameplates.general["np_texture"]))
 				health.colorHealth = true
 				health.colorTapping = true
 				health.colorDisconnected = true
@@ -171,7 +171,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 				local Power = CreateFrame("StatusBar", nil, frame)
 				Power:SetHeight(2)
-				Power:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.nameplates["np_texture"]))
+				Power:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.nameplates.general["np_texture"]))
 
 				Power.frequentUpdates = true
 
@@ -194,39 +194,39 @@ f:SetScript("OnEvent", function(self, event, addon)
 				bg:SetColorTexture(0, 0, 0, 0.5)
 
 				local levelname = health:CreateFontString(nil, "OVERLAY")
-				levelname:SetPoint(LolzenUIcfg.nameplates["np_lvlname_anchor"], health, LolzenUIcfg.nameplates["np_lvlname_posx"], LolzenUIcfg.nameplates["np_lvlname_posy"]) 
-				levelname:SetFont(LSM:Fetch("font", LolzenUIcfg.nameplates["np_lvlname_font"]), LolzenUIcfg.nameplates["np_lvlname_font_size"], LolzenUIcfg.nameplates["np_lvlname_font_flag"])
+				levelname:SetPoint(LolzenUIcfg.nameplates.general["np_lvlname_anchor"], health, LolzenUIcfg.nameplates.general["np_lvlname_posx"], LolzenUIcfg.nameplates.general["np_lvlname_posy"]) 
+				levelname:SetFont(LSM:Fetch("font", LolzenUIcfg.nameplates.general["np_lvlname_font"]), LolzenUIcfg.nameplates.general["np_lvlname_font_size"], LolzenUIcfg.nameplates.general["np_lvlname_font_flag"])
 				frame:Tag(levelname, '[lolzen:nplevel][shortclassification] [lolzen:npname]')
 				frame.Level = levelname
 
 				local Castbar = CreateFrame("StatusBar", nil, health)
-				Castbar:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.nameplates["np_cb_texture"]))
-				Castbar:SetPoint(LolzenUIcfg.nameplates["np_cb_anchor"], health, LolzenUIcfg.nameplates["np_cb_anchor2"], LolzenUIcfg.nameplates["np_cb_posx"], LolzenUIcfg.nameplates["np_cb_posy"])
-				Castbar:SetSize(LolzenUIcfg.nameplates["np_cb_width"], LolzenUIcfg.nameplates["np_cb_height"])			
+				Castbar:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.nameplates.castbar["np_cb_texture"]))
+				Castbar:SetPoint(LolzenUIcfg.nameplates.castbar["np_cb_anchor"], health, LolzenUIcfg.nameplates.castbar["np_cb_anchor2"], LolzenUIcfg.nameplates.castbar["np_cb_posx"], LolzenUIcfg.nameplates.castbar["np_cb_posy"])
+				Castbar:SetSize(LolzenUIcfg.nameplates.castbar["np_cb_width"], LolzenUIcfg.nameplates.castbar["np_cb_height"])			
 				Castbar:SetStatusBarColor(1, 1, 1, 1)
 				frame.Castbar = Castbar
 
 				local Spark = Castbar:CreateTexture(nil, "OVERLAY")
-				Spark:SetSize(LolzenUIcfg.nameplates["np_spark_width"], LolzenUIcfg.nameplates["np_spark_height"])
+				Spark:SetSize(LolzenUIcfg.nameplates.castbar["np_spark_width"], LolzenUIcfg.nameplates.castbar["np_spark_height"])
 				Spark:SetBlendMode("ADD")
 				Spark:SetParent(Castbar)
 				frame.Castbar.Spark = Spark
 
 				local icon = Castbar:CreateTexture(nil, "BACKGROUND")
-				icon:SetSize(LolzenUIcfg.nameplates["np_cbicon_size"], LolzenUIcfg.nameplates["np_cbicon_size"])
+				icon:SetSize(LolzenUIcfg.nameplates.castbar["np_cbicon_size"], LolzenUIcfg.nameplates.castbar["np_cbicon_size"])
 				icon:SetTexCoord(.07, .93, .07, .93)
-				icon:SetPoint(LolzenUIcfg.nameplates["np_cbicon_anchor"], health, LolzenUIcfg.nameplates["np_cbicon_anchor2"], LolzenUIcfg.nameplates["np_cbicon_posx"], LolzenUIcfg.nameplates["np_cbicon_posy"])
+				icon:SetPoint(LolzenUIcfg.nameplates.castbar["np_cbicon_anchor"], health, LolzenUIcfg.nameplates.castbar["np_cbicon_anchor2"], LolzenUIcfg.nameplates.castbar["np_cbicon_posx"], LolzenUIcfg.nameplates.castbar["np_cbicon_posy"])
 				frame.Castbar.Icon = icon
 
 				local Time = Castbar:CreateFontString(nil, "OVERLAY")
-				Time:SetPoint(LolzenUIcfg.nameplates["np_cbtime_anchor"], Castbar, LolzenUIcfg.nameplates["np_cbtime_anchor2"], LolzenUIcfg.nameplates["np_cbtime_posx"], LolzenUIcfg.nameplates["np_cbtime_posy"])
-				Time:SetFont(LSM:Fetch("font", LolzenUIcfg.nameplates["np_cbtime_font"]), LolzenUIcfg.nameplates["np_cbtime_font_size"], LolzenUIcfg.nameplates["np_cbtime_font_flag"])
+				Time:SetPoint(LolzenUIcfg.nameplates.castbar["np_cbtime_anchor"], Castbar, LolzenUIcfg.nameplates.castbar["np_cbtime_anchor2"], LolzenUIcfg.nameplates.castbar["np_cbtime_posx"], LolzenUIcfg.nameplates.castbar["np_cbtime_posy"])
+				Time:SetFont(LSM:Fetch("font", LolzenUIcfg.nameplates.castbar["np_cbtime_font"]), LolzenUIcfg.nameplates.castbar["np_cbtime_font_size"], LolzenUIcfg.nameplates.castbar["np_cbtime_font_flag"])
 				Time:SetTextColor(1, 1, 1)
 				frame.Castbar.Time = Time
 
 				local cbtext = Castbar:CreateFontString(nil, "OVERLAY")
-				cbtext:SetPoint(LolzenUIcfg.nameplates["np_cbtext_anchor"], Castbar, LolzenUIcfg.nameplates["np_cbtext_anchor2"], LolzenUIcfg.nameplates["np_cbtext_posx"], LolzenUIcfg.nameplates["np_cbtext_posy"])
-				cbtext:SetFont(LSM:Fetch("font", LolzenUIcfg.nameplates["np_cbtext_font"]), LolzenUIcfg.nameplates["np_cbtext_font_size"], LolzenUIcfg.nameplates["np_cbtext_font_flag"])
+				cbtext:SetPoint(LolzenUIcfg.nameplates.castbar["np_cbtext_anchor"], Castbar, LolzenUIcfg.nameplates.castbar["np_cbtext_anchor2"], LolzenUIcfg.nameplates.castbar["np_cbtext_posx"], LolzenUIcfg.nameplates.castbar["np_cbtext_posy"])
+				cbtext:SetFont(LSM:Fetch("font", LolzenUIcfg.nameplates.castbar["np_cbtext_font"]), LolzenUIcfg.nameplates.castbar["np_cbtext_font_size"], LolzenUIcfg.nameplates.castbar["np_cbtext_font_flag"])
 				cbtext:SetTextColor(1, 1, 1)
 				frame.Castbar.Text = cbtext
 
@@ -236,24 +236,24 @@ f:SetScript("OnEvent", function(self, event, addon)
 				Shield:SetPoint("CENTER", icon, 0, 0)
 				frame.Castbar.Shield = Shield
 
-				if LolzenUIcfg.nameplates["np_raidtargetindicator"] == true then
+				if LolzenUIcfg.nameplates.general["np_raidtargetindicator"] == true then
 					local RaidTargetIndicator = health:CreateTexture(nil, 'OVERLAY')
-					RaidTargetIndicator:SetSize(LolzenUIcfg.nameplates["np_raidmark_size"], LolzenUIcfg.nameplates["np_raidmark_size"])
-					RaidTargetIndicator:SetPoint(LolzenUIcfg.nameplates["np_raidmark_anchor"], health, LolzenUIcfg.nameplates["np_raidmark_posx"], LolzenUIcfg.nameplates["np_raidmark_posy"])
+					RaidTargetIndicator:SetSize(LolzenUIcfg.nameplates.general["np_raidmark_size"], LolzenUIcfg.nameplates.general["np_raidmark_size"])
+					RaidTargetIndicator:SetPoint(LolzenUIcfg.nameplates.general["np_raidmark_anchor"], health, LolzenUIcfg.nameplates.general["np_raidmark_posx"], LolzenUIcfg.nameplates.general["np_raidmark_posy"])
 					frame.RaidTargetIndicator = RaidTargetIndicator
 				end
 
-				if LolzenUIcfg.nameplates["np_targetindicator"] == true then
+				if LolzenUIcfg.nameplates.general["np_targetindicator"] == true then
 					local targetindicator = health:CreateTexture(nil, 'OVERLAY')
 					targetindicator:SetPoint("LEFT", health, 0, -3)
 					targetindicator:SetTexture("Interface\\AddOns\\LolzenUI\\media\\target-glow")
-					targetindicator:SetSize(LolzenUIcfg.nameplates["np_width"], 5*cvars.nameplateSelectedScale)
+					targetindicator:SetSize(LolzenUIcfg.nameplates.general["np_width"], 5*cvars.nameplateSelectedScale)
 					targetindicator:SetVertexColor(48/255, 113/255, 191/255)
 					frame.Targetindicator = targetindicator
 					frame:RegisterEvent("PLAYER_TARGET_CHANGED", UpdateTargetIndicator, true)
 				end
 
-				if LolzenUIcfg.nameplates["np_threatindicator"] == true then
+				if LolzenUIcfg.nameplates.general["np_threatindicator"] == true then
 					local Glow = CreateFrame("Frame", nil, frame)
 					Glow:SetBackdrop({
 						edgeFile ="Interface\\AddOns\\LolzenUI\\media\\glow", edgeSize = 5,
@@ -268,44 +268,44 @@ f:SetScript("OnEvent", function(self, event, addon)
 					frame:RegisterEvent("UNIT_THREAT_LIST_UPDATE", UpdateThreat)
 				end
 
-				local Buffs = CreateAura(frame, LolzenUIcfg.nameplates["np_aura_maxnum"])
+				local Buffs = CreateAura(frame, LolzenUIcfg.nameplates.general["np_aura_maxnum"])
 				frame.Buffs = Buffs
 				
-				local Debuffs = CreateAura(frame, LolzenUIcfg.nameplates["np_aura_maxnum"])
+				local Debuffs = CreateAura(frame, LolzenUIcfg.nameplates.general["np_aura_maxnum"])
 				frame.Debuffs = Debuffs
 				
-				local Auras = CreateAura(frame, LolzenUIcfg.nameplates["np_aura_maxnum"])
+				local Auras = CreateAura(frame, LolzenUIcfg.nameplates.general["np_aura_maxnum"])
 				frame.Auras = Auras
 				
-				if LolzenUIcfg.nameplates["np_aura_show_type"] == "Buffs" then
-					frame.Buffs:SetPoint(LolzenUIcfg.nameplates["np_aura_anchor1"], frame, LolzenUIcfg.nameplates["np_aura_anchor2"], LolzenUIcfg.nameplates["np_aura_posx"], LolzenUIcfg.nameplates["np_aura_posy"])
-					if LolzenUIcfg.nameplates["np_aura_show_only_player"] == true then
+				if LolzenUIcfg.nameplates.general["np_aura_show_type"] == "Buffs" then
+					frame.Buffs:SetPoint(LolzenUIcfg.nameplates.general["np_aura_anchor1"], frame, LolzenUIcfg.nameplates.general["np_aura_anchor2"], LolzenUIcfg.nameplates.general["np_aura_posx"], LolzenUIcfg.nameplates.general["np_aura_posy"])
+					if LolzenUIcfg.nameplates.general["np_aura_show_only_player"] == true then
 						frame.Buffs.onlyShowPlayer = true
 					end
 					--frame.Buffs.showBuffType = true
-					frame.Buffs["growth-x"] = LolzenUIcfg.nameplates["np_aura_growth_x"]
-					frame.Buffs["growth-y"] = LolzenUIcfg.nameplates["np_aura_growth_y"]
-				elseif LolzenUIcfg.nameplates["np_aura_show_type"] == "Debuffs" then
-					frame.Debuffs:SetPoint(LolzenUIcfg.nameplates["np_aura_anchor1"], frame, LolzenUIcfg.nameplates["np_aura_anchor2"], LolzenUIcfg.nameplates["np_aura_posx"], LolzenUIcfg.nameplates["np_aura_posy"])
-					if LolzenUIcfg.nameplates["np_aura_show_only_player"] == true then
+					frame.Buffs["growth-x"] = LolzenUIcfg.nameplates.general["np_aura_growth_x"]
+					frame.Buffs["growth-y"] = LolzenUIcfg.nameplates.general["np_aura_growth_y"]
+				elseif LolzenUIcfg.nameplates.general["np_aura_show_type"] == "Debuffs" then
+					frame.Debuffs:SetPoint(LolzenUIcfg.nameplates.general["np_aura_anchor1"], frame, LolzenUIcfg.nameplates.general["np_aura_anchor2"], LolzenUIcfg.nameplates.general["np_aura_posx"], LolzenUIcfg.nameplates.general["np_aura_posy"])
+					if LolzenUIcfg.nameplates.general["np_aura_show_only_player"] == true then
 						frame.Debuffs.onlyShowPlayer = true
 					end
 					--frame.Debuffs.showDebuffType = true
-					frame.Debuffs["growth-x"] = LolzenUIcfg.nameplates["np_aura_growth_x"]
-					frame.Debuffs["growth-y"] = LolzenUIcfg.nameplates["np_aura_growth_y"]
+					frame.Debuffs["growth-x"] = LolzenUIcfg.nameplates.general["np_aura_growth_x"]
+					frame.Debuffs["growth-y"] = LolzenUIcfg.nameplates.general["np_aura_growth_y"]
 				elseif LolzenUIcfg.nameplates["np_aura_show_type"] == "Both" then
-					frame.Auras:SetPoint(LolzenUIcfg.nameplates["np_aura_anchor1"], frame, LolzenUIcfg.nameplates["np_aura_anchor2"], LolzenUIcfg.nameplates["np_aura_posx"], LolzenUIcfg.nameplates["np_aura_posy"])
-					if LolzenUIcfg.nameplates["np_aura_show_only_player"] == true then
+					frame.Auras:SetPoint(LolzenUIcfg.nameplates.general["np_aura_anchor1"], frame, LolzenUIcfg.nameplates.general["np_aura_anchor2"], LolzenUIcfg.nameplates.general["np_aura_posx"], LolzenUIcfg.nameplates.general["np_aura_posy"])
+					if LolzenUIcfg.nameplates.general["np_aura_show_only_player"] == true then
 						frame.Auras.onlyShowPlayer = true
 					end
 					--frame.Auras.showBuffType = true
 					--frame.Auras.showDebuffType = true
-					frame.Auras["growth-x"] = LolzenUIcfg.nameplates["np_aura_growth_x"]
-					frame.Auras["growth-y"] = LolzenUIcfg.nameplates["np_aura_growth_y"]
+					frame.Auras["growth-x"] = LolzenUIcfg.nameplates.general["np_aura_growth_x"]
+					frame.Auras["growth-y"] = LolzenUIcfg.nameplates.general["np_aura_growth_y"]
 				end
 
 				-- set size and points
-				frame:SetSize(LolzenUIcfg.nameplates["np_width"], LolzenUIcfg.nameplates["np_height"])
+				frame:SetSize(LolzenUIcfg.nameplates.general["np_width"], LolzenUIcfg.nameplates.general["np_height"])
 				frame:SetPoint("CENTER", 0, 0)
 
 				Castbar.PostChannelStart = PostCastStart
