@@ -129,7 +129,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		-- return hex value of color values and the unitname
 		local function getColorHexUnit(unit, r, g, b)
-			return ("|cff%.2x%.2x%.2x%s"):format(r*255,g*255,b*255, UnitName(unit))
+			if r ~= nil then
+				return ("|cff%.2x%.2x%.2x%s"):format(r*255,g*255,b*255, UnitName(unit))
+			else
+				return "cff888888"..UnitName(unit).."|r"
+			end
 		end
 
 		-- return a questdifficulty inspired colored level
