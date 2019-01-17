@@ -181,8 +181,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 
 		local PostUpdateIcon = function(icons, unit, button, index, offset, filter, isDebuff)
-			if not unit then return end
-			
 			-- fix for boss, party & raid
 			-- these have a number attached to their names
 			if string.find(unit, "boss") then
@@ -194,20 +192,17 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 
 			if LolzenUIcfg.unitframes[unit]["uf_"..unit.."_aura_desature_nonplayer_auras"] == true then
-				local texture = button.icon
 				if button.isPlayer then
-					texture:SetDesaturated(false)
+					button.icon:SetDesaturated(false)
 				else
-					texture:SetDesaturated(true)
+					button.icon:SetDesaturated(true)
 				end
 			end
 		end
 
 		local CreateAura = function(self, num)
 			local Auras = CreateFrame("Frame", nil, self)
-			--local unit = gsub(self.unit, "(%d)", "")
 			local unit = self.unit
-			if not unit then return end
 
 			-- fix for boss, party & raid
 			-- these have a number attached to their names
@@ -233,14 +228,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 
 			Auras.PostCreateIcon = PostCreateIcon
+			Auras.PostUpdateIcon = PostUpdateIcon
 
 			return Auras
 		end
 
-		local PostUpdateCombatFade = function(self, parent, inCombat)
-			print(self:GetName())
-		end
-		
 		local shared = function(self, unit, isSingle)
 			self:SetScript("OnEnter", UnitFrame_OnEnter)
 			self:SetScript("OnLeave", UnitFrame_OnLeave)
@@ -453,9 +445,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 			Power.PostUpdate = PostUpdatePower
 			Castbar.PostChannelStart = PostCastStart
 			Castbar.PostCastStart = PostCastStart
-			Buffs.PostUpdateIcon = PostUpdateIcon
-			Debuffs.PostUpdateIcon = PostUpdateIcon
-			Auras.PostUpdateIcon = PostUpdateIcon
 		end
 
 		local UnitSpecific = {
