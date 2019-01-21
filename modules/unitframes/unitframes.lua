@@ -191,7 +191,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				unit = "raid"
 			end
 
-			if LolzenUIcfg.unitframes[unit]["uf_"..unit.."_aura_desature_nonplayer_auras"] == true then
+			if LolzenUIcfg.unitframes[unit] and LolzenUIcfg.unitframes[unit]["uf_"..unit.."_aura_desature_nonplayer_auras"] == true then
 				if button.isPlayer then
 					button.icon:SetDesaturated(false)
 				else
@@ -215,7 +215,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 
 			-- check if SVs exist, otherwise do nothing
-			if LolzenUIcfg.unitframes[unit]["uf_"..unit.."_aura_size"] then
+			if LolzenUIcfg.unitframes[unit] and LolzenUIcfg.unitframes[unit]["uf_"..unit.."_aura_size"] then
 				Auras:SetSize(num * (LolzenUIcfg.unitframes[unit]["uf_"..unit.."_aura_size"] + 4), LolzenUIcfg.unitframes[unit]["uf_"..unit.."_aura_size"])
 				Auras.size = LolzenUIcfg.unitframes[unit]["uf_"..unit.."_aura_size"]
 			-- create a fallback to prevent getting errors in BfA
