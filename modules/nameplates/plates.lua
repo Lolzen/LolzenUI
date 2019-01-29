@@ -133,8 +133,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 
 		local PostUpdatePower = function(Power, unit, min, max)
+			if not unit then return end
 			-- use custom power colors from unitframes
-			local r, g, b = unpack(LolzenUIcfg.unitframes["uf_power_colors"][UnitPowerType(unit)])
+			local r, g, b = unpack(LolzenUIcfg.unitframes.powercolors[UnitPowerType(unit)])
 
 			Power:SetStatusBarColor(r, g, b)
 		end
@@ -315,6 +316,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 				Auras.PostUpdateIcon = PostUpdateIcon
 			end
 		end)
-		oUF:SpawnNamePlates(nil, UpdateTargetIndicator, cvars)
+		oUF:SpawnNamePlates("Lolzen - Nameplates", UpdateTargetIndicator, cvars)
 	end
 end)
