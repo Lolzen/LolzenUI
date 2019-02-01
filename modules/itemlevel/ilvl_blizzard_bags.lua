@@ -30,7 +30,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 
 		-- Bags & Bank (Blizzard)
-		local function updateBagSlotInfoTest(frame)
+		local function updateBagSlotInfo(frame)
 			local bag = frame:GetID()
 			local name = frame:GetName()
 			local itemButton
@@ -63,10 +63,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 		end
 		if LolzenUIcfg.itemlevel["ilvl_bags"] == true then
-			hooksecurefunc("ContainerFrame_Update", updateBagSlotInfoTest)
+			hooksecurefunc("ContainerFrame_Update", updateBagSlotInfo)
 			hooksecurefunc("BankFrameItemButton_Update", function(button)
 				if not button.isBag then
-					updateBagSlotInfoTest(BankFrame)
+					updateBagSlotInfo(BankFrame)
 				end
 			end)
 		end
