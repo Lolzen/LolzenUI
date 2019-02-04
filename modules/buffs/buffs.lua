@@ -36,16 +36,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 
 		-- Change the position
-		hooksecurefunc(BuffFrame, "SetPoint", function(self)
-			if self.moving == true then return end
-			self.moving = true
-			self:SetMovable(true)
-			self:SetUserPlaced(true)
-			self:ClearAllPoints()
-			self:SetPoint(LolzenUIcfg.buffs["buff_anchor1"], LolzenUIcfg.buffs["buff_parent"], LolzenUIcfg.buffs["buff_anchor2"], LolzenUIcfg.buffs["buff_posx"], LolzenUIcfg.buffs["buff_posy"])
-			self:SetMovable(false)
-			self.moving = nil
-		end)
+		local function BuffFramePosition()
+			BuffFrame:ClearAllPoints()
+			BuffFrame:SetPoint(LolzenUIcfg.buffs["buff_anchor1"], LolzenUIcfg.buffs["buff_parent"], LolzenUIcfg.buffs["buff_anchor2"], LolzenUIcfg.buffs["buff_posx"], LolzenUIcfg.buffs["buff_posy"])
+		end  
+		hooksecurefunc("UIParent_UpdateTopFramePositions", BuffFramePosition)
 
 		local function StyleBuffs(buttonName, index)
 			local button = _G[buttonName..index]
