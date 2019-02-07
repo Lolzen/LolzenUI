@@ -55,12 +55,13 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		tags["lolzen:power"] = function(unit)
 			local min, max = UnitPower(unit), UnitPowerMax(unit)
+			local color = LolzenUIcfg.unitframes.powercolors[UnitPowerType(unit)]
 			if min == 0 or max == 0 or not UnitIsConnected(unit) or UnitIsDead(unit) or UnitIsGhost(unit) then return end
 
 			if LolzenUIcfg.unitframes.general["uf_use_sivalue"] == true then
-				return siValue(min)
+				return ("|cff%02x%02x%02x%d|r"):format(color[1]*255, color[2]*255, color[3]*255, siValue(min))
 			else
-				return min
+				return ("|cff%02x%02x%02x%d|r"):format(color[1]*255, color[2]*255, color[3]*255, min)
 			end
 		end
 		tagevents["lolzen:power"] = tagevents.missingpp
@@ -139,11 +140,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 
 		local PostUpdatePower = function(Power, unit, min, max)
-			-- use custom power colors
-			local r, g, b = unpack(LolzenUIcfg.unitframes.powercolors[UnitPowerType(unit)])
-
-			Power:SetStatusBarColor(r, g, b)
-			Power.value:SetTextColor(r, g, b)
 			local parent = Power:GetParent()
 			if parent.PowerDivider then
 				if min > 0 then
