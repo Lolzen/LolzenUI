@@ -1008,18 +1008,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		-- Hide the standard raid frames
 		if LolzenUIcfg.unitframes.raid["uf_raid_enabled"] == true then
-			local frame = CreateFrame("Frame", nil, UIParent)
-			frame:RegisterEvent("PLAYER_ENTERING_WORLD")
-			frame:SetScript("OnEvent", function(self, event)
-				if CompactRaidFrameManager then
-					CompactRaidFrameManager:UnregisterAllEvents()
-					CompactRaidFrameManager:Hide()
-				end
-				if CompactRaidFrameContainer then
-					CompactRaidFrameContainer:UnregisterAllEvents()
-					CompactRaidFrameContainer:Hide()
-				end
-			end)
+			RegisterStateDriver(CompactRaidFrameManager, 'visibility', 'hide')
+			RegisterStateDriver(CompactRaidFrameContainer, 'visibility', 'hide')
 		end
 
 		oUF:Factory(function(self)
