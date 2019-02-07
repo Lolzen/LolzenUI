@@ -138,6 +138,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 			local r, g, b = unpack(LolzenUIcfg.unitframes.powercolors[UnitPowerType(unit)])
 
 			Power:SetStatusBarColor(r, g, b)
+			if C_NamePlate.GetNamePlateForUnit(unit) == C_NamePlate.GetNamePlateForUnit("player") then
+				Power:SetAlpha(1)
+			else
+				Power:SetAlpha(0)
+			end
 		end
 
 		local tags = oUF.Tags.Methods or oUF.Tags
@@ -156,7 +161,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 
 		oUF:RegisterStyle("Lolzen - Nameplates", function(frame, unit)
-			local playerplate = C_NamePlate.GetNamePlateForUnit("player")
 			if unit:match("nameplate") then
 				-- health bar
 				local health = CreateFrame("StatusBar", nil, frame)
@@ -173,21 +177,13 @@ f:SetScript("OnEvent", function(self, event, addon)
 				local Power = CreateFrame("StatusBar", nil, frame)
 				Power:SetHeight(2)
 				Power:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.nameplates.general["np_texture"]))
+				Power:SetPoint("LEFT")
+				Power:SetPoint("RIGHT")
+				Power:SetPoint("TOP", frame.Health, "BOTTOM", 0, 0)
 
 				Power.frequentUpdates = true
 
 				frame.Power = Power
-
-				if playerplate then
-					Power:SetAlpha(1)
-					Power:SetPoint("LEFT")
-					Power:SetPoint("RIGHT")
-					Power:SetPoint("TOP", frame.Health, "BOTTOM", 0, 0)
-					
-					Power.PostUpdate = PostUpdatePower
-				else
-					Power:SetAlpha(0)
-				end
 
 				-- frame background
 				local bg = frame:CreateTexture(nil, "BACKGROUND")
@@ -309,6 +305,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				frame:SetSize(LolzenUIcfg.nameplates.general["np_width"], LolzenUIcfg.nameplates.general["np_height"])
 				frame:SetPoint("CENTER", 0, 0)
 
+				Power.PostUpdate = PostUpdatePower
 				Castbar.PostChannelStart = PostCastStart
 				Castbar.PostCastStart = PostCastStart
 				Buffs.PostUpdateIcon = PostUpdateIcon
