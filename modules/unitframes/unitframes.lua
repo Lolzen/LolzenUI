@@ -287,6 +287,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			Power:SetHeight(2)
 			Power:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes.general["uf_statusbar_texture"]))
 			Power:SetFrameStrata("MEDIUM")
+			Power.colorPower = true
 
 			Power.frequentUpdates = true
 
