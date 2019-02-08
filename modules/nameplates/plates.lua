@@ -48,25 +48,25 @@ f:SetScript("OnEvent", function(self, event, addon)
 					frame.Glow:Show()
 					-- tanking securely
 					if status == 3 then
-						frame.Glow:SetBackdropBorderColor(0, 6, 0)
+						frame.Glow:SetBackdropBorderColor(0, 6, 0, 1)
 					--insecurely tanking
 					elseif status == 2 then
-						frame.Glow:SetBackdropBorderColor(6, 6, 0)
+						frame.Glow:SetBackdropBorderColor(6, 6, 0, 1)
 					--not tanking
 					elseif status == 1 then
-						frame.Glow:SetBackdropBorderColor(6, 0, 0)
+						frame.Glow:SetBackdropBorderColor(6, 0, 0, 1)
 					-- infight, not tanking
 					elseif status == 0 then
-						frame.Glow:SetBackdropBorderColor(1, 1, 1)
+						frame.Glow:SetBackdropBorderColor(1, 1, 1, 1)
 					end
 				else
-					frame.Glow:Hide()
+					frame.Glow:SetBackdropBorderColor(0, 0, 0, 0)
 				end
 			else
 				if status and status > 0 then
-					frame.Glow:Show()
+					frame.Glow:SetBackdropBorderColor(1, 0, 0, 1)
 				else
-					frame.Glow:Hide()
+					frame.Glow:SetBackdropBorderColor(0, 0, 0, 0)
 				end
 			end
 		end
