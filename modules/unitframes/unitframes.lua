@@ -98,13 +98,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 		local UpdateThreat = function(self, event, unit)
 			local status = UnitThreatSituation(unit)
 			if status and status > 0 then
-				if not self.Glow:IsShown() then
-					self.Glow:Show()
-				end
+				local r, g, b = GetThreatStatusColor(status)
+				self.Glow:SetBackdropBorderColor(r, g, b, 1)
 			else
-				if self.Glow:IsShown() then
-					self.Glow:Hide()
-				end
+				self.Glow:SetBackdropBorderColor(0, 0, 0, 0)
 			end
 		end
 
