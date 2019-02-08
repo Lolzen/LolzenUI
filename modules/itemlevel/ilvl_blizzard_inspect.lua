@@ -9,6 +9,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 	if addon == "LolzenUI" then
 		if LolzenUIcfg.modules["itemlevel"] == false then return end
 
+		-- Load Blizz InspectUI
+		LoadAddOn("Blizzard_InspectUI")
+
 		local eF = CreateFrame("Frame")
 		eF:RegisterEvent("INSPECT_READY")
 
@@ -103,6 +106,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 
 		function eF.INSPECT_READY()
+			if not InspectFrame and InspectFrame:IsShown() then return end
 			if LolzenUIcfg.itemlevel["ilvl_inspectframe"] == true then
 				updateInspectSlotInfo()
 			end
