@@ -56,12 +56,12 @@ f:SetScript("OnEvent", function(self, event, addon)
 		tags["lolzen:power"] = function(unit)
 			local min, max = UnitPower(unit), UnitPowerMax(unit)
 			local color = LolzenUIcfg.unitframes.powercolors[UnitPowerType(unit)]
-			if min == 0 or max == 0 or not UnitIsConnected(unit) or UnitIsDead(unit) or UnitIsGhost(unit) then return "" end
+			if min == 0 or max == 0 or not UnitIsConnected(unit) or UnitIsDead(unit) or UnitIsGhost(unit) then return end
 
 			if LolzenUIcfg.unitframes.general["uf_use_sivalue"] == true then
-				return ("|cff%02x%02x%02x%d|r"):format(color[1]*255, color[2]*255, color[3]*255, siValue(min))
+				return ("|cff%02x%02x%02x%s|r"):format(color[1]*255, color[2]*255, color[3]*255, siValue(min))
 			else
-				return ("|cff%02x%02x%02x%d|r"):format(color[1]*255, color[2]*255, color[3]*255, min)
+				return ("|cff%02x%02x%02x%s|r"):format(color[1]*255, color[2]*255, color[3]*255, min)
 			end
 		end
 		tagevents["lolzen:power"] = tagevents.missingpp
