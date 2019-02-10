@@ -227,6 +227,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 
 		local shared = function(self, unit, isSingle)
+			local powerType, powerToken, altR, altG, altB = UnitPowerType(unit)
+			if powerToken then
+				self.colors.power[powerToken] = LolzenUIcfg.unitframes.powercolors[powerType]
+			end
 			self:SetScript("OnEnter", UnitFrame_OnEnter)
 			self:SetScript("OnLeave", UnitFrame_OnLeave)
 
