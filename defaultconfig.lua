@@ -158,15 +158,15 @@ defaultconfig.chat = {
 	["chat_background_texture"] = "LolzenUI Standard",
 	["chat_background_alpha"] = 0.5,
 	["chat_background_border"] = "LolzenUI Standard",
-	["chat_sticky_say"] = 1,
-	["chat_sticky_yell"] = 0,
-	["chat_sticky_party"] = 1,
-	["chat_sticky_guild"] = 1,
-	["chat_sticky_officer"] = 1,
-	["chat_sticky_raid"] = 1,
-	["chat_sticky_raidwarning"] = 1,
-	["chat_sticky_whisper"] = 0,
-	["chat_sticky_channel"] = 1,
+	["chat_sticky_say"] = true,
+	["chat_sticky_yell"] = false,
+	["chat_sticky_party"] = true,
+	["chat_sticky_guild"] = true,
+	["chat_sticky_officer"] = true,
+	["chat_sticky_raid"] = true,
+	["chat_sticky_raidwarning"] = true,
+	["chat_sticky_whisper"] = false,
+	["chat_sticky_channel"] = true,
 	["chat_auto_who"] = true,
 	["chat_show_afkdnd_once"] = true,
 	["chat_posx"] = 8,
@@ -1242,6 +1242,28 @@ local function migrateUFData()
 	}
 end
 
+local function migrateChatData()
+	local varsToChange = {
+		"chat_sticky_say",
+		"chat_sticky_yell",
+		"chat_sticky_party",
+		"chat_sticky_guild",
+		"chat_sticky_officer",
+		"chat_sticky_raid",
+		"chat_sticky_raidwarning",
+		"chat_sticky_whisper",
+		"chat_sticky_channel",
+	}
+
+	for num, var in ipairs(varsToChange) do
+		if LolzenUIcfg.chat[var] == 1 then
+			LolzenUIcfg.chat[var] = true
+		else
+			LolzenUIcfg.chat[var] = false
+		end
+	end
+end
+
 -- // check default config and update if necessary // --
 local function updateDB(module)
 	for k, v in pairs(defaultconfig[module]) do
@@ -1250,6 +1272,8 @@ local function updateDB(module)
 			migrateNPData()
 		elseif module == "unitframes" and not LolzenUIcfg.unitframes.general then
 			migrateUFData()
+		elseif module == "chat" and LolzenUIcfg.chat["chat_sticky_say"] == 1 or LolzenUIcfg.chat["chat_sticky_say"] == 0 then
+			migrateChatData()
 		end
 		if not LolzenUIcfg[module][k] and v ~= nil then
 			if type(v) == "table" then
