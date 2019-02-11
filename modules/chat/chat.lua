@@ -34,6 +34,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		local origs = {}
 
+		local function RGBPercToHex(text, r, g, b)
+			return string.format("|cff%02x%02x%02x%s|r", r*255, g*255, b*255, text)
+		end
+
 		local AddMessage = function(self, text, ...)
 			if(type(text) == "string") then
 				-- Strip yells: says: from chat
@@ -57,8 +61,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 					text = string.format("|cff888888"..date("%H.%M").."| |r %s", text)
 				end
 
-				--url
-				text = text:gsub('([wWhH][wWtT][wWtT][%.pP]%S+[^%p%s])', '|cff33b5e5|Hurl:%1|h%1|h|r')
+				-- url
+				text = text:gsub("([wWhH][wWtT][wWtT][%.pP]%S+[^%p%s])", string.format("|cff%02x%02x%02x%s|r", LolzenUIcfg.chat["chat_link_color"][1]*255, LolzenUIcfg.chat["chat_link_color"][2]*255, LolzenUIcfg.chat["chat_link_color"][3]*255, "|Hurl:%1|h%1|h"))
 			end
 
 			return origs[self](self, text, ...)
