@@ -174,6 +174,7 @@ defaultconfig.chat = {
 	["chat_anchor1"] = "BOTTOMLEFT",
 	["chat_anchor2"] = "BOTTOMLEFT",
 	["chat_strip_say_and_yell"] = true,
+	["chat_link_color"] = {51/255, 181/255, 229/255},
 }
 
 defaultconfig.clock = {
