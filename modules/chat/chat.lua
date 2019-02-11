@@ -198,16 +198,51 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 		end
 
-		ChatTypeInfo["SAY"].sticky = LolzenUIcfg.chat["chat_sticky_say"]
-		ChatTypeInfo["YELL"].sticky = LolzenUIcfg.chat["chat_sticky_yell"]
-		ChatTypeInfo["PARTY"].sticky = LolzenUIcfg.chat["chat_sticky_party"]
-		ChatTypeInfo["GUILD"].sticky = LolzenUIcfg.chat["chat_sticky_guild"]
-		ChatTypeInfo["OFFICER"].sticky = LolzenUIcfg.chat["chat_sticky_officer"]
-		ChatTypeInfo["RAID"].sticky = LolzenUIcfg.chat["chat_sticky_raid"]
-		ChatTypeInfo["RAID_WARNING"].sticky = LolzenUIcfg.chat["chat_sticky_raidwarning"]
-		--ChatTypeInfo["INSTANCE_CHAT"].sticky = 1
-		ChatTypeInfo["WHISPER"].sticky = LolzenUIcfg.chat["chat_sticky_whisper"]
-		ChatTypeInfo["CHANNEL"].sticky = LolzenUIcfg.chat["chat_sticky_channel"]
+		if LolzenUIcfg.chat["chat_sticky_say"] == true then
+			ChatTypeInfo["SAY"].sticky = 1
+		else
+			ChatTypeInfo["SAY"].sticky = 0
+		end
+		if LolzenUIcfg.chat["chat_sticky_yell"] == true then
+			ChatTypeInfo["YELL"].sticky = 1
+		else
+			ChatTypeInfo["YELL"].sticky = 0
+		end
+		if LolzenUIcfg.chat["chat_sticky_party"] == true then
+			ChatTypeInfo["PARTY"].sticky = 1
+		else
+			ChatTypeInfo["PARTY"].sticky = 0
+		end
+		if LolzenUIcfg.chat["chat_sticky_guild"] == true then
+			ChatTypeInfo["GUILD"].sticky = 1
+		else
+			ChatTypeInfo["GUILD"].sticky = 0
+		end
+		if LolzenUIcfg.chat["chat_sticky_officer"] == true then
+			ChatTypeInfo["OFFICER"].sticky = 1
+		else
+			ChatTypeInfo["OFFICER"].sticky = 0
+		end
+		if LolzenUIcfg.chat["chat_sticky_raid"] == true then
+			ChatTypeInfo["RAID"].sticky = 1
+		else
+			ChatTypeInfo["RAID"].sticky = 0
+		end
+		if LolzenUIcfg.chat["chat_sticky_raidwarning"] == true then
+			ChatTypeInfo["RAID_WARNING"].sticky = 1
+		else
+			ChatTypeInfo["RAID_WARNING"].sticky = 0
+		end
+		if LolzenUIcfg.chat["chat_sticky_whisper"] == true then
+			ChatTypeInfo["WHISPER"].sticky = 1
+		else
+			ChatTypeInfo["WHISPER"].sticky = 0
+		end
+		if LolzenUIcfg.chat["chat_sticky_channel"] == true then
+			ChatTypeInfo["CHANNEL"].sticky = 1
+		else
+			ChatTypeInfo["CHANNEL"].sticky = 0
+		end
 
 		-- /who whispered me?
 		local Who = {}
