@@ -271,6 +271,17 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 		ChatFrame_AddMessageEventFilter("CHAT_MSG_AFK", chatEvent)
 		ChatFrame_AddMessageEventFilter("CHAT_MSG_DND", chatEvent)
+		
+		-- Disable LolzenUI chatstamps if blizzard chatstamps are activated
+			if GetCVar("showTimestamps") ~= "none" then
+				LolzenUIcfg.chat["chat_timestamp"] = false
+			end
+	
+		hooksecurefunc("InterfaceOptionsSocialPanelTimestamps_OnClick", function(self)
+			if GetCVar("showTimestamps") ~= "none" then
+				LolzenUIcfg.chat["chat_timestamp"] = false
+			end
+		end)
 	elseif event == "PLAYER_ENTERING_WORLD" then
 		if LolzenUIcfg.modules["chat"] == false then return end
 		-- disable UI forced positioning
