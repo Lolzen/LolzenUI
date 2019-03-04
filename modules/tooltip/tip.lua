@@ -29,7 +29,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 		GAME_TOOLTIP_BACKDROP_STYLE_DEFAULT = {
 			bgFile = "Interface\\Buttons\\WHITE8x8",
 			edgeFile = LSM:Fetch("border", LolzenUIcfg.tooltip["tip_border"]),
-			--edgeFile = "Interface\\AddOns\\LolzenUI\\media\\border_round",
 			tile = false,
 			tileEdge = true,
 			tileSize = 16,
@@ -41,17 +40,12 @@ f:SetScript("OnEvent", function(self, event, addon)
 		}
 		GAME_TOOLTIP_BACKDROP_STYLE_EMBEDDED = GAME_TOOLTIP_BACKDROP_STYLE_DEFAULT
 		GAME_TOOLTIP_BACKDROP_STYLE_AZERITE_ITEM  = {
-			--bgFile = "Interface\\Buttons\\WHITE8x8",
 			bgFile = "Interface\\AddOns\\LolzenUI\\media\\tooltip-azerite-bg",
-			--edgeFile = "Interface/Tooltips/UI-Tooltip-Border-Azerite",
 			edgeFile = "Interface\\AddOns\\LolzenUI\\media\\border-azerite",
-			--edgeFile = LSM:Fetch("border", LolzenUIcfg.tooltip["tip_border"]),
 			tile = false,
 			tileEdge = true,
 			tileSize = 16,
-			--edgeSize = 19,
 			edgeSize = 16,
-			--insets = { left = 4, right = 4, top = 4, bottom = 4 },
 			insets = { left = 3, right = 3, top = 3, bottom = 3 },
 
 			backdropBorderColor = CreateColor(1, 1, 1),
@@ -60,7 +54,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 			overlayAtlasTop = "AzeriteTooltip-Topper";
 			overlayAtlasTopScale = .75,
 			overlayAtlasBottom = "AzeriteTooltip-Bottom";
-			--overlayAtlasBottomScale = 1.5,
 		}
 
 		-- customize the mobClassification
