@@ -51,11 +51,27 @@ f:SetScript("OnEvent", function(self, event, addon)
 		OverrideActionBar.LeaveButton:ClearAllPoints()
 		OverrideActionBar.LeaveButton:SetPoint("BOTTOMRIGHT", ActionButton12)
 
-		-- Create a holder frame, which the Main Menu Bar can refer to when positioning;
-		-- per default it wouldn't be centered
-		local holder = CreateFrame("Frame", "MainMenuBarHolderFrame", UIParent, "SecureHandlerStateTemplate")
-		holder:SetSize(LolzenUIcfg.actionbar["actionbar_button_size"]*12+LolzenUIcfg.actionbar["actionbar_button_spacing"]*11, LolzenUIcfg.actionbar["actionbar_button_size"])
-		holder:SetPoint(LolzenUIcfg.actionbar["actionbar_mmb_anchor1"], LolzenUIcfg.actionbar["actionbar_mmb_parent"], LolzenUIcfg.actionbar["actionbar_mmb_anchor1"], LolzenUIcfg.actionbar["actionbar_mmb_posx"], LolzenUIcfg.actionbar["actionbar_mmb_posy"])
+		-- Create a holder frame, which some bars can refer to when positioning;
+		-- per default they wouldn't be centered
+		local mmb_holder = CreateFrame("Frame", "MainMenuBarHolderFrame", UIParent, "SecureHandlerStateTemplate")
+		mmb_holder:SetSize(LolzenUIcfg.actionbar["actionbar_button_size"]*12+LolzenUIcfg.actionbar["actionbar_button_spacing"]*11, LolzenUIcfg.actionbar["actionbar_button_size"])
+		mmb_holder:SetPoint("BOTTOM", UIParent, "BOTTOM", LolzenUIcfg.actionbar["actionbar_mmb_posx"], LolzenUIcfg.actionbar["actionbar_mmb_posy"])
+		ns.mmb_holder = mmb_holder
+
+		local mbbl_holder = CreateFrame("Frame", "MultiBarBottomLeftHolderFrame", UIParent, "SecureHandlerStateTemplate")
+		mbbl_holder:SetSize(LolzenUIcfg.actionbar["actionbar_button_size"]*12+LolzenUIcfg.actionbar["actionbar_button_spacing"]*11, LolzenUIcfg.actionbar["actionbar_button_size"])
+		mbbl_holder:SetPoint("BOTTOM", UIParent, "BOTTOM", LolzenUIcfg.actionbar["actionbar_mbbl_posx"], LolzenUIcfg.actionbar["actionbar_mbbl_posy"])
+		ns.mbbl_holder = mbbl_holder
+
+		local mbbr_holder = CreateFrame("Frame", "MultiBarBottomRightHolderFrame", UIParent, "SecureHandlerStateTemplate")
+		mbbr_holder:SetSize(LolzenUIcfg.actionbar["actionbar_button_size"]*12+LolzenUIcfg.actionbar["actionbar_button_spacing"]*11, LolzenUIcfg.actionbar["actionbar_button_size"])
+		mbbr_holder:SetPoint("BOTTOM", UIParent, "BOTTOM", LolzenUIcfg.actionbar["actionbar_mbbr_posx"], LolzenUIcfg.actionbar["actionbar_mbbr_posy"])
+		ns.mbbr_holder = mbbr_holder
+		
+		local pet_holder = CreateFrame("Frame", "PetBarHolderFrame", UIParent, "SecureHandlerStateTemplate")
+		pet_holder:SetSize(LolzenUIcfg.actionbar["actionbar_button_size"]*12+LolzenUIcfg.actionbar["actionbar_button_spacing"]*11, LolzenUIcfg.actionbar["actionbar_button_size"])
+		pet_holder:SetPoint("BOTTOM", UIParent, "BOTTOM", LolzenUIcfg.actionbar["actionbar_petb_posx"], LolzenUIcfg.actionbar["actionbar_petb_posy"])
+		ns.pet_holder = pet_holder
 
 		local actionbars = {
 			"ActionButton",
@@ -124,8 +140,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		-- hide those pesky hotkeys, ffs
 		hooksecurefunc("ActionButton_UpdateHotkeys", function(self, actionButtonType)
-			local name = self:GetName()
 			if LolzenUIcfg.actionbar["actionbar_show_keybinds"] == false then
+				local name = self:GetName()
 				_G[name.."HotKey"]:Hide()
 			end
 		end)
@@ -150,17 +166,17 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 					if i == 1 then
 						if button == _G["ActionButton"..i] then
-							button:SetPoint("BOTTOMLEFT", holder, 0, 0)
+							button:SetPoint("BOTTOMLEFT", mmb_holder, 0, 0)
 						elseif button == _G["MultiBarBottomLeftButton"..i] then
-							button:SetPoint(LolzenUIcfg.actionbar["actionbar_mbbl_anchor1"], LolzenUIcfg.actionbar["actionbar_mbbl_parent"], LolzenUIcfg.actionbar["actionbar_mbbl_anchor2"], LolzenUIcfg.actionbar["actionbar_mbbl_posx"], LolzenUIcfg.actionbar["actionbar_mbbl_posy"])
+							button:SetPoint("BOTTOMLEFT", mbbl_holder, 0, 0)
 						elseif button == _G["MultiBarBottomRightButton"..i] then
-							button:SetPoint(LolzenUIcfg.actionbar["actionbar_mbbr_anchor1"], LolzenUIcfg.actionbar["actionbar_mbbr_parent"], LolzenUIcfg.actionbar["actionbar_mbbr_anchor2"], LolzenUIcfg.actionbar["actionbar_mbbr_posx"], LolzenUIcfg.actionbar["actionbar_mbbr_posy"])
+							button:SetPoint("BOTTOMLEFT", mbbr_holder, 0, 0)
 						elseif button == _G["MultiBarLeftButton"..i] then
-							button:SetPoint(LolzenUIcfg.actionbar["actionbar_mbl_anchor1"], LolzenUIcfg.actionbar["actionbar_mbl_parent"], LolzenUIcfg.actionbar["actionbar_mbl_anchor2"], LolzenUIcfg.actionbar["actionbar_mbl_posx"], LolzenUIcfg.actionbar["actionbar_mbl_posy"])
+							button:SetPoint("RIGHT", UIParent, "RIGHT", LolzenUIcfg.actionbar["actionbar_mbl_posx"], LolzenUIcfg.actionbar["actionbar_mbl_posy"])
 						elseif button == _G["MultiBarRightButton"..i] then
-							button:SetPoint(LolzenUIcfg.actionbar["actionbar_mbr_anchor1"], LolzenUIcfg.actionbar["actionbar_mbr_parent"], LolzenUIcfg.actionbar["actionbar_mbr_anchor2"], LolzenUIcfg.actionbar["actionbar_mbr_posx"], LolzenUIcfg.actionbar["actionbar_mbr_posy"])
+							button:SetPoint("RIGHT", UIParent, "RIGHT", LolzenUIcfg.actionbar["actionbar_mbr_posx"], LolzenUIcfg.actionbar["actionbar_mbr_posy"])
 						elseif button == _G["PetActionButton"..i] then
-							button:SetPoint(LolzenUIcfg.actionbar["actionbar_petb_anchor1"], LolzenUIcfg.actionbar["actionbar_petb_parent"], LolzenUIcfg.actionbar["actionbar_petb_anchor2"], LolzenUIcfg.actionbar["actionbar_petb_posx"], LolzenUIcfg.actionbar["actionbar_petb_posy"])
+							button:SetPoint("BOTTOMLEFT", pet_holder, 0, 0)
 						elseif button == _G["OverrideActionBarButton"..i] then
 							button:SetPoint("BOTTOMLEFT", ActionButton1)
 						elseif button == _G["ExtraActionButton"..i] then
