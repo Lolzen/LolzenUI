@@ -11,6 +11,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		local eF = CreateFrame("Frame")
 		eF:RegisterEvent("UNIT_INVENTORY_CHANGED")
+		eF:RegisterEvent("PLAYER_EQUIPMENT_CHANGED")
 		eF:RegisterEvent("PLAYER_LOGIN")
 
 		local slots = {
@@ -86,6 +87,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 			if LolzenUIcfg.itemlevel["ilvl_characterframe"] == true then
 				updateCharacterSlotInfo()
 			end
+		end
+
+		function eF.PLAYER_EQUIPMENT_CHANGED()
+			eF:UNIT_INVENTORY_CHANGED()
 		end
 
 		function eF.PLAYER_LOGIN()
