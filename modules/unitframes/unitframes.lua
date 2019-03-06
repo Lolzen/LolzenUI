@@ -227,13 +227,23 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 
 		local shared = function(self, unit, isSingle)
-			local powerType, powerToken, altR, altG, altB = UnitPowerType(unit)
-			if powerToken then
-				self.colors.power[powerToken] = LolzenUIcfg.unitframes.powercolors[powerType]
-			end
-			if powerType then
-				self.colors.power[powerType] = LolzenUIcfg.unitframes.powercolors[powerType]
-			end
+			self.colors.power["MANA"] = LolzenUIcfg.unitframes.powercolors[0]
+			self.colors.power["RAGE"] = LolzenUIcfg.unitframes.powercolors[1]
+			self.colors.power["FOCUS"] = LolzenUIcfg.unitframes.powercolors[2]
+			self.colors.power["ENERGY"] = LolzenUIcfg.unitframes.powercolors[3]
+			self.colors.power["COMBO_POINTS"] = LolzenUIcfg.unitframes.powercolors[4]
+			self.colors.power["RUNES"] = LolzenUIcfg.unitframes.powercolors[5]
+			self.colors.power["RUNIC_POWER"] = LolzenUIcfg.unitframes.powercolors[6]
+			self.colors.power["SOUL_SHARDS"] = LolzenUIcfg.unitframes.powercolors[7]
+			self.colors.power["LUNAR_POWER"] = LolzenUIcfg.unitframes.powercolors[8]
+			self.colors.power["HOLY_POWER"] = LolzenUIcfg.unitframes.powercolors[9]
+			self.colors.power["MAELSTROM"] = LolzenUIcfg.unitframes.powercolors[11]
+			self.colors.power["CHI"] = LolzenUIcfg.unitframes.powercolors[12]
+			self.colors.power["INSANITY"] = LolzenUIcfg.unitframes.powercolors[13]
+			self.colors.power["ARCANE_CHARGES"] = LolzenUIcfg.unitframes.powercolors[16]
+			self.colors.power["FURY"] = LolzenUIcfg.unitframes.powercolors[17]
+			self.colors.power["PAIN"] = LolzenUIcfg.unitframes.powercolors[18]
+
 			self:SetScript("OnEnter", UnitFrame_OnEnter)
 			self:SetScript("OnLeave", UnitFrame_OnLeave)
 
