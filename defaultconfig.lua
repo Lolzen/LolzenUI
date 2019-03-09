@@ -1242,16 +1242,28 @@ local function migrateChatData()
 	end
 end
 
+local function resetActionBarData()
+	table.wipe(LolzenUIcfg.actionbar)
+	LolzenUIcfg.actionbar = defaultconfig.actionbar
+	print("LolzenUI: actionbar settings have been reset due to underlying changes. You can reconfigure your settings now. Sorry for any inconvenience.")
+end
+
 -- // check default config and update if necessary // --
 local function updateDB(module)
+	local expansion, major, minor, revision = tonumber(strsub(LolzenUIcfg.version, 1, 1)), tonumber(strsub(LolzenUIcfg.version, 3, 3)), tonumber(strsub(LolzenUIcfg.version, 5, 5)), tonumber(strsub(LolzenUIcfg.version, 8))
 	for k, v in pairs(defaultconfig[module]) do
-		-- check if the new structure is present, otherwise update it
-		if module == "nameplates" and not LolzenUIcfg.nameplates.general then
-			migrateNPData()
-		elseif module == "unitframes" and not LolzenUIcfg.unitframes.general then
-			migrateUFData()
-		elseif module == "chat" and LolzenUIcfg.chat["chat_sticky_say"] == 1 or LolzenUIcfg.chat["chat_sticky_say"] == 0 then
-			migrateChatData()
+		-- check if updating Save Variables is needed, based on stored LolzenUI version
+		-- In revision 4 of 8.1.0 we startet to migrate the LolzenUIcfg structure to a new format, so we check up to version 8.2.0 for data migration
+		if expansion == 8 and major > 2 then
+			if module == "nameplates" and not LolzenUIcfg.nameplates.general then
+				migrateNPData()
+			elseif module == "unitframes" and not LolzenUIcfg.unitframes.general then
+				migrateUFData()
+			elseif module == "chat" and LolzenUIcfg.chat["chat_sticky_say"] == 1 or LolzenUIcfg.chat["chat_sticky_say"] == 0 then
+				migrateChatData()
+			elseif moduel == "actionbar" and LolzenUIcfg.actionbar["actionbar_mmb_anchor1"] ~= nil then
+				resetActionBarData()
+			end
 		end
 		if not LolzenUIcfg[module][k] and v ~= nil then
 			if type(v) == "table" then
@@ -1279,12 +1291,18 @@ f:SetScript("OnEvent", function(self, event, addon)
 		-- create new defaults on first login
 		if LolzenUIcfg == nil then
 			LolzenUIcfg = defaultconfig
+			-- store LolzenUI version in SV
+			LolzenUIcfg.version = GetAddOnMetadata("LolzenUI", "version")
 		else
 			-- update saved variables upon finding new entries
 			for k, v in pairs(defaultconfig) do
 				if not LolzenUIcfg[k] then
 					LolzenUIcfg[k] = v
 				else
+					-- update LolzenUIcfg.version if necessary
+					if LolzenUIcfg.version ~= GetAddOnMetadata("LolzenUI", "version") then
+						LolzenUIcfg.version = GetAddOnMetadata("LolzenUI", "version")
+					end
 					updateDB(k)
 				end
 			end
