@@ -15,7 +15,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 		local frame = CreateFrame("Frame")
 
 		local cache = {}
-		UnitPopupButtons.INSPECT.dist = 0  -- enables "Inspect" option in dropdown
 
 		local function updateFrames()
 			InspectPaperDollFrame_OnShow()
@@ -29,10 +28,15 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 
 		InspectFrame_OnEvent = function(self, event, a1)
-			if not InspectFrame:IsShown() then return end
 			local unit = InspectFrame.unit
+			if event == "INSPECT_READY" and unit then
+				ShowUIPanel(InspectFrame)
+				UpdateUnit(unit)
+			end
+			if not InspectFrame:IsShown() then return end
 			if (event == "PLAYER_TARGET_CHANGED" and unit == "target") or (event == "PARTY_MEMBERS_CHANGED" and unit ~= "target") then
 				if UnitExists(unit) then
+					NotifyInspect(unit)
 					UpdateUnit(unit)
 				end
 			elseif event == "UNIT_PORTRAIT_UPDATE" and unit == a1 then
@@ -40,8 +44,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 				UpdateUnit(unit)
 			elseif event == "UNIT_NAME_UPDATE" and unit == a1 then
 				InspectFrameTitleText:SetText(UnitPVPName(unit))
-			elseif event == "INSPECT_READY" then
-				UpdateUnit(unit)
 			end
 		end
 		InspectFrame:SetScript("OnEvent", InspectFrame_OnEvent)
@@ -50,11 +52,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 		InspectPaperDollItemSlotButton_Update = function(self, ...)
 			oInspectPaperDollItemSlotButton_Update(self, ...)
 			local id = self:GetID()
-			local link
-			if CheckInteractDistance(InspectFrame.unit, 1) then
-				link = GetInventoryItemLink(InspectFrame.unit, id)
-				cache[id] = link
-			end
+			local link = GetInventoryItemLink(InspectFrame.unit, id)
+			cache[id] = link
 		end
 
 		InspectPaperDollItemSlotButton_OnEnter = function(self)
@@ -64,7 +63,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 			elseif cache[id] then  -- retrieved from cache
 				GameTooltip:SetHyperlink(cache[id])
-
 			else  -- empty slot
 				GameTooltip:SetText((self.checkRelic and UnitHasRelicSlot(unit) and _G.RELICSLOT) or _G[strupper(strsub(self:GetName(), 8))])
 			end
