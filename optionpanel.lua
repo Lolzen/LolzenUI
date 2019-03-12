@@ -86,6 +86,19 @@ function ns.createButtons()
 			button[i]:SetScript("OnLeave", function(self)
 				GameTooltip:Hide()
 			end)
+		else
+			-- custom modules may change positioning (because we sort alphabetically)
+			button[i].text = _G["tickbox"..i.."Text"]
+			button[i].text:SetText(L[ns.modules[i].name])
+			
+			-- get status from saved vars
+			if LolzenUIcfg.modules[ns.modules[i].name] == true then
+				button[i]:SetChecked(true)
+				button[i].text:SetTextColor(51/255, 181/255, 229/255)
+			else
+				button[i]:SetChecked(false)
+				button[i].text:SetTextColor(1, 1, 1)
+			end
 		end
 	end
 end
