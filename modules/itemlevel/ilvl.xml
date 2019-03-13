@@ -5,4 +5,5 @@
 	<Script file="modules/itemlevel/ilvl_blizzard_character.lua"/>
 	<Script file="modules/itemlevel/ilvl_blizzard_inspect.lua"/>
 	<Script file="modules/itemlevel/ilvl_baudbag.lua"/>
+	<Script file="modules/itemlevel/ilvl_litebag.lua"/>
 </Ui>
