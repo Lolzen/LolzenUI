@@ -8,7 +8,7 @@ f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)
 	if addon == "LolzenUI" then
 		if LolzenUIcfg.modules["itemlevel"] == false then return end
-		if IsAddOnLoaded("BaudBag") then return end
+		if IsAddOnLoaded("BaudBag") or IsAddOnLoaded("LiteBag") then return end
 
 		local function getItemlvlBags(bagID, slotID)
 			local itemLink = GetContainerItemLink(bagID, slotID)
