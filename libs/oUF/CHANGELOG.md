@@ -1,3 +1,13 @@
+**Changes in 9.1.0:**
+
+- _Val Voronov (5):_
+    1. core: Use _initialAttribute-* to set attributes
+    2. Add .colorSelection option to health and power elements ([#484](https://github.com/oUF-wow/oUF/issues/484))
+    3. threatindicator: Use a better default texture ([#486](https://github.com/oUF-wow/oUF/issues/486))
+    4. pvpclassificationindicator: Add the element ([#482](https://github.com/oUF-wow/oUF/issues/482))
+    5. core: Update the event system ([#483](https://github.com/oUF-wow/oUF/issues/483))
+- 9 files changed, 287 insertions(+), 39 deletions(-)
+
 **Changes in 9.0.2:**
 
 - _Rainrider (3):_
