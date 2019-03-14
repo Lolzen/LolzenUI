@@ -12,6 +12,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		if LolzenUIcfg.modules["actionbars"] == false then return end
 
 		--// hide blizz art //--
+
 		local invisible = CreateFrame("Frame", nil)
 		invisible:EnableMouse(false)
 		invisible:Hide()
@@ -37,10 +38,27 @@ f:SetScript("OnEvent", function(self, event, addon)
 		
 		MainMenuBarArtFrame:UnregisterAllEvents()
 
-		-- Hide the SStatusTrackingBarManager
-		StatusTrackingBarManager:UnregisterAllEvents()
-		StatusTrackingBarManager:Hide()
-		StatusTrackingBarManager.show = StatusTrackingBarManager.Hide
+		-- Hide the StatusbarMixins by calling StatusTrackingBarManager:HideStatusBars() on every ShouldBeVisible() call
+		-- thanks for not giving these bars a name blizzard ~.~
+		hooksecurefunc(ExpBarMixin, "ShouldBeVisible", function(self)
+			StatusTrackingBarManager:HideStatusBars()
+		end)
+		
+		hooksecurefunc(ArtifactBarMixin, "ShouldBeVisible", function(self)
+			StatusTrackingBarManager:HideStatusBars()
+		end)
+		
+		hooksecurefunc(HonorBarMixin, "ShouldBeVisible", function(self)
+			StatusTrackingBarManager:HideStatusBars()
+		end)
+		
+		hooksecurefunc(ReputationBarMixin, "ShouldBeVisible", function(self)
+			StatusTrackingBarManager:HideStatusBars()
+		end)
+		
+		hooksecurefunc(AzeriteBarMixin, "ShouldBeVisible", function(self)
+			StatusTrackingBarManager:HideStatusBars()
+		end)
 
 		--// Bar sizes, positions & styling//--
 
