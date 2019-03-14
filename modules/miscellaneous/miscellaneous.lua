@@ -31,7 +31,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		AchievementMicroButton, QuestLogMicroButton, GuildMicroButton, 
 		PVPMicroButton, LFDMicroButton, CompanionsMicroButton,
 		EJMicroButton, HelpMicroButton, MainMenuMicroButton,
-		CollectionsMicroButton, StoreMicroButton,
+		CollectionsMicroButton,
 	}
 
 	if LolzenUIcfg.miscellaneous["misc_hide_microbuttons"] == true then
@@ -40,9 +40,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 			_G['AchievementMicroButton_Update'] = function() end
 		end
 
-		-- do NOT show this again, ffs
-		StoreMicroButton.Show = function() end
-
+		-- special snowflake microbutton
+		StoreMicroButton:SetAlpha(0)
+		StoreMicroButton:EnableMouse(false)
+		
 		for _, frame in pairs(MicroButtons) do
 			frame:SetParent(invisible)
 			frame:Hide()
