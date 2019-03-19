@@ -16,9 +16,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 			-- general tooltips
 			GameTooltip,
 			ItemRefTooltip,
-			WorldMapTooltip,
-			WorldMapCompareTooltip1,
-			WorldMapCompareTooltip2,
 			-- shopping tooltips
 			ShoppingTooltip1,
 			ShoppingTooltip2,
