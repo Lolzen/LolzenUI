@@ -577,6 +577,27 @@ f:SetScript("OnEvent", function(self, event, addon)
 					self.Runes = Runes
 				end
 
+				if select(2, UnitClass('player')) == "MONK" then
+					--stagger
+					local Stagger = CreateFrame('StatusBar', nil, self)
+					Stagger:SetSize(LolzenUIcfg.unitframes.player["uf_player_width"], 8)
+					Stagger:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes.general["uf_statusbar_texture"]))
+					Stagger:SetPoint(LolzenUIcfg.unitframes.player["uf_player_classpower_anchor1"], self, LolzenUIcfg.unitframes.player["uf_player_classpower_anchor2"], LolzenUIcfg.unitframes.player["uf_player_classpower_posx"], LolzenUIcfg.unitframes.player["uf_player_classpower_posy"])
+
+					Stagger.border = CreateFrame("Frame", nil, Stagger)
+					Stagger.border:SetBackdrop({
+						edgeFile = LSM:Fetch("border", LolzenUIcfg.unitframes.player["uf_player_classpower_border"]),
+						tile=true, tileSize=4, edgeSize=4,
+						--insets={left=0, right=1, top=0, bottom=0}
+					})
+					Stagger.border:SetPoint("TOPLEFT", Stagger, -1.5, 1.5)
+					Stagger.border:SetPoint("BOTTOMRIGHT", Stagger, 1, -1)
+					Stagger.border:SetBackdropBorderColor(0, 0, 0)
+					Stagger.border:SetFrameLevel(3)
+
+					self.Stagger = Stagger
+				end
+
 				local Glow = CreateFrame("Frame", nil, self)
 				Glow:SetBackdrop({
 					edgeFile ="Interface\\AddOns\\LolzenUI\\media\\glow", edgeSize = 5,
