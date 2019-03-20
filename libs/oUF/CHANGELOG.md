@@ -1,3 +1,12 @@
+**Changes in 9.1.1:**
+
+- _Rainrider (1):_
+    1. elements: do not toggle visibility on enable in elements where it is part of the update process
+- _Val Voronov (2):_
+    1. core: Prevent multiple instances of the nameplate driver ([#492](https://github.com/oUF-wow/oUF/issues/492))
+    2. core: Greatly reduced the number of UAE calls for the nameplates ([#491](https://github.com/oUF-wow/oUF/issues/491))
+- 4 files changed, 19 insertions(+), 15 deletions(-)
+
 **Changes in 9.1.0:**
 
 - _Val Voronov (5):_
