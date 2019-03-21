@@ -431,6 +431,16 @@ f:SetScript("OnEvent", function(self, event, addon)
 			local rc = Health:CreateTexture(nil, "OVERLAY")
 			self.ReadyCheckIndicator = rc
 
+			if unit == "player" or unit == "party" or unit == "raid" then
+				local dbh = Health:CreateTexture(nil, "OVERLAY")
+				dbh:SetAllPoints(Health)
+				dbh:SetTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes.general["uf_statusbar_texture"]))
+				dbh:SetVertexColor(0, 0, 0, 0)
+				self.DebuffHighlight = dbh
+				self.DebuffHighlightAlpha = 0.5
+				self.DebuffHighlightFilter = true
+			end
+
 			if(isSingle) then
 				self:SetSize(220, 21)
 			end
