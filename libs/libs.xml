@@ -2,6 +2,7 @@
 ..\FrameXML\UI.xsd">
 	<Include file="oUF\oUF.xml"/>
 	<Script file="oUF_MovableFrames\movable.lua"/>
+	<Script file="oUF_DebuffHighlight\oUF_DebuffHighlight.lua"/>
 	<Script file="LibStub\LibStub.lua"/>
 	<Script file="CallBackHandler-1.0\CallBackHandler-1.0.lua"/>
 	<Script file="LibSharedMedia-3.0\LibSharedMedia-3.0.lua"/>	
