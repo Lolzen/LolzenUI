@@ -33,15 +33,27 @@ timer:SetScript("OnFinished", function(self, requested)
 	pullNum = pullNum -1
 end)
 
-local function initiateCountdown(num)
-	if isCounting == true then return end
-	isCounting = true
-	if LolzenUIcfg.pullcount["pull_sound_"..num] then
-		PlaySoundFile("Interface\\AddOns\\LolzenUI\\sounds\\"..LolzenUIcfg.pullcount["pull_sound_"..num], "master")
+local deniedicon = string.format("|T%s:%d:%d:0:0|t", "Interface\\RaidFrame\\ReadyCheck-NotReady", 20, 20)
+local function initiateOrAbortCountdown(num)
+	if num == 0 then
+		isCounting = false
+		--pullNum = 0
+		timer:Stop()
+		PlaySoundFile("Interface\\AddOns\\LolzenUI\\sounds\\Denied.mp3", "master") --TBD option
+		-- cancel timer
+		TimerTracker_OnEvent(TimerTracker, "PLAYER_ENTERING_WORLD")
+		-- alert that the timer has been stopped
+		RaidNotice_AddMessage(RaidBossEmoteFrame, deniedicon.."  |cffff0000PULL ABORTED|r   "..deniedicon, ChatTypeInfo["RAID_BOSS_EMOTE"])
+	else
+		if isCounting == true then return end
+		isCounting = true
+		if LolzenUIcfg.pullcount["pull_sound_"..num] then
+			PlaySoundFile("Interface\\AddOns\\LolzenUI\\sounds\\"..LolzenUIcfg.pullcount["pull_sound_"..num], "master")
+		end
+		pullNum = num
+		timer:Play()
+		TimerTracker_OnEvent(TimerTracker, "START_TIMER", 2, num, num)
 	end
-	pullNum = num
-	timer:Play()
-	TimerTracker_OnEvent(TimerTracker, "START_TIMER", 2, num, num)
 end
 
 f:SetScript("OnEvent", function(self, event, ...)
@@ -93,19 +105,21 @@ f:SetScript("OnEvent", function(self, event, ...)
 		if IsAddOnLoaded("DBM-Core") or IsAddOnLoaded("BigWigs") then return end
 		
 		local prefix, msg, channel, sender = ...
+		--print(prefix)
 		if prefix == "BigWigs" then
 			local bwPrefix, bwMsg, extra = strsplit("^", msg)
+			--print(bwPrefix)
 			
 			if bwPrefix == "P" and bwMsg == "Pull" then
 				--print("recieved pull timer from BigWigs :"..tonumber(extra))
-				initiateCountdown(tonumber(extra))
-			end		
+				initiateOrAbortCountdown(tonumber(extra))
+			end
 		elseif prefix == "D4" then
 			local dbmPrefix, time, _, _, _ = strsplit("\t", msg)
 			
 			if dbmPrefix == "PT" then
 				--print("recieved pull timer from DBM : "..tonumber(time))
-				initiateCountdown(tonumber(time))
+				initiateOrAbortCountdown(tonumber(time))
 			end
 		end
 	end
@@ -114,13 +128,13 @@ end)
 local function SendPull(num)
 	if IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
 		C_ChatInfo.SendAddonMessage("D4", "PT\t"..num, "INSTANCE_CHAT") --DBM
-		C_ChatInfo.SendAddonMessage("BigWigs", "P^Pull^"..num, "INSTANCE_CHAT") --BigWigs
+		--C_ChatInfo.SendAddonMessage("BigWigs", "P^Pull^"..num, "INSTANCE_CHAT") --BigWigs
 	elseif IsInGroup(LE_PARTY_CATEGORY_HOME) then
 		C_ChatInfo.SendAddonMessage("D4", "PT\t"..num, "PARTY") --DBM
-		C_ChatInfo.SendAddonMessage("BigWigs", "P^Pull^"..num, "PARTY") --BigWigs
+		--C_ChatInfo.SendAddonMessage("BigWigs", "P^Pull^"..num, "PARTY") --BigWigs
 	else
 		C_ChatInfo.SendAddonMessage("D4", "PT\t"..num, "WHISPER", UnitName("player")) --DBM
-		C_ChatInfo.SendAddonMessage("BigWigs", "P^Pull^"..num, "WHISPER", UnitName("player")) --BigWigs
+		--C_ChatInfo.SendAddonMessage("BigWigs", "P^Pull^"..num, "WHISPER", UnitName("player")) --BigWigs
 	end
 end
 
