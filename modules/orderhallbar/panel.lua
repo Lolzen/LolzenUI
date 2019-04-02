@@ -112,6 +112,7 @@ hooksecurefunc("TokenFrame_Update", getCurrencies)
 local function modifyOHB()
 	if OrderHallCommandBar.modded == true then return end
 	OrderHallCommandBar.AreaName:SetTextColor(unpack(LolzenUIcfg.orderhallbar["ohb_zone_color"]))
+	OrderHallCommandBar.AreaName:SetFont(LSM:Fetch("font", LolzenUIcfg.orderhallbar["ohb_zone_font"]), LolzenUIcfg.orderhallbar["ohb_zone_font_size"], LolzenUIcfg.orderhallbar["ohb_zone_font_flag"])
 
 	-- Create an AG based timer to update Area text and coordinates
 	local timer = OrderHallCommandBar:CreateAnimationGroup()
