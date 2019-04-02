@@ -168,6 +168,7 @@ defaultconfig.clock = {
 	["clock_anchor2"] = "TOPRIGHT",
 	["clock_posx"] = -5,
 	["clock_posy"] = -9,
+	["clock_dateformat"] = "EU",
 }
 
 defaultconfig.fonts = {
