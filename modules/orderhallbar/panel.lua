@@ -49,7 +49,7 @@ local function getCurrencies()
 
 			if not currency[i].text then
 				currency[i].text = OrderHallCommandBar:CreateFontString(nil, "OVERLAY")
-				currency[i].text:SetFont(LSM:Fetch("font", LolzenUIcfg.orderhallbar["ohb_currency_font"]), LolzenUIcfg.orderhallbar["ohb_currency_font_size"] ,LolzenUIcfg.orderhallbar["ohb_currency_font_flag"])
+				currency[i].text:SetFont(LSM:Fetch("font", LolzenUIcfg.orderhallbar["ohb_currency_font"]), LolzenUIcfg.orderhallbar["ohb_currency_font_size"], LolzenUIcfg.orderhallbar["ohb_currency_font_flag"])
 				currency[i].text:SetTextColor(1, 1, 1)
 				currency[i].text:SetPoint("LEFT", currency[i], "RIGHT", 5, 0)
 			end
