@@ -1258,7 +1258,7 @@ local function updateDB(module)
 	for k, v in pairs(defaultconfig[module]) do
 		-- check if updating Save Variables is needed, based on stored LolzenUI version
 		-- In revision 4 of 8.1.0 we startet to migrate the LolzenUIcfg structure to a new format, so we check up to version 8.2.0 for data migration
-		if expansion == 8 and major > 2 then
+		if expansion == 8 and major < 2 then
 			if module == "nameplates" and not LolzenUIcfg.nameplates.general then
 				migrateNPData()
 			elseif module == "unitframes" and not LolzenUIcfg.unitframes.general then
