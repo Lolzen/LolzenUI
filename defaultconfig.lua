@@ -1265,7 +1265,7 @@ local function updateDB(module)
 				migrateUFData()
 			elseif module == "chat" and LolzenUIcfg.chat["chat_sticky_say"] == 1 or LolzenUIcfg.chat["chat_sticky_say"] == 0 then
 				migrateChatData()
-			elseif moduel == "actionbar" and LolzenUIcfg.actionbar["actionbar_mmb_anchor1"] ~= nil then
+			elseif module == "actionbar" and LolzenUIcfg.actionbar["actionbar_mmb_anchor1"] ~= nil then
 				resetActionBarData()
 			end
 		end
