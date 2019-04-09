@@ -6,6 +6,28 @@ local LSM = LibStub("LibSharedMedia-3.0")
 
 ns.RegisterModule("clock", L["desc_clock"], true)
 
+local function getUSDayFormat(day)
+	local day = tonumber(day)
+			if day == 1 then
+				return "st"
+			elseif day == 2 then
+				return "nd"
+			elseif day == 3 then
+				return "rd"
+			else
+				return "th"
+			end
+		end
+		
+local function getDate()
+	local cdate = C_DateAndTime.GetCurrentCalendarTime()
+	if LolzenUIcfg.clock["clock_dateformat"] == "US" then
+		return CALENDAR_WEEKDAY_NAMES[cdate.weekday]..", "..CALENDAR_FULLDATE_MONTH_NAMES[cdate.month].." "..cdate.monthDay..getUSDayFormat(cdate.monthDay).." "..cdate.year
+	else
+		return CALENDAR_WEEKDAY_NAMES[cdate.weekday]..", "..cdate.monthDay..". "..CALENDAR_FULLDATE_MONTH_NAMES[cdate.month].." "..cdate.year
+	end
+end
+
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)
@@ -79,13 +101,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 		seconds:SetShadowOffset(1, -1)
 		seconds:SetTextColor(unpack(LolzenUIcfg.clock["clock_seconds_color"]))
 
-		-- C_DateAndTime.GetCurrentCalendarTime() is unreliable on login and returns nil untin a /reload
-		-- keep it here in case this changes tho
-		--local cdate = C_DateAndTime.GetCurrentCalendarTime()
-		local weekday = date("%d"):gsub("0","")+1
-		local day = date("%d"):gsub("0","")
-		local month = date("%m"):gsub("0","")
-
 		local timer = clockFrame:CreateAnimationGroup()
 
 		local timerAnim = timer:CreateAnimation()
@@ -101,26 +116,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end)
 		timer:Play()
 
-		local dateformat
-		if LolzenUIcfg.clock["clock_dateformat"] == "US" then
-			local getUSDayFormat = function(day)
-				if day == 1 then
-					return "st"
-				elseif day == 2 then
-					return "nd"
-				elseif day == 3 then
-					return "rd"
-				else
-					return "th"
-				end
-			end
-			--dateformat = CALENDAR_WEEKDAY_NAMES[cdate.weekday]..", "..CALENDAR_FULLDATE_MONTH_NAMES[cdate.month].." "..cdate.monthDay..getUSDayFormat(cdate.monthDay).." "..cdate.year
-			dateformat = CALENDAR_WEEKDAY_NAMES[weekday]..", "..CALENDAR_FULLDATE_MONTH_NAMES[tonumber(month)].." "..day..getUSDayFormat(tonumber(day)).." "..date("%Y")
-		else
-			--dateformat = CALENDAR_WEEKDAY_NAMES[cdate.weekday]..", "..cdate.monthDay..". "..CALENDAR_FULLDATE_MONTH_NAMES[cdate.month].." "..cdate.year
-			dateformat = CALENDAR_WEEKDAY_NAMES[weekday]..", "..day..". "..CALENDAR_FULLDATE_MONTH_NAMES[tonumber(month)].." "..date("%Y")
-		end
-
 		clockFrame:SetScript("OnEnter", function()
 			GameTooltip:SetOwner(clockFrame, "ANCHOR_TOPLEFT", 2, 5)
 			collectgarbage()
@@ -129,7 +124,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			local latencycolor = ColorizeLatency(select(3, GetNetStats()))
 			local fpscolor = ColorizeFramerate(GetFramerate())
 
-			GameTooltip:AddLine(dateformat, 1, 1, 1)
+			GameTooltip:AddLine(getDate(), 1, 1, 1)
 			GameTooltip:AddDoubleLine("Framerate:", format("%.1f fps", GetFramerate()), LolzenUIcfg.clock["clock_color"].r, LolzenUIcfg.clock["clock_color"].g, LolzenUIcfg.clock["clock_color"].b, fpscolor.r, fpscolor.g, fpscolor.b)
 			GameTooltip:AddDoubleLine("Latency:", format("%d ms", select(3, GetNetStats())), LolzenUIcfg.clock["clock_color"].r, LolzenUIcfg.clock["clock_color"].g, LolzenUIcfg.clock["clock_color"].b, latencycolor.r, latencycolor.g, latencycolor.b)
 			GameTooltip:AddLine(" ")
