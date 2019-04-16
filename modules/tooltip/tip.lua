@@ -318,7 +318,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 			if UnitIsPVP(unit) then
 				for i=2, GameTooltip:NumLines(), 1 do
 					if _G["GameTooltipTextLeft"..i]:GetText():find(PVP_ENABLED) then
-						_G["GameTooltipTextLeft"..i]:Hide()
+						if UnitIsPlayer(unit) then
+							_G["GameTooltipTextLeft"..i]:Hide()
+						else
+							_G["GameTooltipTextLeft"..i]:SetText(nil)
+						end
 					end
 				end
 			end
