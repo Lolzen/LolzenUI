@@ -187,12 +187,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			-- while the hidden PvP line is an empty space. So we use the PvP line and set our text there instead of adding a new one, if the target has PvP activated
 			if UnitIsPlayer(unit) then
 				if talentCache[UnitName(unit)] and select(5, GetSpecializationInfoByID(GetInspectSpecialization(unit))) == talentCache[UnitName(unit)].role then
-					if UnitIsPVP(unit) then
-						_G["GameTooltipTextLeft"..GameTooltip:NumLines()]:SetText((string.format("|T%s:%d:%d:0:-1|t", talentCache[UnitName(unit)].icon, 16, 16)).." |cFFFFFFFF"..talentCache[UnitName(unit)].name.." ("..talentCache[UnitName(unit)].role..")|r")
-						_G["GameTooltipTextLeft"..GameTooltip:NumLines()]:Show()
-					else
-						GameTooltip:AddLine((string.format("|T%s:%d:%d:0:-1|t", talentCache[UnitName(unit)].icon, 16, 16)).." |cFFFFFFFF"..talentCache[UnitName(unit)].name.." ("..talentCache[UnitName(unit)].role..")|r")
-					end
+					GameTooltip:AddLine((string.format("|T%s:%d:%d:0:-1|t", talentCache[UnitName(unit)].icon, 16, 16)).." |cFFFFFFFF"..talentCache[UnitName(unit)].name.." ("..talentCache[UnitName(unit)].role..")|r")
 					GameTooltip:AppendText("")
 				else
 					local _, name, _, icon, role, _ = GetSpecializationInfoByID(GetInspectSpecialization(unit))
@@ -203,12 +198,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 							["name"] = name,
 							["role"] = string.sub(role, 1, 1)..string.lower(string.sub(role, 2)),
 						}
-						if UnitIsPVP(unit) then
-							_G["GameTooltipTextLeft"..GameTooltip:NumLines()]:SetText((string.format("|T%s:%d:%d:0:-1|t", icon, 16, 16)).." |cFFFFFFFF"..name.." ("..string.sub(role, 1, 1)..string.lower(string.sub(role, 2))..")|r")
-							_G["GameTooltipTextLeft"..GameTooltip:NumLines()]:Show()
-						else
-							GameTooltip:AddLine((string.format("|T%s:%d:%d:0:-1|t", icon, 16, 16)).." |cFFFFFFFF"..name.." ("..string.sub(role, 1, 1)..string.lower(string.sub(role, 2))..")|r")
-						end
+						GameTooltip:AddLine((string.format("|T%s:%d:%d:0:-1|t", icon, 16, 16)).." |cFFFFFFFF"..name.." ("..string.sub(role, 1, 1)..string.lower(string.sub(role, 2))..")|r")
 						GameTooltip:AppendText("")
 					end
 				end
@@ -318,11 +308,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			if UnitIsPVP(unit) then
 				for i=2, GameTooltip:NumLines(), 1 do
 					if _G["GameTooltipTextLeft"..i]:GetText():find(PVP_ENABLED) then
-						if UnitIsPlayer(unit) then
-							_G["GameTooltipTextLeft"..i]:Hide()
-						else
-							_G["GameTooltipTextLeft"..i]:SetText(nil)
-						end
+						_G["GameTooltipTextLeft"..i]:SetText(nil)
 					end
 				end
 			end
