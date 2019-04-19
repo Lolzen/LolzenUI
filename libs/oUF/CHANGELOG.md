@@ -1,3 +1,15 @@
+**Changes in 9.1.2:**
+
+- _Rainrider (1):_
+    1. core: handle pass-through events for eventless frames as unitless
+- _Val Voronov (5):_
+    1. Renamed Private.UnitSelectionType to Private.unitSelectionType
+    2. Renamed Private.UnitExists to Private.unitExists
+    3. runes: Updated docs ([#494](https://github.com/oUF-wow/oUF/issues/494))
+    4. powerprediction: Use next instead of pairs
+    5. powerprediction: Fixed a typo
+- 10 files changed, 26 insertions(+), 26 deletions(-)
+
 **Changes in 9.1.1:**
 
 - _Rainrider (1):_
