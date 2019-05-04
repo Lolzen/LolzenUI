@@ -1,3 +1,9 @@
+**Changes in 9.1.3:**
+
+- _Rainrider (1):_
+    1. stagger: fix visibility toggling
+- 1 file changed, 2 insertions(+)
+
 **Changes in 9.1.2:**
 
 - _Rainrider (1):_
