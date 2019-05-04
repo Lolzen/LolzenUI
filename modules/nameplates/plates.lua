@@ -71,7 +71,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 		end
 
-		local UpdateExplosive = function(frame, unit)
+		local UpdateExplosiveAndPRD = function(frame, unit)
 			if not frame then return end
 			if UnitName(frame.unit) == "Explosives" then
 				frame.explosive:SetAlpha(1)
@@ -79,6 +79,13 @@ f:SetScript("OnEvent", function(self, event, addon)
 			else
 				frame.explosive:SetAlpha(0)
 				frame.exploGlow:SetBackdropBorderColor(0, 0, 0, 0)
+			end
+			
+			-- show power on Personal Resource Display only
+			if UnitName(frame.unit) == UnitName("player") then
+				frame.Power:Show()
+			else
+				frame.Power:Hide()
 			end
 		end
 
@@ -143,16 +150,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 			return Auras
 		end
 
-		local PostUpdatePower = function(Power, unit, min, max)
-			if not unit then return end
-			if UnitAffectingCombat("player") then
-				-- use custom power colors from unitframes
-				local r, g, b = unpack(LolzenUIcfg.unitframes.powercolors[UnitPowerType(unit)])
-
-				Power:SetStatusBarColor(r, g, b)
-			end
-		end
-
 		local tags = oUF.Tags.Methods or oUF.Tags
 		local tagevents = oUF.TagEvents or oUF.Tags.Events
 
@@ -186,18 +183,15 @@ f:SetScript("OnEvent", function(self, event, addon)
 				local Power = CreateFrame("StatusBar", nil, frame)
 				Power:SetHeight(1)
 				Power:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.nameplates.general["np_texture"]))
-				Power:SetAlpha(1)	
+				Power:SetAlpha(1)
+				Power:SetPoint("LEFT")
+				Power:SetPoint("RIGHT")
+				Power:SetPoint("TOP", frame.Health, "BOTTOM", 0, 1)
 
+				Power.colorPower = true
 				Power.frequentUpdates = true
 
 				frame.Power = Power
-
-				if C_NamePlate.GetNamePlateForUnit(unit) == C_NamePlate.GetNamePlateForUnit("player") then
-					Power:SetPoint("LEFT")
-					Power:SetPoint("RIGHT")
-					Power:SetPoint("TOP", frame.Health, "BOTTOM", 0, 1)
-					Power.PostUpdate = PostUpdatePower
-				end
 
 				-- frame background
 				local bg = frame:CreateTexture(nil, "BACKGROUND")
@@ -293,8 +287,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 				explo:SetTexture("Interface\\AddOns\\LolzenUI\\media\\stripes")
 				explo:SetAllPoints(health)
 				frame.explosive = explo
-				table.insert(frame.__elements, UpdateExplosive)
-				frame:RegisterEvent("UNIT_NAME_UPDATE", UpdateExplosive)
+				table.insert(frame.__elements, UpdateExplosiveAndPRD)
+				frame:RegisterEvent("UNIT_NAME_UPDATE", UpdateExplosiveAndPRD)
 
 				local Buffs = CreateAura(frame, LolzenUIcfg.nameplates.general["np_aura_maxnum"])
 				frame.Buffs = Buffs
