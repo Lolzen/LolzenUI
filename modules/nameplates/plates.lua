@@ -71,6 +71,17 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 		end
 
+		local UpdateExplosive = function(frame, unit)
+			if not frame then return end
+			if UnitName(frame.unit) == "Explosives" then
+				frame.explosive:SetAlpha(1)
+				frame.exploGlow:SetBackdropBorderColor(0.2, 0.2, 1, 1)
+			else
+				frame.explosive:SetAlpha(0)
+				frame.exploGlow:SetBackdropBorderColor(0, 0, 0, 0)
+			end
+		end
+
 		local PostCastStart = function(Castbar, unit, spell, spellrank)
 			if not unit == "targettarget" then
 				Castbar:GetParent().Name:SetText(spell)
@@ -267,6 +278,23 @@ f:SetScript("OnEvent", function(self, event, addon)
 					frame:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE", UpdateThreat)
 					frame:RegisterEvent("UNIT_THREAT_LIST_UPDATE", UpdateThreat)
 				end
+
+				local exploGlow = CreateFrame("Frame", nil, frame)
+				exploGlow:SetBackdrop({
+					edgeFile ="Interface\\AddOns\\LolzenUI\\media\\glow", edgeSize = 5,
+					insets = {left = 4, right = 4, top = 4, bottom = 4}
+				})
+				exploGlow:SetPoint("TOPLEFT", health, -5, 5)
+				exploGlow:SetPoint("BOTTOMRIGHT", health, 5, -5)
+				exploGlow:SetBackdropBorderColor(6, 0, 0)
+				frame.exploGlow = exploGlow
+
+				local explo = health:CreateTexture(nil, 'OVERLAY')
+				explo:SetTexture("Interface\\AddOns\\LolzenUI\\media\\stripes")
+				explo:SetAllPoints(health)
+				frame.explosive = explo
+				table.insert(frame.__elements, UpdateExplosive)
+				frame:RegisterEvent("UNIT_NAME_UPDATE", UpdateExplosive)
 
 				local Buffs = CreateAura(frame, LolzenUIcfg.nameplates.general["np_aura_maxnum"])
 				frame.Buffs = Buffs
