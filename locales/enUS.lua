@@ -65,7 +65,7 @@ if GetLocale() == "enUS" then
 	L["step8"] = "This bar indicates your Experience/Reputation/Honor.\nIt will prioritize honor in BGs, and reputation if a faction is watched\nTo watch a faction press \"C\" -> Reputation -> Select a faction -> Tick \"Show as Experience Bar\"\nHover over it to show the text."
 	L["step9"] = "Whetever you have DBM or BigWigs installed, /pull is built-in along with a visual timer."
 	L["step10"] = "For a vast amount of options open up the Optionpanel with /lolzen or /lolzenui\n\nClick next to open up the Optionpanel. (Requires LolzenUI_Options)"
-	L["step11"] = "Click \"Skip\" to end the tuorial\n\nThis tutorial will not show again."
+	L["step11"] = "Click \"Skip\" to end the tutorial\n\nThis tutorial will not show again."
 	L["step2_help"] = "Click the Class Icon"
 	L["step3_help"] = "In this area currencies will be shown"
 	L["step4_help"] = "Zone [X/Y]"
