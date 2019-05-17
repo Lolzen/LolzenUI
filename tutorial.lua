@@ -5,16 +5,16 @@ local L = ns.L
 
 local stepdesc = {
 	[1] = L["step1"],
-	[2] = L["step1"],
-	[3] = L["step1"],
-	[4] = L["step1"],
-	[5] = L["step1"],
-	[6] = L["step1"],
-	[7] = L["step1"],
-	[8] = L["step1"],
-	[9] = L["step1"],
-	[10] = L["step1"],
-	[11] = L["step1"],
+	[2] = L["step2"],
+	[3] = L["step3"],
+	[4] = L["step4"],
+	[5] = L["step5"],
+	[6] = L["step6"],
+	[7] = L["step7"],
+	[8] = L["step8"],
+	[9] = L["step9"],
+	[10] = L["step10"],
+	[11] = L["step11"],
 }
 
 local steps = 1
