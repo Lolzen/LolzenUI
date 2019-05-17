@@ -58,7 +58,11 @@ end
 
 f:SetScript("OnEvent", function(self, event, ...)
 	local arg1 = ...
-	if event == "ADDON_LOADED" and arg1 == "LolzenUI" then
+	if event == "ADDON_LOADED" and arg1 == "Blizzard_ChallengesUI" then
+		if LolzenUIcfg.modules["pullcount"] == false then return end
+		-- set the framestrata to LOW so the TimerTracker numbers aren't hidden
+		ChallengesKeystoneFrame:SetFrameStrata("LOW")
+	elseif event == "ADDON_LOADED" and arg1 == "LolzenUI" then
 		if LolzenUIcfg.modules["pullcount"] == false then return end
 		-- Register BigWigs and DBM prefixes so we can get their pullcounters too
 		-- but only if we don't run them already
