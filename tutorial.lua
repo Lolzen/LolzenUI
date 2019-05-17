@@ -1,17 +1,20 @@
 ﻿-- One time tutorial
 
+local addon, ns = ...
+local L = ns.L
+
 local stepdesc = {
-	[1] = "Welcome to LolzenUI!\nThis is the Tutorial, which will guide you to the most crucial things.",
-	[2] = "You may notice the missing Minimap Icon for missions.\nThey can be accessed by clicking the topleft ClassIcon on the OrderHallClassBar (On the very top left)",
-	[3] = "Next to the ClassIcon is an area which tracks currencies.\nPress \"C\" -> Currency -> Select a currency of interest -> Tick \"Show on Backpack\"",
-	[4] = "In the Topcenter, the Zonename along with Coordinates will be shown",
-	[5] = "On the Topright you can see a clock.\nMouseover to see a list of Addons with current memory usage.\nHINT: the most \"hungry\" Addon will ALWAYS be red, no matter how tiny the footprint actually is!",
-	[6] = "On the Minimap you do have an indicator of which day it is.\nClick on it to open the CalendarFrame.",
-	[7] = "This bar indicates your Artifact Level.\nHover over it to show the text.",
-	[8] = "This bar indicates your Experience/Reputation/Honor.\nIt will not prioritize honor in BGs, and reputation if a faction is watched\nTo watch a faction press \"C\" -> Reputation -> Select a faction -> Tick \"Show as Experience Bar\"\nHover over it to show the text.",
-	[9] = "Whetever you have DBM or BigWigs installed, /pull is built-in along with a visual timer.",
-	[10] = "For a vast amount of options open up the Optionpanel with /lolzen or /lolzenui\n\nClick next to open up the Optionpanel. (Requires LolzenUI_Options)",
-	[11] = "Click \"Skip\" to end the tuorial\n\nThis tutorial will not show again."
+	[1] = L["step1"],
+	[2] = L["step1"],
+	[3] = L["step1"],
+	[4] = L["step1"],
+	[5] = L["step1"],
+	[6] = L["step1"],
+	[7] = L["step1"],
+	[8] = L["step1"],
+	[9] = L["step1"],
+	[10] = L["step1"],
+	[11] = L["step1"],
 }
 
 local steps = 1
@@ -58,7 +61,7 @@ local function setTutoalStep(tf, text, steptext, num)
 			tex:SetAllPoints(helpframe)
 			helpframe.box:SetPoint("TOPLEFT", helpframe, "BOTTOM", -30, 0)
 			helpframe.box:SetSize(200, 50)
-			helpframe.text:SetText("Click the Class Icon")
+			helpframe.text:SetText(L["step2_help"])
 		elseif num == 3 then
 			helpframe:Show()
 			helpframe:ClearAllPoints()
@@ -68,7 +71,7 @@ local function setTutoalStep(tf, text, steptext, num)
 			tex:SetAllPoints(helpframe)
 			helpframe.box:SetPoint("TOPLEFT", helpframe, "BOTTOM", -30, 0)
 			helpframe.box:SetSize(265, 50)
-			helpframe.text:SetText("In this area currencies will be shown")
+			helpframe.text:SetText(L["step3_help"])
 		elseif num == 4 then
 			helpframe:Show()
 			helpframe:ClearAllPoints()
@@ -78,7 +81,7 @@ local function setTutoalStep(tf, text, steptext, num)
 			tex:SetAllPoints(helpframe)
 			helpframe.box:SetPoint("TOPLEFT", helpframe, "BOTTOM", 0, 0)
 			helpframe.box:SetSize(110, 50)
-			helpframe.text:SetText("Zone [X/Y]")
+			helpframe.text:SetText(L["step4_help"])
 		elseif num == 5 then
 			helpframe:Show()
 			helpframe:ClearAllPoints()
@@ -88,7 +91,7 @@ local function setTutoalStep(tf, text, steptext, num)
 			tex:SetAllPoints(helpframe)
 			helpframe.box:SetPoint("TOPLEFT", helpframe, "BOTTOM", -140, 0)
 			helpframe.box:SetSize(250, 50)
-			helpframe.text:SetText("Mouseover to see some stats")
+			helpframe.text:SetText(L["step5_help"])
 		elseif num == 6 then
 			helpframe:Show()
 			helpframe:ClearAllPoints()
@@ -98,7 +101,7 @@ local function setTutoalStep(tf, text, steptext, num)
 			tex:SetAllPoints(helpframe)
 			helpframe.box:SetPoint("TOPLEFT", helpframe, "BOTTOM", -140, 0)
 			helpframe.box:SetSize(300, 50)
-			helpframe.text:SetText("Click on the number to open the Calendar")
+			helpframe.text:SetText(L["step6_help"])
 		elseif num == 7 then
 			helpframe:Show()
 			helpframe:ClearAllPoints()
@@ -108,7 +111,7 @@ local function setTutoalStep(tf, text, steptext, num)
 			tex:SetAllPoints(helpframe)
 			helpframe.box:SetPoint("TOPLEFT", helpframe, "BOTTOM", -140, 0)
 			helpframe.box:SetSize(290, 50)
-			helpframe.text:SetText("Mouseover this bar to show the text")
+			helpframe.text:SetText(L["step7_help"])
 		elseif num == 8 then
 			helpframe:Show()
 			helpframe:ClearAllPoints()
@@ -118,7 +121,7 @@ local function setTutoalStep(tf, text, steptext, num)
 			tex:SetAllPoints(helpframe)
 			helpframe.box:SetPoint("TOPLEFT", helpframe, "TOP", -140, 50)
 			helpframe.box:SetSize(290, 50)
-			helpframe.text:SetText("Mouseover this bar to show the text")
+			helpframe.text:SetText(L["step8_help"])
 		elseif num == 11 then
 			LoadAddOn("LolzenUI_Options")
 			InterfaceOptionsFrame_OpenToCategory("LolzenUI")
@@ -132,7 +135,7 @@ local function setTutoalStep(tf, text, steptext, num)
 				tex:SetAllPoints(helpframe)
 				helpframe.box:SetPoint("TOPLEFT", helpframe, "BOTTOM", -280, 0)
 				helpframe.box:SetSize(290, 50)
-				helpframe.text:SetText("LolzenUI is marked - press \"+\"")
+				helpframe.text:SetText(L["step11_help"])
 			end
 		else
 			helpframe:Hide()
@@ -174,7 +177,7 @@ local function showTutorial()
 	-- next button
 	tf.nbutton = CreateFrame("Button", "LolzenUI_TutorialNextButton", tf, "UIPanelButtonTemplate")
 	tf.nbutton:SetSize(120, 23) -- width, height
-	tf.nbutton:SetText("Next")
+	tf.nbutton:SetText(L["next_button_text"])
 	tf.nbutton:SetPoint("BOTTOMLEFT", tf, "BOTTOMLEFT", 18, 13)
 	tf.nbutton:SetScript("OnClick", function()
 		-- increase step counter
@@ -187,7 +190,7 @@ local function showTutorial()
 	-- previous button
 	tf.pbutton = CreateFrame("Button", "LolzenUI_TutorialNextButton", tf, "UIPanelButtonTemplate")
 	tf.pbutton:SetSize(120, 23) -- width, height
-	tf.pbutton:SetText("Previous")
+	tf.pbutton:SetText(L["previous_button_text"])
 	tf.pbutton:SetPoint("LEFT", tf.nbutton, "RIGHT", 15, 0)
 	tf.pbutton:SetScript("OnClick", function()
 		-- decrease step counter
@@ -200,7 +203,7 @@ local function showTutorial()
 	-- skip button
 	tf.sbutton = CreateFrame("Button", "LolzenUI_TutorialSkipButton", tf, "UIPanelButtonTemplate")
 	tf.sbutton:SetSize(120, 23) -- width, height
-	tf.sbutton:SetText("Skip")
+	tf.sbutton:SetText(L["skip_button_text"])
 	tf.sbutton:SetPoint("BOTTOMRIGHT", tf, "BOTTOMRIGHT", -18, 13)
 	tf.sbutton:SetScript("OnClick", function()
 		LolzenUIcfg["hasSeenTutorial"] = true
