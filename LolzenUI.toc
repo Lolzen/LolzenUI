@@ -18,3 +18,5 @@ core.lua
 optionpanel.lua
 
 modules.xml
+
+tutorial.lua
