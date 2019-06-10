@@ -79,7 +79,10 @@ local function modifyMinimap()
 	-- C_DateAndTime.GetCurrentCalendarTime() is unreliable on login and returns nil untin a /reload
 	-- keep it here in case this changes tho
 	--local date = C_Calendar.GetDate()
-	local day = date("%d"):gsub("0","")
+	local day = date("%d")
+	if tonumber(day) < 10 then
+		day = day:gsub("0","")
+	end
 
 	local CalFrame = CreateFrame("Button", "CalFrame", Minimap)
 	if LolzenUIcfg.minimap["minimap_square"] == true then
