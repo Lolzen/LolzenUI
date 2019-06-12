@@ -1,3 +1,9 @@
+**Changes in 9.2.0:**
+
+- _Val Voronov (1):_
+    1. tags: Update the system ([#501](https://github.com/oUF-wow/oUF/issues/501))
+- 1 file changed, 151 insertions(+), 102 deletions(-)
+
 **Changes in 9.1.3:**
 
 - _Rainrider (1):_
