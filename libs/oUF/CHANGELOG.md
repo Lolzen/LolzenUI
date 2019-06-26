@@ -1,3 +1,18 @@
+**Changes in 9.2.2:**
+
+- _Val Voronov (1):_
+    1. blizzard: Do not hook nameplates' scripts more than once ([#508](https://github.com/oUF-wow/oUF/issues/508))
+- 1 file changed, 4 insertions(+), 1 deletion(-)
+
+**Changes in 9.2.1:**
+
+- _Adrian L Lange (1):_
+    1. Use upstream version of the packager
+- _Val Voronov (2):_
+    1. Bump TOC for 8.2 ([#507](https://github.com/oUF-wow/oUF/issues/507))
+    2. blizzard: Do not re-parent nameplates ([#506](https://github.com/oUF-wow/oUF/issues/506))
+- 3 files changed, 13 insertions(+), 6 deletions(-)
+
 **Changes in 9.2.0:**
 
 - _Val Voronov (1):_
