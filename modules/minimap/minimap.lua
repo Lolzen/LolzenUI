@@ -16,6 +16,7 @@ local frames = {
 }
 
 local function modifyMinimap()
+	Minimap:ClearAllPoints()
 	Minimap:SetPoint(LolzenUIcfg.minimap["minimap_anchor"], OrderHallClassBar, LolzenUIcfg.minimap["minimap_posx"], LolzenUIcfg.minimap["minimap_posy"])
 
 	if LolzenUIcfg.minimap["minimap_square"] == true then
