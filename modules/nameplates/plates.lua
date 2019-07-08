@@ -150,21 +150,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 			return Auras
 		end
 
-		local tags = oUF.Tags.Methods or oUF.Tags
-		local tagevents = oUF.TagEvents or oUF.Tags.Events
-
-		tags["lolzen:nplevel"] = function(unit)
-			if not UnitLevel(unit) or UnitLevel(unit) == -1 then
-				return "|cffff0000??|r "
-			else
-				return ("|cff%02x%02x%02x%d|r"):format(GetQuestDifficultyColor(UnitLevel(unit)).r*255, GetQuestDifficultyColor(UnitLevel(unit)).g*255, GetQuestDifficultyColor(UnitLevel(unit)).b*255, UnitLevel(unit))
-			end
-		end
-
-		tags["lolzen:npname"] = function(unit)
-			return UnitName(unit)
-		end
-
 		oUF:RegisterStyle("Lolzen - Nameplates", function(frame, unit)
 			--local playerplate = C_NamePlate.GetNamePlateForUnit("player")
 			if unit:match("nameplate") then
@@ -201,7 +186,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				local levelname = health:CreateFontString(nil, "OVERLAY")
 				levelname:SetPoint(LolzenUIcfg.nameplates.general["np_lvlname_anchor"], health, LolzenUIcfg.nameplates.general["np_lvlname_posx"], LolzenUIcfg.nameplates.general["np_lvlname_posy"]) 
 				levelname:SetFont(LSM:Fetch("font", LolzenUIcfg.nameplates.general["np_lvlname_font"]), LolzenUIcfg.nameplates.general["np_lvlname_font_size"], LolzenUIcfg.nameplates.general["np_lvlname_font_flag"])
-				frame:Tag(levelname, '[lolzen:nplevel][shortclassification] [lolzen:npname]')
+				frame:Tag(levelname, '[difficulty][level][shortclassification]'..' |cffffffff[name]|r')
 				frame.Level = levelname
 
 				local Castbar = CreateFrame("StatusBar", nil, health)

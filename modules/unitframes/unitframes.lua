@@ -13,61 +13,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 	if addon == "LolzenUI" then
 		if LolzenUIcfg.modules["unitframes"] == false then return end
 
-		local siValue = function(val)
-			if val >= 1e6 then
-				if LolzenUIcfg.unitframes.general["uf_use_dot_format"] == true then
-					return ("%.1fm"):format(val / 1e6)
-				else
-					return ("%.1f"):format(val / 1e6):gsub('%.', 'm')
-				end
-			elseif val >= 1e4 then
-				if LolzenUIcfg.unitframes.general["uf_use_dot_format"] == true then
-					return ("%.1fk"):format(val / 1e3)
-				else
-					return ("%.1f"):format(val / 1e3):gsub('%.', 'k')
-				end
-			else
-				return val
-			end
-		end
-
-		-- tags
-		local tags = oUF.Tags.Methods or oUF.Tags
-		local tagevents = oUF.TagEvents or oUF.Tags.Events
-
-		tags["lolzen:health"] = function(unit)
-			if not UnitIsConnected(unit) or UnitIsDead(unit) or UnitIsGhost(unit) then return end
-
-			local min, max = UnitHealth(unit), UnitHealthMax(unit)
-			if LolzenUIcfg.unitframes.general["uf_use_sivalue"] == true then
-				return siValue(min)
-			else
-				return min
-			end
-		end
-
-		tags["lolzen:power"] = function(unit)
-			local min, max = UnitPower(unit), UnitPowerMax(unit)
-			local color = LolzenUIcfg.unitframes.powercolors[UnitPowerType(unit)]
-			if min == 0 or max == 0 or not UnitIsConnected(unit) or UnitIsDead(unit) or UnitIsGhost(unit) then return end
-
-			if LolzenUIcfg.unitframes.general["uf_use_sivalue"] == true then
-				return ("|cff%02x%02x%02x%s|r"):format(color[1]*255, color[2]*255, color[3]*255, siValue(min))
-			else
-				return ("|cff%02x%02x%02x%s|r"):format(color[1]*255, color[2]*255, color[3]*255, min)
-			end
-		end
-		tagevents["lolzen:power"] = tagevents.missingpp
-
-		tags["lolzen:level"] = function(unit)
-			if not UnitLevel(unit) or UnitLevel(unit) == -1 then
-				return "|cffff0000??|r "
-			else
-				return ("|cff%02x%02x%02x%d|r"):format(GetQuestDifficultyColor(UnitLevel(unit)).r*255, GetQuestDifficultyColor(UnitLevel(unit)).g*255, GetQuestDifficultyColor(UnitLevel(unit)).b*255, UnitLevel(unit))
-			end
-		end
-		-- tags end
-
 		local PostCastStart = function(Castbar, unit, spell, spellrank)
 			Castbar.Text:SetText(spell)
 			if Castbar.notInterruptible then
@@ -409,7 +354,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 			local level = Health:CreateFontString(nil, "OVERLAY")
 			level:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSans.ttf", 12, "THINOUTLINE")
-			self:Tag(level, "[lolzen:level][shortclassification]")
+			self:Tag(level, "[difficulty][level][shortclassification]")
 			self.Level = level
 
 			local name = Health:CreateFontString(nil, "OVERLAY")
