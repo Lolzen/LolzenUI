@@ -74,10 +74,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 		local UpdateExplosiveAndPRD = function(frame, unit)
 			if not frame then return end
 			if UnitName(frame.unit) == "Explosives" then
-				frame.explosive:SetAlpha(1)
+				frame.Health:SetStatusBarTexture("Interface\\AddOns\\LolzenUI\\media\\stripes")
 				frame.exploGlow:SetBackdropBorderColor(0.2, 0.2, 1, 1)
 			else
-				frame.explosive:SetAlpha(0)
+				frame.Health:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.nameplates.general["np_texture"]))
 				frame.exploGlow:SetBackdropBorderColor(0, 0, 0, 0)
 			end
 			
@@ -151,12 +151,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 
 		oUF:RegisterStyle("Lolzen - Nameplates", function(frame, unit)
-			--local playerplate = C_NamePlate.GetNamePlateForUnit("player")
 			if unit:match("nameplate") then
 				-- health bar
 				local health = CreateFrame("StatusBar", nil, frame)
 				health:SetAllPoints()
-				health:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.nameplates.general["np_texture"]))
 				health.colorHealth = true
 				health.colorTapping = true
 				health.colorDisconnected = true
@@ -269,8 +267,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 				frame.exploGlow = exploGlow
 
 				local explo = health:CreateTexture(nil, 'OVERLAY')
-				explo:SetTexture("Interface\\AddOns\\LolzenUI\\media\\stripes")
-				explo:SetAllPoints(health)
 				frame.explosive = explo
 				table.insert(frame.__elements, UpdateExplosiveAndPRD)
 				frame:RegisterEvent("UNIT_NAME_UPDATE", UpdateExplosiveAndPRD)
