@@ -252,7 +252,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 			local PowerPoints = Power:CreateFontString(nil, "OVERLAY")
 			PowerPoints:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 18, "THINOUTLINE")
-			self:Tag(PowerPoints, "[lolzen:power]")
+			self:Tag(PowerPoints, "[powercolor][lolzen:power]")
 			self.Power.value = PowerPoints
 
 			local bg = self:CreateTexture(nil, "BORDER")
