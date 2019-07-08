@@ -46,13 +46,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 		end
 
-		tags["lolzen:perhp"] = function(unit)
-			if not UnitIsConnected(unit) or UnitIsDead(unit) or UnitIsGhost(unit) then return end
-			
-			local min, max = UnitHealth(unit), UnitHealthMax(unit)
-			return math.floor(UnitHealth(unit) / max * 100 + 0.5).."%"
-		end
-
 		tags["lolzen:power"] = function(unit)
 			local min, max = UnitPower(unit), UnitPowerMax(unit)
 			local color = LolzenUIcfg.unitframes.powercolors[UnitPowerType(unit)]
@@ -285,12 +278,12 @@ f:SetScript("OnEvent", function(self, event, addon)
 			HealthPoints:SetPoint(LolzenUIcfg.unitframes.general["uf_general_hp_anchor"], LolzenUIcfg.unitframes.general["uf_general_hp_posx"], LolzenUIcfg.unitframes.general["uf_general_hp_posy"])
 			if LolzenUIcfg.unitframes.general["uf_use_val_and_perc"] == true then
 				if LolzenUIcfg.unitframes.general["uf_perc_first"] == true then
-					self:Tag(HealthPoints, "[|cffc41f3b>dead<|r][|cff999999>offline<|r][lolzen:perhp]"..LolzenUIcfg.unitframes.general["uf_val_perc_divider"].."[lolzen:health]")
+					self:Tag(HealthPoints, "[|cffc41f3b>dead<|r][|cff999999>offline<|r][perhp]%"..LolzenUIcfg.unitframes.general["uf_val_perc_divider"].."[lolzen:health]")
 				else
-					self:Tag(HealthPoints, "[|cffc41f3b>dead<|r][|cff999999>offline<|r][lolzen:health]"..LolzenUIcfg.unitframes.general["uf_val_perc_divider"].."[lolzen:perhp]")
+					self:Tag(HealthPoints, "[|cffc41f3b>dead<|r][|cff999999>offline<|r][lolzen:health]"..LolzenUIcfg.unitframes.general["uf_val_perc_divider"].."[perhp]%")
 				end
 			elseif LolzenUIcfg.unitframes.general["uf_use_hp_percent"] == true and LolzenUIcfg.unitframes.general["uf_use_val_and_perc"] == false then
-				self:Tag(HealthPoints, "[|cffc41f3b>dead<|r][|cff999999>offline<|r][lolzen:perhp]")
+				self:Tag(HealthPoints, "[|cffc41f3b>dead<|r][|cff999999>offline<|r][perhp]%")
 			else
 				self:Tag(HealthPoints, "[|cffc41f3b>dead<|r][|cff999999>offline<|r][lolzen:health]")
 			end
