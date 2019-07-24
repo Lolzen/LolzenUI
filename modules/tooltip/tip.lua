@@ -334,7 +334,13 @@ f:SetScript("OnEvent", function(self, event, addon)
 		-- [hooks and scripts]
 		-- anchor
 		hooksecurefunc("GameTooltip_SetDefaultAnchor", function(tooltip, parent)
-			tooltip:SetPoint(LolzenUIcfg.tooltip["tip_anchor1"], UIParent, LolzenUIcfg.tooltip["tip_anchor2"], LolzenUIcfg.tooltip["tip_posx"], LolzenUIcfg.tooltip["tip_posy"])
+			if parent == "ANCHOR_CURSOR" then return end
+			-- fix 8.2 out of screen bug (thanks oUF)
+			if not pcall(tooltip.GetCenter, tooltip) then
+				tooltip:SetOwner(parent, "ANCHOR_CURSOR")
+			else
+				tooltip:SetPoint(LolzenUIcfg.tooltip["tip_anchor1"], UIParent, LolzenUIcfg.tooltip["tip_anchor2"], LolzenUIcfg.tooltip["tip_posx"], LolzenUIcfg.tooltip["tip_posy"])
+			end
 		end)
 
 		-- styling for units
