@@ -180,6 +180,22 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 		end
 
+		-- colorize tooltipborder accordingly to Azerite Essence rank
+		local function colorEssenceQuality(self)
+			local selectedEssenceName = string.gsub(_G["GameTooltipTextLeft1"]:GetText(), " %b()", "")
+			local essences = C_AzeriteEssence.GetEssences()
+			for _, slot in pairs(essences) do
+				local essence = C_AzeriteEssence.GetEssenceInfo(slot.ID)
+				if selectedEssenceName == essence.name then
+					local r, g, b = GetItemQualityColor(essence.rank+1)
+					self:SetBackdropBorderColor(r, g, b)
+					if self:GetBackdropBorderColor() ~= {r, g, b} then
+						self:SetBackdropBorderColor(r, g, b)
+					end
+				end
+			end
+		end
+
 		-- talents
 		local talentCache = {}
 		local function InspectTalents(inspect, unit)
@@ -345,6 +361,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		-- styling for units
 		GameTooltip:HookScript("OnTooltipSetUnit", modifyTooltip)
+
+		-- Azerite Essences
+		hooksecurefunc(GameTooltip, "SetAzeriteEssence", colorEssenceQuality)
+		hooksecurefunc(GameTooltip, "SetAzeriteEssenceSlot", colorEssenceQuality)
 
 		-- clear textures when the tooltip is hidden
 		GameTooltip:HookScript("OnHide", function(self)
