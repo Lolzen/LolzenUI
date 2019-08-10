@@ -1,0 +1,22 @@
+<Ui xmlns='http://www.blizzard.com/wow/ui/'>
+	<Script file="modules/unitframes/elements/health.lua"/>
+	<Script file="modules/unitframes/elements/healthpoints.lua"/>
+	<Script file="modules/unitframes/elements/power.lua"/>
+	<Script file="modules/unitframes/elements/powerpoints.lua"/>
+	<Script file="modules/unitframes/elements/border.lua"/>
+	<Script file="modules/unitframes/elements/castbar.lua"/>
+	<Script file="modules/unitframes/elements/raidmarkindicator.lua"/>
+	<Script file="modules/unitframes/elements/leadindicator.lua"/>
+	<Script file="modules/unitframes/elements/roleindicator.lua"/>
+	<Script file="modules/unitframes/elements/readycheckindicator.lua"/>
+	<Script file="modules/unitframes/elements/rangeindicator.lua"/>
+	<Script file="modules/unitframes/elements/debuffhighlight.lua"/>
+	<Script file="modules/unitframes/elements/combatfade.lua"/>
+	<Script file="modules/unitframes/elements/classpower.lua"/>
+	<Script file="modules/unitframes/elements/runes.lua"/>
+	<Script file="modules/unitframes/elements/stagger.lua"/>
+	<Script file="modules/unitframes/elements/threatborder.lua"/>
+	<Script file="modules/unitframes/elements/tags.lua"/>
+	<Script file="modules/unitframes/elements/infopanel.lua"/>
+	<Script file="modules/unitframes/elements/auras.lua"/>
+</Ui>
