@@ -129,7 +129,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 				)
 				raid:SetPoint("LEFT", UIParent, 20, 0)
 			end
-			end
 		end)
 	end
 end)
