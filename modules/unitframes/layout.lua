@@ -37,6 +37,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			return object
 		end
 
+		oUF:RegisterStyle("Lolzen", ns.shared)
 		for unit,layout in next, UnitSpecific do
 			-- Capitalize the unit name, so it looks better.
 			oUF:RegisterStyle('Lolzen - ' .. unit:gsub("^%l", string.upper), layout)

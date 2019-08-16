@@ -34,5 +34,3 @@ function ns.shared(self, unit)
 	ns.AddHealthBar(self, unit)
 	ns.AddHealthPoints(self, unit)
 end
-
-oUF:RegisterStyle("Lolzen", ns.shared)
