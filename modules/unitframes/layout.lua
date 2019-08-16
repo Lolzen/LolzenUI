@@ -56,17 +56,17 @@ f:SetScript("OnEvent", function(self, event, addon)
 			spawnHelper(self, "focus", "CENTER", -250, -230)
 			spawnHelper(self, "pet", "CENTER", -300, -177)
 
-			for n=1, MAX_BOSS_FRAMES or 5 do
-				if LolzenUIcfg.unitframes.boss["uf_boss_additional_pos"] == "ABOVE" then
-					spawnHelper(self, "boss" .. n, "CENTER", 0, -200 - LolzenUIcfg.unitframes.boss["uf_boss_height"] + (LolzenUIcfg.unitframes.boss["uf_boss_height"] * n) - LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] + (LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] * n))
-				elseif LolzenUIcfg.unitframes.boss["uf_boss_additional_pos"] == "BELOW" then
-					spawnHelper(self, "boss" .. n, "CENTER", 0, -200 + LolzenUIcfg.unitframes.boss["uf_boss_height"] - (LolzenUIcfg.unitframes.boss["uf_boss_height"] * n) + LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] - (LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] * n))
-				elseif 	LolzenUIcfg.unitframes.boss["uf_boss_additional_pos"] == "LEFT" then
-					spawnHelper(self, "boss" .. n, "CENTER", (0 + LolzenUIcfg.unitframes.boss["uf_boss_width"]) - (LolzenUIcfg.unitframes.boss["uf_boss_width"] * n) + LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] - (LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] * n), -200)
-				elseif 	LolzenUIcfg.unitframes.boss["uf_boss_additional_pos"] == "RIGHT" then
-					spawnHelper(self, "boss" .. n, "CENTER", (0 - LolzenUIcfg.unitframes.boss["uf_boss_width"]) + (LolzenUIcfg.unitframes.boss["uf_boss_width"] * n) - LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] + (LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] * n), -200)
-				end
-			end
+		--	for n=1, MAX_BOSS_FRAMES or 5 do
+		--		if LolzenUIcfg.unitframes.boss["uf_boss_additional_pos"] == "ABOVE" then
+		--			spawnHelper(self, "boss" .. n, "CENTER", 0, -200 - LolzenUIcfg.unitframes.boss["uf_boss_height"] + (LolzenUIcfg.unitframes.boss["uf_boss_height"] * n) - LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] + (LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] * n))
+		--		elseif LolzenUIcfg.unitframes.boss["uf_boss_additional_pos"] == "BELOW" then
+		--			spawnHelper(self, "boss" .. n, "CENTER", 0, -200 + LolzenUIcfg.unitframes.boss["uf_boss_height"] - (LolzenUIcfg.unitframes.boss["uf_boss_height"] * n) + LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] - (LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] * n))
+		--		elseif 	LolzenUIcfg.unitframes.boss["uf_boss_additional_pos"] == "LEFT" then
+		--			spawnHelper(self, "boss" .. n, "CENTER", (0 + LolzenUIcfg.unitframes.boss["uf_boss_width"]) - (LolzenUIcfg.unitframes.boss["uf_boss_width"] * n) + LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] - (LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] * n), -200)
+		--		elseif 	LolzenUIcfg.unitframes.boss["uf_boss_additional_pos"] == "RIGHT" then
+		--			spawnHelper(self, "boss" .. n, "CENTER", (0 - LolzenUIcfg.unitframes.boss["uf_boss_width"]) + (LolzenUIcfg.unitframes.boss["uf_boss_width"] * n) - LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] + (LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] * n), -200)
+		--		end
+		--	end
 
 			if LolzenUIcfg.unitframes.party["uf_party_enabled"] == true then
 				if LolzenUIcfg.unitframes.party["uf_party_use_vertical_layout"] == true then
