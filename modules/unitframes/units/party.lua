@@ -1,15 +1,14 @@
 local _, ns = ...
 local LSM = LibStub("LibSharedMedia-3.0")
-local oUF = ns.oUF
 
 ns.SetupParty = function(self, unit)
 	ns.shared(self, unit)
 
-	self:SetSize(LolzenUIcfg.unitframes.targettarget["uf_targettarget_width"], LolzenUIcfg.unitframes.targettarget["uf_targettarget_height"])
+	self:SetSize(LolzenUIcfg.unitframes.party["uf_party_width"], LolzenUIcfg.unitframes.party["uf_party_height"])
 
-	if LolzenUIcfg.unitframes.targettarget["uf_targettarget_use_own_hp_font_settings"] == true then
-		self.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.targettarget["uf_targettarget_hp_font"]), LolzenUIcfg.unitframes.targettarget["uf_targettarget_hp_font_size"], LolzenUIcfg.unitframes.targettarget["uf_targettarget_hp_font_flag"])
-		self.Health.value:SetPoint(LolzenUIcfg.unitframes.targettarget["uf_targettarget_hp_anchor"], LolzenUIcfg.unitframes.targettarget["uf_targettarget_hp_posx"], LolzenUIcfg.unitframes.targettarget["uf_targettarget_hp_posy"])
+	if LolzenUIcfg.unitframes.party["uf_party_use_own_hp_font_settings"] == true then
+		self.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.party["uf_party_hp_font"]), LolzenUIcfg.unitframes.party["uf_party_hp_font_size"], LolzenUIcfg.unitframes.party["uf_party_hp_font_flag"])
+		self.Health.value:SetPoint(LolzenUIcfg.unitframes.party["uf_party_hp_anchor"], LolzenUIcfg.unitframes.party["uf_party_hp_posx"], LolzenUIcfg.unitframes.party["uf_party_hp_posy"])
 	end
 
 	self.Border:SetPoint("TOPLEFT", self, -3, 3)
