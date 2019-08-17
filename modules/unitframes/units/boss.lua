@@ -1,6 +1,5 @@
 local _, ns = ...
 local LSM = LibStub("LibSharedMedia-3.0")
-local oUF = ns.oUF
 
 ns.SetupBoss = function(self, unit)
 	ns.shared(self, unit)
@@ -91,7 +90,7 @@ ns.SetupBoss = function(self, unit)
 	self.Castbar.Text:SetTextColor(LolzenUIcfg.unitframes.boss["uf_boss_cb_font_color"][1], LolzenUIcfg.unitframes.boss["uf_boss_cb_font_color"][2], LolzenUIcfg.unitframes.boss["uf_boss_cb_font_color"][3])
 
 	ns.AddInfoPanel(self, unit)
-	self.SetPoint("LEFT", self.Health, "LEFT", 2, -18)
+	self.Level:SetPoint("LEFT", self.Health, "LEFT", 2, -18)
 	self.Name:SetPoint("RIGHT", self.Health, "RIGHT", -2, -18)
 
 	ns.AddRaidMark(self, unit)
