@@ -1,6 +1,8 @@
 local _, ns = ...
 
 local UpdateThreat = function(self, event, unit)
+	if self.unit ~= unit then return end
+
 	local status = UnitThreatSituation(unit)
 	if status and status > 0 then
 		local r, g, b = GetThreatStatusColor(status)
@@ -20,7 +22,9 @@ function ns.AddThreatBorder(self, unit)
 	Glow:SetPoint("BOTTOMRIGHT", self, 5, -5)
 	Glow:SetFrameLevel(2)
 	self.Glow = Glow
-	table.insert(self.__elements, UpdateThreat)
-	self:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE", UpdateThreat)
-	self:RegisterEvent("UNIT_THREAT_LIST_UPDATE", UpdateThreat)
+	
+	self.ThreatIndicator = {
+		IsObjectType = function() end,
+		Override = UpdateThreat,
+	}
 end
