@@ -31,7 +31,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 			else
 				self:SetActiveStyle'Lolzen'
 			end
-
 			local object = self:Spawn(unit)
 			object:SetPoint(...)
 			return object
@@ -56,24 +55,27 @@ f:SetScript("OnEvent", function(self, event, addon)
 			spawnHelper(self, "focus", "CENTER", -250, -230)
 			spawnHelper(self, "pet", "CENTER", -300, -177)
 
-		--	for n=1, MAX_BOSS_FRAMES or 5 do
-		--		if LolzenUIcfg.unitframes.boss["uf_boss_additional_pos"] == "ABOVE" then
-		--			spawnHelper(self, "boss" .. n, "CENTER", 0, -200 - LolzenUIcfg.unitframes.boss["uf_boss_height"] + (LolzenUIcfg.unitframes.boss["uf_boss_height"] * n) - LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] + (LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] * n))
-		--		elseif LolzenUIcfg.unitframes.boss["uf_boss_additional_pos"] == "BELOW" then
-		--			spawnHelper(self, "boss" .. n, "CENTER", 0, -200 + LolzenUIcfg.unitframes.boss["uf_boss_height"] - (LolzenUIcfg.unitframes.boss["uf_boss_height"] * n) + LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] - (LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] * n))
-		--		elseif 	LolzenUIcfg.unitframes.boss["uf_boss_additional_pos"] == "LEFT" then
-		--			spawnHelper(self, "boss" .. n, "CENTER", (0 + LolzenUIcfg.unitframes.boss["uf_boss_width"]) - (LolzenUIcfg.unitframes.boss["uf_boss_width"] * n) + LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] - (LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] * n), -200)
-		--		elseif 	LolzenUIcfg.unitframes.boss["uf_boss_additional_pos"] == "RIGHT" then
-		--			spawnHelper(self, "boss" .. n, "CENTER", (0 - LolzenUIcfg.unitframes.boss["uf_boss_width"]) + (LolzenUIcfg.unitframes.boss["uf_boss_width"] * n) - LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] + (LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] * n), -200)
-		--		end
-		--	end
+			for i=1, MAX_BOSS_FRAMES do
+				if LolzenUIcfg.unitframes.boss["uf_boss_additional_pos"] == "ABOVE" then
+					spawnHelper(self, "boss" .. i, "CENTER", 0, -200 - LolzenUIcfg.unitframes.boss["uf_boss_height"] + (LolzenUIcfg.unitframes.boss["uf_boss_height"] * i) - LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] + (LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] * i))
+				elseif LolzenUIcfg.unitframes.boss["uf_boss_additional_pos"] == "BELOW" then
+					spawnHelper(self, "boss" .. i, "CENTER", 0, -200 + LolzenUIcfg.unitframes.boss["uf_boss_height"] - (LolzenUIcfg.unitframes.boss["uf_boss_height"] * i) + LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] - (LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] * i))
+				elseif 	LolzenUIcfg.unitframes.boss["uf_boss_additional_pos"] == "LEFT" then
+					spawnHelper(self, "boss" .. i, "CENTER", (0 + LolzenUIcfg.unitframes.boss["uf_boss_width"]) - (LolzenUIcfg.unitframes.boss["uf_boss_width"] * i) + LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] - (LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] * i), -200)
+				elseif 	LolzenUIcfg.unitframes.boss["uf_boss_additional_pos"] == "RIGHT" then
+					spawnHelper(self, "boss" .. i, "CENTER", (0 - LolzenUIcfg.unitframes.boss["uf_boss_width"]) + (LolzenUIcfg.unitframes.boss["uf_boss_width"] * i) - LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] + (LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] * i), -200)
+				end
+			end
 
 			if LolzenUIcfg.unitframes.party["uf_party_enabled"] == true then
+				self:SetActiveStyle("Lolzen - Party")
+
 				if LolzenUIcfg.unitframes.party["uf_party_use_vertical_layout"] == true then
 					local party = self:SpawnHeader(
 						nil, nil, 'party',
 						'showParty', true,
 						'showPlayer', true,
+						'showRaid', true, --debug
 						'xOffset', 0,
 						'yoffset', 0,
 						'oUF-initialConfigFunction', [[
@@ -107,11 +109,12 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 
 			if LolzenUIcfg.unitframes.raid["uf_raid_enabled"] == true then
+				self:SetActiveStyle("Lolzen - Raid")
 				local raid = self:SpawnHeader(
 					nil, nil, 'raid',
-				--	'showPlayer', true,
-				--	'showSolo', false,
-				--	'showParty', false,
+					'showPlayer', true,
+					'showSolo', false,
+					'showParty', false,
 					'showRaid', true,
 					'xoffset', 7,
 					'yOffset', -5,
@@ -119,7 +122,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 						self:SetHeight(19)
 						self:SetWidth(50)
 					]],
-		--			'groupFilter', '1,2,3,4,5,6,7,8',
+					'groupFilter', '1,2,3,4,5,6,7,8',
 					'groupingOrder', '1,2,3,4,5,6,7,8',
 					'sortMethod', 'GROUP',
 					'groupBy', 'GROUP',
