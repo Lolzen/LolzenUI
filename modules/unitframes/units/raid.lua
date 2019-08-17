@@ -24,4 +24,6 @@ ns.SetupRaid = function(self, unit)
 		self.GroupRoleIndicator:SetSize(LolzenUIcfg.unitframes.raid["uf_raid_ri_size"], LolzenUIcfg.unitframes.raid["uf_raid_ri_size"])
 		self.GroupRoleIndicator:SetPoint(LolzenUIcfg.unitframes.raid["uf_raid_ri_anchor"], self.Health, LolzenUIcfg.unitframes.raid["uf_raid_ri_posx"], LolzenUIcfg.unitframes.raid["uf_raid_ri_posy"])
 	end
+
+	ns.AddLeadIndicator(self, unit)
 end
