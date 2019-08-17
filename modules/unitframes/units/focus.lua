@@ -1,6 +1,5 @@
 local _, ns = ...
 local LSM = LibStub("LibSharedMedia-3.0")
-local oUF = ns.oUF
 
 ns.SetupFocus = function(self, unit)
 	ns.shared(self, unit)
