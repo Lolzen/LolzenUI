@@ -101,7 +101,6 @@ ns.SetupTarget = function(self, unit)
 	self.Level:SetPoint("LEFT", self.Health, "LEFT", 2, -23) 
 	self.Name:SetPoint("RIGHT", self.Health, "RIGHT", -2, -23)
 
-	ns.AddThreatBorder(self, unit)
 	ns.AddCombatFade(self, unit)
 	ns.AddRaidMark(self, unit)
 end
