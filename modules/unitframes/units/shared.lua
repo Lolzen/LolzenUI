@@ -1,8 +1,7 @@
 local _, ns = ...
 local LSM = LibStub("LibSharedMedia-3.0")
-local oUF = ns.oUF
 
-function ns.shared(self, unit)
+ns.shared = function(self, unit)
 	self.colors.power["MANA"] = LolzenUIcfg.unitframes.powercolors[0]
 	self.colors.power["RAGE"] = LolzenUIcfg.unitframes.powercolors[1]
 	self.colors.power["FOCUS"] = LolzenUIcfg.unitframes.powercolors[2]
