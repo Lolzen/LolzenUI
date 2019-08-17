@@ -78,4 +78,5 @@ ns.SetupPlayer = function(self, unit)
 	ns.AddDebuffHighlight(self, unit)
 	ns.AddCombatFade(self, unit)
 	ns.AddRaidMark(self, unit)
+	ns.AddLeadIndicator(self, unit)
 end
