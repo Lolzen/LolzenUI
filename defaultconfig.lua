@@ -432,6 +432,11 @@ defaultconfig.unitframes = {
 		["uf_player_cb_font_size"] = 12,
 		["uf_player_cb_font_flag"] = "OUTLINE",
 		["uf_player_cb_font_color"] = {1, 1, 1},
+		["uf_player_show_restingindicator"] = false,
+		["uf_player_resting_size"] = 16,
+		["uf_player_resting_posx"] = 2,
+		["uf_player_resting_posy"] = 0,
+		["uf_player_resting_anchor"] = "LEFT",
 	},
 	["target"] = {
 		["uf_target_use_own_hp_font_settings"] = true,
