@@ -1,3 +1,16 @@
+**Changes in 9.3.1:**
+
+- _Val Voronov (2):_
+    1. auras: Add comments regarding anchoring restrictions
+    2. auras: Fix copypasta
+- 1 file changed, 10 insertions(+), 1 deletion(-)
+
+**Changes in 9.3.0:**
+
+- _Val Voronov (1):_
+    1. auras: Add .tooltipAnchor option ([#511](https://github.com/oUF-wow/oUF/issues/511))
+- 1 file changed, 21 insertions(+), 1 deletion(-)
+
 **Changes in 9.2.2:**
 
 - _Val Voronov (1):_

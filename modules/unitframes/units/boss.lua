@@ -1,10 +1,10 @@
---// unitframes: boss // --
-
 local _, ns = ...
 local LSM = LibStub("LibSharedMedia-3.0")
 
-ns.SetupBoss = function(self, ...)
-	ns.shared(self, ...)
+ns.SetupBoss = function(self, unit)
+	ns.shared(self, unit)
+
+	self:SetSize(LolzenUIcfg.unitframes.boss["uf_boss_width"], LolzenUIcfg.unitframes.boss["uf_boss_height"])
 
 	if LolzenUIcfg.unitframes.boss["uf_boss_use_own_hp_font_settings"] == true then
 		self.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.boss["uf_boss_hp_font"]), LolzenUIcfg.unitframes.boss["uf_boss_hp_font_size"], LolzenUIcfg.unitframes.boss["uf_boss_hp_font_flag"])
@@ -14,17 +14,8 @@ ns.SetupBoss = function(self, ...)
 	self.Border:SetPoint("TOPLEFT", self, -3, 3)
 	self.Border:SetPoint("BOTTOMRIGHT", self, 3, -2)
 
-	self:SetSize(LolzenUIcfg.unitframes.boss["uf_boss_width"], LolzenUIcfg.unitframes.boss["uf_boss_height"])
-
 	if LolzenUIcfg.unitframes.boss["uf_boss_show_power"] == true then
-		self.Power:SetPoint("LEFT")
-		self.Power:SetPoint("RIGHT")
-		self.Power:SetPoint("TOP", self.Health, "BOTTOM", 0, 2)
-
-		self.PowerDivider:SetSize(self:GetWidth(), 1)
-		self.PowerDivider:SetPoint("TOPLEFT", self.Power, 0, 1)
-		self.PowerDivider:SetDrawLayer("BACKGROUND", 1)
-
+		ns.AddPowerPoints(self, unit)
 		if LolzenUIcfg.unitframes.boss["uf_boss_pp_parent"] == "hp" then
 			self.Power.value:SetPoint(LolzenUIcfg.unitframes.boss["uf_boss_pp_anchor"], self.Health.value, LolzenUIcfg.unitframes.boss["uf_boss_pp_anchor2"], LolzenUIcfg.unitframes.boss["uf_boss_pp_posx"], LolzenUIcfg.unitframes.boss["uf_boss_pp_posy"])
 		elseif LolzenUIcfg.unitframes.boss["uf_boss_pp_parent"] == "self" then
@@ -34,6 +25,7 @@ ns.SetupBoss = function(self, ...)
 	end
 
 	if LolzenUIcfg.unitframes.boss["uf_boss_aura_show_type"] == "Buffs" then
+		ns.AddBuffs(self, unit)
 		self.Buffs:SetPoint(LolzenUIcfg.unitframes.boss["uf_boss_aura_anchor1"], self, LolzenUIcfg.unitframes.boss["uf_boss_aura_anchor2"], LolzenUIcfg.unitframes.boss["uf_boss_aura_posx"], LolzenUIcfg.unitframes.boss["uf_boss_aura_posy"])
 		self.Buffs.numBuffs = LolzenUIcfg.unitframes.boss["uf_boss_aura_maxnum"]
 		if LolzenUIcfg.unitframe.bosss["uf_boss_aura_show_only_player"] == true then
@@ -43,6 +35,7 @@ ns.SetupBoss = function(self, ...)
 		self.Buffs["growth-x"] = LolzenUIcfg.unitframes.boss["uf_boss_aura_growth_x"]
 		self.Buffs["growth-y"] = LolzenUIcfg.unitframes.boss["uf_boss_aura_growth_y"]
 	elseif LolzenUIcfg.unitframes.boss["uf_boss_aura_show_type"] == "Debuffs" then
+		ns.AddDebuffs(self, unit)
 		self.Debuffs:SetPoint(LolzenUIcfg.unitframes.boss["uf_boss_aura_anchor1"], self, LolzenUIcfg.unitframes.boss["uf_boss_aura_anchor2"], LolzenUIcfg.unitframes.boss["uf_boss_aura_posx"], LolzenUIcfg.unitframes.boss["uf_boss_aura_posy"])
 		self.Debuffs.numDebuffs = LolzenUIcfg.unitframes.boss["uf_boss_aura_maxnum"]
 		if LolzenUIcfg.unitframes.boss["uf_boss_aura_show_only_player"] == true then
@@ -52,6 +45,7 @@ ns.SetupBoss = function(self, ...)
 		self.Debuffs["growth-x"] = LolzenUIcfg.unitframes.boss["uf_boss_aura_growth_x"]
 		self.Debuffs["growth-y"] = LolzenUIcfg.unitframes.boss["uf_boss_aura_growth_y"]
 	elseif LolzenUIcfg.unitframes.boss["uf_boss_aura_show_type"] == "Both" then
+		ns.AddAuras(self, unit)
 		self.Auras:SetPoint(LolzenUIcfg.unitframes.boss["uf_boss_aura_anchor1"], self, LolzenUIcfg.unitframes.boss["uf_boss_aura_anchor2"], LolzenUIcfg.unitframes.boss["uf_boss_aura_posx"], LolzenUIcfg.unitframes.boss["uf_boss_aura_posy"])
 		self.Auras.numTotal = LolzenUIcfg.unitframes.boss["uf_boss_aura_maxnum"]
 		if LolzenUIcfg.unitframes.boss["uf_boss_aura_show_only_player"] == true then
@@ -63,6 +57,7 @@ ns.SetupBoss = function(self, ...)
 		self.Auras["growth-y"] = LolzenUIcfg.unitframes.boss["uf_boss_aura_growth_y"]
 	end
 
+	ns.AddCastBar(self, unit)
 	self.Castbar:SetAllPoints(self.Health)
 	self.Castbar:SetStatusBarColor(LolzenUIcfg.unitframes.boss["uf_boss_cb_color"][1], LolzenUIcfg.unitframes.boss["uf_boss_cb_color"][2], LolzenUIcfg.unitframes.boss["uf_boss_cb_color"][3], LolzenUIcfg.unitframes.boss["uf_boss_cb_alpha"])
 
@@ -94,10 +89,9 @@ ns.SetupBoss = function(self, ...)
 	self.Castbar.Text:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.boss["uf_boss_cb_font"]), LolzenUIcfg.unitframes.boss["uf_boss_cb_font_size"], LolzenUIcfg.unitframes.boss["uf_boss_cb_font_flag"])
 	self.Castbar.Text:SetTextColor(LolzenUIcfg.unitframes.boss["uf_boss_cb_font_color"][1], LolzenUIcfg.unitframes.boss["uf_boss_cb_font_color"][2], LolzenUIcfg.unitframes.boss["uf_boss_cb_font_color"][3])
 
-	self.Panel:SetSize(self:GetWidth(), 20)
-	self.Panel:SetPoint("TOP", self.Health, "BOTTOM", 0, -4)
-
-	self.Level:SetPoint("LEFT", self.Health, "LEFT", 2, -18) 
-
+	ns.AddInfoPanel(self, unit)
+	self.Level:SetPoint("LEFT", self.Health, "LEFT", 2, -18)
 	self.Name:SetPoint("RIGHT", self.Health, "RIGHT", -2, -18)
+
+	ns.AddRaidMark(self, unit)
 end

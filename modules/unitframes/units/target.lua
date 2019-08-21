@@ -1,10 +1,10 @@
---// unitframes: target // --
-
 local _, ns = ...
 local LSM = LibStub("LibSharedMedia-3.0")
 
-ns.SetupTarget = function(self, ...)
-	ns.shared(self, ...)
+ns.SetupTarget = function(self, unit)
+	ns.shared(self, unit)
+
+	self:SetSize(LolzenUIcfg.unitframes.target["uf_target_width"], LolzenUIcfg.unitframes.target["uf_target_height"])
 
 	if LolzenUIcfg.unitframes.target["uf_target_use_own_hp_font_settings"] == true then
 		self.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.target["uf_target_hp_font"]), LolzenUIcfg.unitframes.target["uf_target_hp_font_size"], LolzenUIcfg.unitframes.target["uf_target_hp_font_flag"])
@@ -14,16 +14,9 @@ ns.SetupTarget = function(self, ...)
 	self.Border:SetPoint("TOPLEFT", self, -3, 3)
 	self.Border:SetPoint("BOTTOMRIGHT", self, 3, -2)
 
-	self:SetSize(LolzenUIcfg.unitframes.target["uf_target_width"], LolzenUIcfg.unitframes.target["uf_target_height"])
+	ns.AddPowerBar(self, unit)
 
-	self.Power:SetPoint("LEFT")
-	self.Power:SetPoint("RIGHT")
-	self.Power:SetPoint("TOP", self.Health, "BOTTOM", 0, 2)
-
-	self.PowerDivider:SetSize(self:GetWidth(), 1)
-	self.PowerDivider:SetPoint("TOPLEFT", self.Power, 0, 1)
-	self.PowerDivider:SetDrawLayer("BACKGROUND", 1)
-
+	ns.AddPowerPoints(self, unit)
 	if LolzenUIcfg.unitframes.target["uf_target_pp_parent"] == "hp" then
 		self.Power.value:SetPoint(LolzenUIcfg.unitframes.target["uf_target_pp_anchor"], self.Health.value, LolzenUIcfg.unitframes.target["uf_target_pp_anchor2"], LolzenUIcfg.unitframes.target["uf_target_pp_posx"], LolzenUIcfg.unitframes.target["uf_target_pp_posy"])
 	elseif LolzenUIcfg.unitframes.target["uf_target_pp_parent"] == "self" then
@@ -31,6 +24,40 @@ ns.SetupTarget = function(self, ...)
 	end
 	self.Power.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.target["uf_target_pp_font"]), LolzenUIcfg.unitframes.target["uf_target_pp_font_size"], LolzenUIcfg.unitframes.target["uf_target_pp_font_flag"])
 
+	if LolzenUIcfg.unitframes.target["uf_target_aura_show_type"] == "Buffs" then
+		ns.AddBuffs(self, unit)
+		self.Buffs:SetPoint(LolzenUIcfg.unitframes.target["uf_target_aura_anchor1"], self, LolzenUIcfg.unitframes.target["uf_target_aura_anchor2"], LolzenUIcfg.unitframes.target["uf_target_aura_posx"], LolzenUIcfg.unitframes.target["uf_target_aura_posy"])
+		self.Buffs.numBuffs = LolzenUIcfg.unitframes.target["uf_target_aura_maxnum"]
+		if LolzenUIcfg.unitframes.target["uf_target_aura_show_only_player"] == true then
+			self.Buffs.onlyShowPlayer = true
+		end
+		--self.Buffs.showBuffType = true
+		self.Buffs["growth-x"] = LolzenUIcfg.unitframes.target["uf_target_aura_growth_x"]
+		self.Buffs["growth-y"] = LolzenUIcfg.unitframes.target["uf_target_aura_growth_y"]
+	elseif LolzenUIcfg.unitframes.target["uf_target_aura_show_type"] == "Debuffs" then
+		ns.AddDebuffs(self, unit)
+		self.Debuffs:SetPoint(LolzenUIcfg.unitframes.target["uf_target_aura_anchor1"], self, LolzenUIcfg.unitframes.target["uf_target_aura_anchor2"], LolzenUIcfg.unitframes.target["uf_target_aura_posx"], LolzenUIcfg.unitframes.target["uf_target_aura_posy"])
+		self.Debuffs.numDebuffs = LolzenUIcfg.unitframes.target["uf_target_aura_maxnum"]
+		if LolzenUIcfg.unitframes.target["uf_target_aura_show_only_player"] == true then
+			self.Debuffs.onlyShowPlayer = true
+		end
+		--self.Debuffs.showDebuffType = true
+		self.Debuffs["growth-x"] = LolzenUIcfg.unitframes.target["uf_target_aura_growth_x"]
+		self.Debuffs["growth-y"] = LolzenUIcfg.unitframes.target["uf_target_aura_growth_y"]
+	elseif LolzenUIcfg.unitframes.target["uf_target_aura_show_type"] == "Both" then
+		ns.AddAuras(self, unit)
+		self.Auras:SetPoint(LolzenUIcfg.unitframes.target["uf_target_aura_anchor1"], self, LolzenUIcfg.unitframes.target["uf_target_aura_anchor2"], LolzenUIcfg.unitframes.target["uf_target_aura_posx"], LolzenUIcfg.unitframes.target["uf_target_aura_posy"])
+		self.Auras.numTotal = LolzenUIcfg.unitframes.target["uf_target_aura_maxnum"]
+		if LolzenUIcfg.unitframes.target["uf_target_aura_show_only_player"] == true then
+			self.Auras.onlyShowPlayer = true
+		end
+		--self.Auras.showBuffType = true
+		--self.Auras.showDebuffType = true
+		self.Auras["growth-x"] = LolzenUIcfg.unitframes.target["uf_target_aura_growth_x"]
+		self.Auras["growth-y"] = LolzenUIcfg.unitframes.target["uf_target_aura_growth_y"]
+	end
+
+	ns.AddCastBar(self, unit)
 	if LolzenUIcfg.unitframes.target["uf_target_cb_standalone"] == true then
 		self.Castbar:SetPoint(LolzenUIcfg.unitframes.target["uf_target_cb_anchor1"], UIParent, LolzenUIcfg.unitframes.target["uf_target_cb_anchor2"], LolzenUIcfg.unitframes.target["uf_target_cb_posx"], LolzenUIcfg.unitframes.target["uf_target_cb_posy"])
 		self.Castbar:SetSize(LolzenUIcfg.unitframes.target["uf_target_cb_width"], LolzenUIcfg.unitframes.target["uf_target_cb_height"])
@@ -70,40 +97,10 @@ ns.SetupTarget = function(self, ...)
 	self.Castbar.Text:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.target["uf_target_cb_font"]), LolzenUIcfg.unitframes.target["uf_target_cb_font_size"], LolzenUIcfg.unitframes.target["uf_target_cb_font_flag"])
 	self.Castbar.Text:SetTextColor(LolzenUIcfg.unitframes.target["uf_target_cb_font_color"][1], LolzenUIcfg.unitframes.target["uf_target_cb_font_color"][2], LolzenUIcfg.unitframes.target["uf_target_cb_font_color"][3])
 
-	if LolzenUIcfg.unitframes.target["uf_target_aura_show_type"] == "Buffs" then
-		self.Buffs:SetPoint(LolzenUIcfg.unitframes.target["uf_target_aura_anchor1"], self, LolzenUIcfg.unitframes.target["uf_target_aura_anchor2"], LolzenUIcfg.unitframes.target["uf_target_aura_posx"], LolzenUIcfg.unitframes.target["uf_target_aura_posy"])
-		self.Buffs.numBuffs = LolzenUIcfg.unitframes.target["uf_target_aura_maxnum"]
-		if LolzenUIcfg.unitframes.target["uf_target_aura_show_only_player"] == true then
-			self.Buffs.onlyShowPlayer = true
-		end
-		--self.Buffs.showBuffType = true
-		self.Buffs["growth-x"] = LolzenUIcfg.unitframes.target["uf_target_aura_growth_x"]
-		self.Buffs["growth-y"] = LolzenUIcfg.unitframes.target["uf_target_aura_growth_y"]
-	elseif LolzenUIcfg.unitframes.target["uf_target_aura_show_type"] == "Debuffs" then
-		self.Debuffs:SetPoint(LolzenUIcfg.unitframes.target["uf_target_aura_anchor1"], self, LolzenUIcfg.unitframes.target["uf_target_aura_anchor2"], LolzenUIcfg.unitframes.target["uf_target_aura_posx"], LolzenUIcfg.unitframes.target["uf_target_aura_posy"])
-		self.Debuffs.numDebuffs = LolzenUIcfg.unitframes.target["uf_target_aura_maxnum"]
-		if LolzenUIcfg.unitframes.target["uf_target_aura_show_only_player"] == true then
-			self.Debuffs.onlyShowPlayer = true
-		end
-		--self.Debuffs.showDebuffType = true
-		self.Debuffs["growth-x"] = LolzenUIcfg.unitframes.target["uf_target_aura_growth_x"]
-		self.Debuffs["growth-y"] = LolzenUIcfg.unitframes.target["uf_target_aura_growth_y"]
-	elseif LolzenUIcfg.unitframes.target["uf_target_aura_show_type"] == "Both" then
-		self.Auras:SetPoint(LolzenUIcfg.unitframes.target["uf_target_aura_anchor1"], self, LolzenUIcfg.unitframes.target["uf_target_aura_anchor2"], LolzenUIcfg.unitframes.target["uf_target_aura_posx"], LolzenUIcfg.unitframes.target["uf_target_aura_posy"])
-		self.Auras.numTotal = LolzenUIcfg.unitframes.target["uf_target_aura_maxnum"]
-		if LolzenUIcfg.unitframes.target["uf_target_aura_show_only_player"] == true then
-			self.Auras.onlyShowPlayer = true
-		end
-		--self.Auras.showBuffType = true
-		--self.Auras.showDebuffType = true
-		self.Auras["growth-x"] = LolzenUIcfg.unitframes.target["uf_target_aura_growth_x"]
-		self.Auras["growth-y"] = LolzenUIcfg.unitframes.target["uf_target_aura_growth_y"]
-	end
-
-	self.Panel:SetSize(self:GetWidth(), 20)
-	self.Panel:SetPoint("TOP", self.Health, "BOTTOM", 0, -4)
-
+	ns.AddInfoPanel(self, unit)
 	self.Level:SetPoint("LEFT", self.Health, "LEFT", 2, -23) 
-
 	self.Name:SetPoint("RIGHT", self.Health, "RIGHT", -2, -23)
+
+	ns.AddCombatFade(self, unit)
+	ns.AddRaidMark(self, unit)
 end

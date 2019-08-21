@@ -17,7 +17,6 @@ defaultconfig.lua
 core.lua
 optionpanel.lua
 
-oUF_Tags.lua
 modules.xml
 
 tutorial.lua

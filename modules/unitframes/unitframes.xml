@@ -1,14 +1,6 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\FrameXML\UI.xsd">
-	<Script file="modules/unitframes/uf_core.lua"/>
-	<Script file="modules/unitframes/uf_shared.lua"/>
-	<Script file="modules/unitframes/uf_player.lua"/>
-	<Script file="modules/unitframes/uf_target.lua"/>
-	<Script file="modules/unitframes/uf_tot.lua"/>
-	<Script file="modules/unitframes/uf_party.lua"/>
-	<Script file="modules/unitframes/uf_raid.lua"/>
-	<Script file="modules/unitframes/uf_pet.lua"/>
-	<Script file="modules/unitframes/uf_boss.lua"/>
-	<Script file="modules/unitframes/uf_focus.lua"/>
-	<Script file="modules/unitframes/uf_factory.lua"/>
+	<Include file="modules/unitframes/elements/elements.xml"/>
+	<Include file="modules/unitframes/units/units.xml"/>
+	<Script file="modules/unitframes/layout.lua"/>
 </Ui>

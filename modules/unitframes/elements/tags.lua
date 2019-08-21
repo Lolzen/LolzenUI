@@ -1,7 +1,7 @@
-﻿-- // oUF Tags //--
-
 local _, ns = ...
 local oUF = ns.oUF
+local tags = oUF.Tags.Methods or oUF.Tags
+local tagevents = oUF.TagEvents or oUF.Tags.Events
 
 local siValue = function(val)
 	if val >= 1e6 then
@@ -20,9 +20,6 @@ local siValue = function(val)
 		return val
 	end
 end
-
-local tags = oUF.Tags.Methods or oUF.Tags
-local tagevents = oUF.TagEvents or oUF.Tags.Events
 
 tags["lolzen:health"] = function(unit)
 	if not UnitIsConnected(unit) or UnitIsDead(unit) or UnitIsGhost(unit) then return end
