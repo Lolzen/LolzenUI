@@ -79,4 +79,8 @@ ns.SetupPlayer = function(self, unit)
 	ns.AddCombatFade(self, unit)
 	ns.AddRaidMark(self, unit)
 	ns.AddLeadIndicator(self, unit)
+	
+	if LolzenUIcfg.unitframes.player["uf_player_show_restingindicator"] == true then
+		ns.AddRestedIndicator(self, unit)
+	end
 end
