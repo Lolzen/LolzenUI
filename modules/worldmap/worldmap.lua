@@ -11,7 +11,20 @@ f:SetScript("OnEvent", function(self, event, addon)
 	if addon == "LolzenUI" then
 		if LolzenUIcfg.modules["worldmap"] == false then return end
 
-		UIPanelWindows["WorldMapFrame"] = { area = nil, pushable = 0, xoffset = 0, yoffset = 0, whileDead = 1, minYOffset = 0, maximizePoint = "TOP" }
+		UIPanelWindows["WorldMapFrame"] = {area = "center", pushable = 9}
+			WorldMapFrame:SetScale(0.75)
+			hooksecurefunc(WorldMapFrame, "Show", function(self)
+				--WorldMapFrame:SetScale(0.75)
+				self:EnableKeyboard(false)
+				self.BlackoutFrame:Hide()
+			end)
+			
+			WorldMapFrame.ScrollContainer.GetCursorPosition = function(f)
+				local x,y = MapCanvasScrollControllerMixin.GetCursorPosition(f);
+				local s = WorldMapFrame:GetScale();
+				return x/s, y/s;
+			end
+	--[[	UIPanelWindows["WorldMapFrame"] = { area = nil, pushable = 0, xoffset = 0, yoffset = 0, whileDead = 1, minYOffset = 0, maximizePoint = "TOP" }
 		tinsert(UISpecialFrames, "WorldMapFrame")
 
 		WorldMapFrame.BorderFrame.NineSlice:Hide()
@@ -136,6 +149,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 			if LolzenUIcfg.worldmap["worldmap_coordinates"] == true then
 				timer:Stop()
 			end
-		end)
+		end)]]
 	end
 end)
