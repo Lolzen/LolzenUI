@@ -36,22 +36,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 			backdropColor = CreateColor(0, 0, 0),
 		}
 		GAME_TOOLTIP_BACKDROP_STYLE_EMBEDDED = GAME_TOOLTIP_BACKDROP_STYLE_DEFAULT
-		GAME_TOOLTIP_BACKDROP_STYLE_AZERITE_ITEM  = {
-			bgFile = "Interface\\AddOns\\LolzenUI\\media\\tooltip-azerite-bg",
-			edgeFile = "Interface\\AddOns\\LolzenUI\\media\\border-azerite",
-			tile = false,
-			tileEdge = true,
-			tileSize = 16,
-			edgeSize = 16,
-			insets = { left = 3, right = 3, top = 3, bottom = 3 },
-
-			backdropBorderColor = CreateColor(1, 1, 1),
-			backdropColor = CreateColor(1, 1, 1),
-			
-			overlayAtlasTop = "AzeriteTooltip-Topper";
-			overlayAtlasTopScale = .75,
-			overlayAtlasBottom = "AzeriteTooltip-Bottom";
-		}
 
 		-- customize the mobClassification
 		local mobType = {
@@ -175,22 +159,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 					self:SetBackdropBorderColor(r, g, b)
 					if self.TopOverlay:IsShown() then
 						self:SetBackdropColor(r, g, b)
-					end
-				end
-			end
-		end
-
-		-- colorize tooltipborder accordingly to Azerite Essence rank
-		local function colorEssenceQuality(self)
-			local selectedEssenceName = string.gsub(_G["GameTooltipTextLeft1"]:GetText(), " %b()", "")
-			local essences = C_AzeriteEssence.GetEssences()
-			for _, slot in pairs(essences) do
-				local essence = C_AzeriteEssence.GetEssenceInfo(slot.ID)
-				if selectedEssenceName == essence.name then
-					local r, g, b = GetItemQualityColor(essence.rank+1)
-					self:SetBackdropBorderColor(r, g, b)
-					if self:GetBackdropBorderColor() ~= {r, g, b} then
-						self:SetBackdropBorderColor(r, g, b)
 					end
 				end
 			end
@@ -361,10 +329,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		-- styling for units
 		GameTooltip:HookScript("OnTooltipSetUnit", modifyTooltip)
-
-		-- Azerite Essences
-		hooksecurefunc(GameTooltip, "SetAzeriteEssence", colorEssenceQuality)
-		hooksecurefunc(GameTooltip, "SetAzeriteEssenceSlot", colorEssenceQuality)
 
 		-- clear textures when the tooltip is hidden
 		GameTooltip:HookScript("OnHide", function(self)
