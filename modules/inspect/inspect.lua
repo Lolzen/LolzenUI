@@ -18,7 +18,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		local function updateFrames()
 			InspectPaperDollFrame_OnShow()
-			InspectPVPFrame_OnShow()
+		--	InspectPVPFrame_OnShow()
 			InspectFrame_UpdateTabs()
 		end
 
@@ -95,26 +95,26 @@ f:SetScript("OnEvent", function(self, event, addon)
 			modInspectPaperDollItemSlotButton_OnClick(...)
 		end
 
-		local oInspectPVPFrame_Update = InspectPVPFrame_Update
-		InspectPVPFrame_Update = function(...)
-			if UnitExists(InspectFrame.unit) then
-				oInspectPVPFrame_Update(...)
-			end
-		end
+	--	local oInspectPVPFrame_Update = InspectPVPFrame_Update
+	--	InspectPVPFrame_Update = function(...)
+	--		if UnitExists(InspectFrame.unit) then
+	--			oInspectPVPFrame_Update(...)
+	--		end
+	--	end
 
-		local oTalentFrame_Update = TalentFrame_Update
-		TalentFrame_Update = function(self, unit)
-			if UnitExists(unit) then
-				oTalentFrame_Update(self, unit)
-			end
-		end
+	--	local oTalentFrame_Update = TalentFrame_Update
+	--	TalentFrame_Update = function(self, unit)
+	--		if UnitExists(unit) then
+	--			oTalentFrame_Update(self, unit)
+	--		end
+	--	end
 
-		local oInspectGuildFrame_Update = InspectGuildFrame_Update
-		InspectGuildFrame_Update = function(...)
-			if UnitExists(InspectFrame.unit) then
-				oInspectGuildFrame_Update(...)
-			end
-		end
+	--	local oInspectGuildFrame_Update = InspectGuildFrame_Update
+	--	InspectGuildFrame_Update = function(...)
+	--		if UnitExists(InspectFrame.unit) then
+	--			oInspectGuildFrame_Update(...)
+	--		end
+	--	end
 
 		-- mod this function so we can link cached items
 		function modInspectPaperDollItemSlotButton_OnClick(self, button)
@@ -137,7 +137,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 
 		-- override this function to NOT clear any variables; fixes empty specIcon
-		function InspectTalentFrameSpec_OnClear()
-		end
+	--	function InspectTalentFrameSpec_OnClear()
+	--	end
 	end
 end)

@@ -97,15 +97,15 @@ f:SetScript("OnEvent", function(self, event, addon)
 			eF:UNIT_INVENTORY_CHANGED()
 		end
 
-		hooksecurefunc("PaperDollFrame_SetLabelAndText", function(statFrame, label, text, isPercentage, numericValue)
-			if isPercentage then
-				text = format("%.2f%%", numericValue)
-				statFrame.Value:SetText(text)
-			end
-			if label == "Item Level" then
-				statFrame.Value:SetText(format("%.2f", select(2, GetAverageItemLevel())))
-			end
-		end)
+	--	hooksecurefunc("PaperDollFrame_SetLabelAndText", function(statFrame, label, text, isPercentage, numericValue)
+	--		if isPercentage then
+	--			text = format("%.2f%%", numericValue)
+	--			statFrame.Value:SetText(text)
+	--		end
+	--		if label == "Item Level" then
+	--			statFrame.Value:SetText(format("%.2f", select(2, GetAverageItemLevel())))
+	--		end
+	--	end)
 
 		eF:SetScript("OnEvent", function(self, event, ...)  
 			if(self[event]) then
