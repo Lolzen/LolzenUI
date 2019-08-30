@@ -27,22 +27,24 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 	-- MicroButtons
 	local MicroButtons = {
-		CharacterMicroButton, SpellbookMicroButton, TalentMicroButton, 
-		AchievementMicroButton, QuestLogMicroButton, GuildMicroButton, 
-		PVPMicroButton, LFDMicroButton, CompanionsMicroButton,
-		EJMicroButton, HelpMicroButton, MainMenuMicroButton,
-		CollectionsMicroButton,
+	--	CharacterMicroButton, SpellbookMicroButton, TalentMicroButton, 
+	--	AchievementMicroButton, QuestLogMicroButton, GuildMicroButton, 
+	--	PVPMicroButton, LFDMicroButton, CompanionsMicroButton,
+	--	EJMicroButton, HelpMicroButton, MainMenuMicroButton,
+	--	CollectionsMicroButton,
+		CharacterMicroButton, SpellbookMicroButton, QuestLogMicroButton, SocialsMicroButton, WorldMapMicroButton,
+		MainMenuMicroButton, HelpMicroButton,
 	}
 
 	if LolzenUIcfg.miscellaneous["misc_hide_microbuttons"] == true then
 		--fix a blizz bug; thx tuller
-		if not _G['AchievementMicroButton_Update'] then
-			_G['AchievementMicroButton_Update'] = function() end
-		end
+	--	if not _G['AchievementMicroButton_Update'] then
+	--		_G['AchievementMicroButton_Update'] = function() end
+	--	end
 
 		-- special snowflake microbutton
-		StoreMicroButton:SetAlpha(0)
-		StoreMicroButton:EnableMouse(false)
+	--	StoreMicroButton:SetAlpha(0)
+	--	StoreMicroButton:EnableMouse(false)
 		
 		for _, frame in pairs(MicroButtons) do
 			frame:SetParent(invisible)
