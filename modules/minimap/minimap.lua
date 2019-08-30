@@ -47,16 +47,16 @@ local function modifyMinimap()
 		end
 	end)
 
-	MiniMapTrackingButtonBorder:Hide()
-	MiniMapTrackingBackground:Hide()
-	MiniMapTracking:SetParent(Minimap)
-	MiniMapTracking:ClearAllPoints()
-	MiniMapTrackingIcon:SetTexCoord(0.065,0.935,0.065,0.935)
-	if LolzenUIcfg.minimap["minimap_square"] == true then
-		MiniMapTracking:SetPoint("BOTTOMRIGHT", -5, 0)
-	else
-		MiniMapTracking:SetPoint("BOTTOMRIGHT", -5, 0)
-	end
+--	MiniMapTrackingButtonBorder:Hide()
+--	MiniMapTrackingBackground:Hide()
+--	MiniMapTracking:SetParent(Minimap)
+--	MiniMapTracking:ClearAllPoints()
+--	MiniMapTrackingIcon:SetTexCoord(0.065,0.935,0.065,0.935)
+--	if LolzenUIcfg.minimap["minimap_square"] == true then
+--		MiniMapTracking:SetPoint("BOTTOMRIGHT", -5, 0)
+--	else
+--		MiniMapTracking:SetPoint("BOTTOMRIGHT", -5, 0)
+--	end
 
 	MiniMapMailBorder:Hide()
 	MiniMapMailFrame:SetParent(Minimap)
@@ -68,13 +68,13 @@ local function modifyMinimap()
 	end
 	MiniMapMailIcon:SetTexture("Interface/Minimap/Tracking/Mailbox")
 
-	QueueStatusMinimapButtonBorder:Hide()
-	QueueStatusMinimapButton:SetParent(Minimap)
-	QueueStatusMinimapButton:ClearAllPoints()
-	QueueStatusMinimapButton:SetPoint("TOPRIGHT", -5, -5)
-	if LolzenUIcfg.minimap["minimap_square"] == false then
-		QueueStatusMinimapButton:SetFrameStrata("HIGH")
-	end
+--	QueueStatusMinimapButtonBorder:Hide()
+--	QueueStatusMinimapButton:SetParent(Minimap)
+--	QueueStatusMinimapButton:ClearAllPoints()
+--	QueueStatusMinimapButton:SetPoint("TOPRIGHT", -5, -5)
+--	if LolzenUIcfg.minimap["minimap_square"] == false then
+--		QueueStatusMinimapButton:SetFrameStrata("HIGH")
+--	end
 
 	-- let's make our own CalendarFrame =]
 	-- C_DateAndTime.GetCurrentCalendarTime() is unreliable on login and returns nil untin a /reload
@@ -102,14 +102,14 @@ local function modifyMinimap()
 	CalFont:SetText(day)
 
 	--Now we want to click the numbers to open the calendarframe, don't we?
-	CalFrame:SetScript("OnClick", function()
-		if not CalendarFrame then
-			LoadAddOn("Blizzard_Calendar")
-			ShowUIPanel(CalendarFrame)
-		else
-			ShowUIPanel(CalendarFrame)
-		end
-	end)
+--	CalFrame:SetScript("OnClick", function()
+--		if not CalendarFrame then
+--			LoadAddOn("Blizzard_Calendar")
+--			ShowUIPanel(CalendarFrame)
+--		else
+--			ShowUIPanel(CalendarFrame)
+--		end
+--	end)
 
 	-- Clean up
 	MinimapZoneText:Hide()
@@ -117,10 +117,10 @@ local function modifyMinimap()
 	MinimapNorthTag:Hide()
 	MinimapNorthTag:SetAlpha(0)
 
-	TimeManagerClockButton:Hide()
+--	TimeManagerClockButton:Hide()
 
-	GarrisonLandingPageMinimapButton:HookScript("OnShow", function() GarrisonLandingPageMinimapButton:Hide() end)
-	GarrisonLandingPageMinimapButton.IsShown = function() return true end
+--	GarrisonLandingPageMinimapButton:HookScript("OnShow", function() GarrisonLandingPageMinimapButton:Hide() end)
+--	GarrisonLandingPageMinimapButton.IsShown = function() return true end
 
 	for _, frame in pairs(frames) do
 		frame:Hide()
