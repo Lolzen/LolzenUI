@@ -31,6 +31,7 @@ function getCoordinates()
 end
 
 local function getAreaText()
+	--OrderHallCommandBar.AreaName:SetText(GetZoneText())
 	if GetRealZoneText() == GetMinimapZoneText() then
 		OrderHallCommandBar.AreaName:SetText(GetZoneText()..getCoordinates())
 	else
@@ -38,6 +39,69 @@ local function getAreaText()
 	end
 end
 
+local function createOrderHallBar()
+	local OrderHallCommandBar = CreateFrame("Frame", nil, UIParent)
+	OrderHallCommandBar:SetPoint("TOP", 0, 0)
+	OrderHallCommandBar:SetWidth(GetScreenWidth())
+	OrderHallCommandBar:SetHeight(25)
+
+--	print("test")
+	--local bg = OrderHallCommandBar:CreateTexture(nil, "BACKGROUND")
+--	bg:SetAllPoints(OrderHallCommandBar)
+--	bg:SetTexture(LSM:Fetch("background", LolzenUIcfg.orderhallbar["ohb_background"]))
+--	bg:SetVertexColor(unpack(LolzenUIcfg.orderhallbar["ohb_background_color"]))
+--	bg:SetAlpha(LolzenUIcfg.orderhallbar["ohb_background_alpha"])
+--	bg:SetAllPoints(OrderHallCommandBar)
+
+	OrderHallCommandBar.Background = OrderHallCommandBar:CreateTexture(nil, "BACKGROUND")
+	OrderHallCommandBar.Background:SetAllPoints(OrderHallCommandBar)
+--	OrderHallCommandBar.Background:SetTexture(LSM:Fetch("background", LolzenUIcfg.orderhallbar["ohb_background"]))
+	OrderHallCommandBar.Background:SetTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
+	OrderHallCommandBar.Background:SetVertexColor(0, 0, 0)
+	OrderHallCommandBar.Background:SetAlpha(0.5)
+	
+	local _, class = UnitClass("player")
+	OrderHallCommandBar.ClassIcon = OrderHallCommandBar:CreateTexture(nil, "OVERLAY")
+	OrderHallCommandBar.ClassIcon:SetTexture("Interface\\TargetingFrame\\UI-Classes-Circles")
+	local x1, x2, y1, y2 = unpack(CLASS_ICON_TCOORDS[strupper(class)])
+	local height = y2 - y1
+	y1 = y1 + 0.25 * height
+	y2 = y2 - 0.25 * height
+	OrderHallCommandBar.ClassIcon:SetTexCoord(x1, x2, y1, y2)
+	OrderHallCommandBar.ClassIcon:SetPoint("LEFT", OrderHallCommandBar, 0, 0)
+	OrderHallCommandBar.ClassIcon:SetSize(46, 23)
+	OrderHallCommandBar.ClassIcon:SetBlendMode("ADD")
+	OrderHallCommandBar.ClassIcon:SetAlpha(0.55)
+
+	
+	OrderHallCommandBar.AreaName = OrderHallCommandBar:CreateFontString(nil, "OVERLAY")
+	OrderHallCommandBar.AreaName:SetTextColor(51/255, 181/255, 229/255)
+	OrderHallCommandBar.AreaName:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSansBold.ttf", 12, "THINOUTLINE")
+--	OrderHallCommandBar.AreaName:SetTextColor(unpack(LolzenUIcfg.orderhallbar["ohb_zone_color"]))
+--	OrderHallCommandBar.AreaName:SetFont(LSM:Fetch("font", LolzenUIcfg.orderhallbar["ohb_zone_font"]), LolzenUIcfg.orderhallbar["ohb_zone_font_size"], LolzenUIcfg.orderhallbar["ohb_zone_font_flag"])
+	OrderHallCommandBar.AreaName:SetPoint("CENTER", OrderHallCommandBar, 0, 0)
+	if GetRealZoneText() == GetMinimapZoneText() then
+		OrderHallCommandBar.AreaName:SetText(GetZoneText()..getCoordinates())
+	else
+		OrderHallCommandBar.AreaName:SetText(GetZoneText().." ("..GetMinimapZoneText()..")"..getCoordinates())
+	end
+	
+	-- frame creation code here
+OrderHallCommandBar.elapsed = 0.125 -- run the update code 8 times per second
+OrderHallCommandBar:SetScript("OnUpdate", function(self, elapsed)
+	self.elapsed = self.elapsed - elapsed
+	if self.elapsed > 0 then return end
+	self.elapsed = 0.125
+	if GetRealZoneText() == GetMinimapZoneText() then
+		OrderHallCommandBar.AreaName:SetText(GetZoneText()..getCoordinates())
+	else
+		OrderHallCommandBar.AreaName:SetText(GetZoneText().." ("..GetMinimapZoneText()..")"..getCoordinates())
+	end
+	-- rest of the code here
+end)	
+end
+--createOrderHallBar()
+--[[
 local currency = {}
 local function getCurrencies()
 	if not OrderHallCommandBar then return end
@@ -108,86 +172,16 @@ local function getCurrencies()
 	end
 end
 hooksecurefunc("TokenFrame_Update", getCurrencies)
-
-local function modifyOHB()
-	if OrderHallCommandBar.modded == true then return end
-	OrderHallCommandBar.AreaName:SetTextColor(unpack(LolzenUIcfg.orderhallbar["ohb_zone_color"]))
-	OrderHallCommandBar.AreaName:SetFont(LSM:Fetch("font", LolzenUIcfg.orderhallbar["ohb_zone_font"]), LolzenUIcfg.orderhallbar["ohb_zone_font_size"], LolzenUIcfg.orderhallbar["ohb_zone_font_flag"])
-
-	-- Create an AG based timer to update Area text and coordinates
-	local timer = OrderHallCommandBar:CreateAnimationGroup()
-	local timerAnim = timer:CreateAnimation()
-	timerAnim:SetDuration(0.5)
-	timer:SetScript("OnFinished", function(self, requested)
-		getAreaText()
-		self:Play()
-	end)
-
-	-- hide troop info
-	OrderHallCommandBar.RefreshCategories = function() end
-	OrderHallCommandBar.RequestCategoryInfo = function() end
-				
-	OrderHallCommandBar.Background:SetTexture(LSM:Fetch("background", LolzenUIcfg.orderhallbar["ohb_background"]))
-	OrderHallCommandBar.Background:SetVertexColor(unpack(LolzenUIcfg.orderhallbar["ohb_background_color"]))
-	OrderHallCommandBar.Background:SetAlpha(LolzenUIcfg.orderhallbar["ohb_background_alpha"])
-
-	OrderHallCommandBar.WorldMapButton:Hide()
-	OrderHallCommandBar.CurrencyIcon:Hide()
-	OrderHallCommandBar.CurrencyHitTest:Hide() -- the area which popups the order resource info tooltip
-	OrderHallCommandBar.Currency:Hide()
-
-	OrderHallCommandBar:RegisterEvent("CHAT_MSG_CURRENCY")
-	OrderHallCommandBar:RegisterEvent("CURRENCY_DISPLAY_UPDATE")
-	OrderHallCommandBar:RegisterEvent("PLAYER_STARTED_MOVING")
-	OrderHallCommandBar:RegisterEvent("PLAYER_STOPPED_MOVING")
-	OrderHallCommandBar:SetScript("OnEvent", function(self, event)
-		if event == "CHAT_MSG_CURRENCY" or event == "CURRENCY_DISPLAY_UPDATE" then
-			getCurrencies()
-		elseif event == "PLAYER_STOPPED_MOVING" then
-			timer:Stop()
-		elseif event == "PLAYER_STARTED_MOVING" then
-			timer:Play()
-		end
-	end)
-
-	local ohbframe = CreateFrame("Frame")
-	ohbframe:SetAllPoints(OrderHallCommandBar.ClassIcon)
-	ohbframe:EnableMouse(true)
-	ohbframe:SetFrameStrata("HIGH")
-	ohbframe:SetScript("OnMouseDown", GarrisonLandingPage_Toggle)
-
-	--reposition BG display
-	UIWidgetTopCenterContainerFrame:SetPoint("TOP", OrderHallCommandBar, "BOTTOM", 0, -10)
-
-	OrderHallCommandBar.modded = true
-end
-
+]]
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
-f:RegisterEvent("CINEMATIC_STOP")
-f:RegisterEvent("PLAYER_ENTERING_WORLD")
+--f:RegisterEvent("PLAYER_ENTERING_WORLD")
 f:SetScript("OnEvent", function(self, event, addon)
 	if event == "ADDON_LOADED" then
 		if addon == "LolzenUI" then
 			if LolzenUIcfg.modules["orderhallbar"] == false then return end
 
-			if LolzenUIcfg.orderhallbar["ohb_always_show"] == true then
-				LoadAddOn("Blizzard_OrderHallUI")
-			end
-		elseif addon == "Blizzard_OrderHallUI" then
-			if LolzenUIcfg.modules["orderhallbar"] == false then return end
-
-			if OrderHallCommandBar then
-				modifyOHB()
-			end
-		end
-	elseif event == "CINEMATIC_STOP" or event == "PLAYER_ENTERING_WORLD" then
-		if LolzenUIcfg.modules["orderhallbar"] == false then return end
-		if LolzenUIcfg.orderhallbar["ohb_always_show"] == true then
-			if not OrderHallCommandBar:IsShown() then
-				OrderHallCommandBar:Show()
-				getAreaText()
-			end
+			createOrderHallBar()
 		end
 	end
 end)
