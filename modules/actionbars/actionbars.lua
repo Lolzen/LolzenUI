@@ -17,39 +17,25 @@ f:SetScript("OnEvent", function(self, event, addon)
 		invisible:Hide()
 
 		local BlizzArt = {
-			MainMenuBarArtFrameBackground,
-			MainMenuBarArtFrame.LeftEndCap, MainMenuBarArtFrame.RightEndCap,
-			MainMenuBarArtFrame.PageNumber, ActionBarUpButton, ActionBarDownButton,
-			StanceBarFrame, SlidingActionBarTexture0, SlidingActionBarTexture1,
-			MicroButtonAndBagsBar,
-			-- Vehicle Textures
-			OverrideActionBarBG, OverrideActionBarEndCapL, OverrideActionBarEndCapR, OverrideActionBarBorder,
-			OverrideActionBarDivider1, OverrideActionBarDivider2, OverrideActionBarDivider3,
-			OverrideActionBarExitBG, OverrideActionBarMicroBGL, OverrideActionBarMicroBGR, OverrideActionBarMicroBGMid,
-			OverrideActionBarButtonBGL, OverrideActionBarButtonBGR, OverrideActionBarButtonBGMid,
-			OverrideActionBarExpBar, OverrideActionBarHealthBar, 
-			OverrideActionBarPowerBar, OverrideActionBarPitchFrame,
+			MainMenuBarLeftEndCap, MainMenuBarRightEndCap,
+			MainMenuExpBar, ReputationWatchBar,
+			MainMenuBarTexture0, MainMenuBarTexture1, MainMenuBarTexture2, MainMenuBarTexture3,
+			MainMenuBarPerformanceBar, MainMenuBarPerformanceBarFrameButton,
+			ActionBarUpButton, ActionBarDownButton, MainMenuBarPageNumber,
+			CharacterBag3Slot, CharacterBag2Slot, CharacterBag1Slot, CharacterBag0Slot, MainMenuBarBackpackButton,
 		}
 
 		for _, frame in pairs(BlizzArt) do
 			frame:SetParent(invisible)
 		end
-		
-		MainMenuBarArtFrame:UnregisterAllEvents()
-
-		-- Hide the SStatusTrackingBarManager
-		StatusTrackingBarManager:UnregisterAllEvents()
-		StatusTrackingBarManager:Hide()
-		StatusTrackingBarManager.show = StatusTrackingBarManager.Hide
 
 		--// Bar sizes, positions & styling//--
 
 		-- Make the MainMenuBar clickthrough, so it doesn't interfere with other frames placed at the bottom
 		MainMenuBar:EnableMouse(false)
-
-		-- move the VehicleExitButton
-		OverrideActionBar.LeaveButton:ClearAllPoints()
-		OverrideActionBar.LeaveButton:SetPoint("BOTTOMRIGHT", ActionButton12)
+		MainMenuBarArtFrame:EnableMouse(false)
+	--	MainMenuBarPerformanceBar:EnableMouse(false)
+	--	MainMenuBarPerformanceBarFrame.Show = function() end
 
 		-- Create a holder frame, which some bars can refer to when positioning;
 		-- per default they wouldn't be centered
@@ -79,9 +65,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 			"MultiBarBottomRightButton",
 			"MultiBarLeftButton",
 			"MultiBarRightButton",
-			"PetActionButton",
-			"OverrideActionBarButton",
-			"ExtraActionButton",
+--			"PetActionButton",
+--			"OverrideActionBarButton",
+--			"ExtraActionButton",
 		}
 
 		local function applyTheme(name)
@@ -147,11 +133,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end)
 
 		--hook PetActionBar_Update, so it doesn't interfer with SetNormalTexture()
-		hooksecurefunc("PetActionBar_Update", function(self)
-			for i=1, NUM_PET_ACTION_SLOTS do
-				_G["PetActionButton"..i]:SetNormalTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.actionbar["actionbar_normal_texture"])
-			end
-		end)
+--		hooksecurefunc("PetActionBar_Update", function(self)
+--			for i=1, NUM_PET_ACTION_SLOTS do
+--				_G["PetActionButton"..i]:SetNormalTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.actionbar["actionbar_normal_texture"])
+--			end
+--		end)
 
 		local function setActionBarPosition(name)
 			for i = 1, NUM_ACTIONBAR_BUTTONS do
