@@ -105,7 +105,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 		local editboxTextures = {
 			"EditBoxRight",
 			"EditBoxLeft",
-			"EditBoxMid"
+			"EditBoxMid",
+		--	"Background"
 		}
 
 		local blacklist = {
@@ -116,23 +117,27 @@ f:SetScript("OnEvent", function(self, event, addon)
 		for i=1, NUM_CHAT_WINDOWS do
 			local cf = _G["ChatFrame"..i]
 			local eb = _G["ChatFrame"..i.."EditBox"]
-			local s2bb = cf["ScrollToBottomButton"]
-			local sb = cf["ScrollBar"]
-			local tt =_G["ChatFrame"..i.."ThumbTexture"]
+		--	local s2bb = cf["ScrollToBottomButton"]
+		--	local sb = cf["ScrollBar"]
+	--		local tt =_G["ChatFrame"..i.."ThumbTexture"]
+			local up = _G["ChatFrame"..i.."ButtonFrameUpButton"]
+			local down = _G["ChatFrame"..i.."ButtonFrameDownButton"]
+			local bottom = _G["ChatFrame"..i.."ButtonFrameBottomButton"]
 			
 			-- hide editbox textures and chat textures
 			for k, v in pairs(editboxTextures) do
 				_G["ChatFrame"..i..v]:SetAlpha(0)
 			end
-			eb.focusLeft:SetAlpha(0)
-			eb.focusRight:SetAlpha(0)
-			eb.focusMid:SetAlpha(0)
+		--	eb.focusLeft:SetAlpha(0)
+		--	eb.focusRight:SetAlpha(0)
+		--	eb.focusMid:SetAlpha(0)
+	--	cf.Background:Hide()
 
-			for _, n in pairs(CHAT_FRAME_TEXTURES) do
-				local t = _G['ChatFrame'..i..n]
-				t:Hide()
-				t.Show = function() end
-			end
+		--	for _, n in pairs(CHAT_FRAME_TEXTURES) do
+		--		local t = _G['ChatFrame'..i..n]
+		--		t:Hide()
+		--		t.Show = function() end
+		--	end
 
 			cf:SetFont(LSM:Fetch("font", LolzenUIcfg.chat["chat_font"]), LolzenUIcfg.chat["chat_font_size"], LolzenUIcfg.chat["chat_font_flag"])
 			if LolzenUIcfg.chat["chat_font_shadow"] == true then
@@ -149,8 +154,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 			-- TODO: do something to access 
 			-- ChatFrameChannelButton, ChatFrameToggleVoiceDeafenButton and ChatFrameToggleVoiceMuteButton
 			-- maybe unhide scrollbar and reshape/reskin
-			QuickJoinToastButton:Hide()
-			QuickJoinToastButton.Show = function() end
+	--		QuickJoinToastButton:Hide()
+	--		QuickJoinToastButton.Show = function() end
 
 			ChatFrameMenuButton:Hide()
 			ChatFrameMenuButton.Show = function() end
@@ -158,20 +163,29 @@ f:SetScript("OnEvent", function(self, event, addon)
 			ChatFrameChannelButton:Hide()
 			ChatFrameChannelButton.Show = function() end
 
-			ChatFrameToggleVoiceDeafenButton:Hide()
-			ChatFrameToggleVoiceDeafenButton.Show = function() end
+	--		ChatFrameToggleVoiceDeafenButton:Hide()
+	--		ChatFrameToggleVoiceDeafenButton.Show = function() end
 
-			ChatFrameToggleVoiceMuteButton:Hide()
-			ChatFrameToggleVoiceMuteButton.Show = function() end
+	--		ChatFrameToggleVoiceMuteButton:Hide()
+	--		ChatFrameToggleVoiceMuteButton.Show = function() end
 
-			tt:Hide()
-			tt.Show = function() end
+		--	tt:Hide()
+		--	tt.Show = function() end
 
-			s2bb:Hide()
-			s2bb.Show = function() end
+		--	s2bb:Hide()
+		--	s2bb.Show = function() end
 
-			sb:Hide()
-			sb.Show = function() end
+		--	sb:Hide()
+		--	sb.Show = function() end
+
+			up:Hide()
+			up.Show = function() end
+
+			down:Hide()
+			down.Show = function() end
+
+			bottom:Hide()
+			bottom.Show = function() end
 
 			-- move editbox above the chat
 			eb:ClearAllPoints()
@@ -273,15 +287,15 @@ f:SetScript("OnEvent", function(self, event, addon)
 		ChatFrame_AddMessageEventFilter("CHAT_MSG_DND", chatEvent)
 		
 		-- Disable LolzenUI chatstamps if blizzard chatstamps are activated
-			if GetCVar("showTimestamps") ~= "none" then
-				LolzenUIcfg.chat["chat_timestamp"] = false
-			end
+		--	if GetCVar("showTimestamps") ~= "none" then
+		--		LolzenUIcfg.chat["chat_timestamp"] = false
+		--	end
 	
-		hooksecurefunc("InterfaceOptionsSocialPanelTimestamps_OnClick", function(self)
-			if GetCVar("showTimestamps") ~= "none" then
-				LolzenUIcfg.chat["chat_timestamp"] = false
-			end
-		end)
+	--	hooksecurefunc("InterfaceOptionsSocialPanelTimestamps_OnClick", function(self)
+	--		if GetCVar("showTimestamps") ~= "none" then
+				LolzenUIcfg.chat["chat_timestamp"] = true
+	--		end
+	--	end)
 	elseif event == "PLAYER_ENTERING_WORLD" then
 		if LolzenUIcfg.modules["chat"] == false then return end
 		-- disable UI forced positioning
