@@ -168,7 +168,7 @@ local function Enable(self)
 		element.ForceUpdate = ForceUpdate
 
 		self:RegisterEvent('UNIT_DISPLAYPOWER', VisibilityPath)
-		self:RegisterEvent('PLAYER_TALENT_UPDATE', VisibilityPath, true)
+		--self:RegisterEvent('PLAYER_TALENT_UPDATE', VisibilityPath, true)
 
 		if(element:IsObjectType('StatusBar') and not element:GetStatusBarTexture()) then
 			element:SetStatusBarTexture([[Interface\TargetingFrame\UI-StatusBar]])
@@ -197,7 +197,7 @@ local function Disable(self)
 
 		self:UnregisterEvent('UNIT_AURA', Path)
 		self:UnregisterEvent('UNIT_DISPLAYPOWER', VisibilityPath)
-		self:UnregisterEvent('PLAYER_TALENT_UPDATE', VisibilityPath)
+		--self:UnregisterEvent('PLAYER_TALENT_UPDATE', VisibilityPath)
 
 		MonkStaggerBar:RegisterEvent('PLAYER_ENTERING_WORLD')
 		MonkStaggerBar:RegisterEvent('PLAYER_SPECIALIZATION_CHANGED')

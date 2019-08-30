@@ -95,6 +95,8 @@ local function UpdateColor(element, unit, cur, max)
 		t = parent.colors.tapped
 	elseif(element.colorDisconnected and element.disconnected) then
 		t = parent.colors.disconnected
+	elseif(element.colorHappiness and UnitIsUnit(unit, "pet") and GetPetHappiness()) then
+		t = parent.colors.happiness[GetPetHappiness()]
 	elseif(element.colorClass and UnitIsPlayer(unit)) or
 		(element.colorClassNPC and not UnitIsPlayer(unit)) or
 		(element.colorClassPet and UnitPlayerControlled(unit) and not UnitIsPlayer(unit)) then

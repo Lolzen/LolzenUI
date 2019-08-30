@@ -1,6 +1,6 @@
 local parent, ns = ...
 local global = GetAddOnMetadata(parent, 'X-oUF')
-local _VERSION = '9.3.1'
+local _VERSION = '@project-version@'
 if(_VERSION:find('project%-version')) then
 	_VERSION = 'devel'
 end
@@ -281,9 +281,6 @@ local function initObject(unit, style, styleFunc, header, ...)
 		end
 
 		if(not (suffix == 'target' or objectUnit and objectUnit:match('target'))) then
-			object:RegisterEvent('UNIT_ENTERED_VEHICLE', updateActiveUnit)
-			object:RegisterEvent('UNIT_EXITED_VEHICLE', updateActiveUnit)
-
 			-- We don't need to register UNIT_PET for the player unit. We register it
 			-- mainly because UNIT_EXITED_VEHICLE and UNIT_ENTERED_VEHICLE doesn't always
 			-- have pet information when they fire for party and raid units.

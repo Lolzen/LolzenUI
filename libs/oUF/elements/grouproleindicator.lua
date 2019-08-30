@@ -37,13 +37,13 @@ local function Update(self, event)
 		element:PreUpdate()
 	end
 
-	local role = UnitGroupRolesAssigned(self.unit)
-	if(role == 'TANK' or role == 'HEALER' or role == 'DAMAGER') then
-		element:SetTexCoord(GetTexCoordsForRoleSmallCircle(role))
-		element:Show()
-	else
-		element:Hide()
-	end
+	--local role = UnitGroupRolesAssigned(self.unit)
+	--if(role == 'TANK' or role == 'HEALER' or role == 'DAMAGER') then
+		--element:SetTexCoord(GetTexCoordsForRoleSmallCircle(role))
+		--element:Show()
+	--else
+		--element:Hide()
+	--end
 
 	--[[ Callback: GroupRoleIndicator:PostUpdate(role)
 	Called after the element has been updated.
@@ -97,7 +97,7 @@ local function Disable(self)
 		element:Hide()
 
 		self:UnregisterEvent('PLAYER_ROLES_ASSIGNED', Path)
-		self:UnregisterEvent('GROUP_ROSTER_UPDATE', Path, true)
+		self:UnregisterEvent('GROUP_ROSTER_UPDATE', Path)
 	end
 end
 

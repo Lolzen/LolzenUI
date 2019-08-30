@@ -29,8 +29,9 @@ local MAINTANK_ICON = [[Interface\GROUPFRAME\UI-GROUP-MAINTANKICON]]
 local MAINASSIST_ICON = [[Interface\GROUPFRAME\UI-GROUP-MAINASSISTICON]]
 
 local function Update(self, event)
-	local element = self.RaidRoleIndicator
 	local unit = self.unit
+
+	local element = self.RaidRoleIndicator
 
 	--[[ Callback: RaidRoleIndicator:PreUpdate()
 	Called before the element has been updated.
