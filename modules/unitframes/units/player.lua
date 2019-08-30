@@ -64,18 +64,18 @@ ns.SetupPlayer = function(self, unit)
 	self.Castbar.Text:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.player["uf_player_cb_font"]), LolzenUIcfg.unitframes.player["uf_player_cb_font_size"], LolzenUIcfg.unitframes.player["uf_player_cb_font_flag"])
 	self.Castbar.Text:SetTextColor(LolzenUIcfg.unitframes.player["uf_player_cb_font_color"][1], LolzenUIcfg.unitframes.player["uf_player_cb_font_color"][2], LolzenUIcfg.unitframes.player["uf_player_cb_font_color"][3])
 
-	ns.AddClassPower(self, unit)
+--	ns.AddClassPower(self, unit)
 
-	if select(2, UnitClass('player')) == "DEATHKNIGHT" then
-		ns.AddRunes(self, unit)
-	end
+--	if select(2, UnitClass('player')) == "DEATHKNIGHT" then
+--		ns.AddRunes(self, unit)
+--	end
 
-	if select(2, UnitClass('player')) == "MONK" then
-		ns.AddStagger(self, unit)
-	end
+--	if select(2, UnitClass('player')) == "MONK" then
+--		ns.AddStagger(self, unit)
+--	end
 
-	ns.AddThreatBorder(self, unit)
-	ns.AddDebuffHighlight(self, unit)
+--	ns.AddThreatBorder(self, unit)
+--	ns.AddDebuffHighlight(self, unit)
 	ns.AddCombatFade(self, unit)
 	ns.AddRaidMark(self, unit)
 	ns.AddLeadIndicator(self, unit)

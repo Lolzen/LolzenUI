@@ -97,9 +97,9 @@ ns.SetupTarget = function(self, unit)
 	self.Castbar.Text:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.target["uf_target_cb_font"]), LolzenUIcfg.unitframes.target["uf_target_cb_font_size"], LolzenUIcfg.unitframes.target["uf_target_cb_font_flag"])
 	self.Castbar.Text:SetTextColor(LolzenUIcfg.unitframes.target["uf_target_cb_font_color"][1], LolzenUIcfg.unitframes.target["uf_target_cb_font_color"][2], LolzenUIcfg.unitframes.target["uf_target_cb_font_color"][3])
 
-	ns.AddInfoPanel(self, unit)
-	self.Level:SetPoint("LEFT", self.Health, "LEFT", 2, -23) 
-	self.Name:SetPoint("RIGHT", self.Health, "RIGHT", -2, -23)
+--	ns.AddInfoPanel(self, unit)
+--	self.Level:SetPoint("LEFT", self.Health, "LEFT", 2, -23) 
+--	self.Name:SetPoint("RIGHT", self.Health, "RIGHT", -2, -23)
 
 	ns.AddCombatFade(self, unit)
 	ns.AddRaidMark(self, unit)
