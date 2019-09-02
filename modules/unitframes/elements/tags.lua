@@ -34,7 +34,6 @@ end
 
 tags["lolzen:power"] = function(unit)
 	local min, max = UnitPower(unit), UnitPowerMax(unit)
-	local color = LolzenUIcfg.unitframes.powercolors[UnitPowerType(unit)]
 	if min == 0 or max == 0 or not UnitIsConnected(unit) or UnitIsDead(unit) or UnitIsGhost(unit) then return end
 
 	if LolzenUIcfg.unitframes.general["uf_use_sivalue"] == true then
