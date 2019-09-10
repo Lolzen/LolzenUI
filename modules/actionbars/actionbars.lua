@@ -7,6 +7,7 @@ ns.RegisterModule("actionbars", L["desc_actionbars"], true)
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
+f:RegisterEvent("PLAYER_ENTERING_WORLD")
 f:SetScript("OnEvent", function(self, event, addon)
 	if addon == "LolzenUI" then
 		if LolzenUIcfg.modules["actionbars"] == false then return end
@@ -205,6 +206,15 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		for _, name in pairs(actionbars) do
 			setActionBarPosition(name)
+		end
+	end
+	-- hide pet hotkeys on login
+	if event == "PLAYER_ENTERING_WORLD" then
+		if LolzenUIcfg.modules["actionbars"] == false then return end
+		if LolzenUIcfg.actionbar["actionbar_show_keybinds"] == false then
+			for i=1, NUM_PET_ACTION_SLOTS do
+				_G["PetActionButton"..i.."HotKey"]:Hide()
+			end
 		end
 	end
 end)
