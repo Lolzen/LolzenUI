@@ -8,5 +8,6 @@
 	<Script file="modules/itemlevel/ilvl_bagnon.lua"/>
 	<Script file="modules/itemlevel/ilvl_baudbag.lua"/>
 	<Script file="modules/itemlevel/ilvl_combuctor.lua"/>
+	<Script file="modules/itemlevel/ilvl_inventorian.lua"/>
 	<Script file="modules/itemlevel/ilvl_litebag.lua"/>
 </Ui>
