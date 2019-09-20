@@ -250,9 +250,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 					Glow:SetPoint("BOTTOMRIGHT", health, 5, -5)
 					Glow:SetBackdropBorderColor(6, 0, 0)
 					frame.Glow = Glow
-					table.insert(frame.__elements, UpdateThreat)
-					frame:RegisterEvent("UNIT_THREAT_SITUATION_UPDATE", UpdateThreat)
-					frame:RegisterEvent("UNIT_THREAT_LIST_UPDATE", UpdateThreat)
+
+					frame.ThreatIndicator = {
+						IsObjectType = function() end,
+						Override = UpdateThreat,
+					}
 				end
 
 				local exploGlow = CreateFrame("Frame", nil, frame)
