@@ -114,12 +114,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 			iconborder:SetBackdropBorderColor(0, 0, 0)
 			iconborder:SetFrameLevel(3)
 
-			--[[
-			local overlay = button.overlay
-			overlay.SetVertexColor = overlayProxy
-			overlay:SetTexture("Interface\\AddOns\\LolzenUI\\media\\auraborder")
-			overlay:SetTexCoord(.07, .93, .07, .93)
-			]]
+			button.overlay:SetTexture("Interface\\AddOns\\LolzenUI\\media\\auraborder")
+			button.overlay:SetTexCoord(.07, .93, .07, .93)
+			button.overlay.Hide = function(self)
+				self:SetVertexColor(0, 0, 0)
+			end
 		end
 
 		local PostUpdateIcon = function(icons, unit, button, index, offset, filter, isDebuff)
@@ -275,9 +274,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 				frame.Buffs = Buffs
 				
 				local Debuffs = CreateAura(frame, LolzenUIcfg.nameplates.general["np_aura_maxnum"])
+				Debuffs.showDebuffType = true
 				frame.Debuffs = Debuffs
 				
 				local Auras = CreateAura(frame, LolzenUIcfg.nameplates.general["np_aura_maxnum"])
+				Auras.showDebuffType = true
 				frame.Auras = Auras
 				
 				if LolzenUIcfg.nameplates.general["np_aura_show_type"] == "Buffs" then
@@ -285,7 +286,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 					if LolzenUIcfg.nameplates.general["np_aura_show_only_player"] == true then
 						frame.Buffs.onlyShowPlayer = true
 					end
-					--frame.Buffs.showBuffType = true
 					frame.Buffs["growth-x"] = LolzenUIcfg.nameplates.general["np_aura_growth_x"]
 					frame.Buffs["growth-y"] = LolzenUIcfg.nameplates.general["np_aura_growth_y"]
 				elseif LolzenUIcfg.nameplates.general["np_aura_show_type"] == "Debuffs" then
@@ -293,16 +293,13 @@ f:SetScript("OnEvent", function(self, event, addon)
 					if LolzenUIcfg.nameplates.general["np_aura_show_only_player"] == true then
 						frame.Debuffs.onlyShowPlayer = true
 					end
-					--frame.Debuffs.showDebuffType = true
 					frame.Debuffs["growth-x"] = LolzenUIcfg.nameplates.general["np_aura_growth_x"]
 					frame.Debuffs["growth-y"] = LolzenUIcfg.nameplates.general["np_aura_growth_y"]
-				elseif LolzenUIcfg.nameplates["np_aura_show_type"] == "Both" then
+				elseif LolzenUIcfg.nameplates.general["np_aura_show_type"] == "Both" then
 					frame.Auras:SetPoint(LolzenUIcfg.nameplates.general["np_aura_anchor1"], frame, LolzenUIcfg.nameplates.general["np_aura_anchor2"], LolzenUIcfg.nameplates.general["np_aura_posx"], LolzenUIcfg.nameplates.general["np_aura_posy"])
 					if LolzenUIcfg.nameplates.general["np_aura_show_only_player"] == true then
 						frame.Auras.onlyShowPlayer = true
 					end
-					--frame.Auras.showBuffType = true
-					--frame.Auras.showDebuffType = true
 					frame.Auras["growth-x"] = LolzenUIcfg.nameplates.general["np_aura_growth_x"]
 					frame.Auras["growth-y"] = LolzenUIcfg.nameplates.general["np_aura_growth_y"]
 				end
