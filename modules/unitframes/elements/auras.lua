@@ -18,12 +18,11 @@ local PostCreateIcon = function(Auras, button)
 	iconborder:SetBackdropBorderColor(0, 0, 0)
 	iconborder:SetFrameLevel(3)
 
-	--[[
-	local overlay = button.overlay
-	overlay.SetVertexColor = overlayProxy
-	overlay:SetTexture("Interface\\AddOns\\LolzenUI\\media\\auraborder")
-	overlay:SetTexCoord(.07, .93, .07, .93)
-	]]
+	button.overlay:SetTexture("Interface\\AddOns\\LolzenUI\\media\\auraborder")
+	button.overlay:SetTexCoord(.07, .93, .07, .93)
+	button.overlay.Hide = function(self)
+		self:SetVertexColor(0, 0, 0)
+	end
 end
 
 local PostUpdateIcon = function(icons, unit, button, index, offset, filter, isDebuff)
@@ -81,6 +80,7 @@ end
 
 function ns.AddAuras(self, unit)
 	local Auras = CreateAura(self, 8)
+	Auras.showDebuffType = true
 	self.Auras = Auras
 end
 
@@ -91,5 +91,6 @@ end
 
 function ns.AddDebuffs(self, unit)
 	local Debuffs = CreateAura(self, 8)
+	Debuffs.showDebuffType = true
 	self.Debuffs = Debuffs
 end
