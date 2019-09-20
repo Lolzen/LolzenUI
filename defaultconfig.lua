@@ -803,6 +803,7 @@ local OMFdefault = {
 
 -- make the defaults globally available
 _G["LolzenUIdefaultcfg"] = defaultconfig
+_G["LolzenUIOMFdefaultcfg"] = OMFdefault
 
 -- // check default config and update if necessary // --
 local function updateDB(module)
