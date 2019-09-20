@@ -61,16 +61,16 @@ local PostCreateIcon = function(Auras, button)
 	Duration:SetTextColor(1, 1, 1)
 	Duration:SetPoint("BOTTOMRIGHT", button, 0, 0)
 	button.Duration = Duration
-
-	button:HookScript('OnUpdate', UpdateAuraTimer)
 end
 
 local PostUpdateIcon = function(icons, unit, button, index, offset, filter, isDebuff)
 	local _, _, _, _, duration, expiration, owner, canStealOrPurge = UnitAura(unit, index, button.filter)
 	if(duration and duration > 0) then
 		button.expiration = expiration - GetTime()
+		button:HookScript('OnUpdate', UpdateAuraTimer)
 	else
 		button.expiration = math.huge
+		button:HookScript('OnUpdate', nil)
 	end
 
 	-- fix for boss, party & raid
