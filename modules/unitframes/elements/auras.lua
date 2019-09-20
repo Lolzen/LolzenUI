@@ -1,9 +1,35 @@
 local _, ns = ...
 
+local function FormatTime(seconds)
+	local day, hour, minute = 86400, 3600, 60
+	if (seconds >= day) then
+		return format('%dd', floor(seconds/day + 0.5))
+	elseif (seconds >= hour) then
+		return format('%dh', floor(seconds/hour + 0.5))
+	elseif (seconds >= minute) then
+		if (seconds <= minute * 5) then
+			return format('%d:%02d', floor(seconds/minute), seconds % minute)
+		end
+		return format('%dm', floor(seconds/minute + 0.5))
+	else
+		return format('%d', ceil(seconds))
+	end
+end
+		
+local function UpdateAuraTimer(self, elapsed)
+	if(self.expiration) then
+		self.expiration = self.expiration - elapsed
+
+		if(self.expiration > 0) then
+			self.Duration:SetFormattedText(FormatTime(self.expiration))
+		end
+	end
+end
+
 local PostCreateIcon = function(Auras, button)
 	local count = button.count
 	count:ClearAllPoints()
-	count:SetPoint"BOTTOM"
+	count:SetPoint("TOPLEFT")
 
 	button.icon:SetTexCoord(.07, .93, .07, .93)
 
@@ -23,9 +49,30 @@ local PostCreateIcon = function(Auras, button)
 	button.overlay.Hide = function(self)
 		self:SetVertexColor(0, 0, 0)
 	end
+
+	-- hide the default cooldown numbers
+	button.cd:SetHideCountdownNumbers(true)
+
+	local TimerP = CreateFrame("Frame", nil, button)
+	TimerP:SetFrameLevel(20)
+	
+	local Duration = TimerP:CreateFontString(nil, 'OVERLAY', 'GameFontNormal')
+	Duration:SetFont("Interface\Addons\LolzenUI\fonts\DroidSansBold.ttf", 12, "THICKOUTLINE")
+	Duration:SetTextColor(1, 1, 1)
+	Duration:SetPoint("BOTTOMRIGHT", button, 0, 0)
+	button.Duration = Duration
+
+	button:HookScript('OnUpdate', UpdateAuraTimer)
 end
 
 local PostUpdateIcon = function(icons, unit, button, index, offset, filter, isDebuff)
+	local _, _, _, _, duration, expiration, owner, canStealOrPurge = UnitAura(unit, index, button.filter)
+	if(duration and duration > 0) then
+		button.expiration = expiration - GetTime()
+	else
+		button.expiration = math.huge
+	end
+
 	-- fix for boss, party & raid
 	-- these have a number attached to their names
 	if string.find(unit, "boss") then
