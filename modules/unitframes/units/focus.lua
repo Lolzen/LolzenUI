@@ -31,7 +31,6 @@ ns.SetupFocus = function(self, unit)
 		if LolzenUIcfg.unitframes.focus["uf_focus_aura_show_only_player"] == true then
 			self.Buffs.onlyShowPlayer = true
 		end
-		--self.Buffs.showBuffType = true
 		self.Buffs["growth-x"] = LolzenUIcfg.unitframes.focus["uf_focus_aura_growth_x"]
 		self.Buffs["growth-y"] = LolzenUIcfg.unitframes.focus["uf_focus_aura_growth_y"]
 	elseif LolzenUIcfg.unitframes.focus["uf_focus_aura_show_type"] == "Debuffs" then
@@ -41,7 +40,6 @@ ns.SetupFocus = function(self, unit)
 		if LolzenUIcfg.unitframes.focus["uf_focus_aura_show_only_player"] == true then
 			self.Debuffs.onlyShowPlayer = true
 		end
-		--self.Debuffs.showDebuffType = true
 		self.Debuffs["growth-x"] = LolzenUIcfg.unitframes.focus["uf_focus_aura_growth_x"]
 		self.Debuffs["growth-y"] = LolzenUIcfg.unitframes.focus["uf_focus_aura_growth_y"]
 	elseif LolzenUIcfg.unitframes.focus["uf_focus_aura_show_type"] == "Both" then
@@ -51,8 +49,6 @@ ns.SetupFocus = function(self, unit)
 		if LolzenUIcfg.unitframes.focus["uf_focus_aura_show_only_player"] == true then
 			self.Auras.onlyShowPlayer = true
 		end
-		--self.Auras.showBuffType = true
-		--self.Auras.showDebuffType = true
 		self.Auras["growth-x"] = LolzenUIcfg.unitframes.focus["uf_focus_aura_growth_x"]
 		self.Auras["growth-y"] = LolzenUIcfg.unitframes.focus["uf_focus_aura_growth_y"]
 	end
