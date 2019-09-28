@@ -41,7 +41,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 
 		-- special snowflake microbutton
-		StoreMicroButton.Show = StoreMicroButton.Hide
+		StoreMicroButton:Hide()
+		StoreMicroButton.Show = function() end
 		
 		for _, frame in pairs(MicroButtons) do
 			frame:SetParent(invisible)
