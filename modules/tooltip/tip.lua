@@ -189,10 +189,16 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		-- colorize tooltipborder accordingly to Azerite EssenceSlot rank
 		local function colorEssenceSlotQuality(self)
-			local selectedEssenceRank = string.gsub(_G["GameTooltipTextLeft1"]:GetText(), "[%a%p%s]", "")
-			local r, g, b = GetItemQualityColor(selectedEssenceRank+1)
-			self:SetBackdropBorderColor(r, g, b)
-			self:SetBackdropColor(r, g, b)
+			local selectedEssenceName = string.gsub(_G["GameTooltipTextLeft1"]:GetText(), " %b()", "")
+			local essences = C_AzeriteEssence.GetEssences()
+			for _, slot in pairs(essences) do
+				local essence = C_AzeriteEssence.GetEssenceInfo(slot.ID)
+				if selectedEssenceName == essence.name then
+					local r, g, b = GetItemQualityColor(essence.rank+1)
+					self:SetBackdropBorderColor(r, g, b)
+					self:SetBackdropColor(r, g, b)
+				end
+			end
 		end
 
 		-- talents
