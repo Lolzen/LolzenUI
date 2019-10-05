@@ -81,6 +81,8 @@ local PostUpdateIcon = function(icons, unit, button, index, offset, filter, isDe
 		unit = "party"
 	elseif string.find(unit, "raid") then
 		unit = "raid"
+	elseif string.find(unit, "arena") then
+		unit = "arena"
 	end
 
 	if LolzenUIcfg.unitframes[unit] and LolzenUIcfg.unitframes[unit]["uf_"..unit.."_aura_desature_nonplayer_auras"] == true then
@@ -104,6 +106,8 @@ local CreateAura = function(self, num)
 		unit = "party"
 	elseif string.find(unit, "raid") then
 		unit = "raid"
+	elseif string.find(unit, "arena") then
+		unit = "arena"
 	end
 
 	-- check if SVs exist, otherwise do nothing
