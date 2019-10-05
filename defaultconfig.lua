@@ -870,6 +870,25 @@ local function updateDB(module)
 			else
 				LolzenUIcfg[module][k] = v
 			end
+		elseif LolzenUIcfg[module][k] and v ~= nil then
+			if type(v) == "table" then
+				for a, b in pairs(v) do
+					if a and b then		
+						-- handle the case tables in tables are present, but new defaults are available
+						if not LolzenUIcfg[module][k][a] then
+							if type(b) == "boolean" then
+								if b == true then
+									LolzenUIcfg[module][k][a] = true
+								else
+									LolzenUIcfg[module][k][a] = false
+								end
+							else
+								LolzenUIcfg[module][k][a] = b
+							end
+						end
+					end
+				end
+			end
 		end
 	end
 end
