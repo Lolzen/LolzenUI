@@ -23,7 +23,7 @@ function ns.AddInfoPanel(self, unit)
 
 	local level = self.Health:CreateFontString(nil, "OVERLAY")
 	level:SetFont("Interface\\AddOns\\LolzenUI\\fonts\\DroidSans.ttf", 12, "THINOUTLINE") 
-	self:Tag(level, "[difficulty][level][shortclassification]")
+	self:Tag(level, "[difficulty][level][shortclassification] [arenaspec]")
 	self.Level = level
 
 	local name = self.Health:CreateFontString(nil, "OVERLAY")
