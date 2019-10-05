@@ -19,6 +19,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			pet = ns.SetupPet,
 			boss = ns.SetupBoss,
 			focus = ns.SetupFocus,
+			arena = ns.SetupArena,
 		}
 
 		-- A small helper to change the style into a unit specific, if it exists.
@@ -64,6 +65,18 @@ f:SetScript("OnEvent", function(self, event, addon)
 					spawnHelper(self, "boss" .. i, "CENTER", (0 + LolzenUIcfg.unitframes.boss["uf_boss_width"]) - (LolzenUIcfg.unitframes.boss["uf_boss_width"] * i) + LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] - (LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] * i), -200)
 				elseif 	LolzenUIcfg.unitframes.boss["uf_boss_additional_pos"] == "RIGHT" then
 					spawnHelper(self, "boss" .. i, "CENTER", (0 - LolzenUIcfg.unitframes.boss["uf_boss_width"]) + (LolzenUIcfg.unitframes.boss["uf_boss_width"] * i) - LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] + (LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] * i), -200)
+				end
+			end
+
+			for i=1, 3 do
+				if LolzenUIcfg.unitframes.arena["uf_arena_additional_pos"] == "ABOVE" then
+					spawnHelper(self, "arena" .. i, "CENTER", 0, -200 - LolzenUIcfg.unitframes.arena["uf_arena_height"] + (LolzenUIcfg.unitframes.arena["uf_arena_height"] * i) - LolzenUIcfg.unitframes.arena["uf_arena_additional_spacing"] + (LolzenUIcfg.unitframes.arena["uf_arena_additional_spacing"] * i))
+				elseif LolzenUIcfg.unitframes.arena["uf_arena_additional_pos"] == "BELOW" then
+					spawnHelper(self, "arena" .. i, "CENTER", 0, -200 + LolzenUIcfg.unitframes.arena["uf_arena_height"] - (LolzenUIcfg.unitframes.arena["uf_arena_height"] * i) + LolzenUIcfg.unitframes.arena["uf_arena_additional_spacing"] - (LolzenUIcfg.unitframes.arena["uf_arena_additional_spacing"] * i))
+				elseif 	LolzenUIcfg.unitframes.arena["uf_arena_additional_pos"] == "LEFT" then
+					spawnHelper(self, "arena" .. i, "CENTER", (0 + LolzenUIcfg.unitframes.arena["uf_arena_width"]) - (LolzenUIcfg.unitframes.arena["uf_arena_width"] * i) + LolzenUIcfg.unitframes.arena["uf_arena_additional_spacing"] - (LolzenUIcfg.unitframes.arena["uf_arena_additional_spacing"] * i), -200)
+				elseif 	LolzenUIcfg.unitframes.arena["uf_arena_additional_pos"] == "RIGHT" then
+					spawnHelper(self, "arena" .. i, "CENTER", (0 - LolzenUIcfg.unitframes.arena["uf_arena_width"]) + (LolzenUIcfg.unitframes.arena["uf_arena_width"] * i) - LolzenUIcfg.unitframes.arena["uf_arena_additional_spacing"] + (LolzenUIcfg.unitframes.arena["uf_arena_additional_spacing"] * i), -200)
 				end
 			end
 
