@@ -810,9 +810,7 @@ local function updateDB(module)
 	local expansion, major, minor, revision = tonumber(strsub(LolzenUIcfg.version, 1, 1)), tonumber(strsub(LolzenUIcfg.version, 3, 3)), tonumber(strsub(LolzenUIcfg.version, 5, 5)), tonumber(strsub(LolzenUIcfg.version, 8))
 	for k, v in pairs(defaultconfig[module]) do
 		if not LolzenUIcfg[module][k] and v ~= nil then
-			if type(v) == "table" then
-				LolzenUIcfg[module][k] = v
-			elseif type(v) == "boolean" then
+			if type(v) == "boolean" then
 				if v == true and LolzenUIcfg[module][k] == nil then
 					LolzenUIcfg[module][k] = true
 				elseif v == false and LolzenUIcfg[module][k] == nil then
