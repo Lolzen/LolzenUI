@@ -813,15 +813,11 @@ local function updateDB(module)
 			if type(v) == "table" then
 				LolzenUIcfg[module][k] = v
 			elseif type(v) == "boolean" then
-				local bool
 				if v == true and LolzenUIcfg[module][k] == nil then
-					bool = "true"
 					LolzenUIcfg[module][k] = true
 				elseif v == false and LolzenUIcfg[module][k] == nil then
-					bool = "false"
 					LolzenUIcfg[module][k] = false
 				end
-				
 			else
 				LolzenUIcfg[module][k] = v
 			end
