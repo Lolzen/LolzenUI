@@ -931,9 +931,17 @@ f:SetScript("OnEvent", function(self, event, addon)
 			LolzenUIcfgOMF = OMFdefault
 		else
 			-- update saved variables upon finding new entries
-			for k, v in pairs(LolzenUIcfgOMF)
+			for k, v in pairs(OMFdefault) do
 				if not LolzenUIcfgOMF[k] then
 					LolzenUIcfgOMF[k] = v
+				else
+					if k == "__INITIAL" then
+						for a, b in pairs(v) do
+							if not LolzenUIcfgOMF[k][a] then
+								LolzenUIcfgOMF[k][a] = b
+							end
+						end
+					end
 				end
 			end
 		end
