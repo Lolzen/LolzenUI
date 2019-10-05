@@ -822,6 +822,11 @@ local OMFdefault = {
 	["Lolzen - Focus"] = {
 		["oUF_LolzenFocus"] = "CENTERUIParent-250-2301.000",
 	},
+	["Lolzen - Arena"] = {
+		["oUF_LolzenArena1"] = "CENTERUIParent0-2001.000",
+		["oUF_LolzenArena2"] = "CENTERUIParent0-2411.000",
+		["oUF_LolzenArena3"] = "CENTERUIParent0-2821.000",
+	},
 	["__INITIAL"] = {
 		["Lolzen - Player"] = {
 			["oUF_LolzenPlayer"] = "CENTERUIParent-250-2001.000",
@@ -850,6 +855,11 @@ local OMFdefault = {
 		},
 		["Lolzen - Focus"] = {
 			["oUF_LolzenFocus"] = "CENTERUIParent-250-2301.000",
+		},
+		["Lolzen - Arena"] = {
+			["oUF_LolzenArena1"] = "CENTERUIParent0-2001.000",
+			["oUF_LolzenArena2"] = "CENTERUIParent0-2411.000",
+			["oUF_LolzenArena3"] = "CENTERUIParent0-2821.000",
 		},
 	},
 }
