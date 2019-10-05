@@ -811,7 +811,7 @@ local function updateDB(module)
 	for k, v in pairs(defaultconfig[module]) do
 		if not LolzenUIcfg[module][k] and v ~= nil then
 			if type(v) == "table" then
-				LolzenUIcfg[module][k] = {unpack(v)}
+				LolzenUIcfg[module][k] = v
 			elseif type(v) == "boolean" then
 				local bool
 				if v == true and LolzenUIcfg[module][k] == nil then
