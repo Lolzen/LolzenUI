@@ -8,4 +8,5 @@
 	<Script file="modules/unitframes/units/pet.lua"/>
 	<Script file="modules/unitframes/units/boss.lua"/>
 	<Script file="modules/unitframes/units/focus.lua"/>
+	<Script file="modules/unitframes/units/arena.lua"/>
 </Ui>
