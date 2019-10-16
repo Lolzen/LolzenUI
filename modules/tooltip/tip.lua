@@ -22,7 +22,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			ShoppingTooltip3,
 		}
 
-		-- overwrite the default tooltip style
+		-- overwrite tooltip styles
 		GAME_TOOLTIP_BACKDROP_STYLE_DEFAULT = {
 			bgFile = "Interface\\Buttons\\WHITE8x8",
 			edgeFile = LSM:Fetch("border", LolzenUIcfg.tooltip["tip_border"]),
@@ -35,23 +35,16 @@ f:SetScript("OnEvent", function(self, event, addon)
 			backdropBorderColor = CreateColor(1, 1, 1),
 			backdropColor = CreateColor(0, 0, 0),
 		}
-		GAME_TOOLTIP_BACKDROP_STYLE_EMBEDDED = GAME_TOOLTIP_BACKDROP_STYLE_DEFAULT
-		GAME_TOOLTIP_BACKDROP_STYLE_AZERITE_ITEM  = {
-			bgFile = "Interface\\AddOns\\LolzenUI\\media\\tooltip-azerite-bg",
-			edgeFile = "Interface\\AddOns\\LolzenUI\\media\\border-azerite",
-			tile = false,
-			tileEdge = true,
-			tileSize = 16,
-			edgeSize = 16,
-			insets = { left = 3, right = 3, top = 3, bottom = 3 },
 
-			backdropBorderColor = CreateColor(1, 1, 1),
-			backdropColor = CreateColor(1, 1, 1),
-			
-			overlayAtlasTop = "AzeriteTooltip-Topper";
-			overlayAtlasTopScale = .75,
-			overlayAtlasBottom = "AzeriteTooltip-Bottom";
-		}
+		GAME_TOOLTIP_BACKDROP_STYLE_EMBEDDED = GAME_TOOLTIP_BACKDROP_STYLE_DEFAULT
+
+		GAME_TOOLTIP_BACKDROP_STYLE_AZERITE_ITEM["bgFile"] = "Interface\\AddOns\\LolzenUI\\media\\tooltip-azerite-bg"
+		GAME_TOOLTIP_BACKDROP_STYLE_AZERITE_ITEM["edgeFile"] = "Interface\\AddOns\\LolzenUI\\media\\border-azerite"
+		GAME_TOOLTIP_BACKDROP_STYLE_AZERITE_ITEM["tile"] = false
+		GAME_TOOLTIP_BACKDROP_STYLE_AZERITE_ITEM["edgeSize"] = 16
+		GAME_TOOLTIP_BACKDROP_STYLE_AZERITE_ITEM["insets"] = { left = 3, right = 3, top = 3, bottom = 3 }
+		GAME_TOOLTIP_BACKDROP_STYLE_AZERITE_ITEM["backdropBorderColor"] = CreateColor(1, 1, 1)
+		GAME_TOOLTIP_BACKDROP_STYLE_AZERITE_ITEM["backdropColor"] = CreateColor(1, 1, 1)
 
 		-- customize the mobClassification
 		local mobType = {
