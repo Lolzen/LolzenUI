@@ -47,6 +47,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		-- Make the MainMenuBar clickthrough, so it doesn't interfere with other frames placed at the bottom
 		MainMenuBar:EnableMouse(false)
+		-- Also the PetActionBarFrame
+		PetActionBarFrame:EnableMouse(false)
 
 		-- move the VehicleExitButton
 		OverrideActionBar.LeaveButton:ClearAllPoints()
