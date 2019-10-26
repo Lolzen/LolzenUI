@@ -27,10 +27,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 						SendChatMessage(tostring(msg), "INSTANCE_CHAT")
 					elseif IsInGroup(LE_PARTY_CATEGORY_HOME) and LolzenUIcfg.interruptannouncer["interruptannoucer_party"] == true then
 						SendChatMessage(tostring(msg), "PARTY")
-					else
-						if LolzenUIcfg.interruptannouncer["interruptannoucer_say"] == true then
-							SendChatMessage(tostring(msg), "SAY")
-						end
 					end
 				end
 			end

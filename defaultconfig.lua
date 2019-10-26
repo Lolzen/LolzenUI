@@ -193,7 +193,6 @@ defaultconfig.itemlevel = {
 }
 
 defaultconfig.interruptannouncer = {
-	["interruptannoucer_say"] = true,
 	["interruptannoucer_party"] = true,
 	["interruptannoucer_instance"] = true,
 	["interruptannouncer_msg"] = L["ia_announce_message_text_interrupted"],
