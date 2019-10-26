@@ -1,7 +1,7 @@
 ## Interface: 80205
 ## Author: Lolzen
 ## Title: Lolzen User Interface
-## Version: 8.2.5_r2
+## Version: 8.2.5_r3
 ## Notes: Restyle the whole WoW UI
 ## x-Credits: haste, Neal, p3lim, tekkub, Seerah
 ## X-oUF: LolzenUI
