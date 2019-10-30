@@ -86,20 +86,22 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		-- get artifact power data
 		function afbar:ARTIFACT_XP_UPDATE()
-			local hasArtifact = HasArtifactEquipped("player")
 			local hasHeartOfAzeroth = C_AzeriteItem.HasActiveAzeriteItem()
-			local artifactDisabled = C_ArtifactUI.IsEquippedArtifactDisabled()
 			-- prioritize Heart of Azeroth over Artifact Weapon
 			if hasHeartOfAzeroth then
 				local azeriteItemLocation = C_AzeriteItem.FindActiveAzeriteItem()
 				local artifactXP, totalXP = C_AzeriteItem.GetAzeriteItemXPInfo(azeriteItemLocation)
-				local xpForNextPoint = totalXP - artifactXP
-				local currentLevel = C_AzeriteItem.GetPowerLevel(azeriteItemLocation)
-				afbar:SetMinMaxValues(0, totalXP)
-				afbar:SetValue(artifactXP)
-				afbar:SetAlpha(LolzenUIcfg.artifactbar["artifactbar_alpha"])
-				-- use tostring to prevent integer overflow
-				xptext:SetFormattedText("[Level: %d] %s / %s (%.0f%%)", currentLevel, tostring(artifactXP), tostring(totalXP), tostring(artifactXP/totalXP*100))
+				if aritfactXP == totaltXp then
+					afbar:SetAlpha(0)
+				else
+					local xpForNextPoint = totalXP - artifactXP
+					local currentLevel = C_AzeriteItem.GetPowerLevel(azeriteItemLocation)
+					afbar:SetMinMaxValues(0, totalXP)
+					afbar:SetValue(artifactXP)
+					afbar:SetAlpha(LolzenUIcfg.artifactbar["artifactbar_alpha"])
+					-- use tostring to prevent integer overflow
+					xptext:SetFormattedText("[Level: %d] %s / %s (%.0f%%)", currentLevel, tostring(artifactXP), tostring(totalXP), tostring(artifactXP/totalXP*100))
+				end
 			else
 				afbar:SetAlpha(0)
 			end
