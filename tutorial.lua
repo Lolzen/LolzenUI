@@ -158,21 +158,13 @@ local function showTutorial()
 	tftext:SetPoint("CENTER", tf)
 
 	-- header
-	local tftex = tf:CreateTexture(nil, "BACKGROUND")
-	tftex:SetTexture("Interface\\DialogFrame\\UI-DialogBox-Header")
-	tftex:SetPoint("BOTTOM", tf, "TOP", 0, -30)
-
 	local headertext = tf:CreateFontString(nil, "OVERLAY", "GameTooltipText")
-	headertext:SetPoint("TOP", tftex, "TOP", 0, -15)
+	headertext:SetPoint("TOPLEFT", tf, 20, -20)
 	headertext:SetText("LolzenUI: Tutorial")
 
 	--step counter header
-	local steptex = tf:CreateTexture(nil, "BACKGROUND")
-	steptex:SetTexture("Interface\\DialogFrame\\UI-DialogBox-Header")
-	steptex:SetPoint("BOTTOM", tf, "TOPRIGHT", -80, -30)
-
 	local stepheadertext = tf:CreateFontString(nil, "OVERLAY", "GameTooltipText")
-	stepheadertext:SetPoint("TOP", steptex, "TOP", 0, -15)
+	stepheadertext:SetPoint("TOPRIGHT", tf, "TOPRIGHT", -20, -20)
 
 	-- next button
 	tf.nbutton = CreateFrame("Button", "LolzenUI_TutorialNextButton", tf, "UIPanelButtonTemplate")
