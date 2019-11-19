@@ -247,17 +247,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 		else
 			ChatTypeInfo["CHANNEL"].sticky = 0
 		end
-
-		-- /who whispered me?
-		local Who = {}
-		local WhoEvent = function(msg, ...)
-			local arg1, arg2, arg3 = ...
-			if Who[arg3] == nil then
-				SendWho(arg3)
-				Who[arg3] = 1
-			end
-		end
-		ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER", WhoEvent)
 		
 		-- Show afk/dnd messages only one time (DontBugMe-like)
 		local data = {}
