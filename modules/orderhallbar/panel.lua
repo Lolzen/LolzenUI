@@ -109,36 +109,6 @@ local function getCurrencies()
 end
 hooksecurefunc("TokenFrame_Update", getCurrencies)
 
-local function getGuildMembersOnline()
-	if not OrderHallCommandBar then return end
-	local guildieframe = CreateFrame("Frame", nil, OrderHallCommandBar)
-	guildieframe:SetSize(100, 10)
-	guildieframe:SetPoint("LEFT", OrderHallCommandBar, "RIGHT", -160, 0)
-	
-	guildieframe.text = guildieframe:CreateFontString(nil, "OVERLAY")
-	guildieframe.text:SetFont(LSM:Fetch("font", LolzenUIcfg.orderhallbar["ohb_currency_font"]), LolzenUIcfg.orderhallbar["ohb_currency_font_size"], LolzenUIcfg.orderhallbar["ohb_currency_font_flag"])
-	guildieframe.text:SetTextColor(64/255, 251/255, 64/255)
-	guildieframe.text:SetAllPoints(guildieframe)
-	guildieframe.text:SetText("G:["..select(2, GetNumGuildMembers()).."]")
-
-	
-	
-	guildieframe:SetScript("OnEnter", function(self)
-		GameTooltip:SetOwner(guildieframe, "ANCHOR_BOTTOMLEFT")
-		GameTooltip:AddLine("|cffffffffOnline Members|r")
-		for i=1, select(2, GetNumGuildMembers()) do
-			local name, rankName, rankIndex, level, classDisplayName, zone, publicNote, officerNote, isOnline, status, class, achievementPoints, achievementRank, isMobile, canSoR, repStanding, GUID = GetGuildRosterInfo(i)
-			name = name:gsub("-"..GetRealmName(), "")
-			local r, g, b, hex = GetClassColor(class)
-			GameTooltip:AddDoubleLine("|cffffffff["..level.."]|r "..name, rankName, r, g, b, 1, 1, 1)
-		end
-		GameTooltip:Show()
-	end)
-	guildieframe:SetScript("OnLeave", function(self)
-		GameTooltip:Hide()
-	end)
-end
-
 local function modifyOHB()
 	if OrderHallCommandBar.modded == true then return end
 	OrderHallCommandBar.AreaName:SetTextColor(unpack(LolzenUIcfg.orderhallbar["ohb_zone_color"]))
@@ -152,9 +122,6 @@ local function modifyOHB()
 		getAreaText()
 		self:Play()
 	end)
-
-	-- guild member info frame
-	getGuildMembersOnline()
 
 	-- hide troop info
 	OrderHallCommandBar.RefreshCategories = function() end
@@ -199,7 +166,6 @@ local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:RegisterEvent("CINEMATIC_STOP")
 f:RegisterEvent("PLAYER_ENTERING_WORLD")
-f:RegisterEvent("GUILD_ROSTER_UPDATE")
 f:SetScript("OnEvent", function(self, event, addon)
 	if event == "ADDON_LOADED" then
 		if addon == "LolzenUI" then
@@ -223,7 +189,5 @@ f:SetScript("OnEvent", function(self, event, addon)
 				getAreaText()
 			end
 		end
-	elseif event == "GUILD_ROSTER_UPDATE" then
-		getGuildMembersOnline()
 	end
 end)
