@@ -2,6 +2,7 @@
 
 local _, ns = ...
 local L = ns.L
+local LBT = LibStub("LibButtonTexture-1.0")
 
 ns.RegisterModule("actionbars", L["desc_actionbars"], true)
 
@@ -38,7 +39,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		
 		MainMenuBarArtFrame:UnregisterAllEvents()
 
-		-- Hide the SStatusTrackingBarManager
+		-- Hide the StatusTrackingBarManager
 		StatusTrackingBarManager:UnregisterAllEvents()
 		StatusTrackingBarManager:Hide()
 		StatusTrackingBarManager.show = StatusTrackingBarManager.Hide
@@ -92,11 +93,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 			_G[name.."Icon"]:SetPoint("TOPLEFT", _G[name], "TOPLEFT", 2, -2)
 			_G[name.."Icon"]:SetPoint("BOTTOMRIGHT", _G[name], "BOTTOMRIGHT", -2, 2)
 
-			_G[name.."Flash"]:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.actionbar["actionbar_flash_texture"])
-			_G[name]:SetNormalTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.actionbar["actionbar_normal_texture"])
-			_G[name]:SetCheckedTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.actionbar["actionbar_checked_texture"])
-			_G[name]:SetHighlightTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.actionbar["actionbar_hover_texture"])
-			_G[name]:SetPushedTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.actionbar["actionbar_pushed_texture"])
+			_G[name.."Flash"]:SetTexture(LBT:Fetch("flashing",LolzenUIcfg.actionbar["actionbar_flash_texture"]))
+			_G[name]:SetNormalTexture(LBT:Fetch("border", LolzenUIcfg.actionbar["actionbar_normal_texture"]))
+			_G[name]:SetCheckedTexture(LBT:Fetch("checked", LolzenUIcfg.actionbar["actionbar_checked_texture"]))
+			_G[name]:SetHighlightTexture(LBT:Fetch("hover", LolzenUIcfg.actionbar["actionbar_hover_texture"]))
+			_G[name]:SetPushedTexture(LBT:Fetch("pushed", LolzenUIcfg.actionbar["actionbar_pushed_texture"]))
 
 			if _G[name.."Border"] then
 				_G[name.."Border"]:SetTexture(nil)
@@ -122,12 +123,22 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 
 			if _G[name.."NormalTexture"] then
-				_G[name.."NormalTexture"]:SetAllPoints(_G[name])
+				if LolzenUIcfg.actionbar["actionbar_normal_texture"] == "Blizzard QuickSlot2" then
+					_G[name.."NormalTexture"]:SetPoint("TOPLEFT", _G[name.."Icon"], "TOPLEFT", -10, 10)
+					_G[name.."NormalTexture"]:SetPoint("BOTTOMRIGHT", _G[name.."Icon"], "BOTTOMRIGHT", 11, -11)
+				else
+					_G[name.."NormalTexture"]:SetAllPoints(_G[name])
+				end
 			end
 
 			-- petbar specific
 			if _G[name.."NormalTexture2"] then
-				_G[name.."NormalTexture2"]:SetAllPoints(_G[name])
+				if LolzenUIcfg.actionbar["actionbar_normal_texture"] == "Blizzard QuickSlot2" then
+					_G[name.."NormalTexture2"]:SetPoint("TOPLEFT", _G[name.."Icon"], "TOPLEFT", -13, 13)
+					_G[name.."NormalTexture2"]:SetPoint("BOTTOMRIGHT", _G[name.."Icon"], "BOTTOMRIGHT", 15, -15)
+				else
+					_G[name.."NormalTexture2"]:SetAllPoints(_G[name])
+				end
 			end
 
 			if _G[name.."Shine"] then
@@ -210,6 +221,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			setActionBarPosition(name)
 		end
 	end
+
 	-- hide pet hotkeys on login
 	if event == "PLAYER_ENTERING_WORLD" then
 		if LolzenUIcfg.modules["actionbars"] == false then return end
