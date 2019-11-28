@@ -93,7 +93,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			_G[name.."Icon"]:SetPoint("TOPLEFT", _G[name], "TOPLEFT", 2, -2)
 			_G[name.."Icon"]:SetPoint("BOTTOMRIGHT", _G[name], "BOTTOMRIGHT", -2, 2)
 
-			_G[name.."Flash"]:SetTexture(LBT:Fetch("flashing",LolzenUIcfg.actionbar["actionbar_flash_texture"]))
+			_G[name.."Flash"]:SetTexture(LBT:Fetch("flashing", LolzenUIcfg.actionbar["actionbar_flash_texture"]))
 			_G[name]:SetNormalTexture(LBT:Fetch("border", LolzenUIcfg.actionbar["actionbar_normal_texture"]))
 			_G[name]:SetCheckedTexture(LBT:Fetch("checked", LolzenUIcfg.actionbar["actionbar_checked_texture"]))
 			_G[name]:SetHighlightTexture(LBT:Fetch("hover", LolzenUIcfg.actionbar["actionbar_hover_texture"]))
@@ -219,6 +219,35 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		for _, name in pairs(actionbars) do
 			setActionBarPosition(name)
+		end
+	end
+
+	function ns.SetActionBarTheme()
+		local actionbars = {
+			"ActionButton",
+			"MultiBarBottomLeftButton",
+			"MultiBarBottomRightButton",
+			"MultiBarLeftButton",
+			"MultiBarRightButton",
+			"PetActionButton",
+			"OverrideActionBarButton",
+			"ExtraActionButton",
+		}
+		for _, name in pairs(actionbars) do
+
+			for i = 1, NUM_ACTIONBAR_BUTTONS do
+				_G[name..i.."Flash"]:SetTexture(LBT:Fetch("flashing", LolzenUIcfg.actionbar["actionbar_flash_texture"]))
+				_G[name..i]:SetNormalTexture(LBT:Fetch("border", LolzenUIcfg.actionbar["actionbar_normal_texture"]))
+				_G[name..i]:SetCheckedTexture(LBT:Fetch("checked", LolzenUIcfg.actionbar["actionbar_checked_texture"]))
+				_G[name..i]:SetHighlightTexture(LBT:Fetch("hover", LolzenUIcfg.actionbar["actionbar_hover_texture"]))
+				_G[name..i]:SetPushedTexture(LBT:Fetch("pushed", LolzenUIcfg.actionbar["actionbar_pushed_texture"]))
+				if LolzenUIcfg.actionbar["actionbar_normal_texture"] == "Blizzard QuickSlot2" then
+					_G[name..i.."NormalTexture"]:SetPoint("TOPLEFT", _G[name..i.."Icon"], "TOPLEFT", -10, 10)
+					_G[name..i.."NormalTexture"]:SetPoint("BOTTOMRIGHT", _G[name..i.."Icon"], "BOTTOMRIGHT", 11, -11)
+				else
+					_G[name..i.."NormalTexture"]:SetAllPoints(_G[name..i])
+				end
+			end
 		end
 	end
 
