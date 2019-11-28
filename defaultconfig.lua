@@ -901,7 +901,6 @@ local function migrateActionBarData()
 	}	
 	table.wipe(LolzenUIcfg.actionbar)	
 	LolzenUIcfg.actionbar = tempActionBar
-}
 end
 
 -- // check default config and update if necessary // --
@@ -910,9 +909,11 @@ local function updateDB(module)
 	for k, v in pairs(defaultconfig[module]) do
 		-- check if updating Save Variables is needed, based on stored LolzenUI version	
 		-- In revision 4 of 8.2.5 actionbar texturepaths have been changed, so we check up to version 9.0 for data migration	
-		if expansion == 9 and major < 0 then
-			if module == "actionbars" and LolzenUIcfg.actionbar["actionbar_normal_texture"] == "gloss" then
-				migrateActionBarData()
+		if expansion == 8 then
+			if module == "actionbar" then 
+				if LolzenUIcfg.actionbar["actionbar_normal_texture"] == "gloss" then
+					migrateActionBarData()
+				end
 			end
 		end
 		if not LolzenUIcfg[module][k] and v ~= nil then
