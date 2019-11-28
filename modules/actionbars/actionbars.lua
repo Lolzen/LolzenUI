@@ -350,6 +350,42 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 		end
 	end
+
+	function ns.UpdateActionBarPositions()
+		-- ToDo: ExtraActionButton Options
+		ns.mmb_holder:SetPoint("BOTTOM", UIParent, "BOTTOM", LolzenUIcfg.actionbar["actionbar_mmb_posx"], LolzenUIcfg.actionbar["actionbar_mmb_posy"])
+		ns.mbbl_holder:SetPoint("BOTTOM", UIParent, "BOTTOM", LolzenUIcfg.actionbar["actionbar_mbbl_posx"], LolzenUIcfg.actionbar["actionbar_mbbl_posy"])
+		ns.mbbr_holder:SetPoint("BOTTOM", UIParent, "BOTTOM", LolzenUIcfg.actionbar["actionbar_mbbr_posx"], LolzenUIcfg.actionbar["actionbar_mbbr_posy"])
+		ns.pet_holder:SetPoint("BOTTOM", UIParent, "BOTTOM", LolzenUIcfg.actionbar["actionbar_petb_posx"], LolzenUIcfg.actionbar["actionbar_petb_posy"])
+
+		local actionbars = {
+			"MultiBarLeftButton",
+			"MultiBarRightButton",
+			"OverrideActionBarButton",
+--			"ExtraActionButton",
+		}
+
+		for _, name in pairs(actionbars) do
+			for i = 1, NUM_ACTIONBAR_BUTTONS do
+				local button = _G[name..i]
+
+				if button then
+					if i == 1 then
+						if button == _G["MultiBarLeftButton"..i] then
+							button:SetPoint("RIGHT", UIParent, "RIGHT", LolzenUIcfg.actionbar["actionbar_mbl_posx"], LolzenUIcfg.actionbar["actionbar_mbl_posy"])
+						elseif button == _G["MultiBarRightButton"..i] then
+							button:SetPoint("RIGHT", UIParent, "RIGHT", LolzenUIcfg.actionbar["actionbar_mbr_posx"], LolzenUIcfg.actionbar["actionbar_mbr_posy"])
+						elseif button == _G["OverrideActionBarButton"..i] then
+							button:SetPoint("BOTTOMLEFT", ActionButton1)
+--						elseif button == _G["ExtraActionButton"..i] then
+--							button:SetPoint("BOTTOM", UIParent, 0, 200)
+						end
+					end
+				end
+			end
+		end
+	end
+
 	-- hide pet hotkeys on login
 	if event == "PLAYER_ENTERING_WORLD" then
 		if LolzenUIcfg.modules["actionbars"] == false then return end
