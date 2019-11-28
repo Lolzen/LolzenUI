@@ -294,6 +294,62 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 	end
 
+	function ns.UpdateActionBarSpacing()
+		local actionbars = {
+			"ActionButton",
+			"MultiBarBottomLeftButton",
+			"MultiBarBottomRightButton",
+			"MultiBarLeftButton",
+			"MultiBarRightButton",
+			"PetActionButton",
+			"OverrideActionBarButton",
+			"ExtraActionButton",
+		}
+		for _, name in pairs(actionbars) do
+			for i = 1, NUM_ACTIONBAR_BUTTONS do
+				local button = _G[name..i]
+				
+				if i >= 2 then
+					if button == _G["ActionButton"..i] then
+						button:SetPoint("LEFT", _G["ActionButton"..i-1], "RIGHT", LolzenUIcfg.actionbar["actionbar_button_spacing"], 0)
+					elseif button == _G["MultiBarBottomLeftButton"..i] then
+						button:SetPoint("LEFT", _G["MultiBarBottomLeftButton"..i-1], "RIGHT", LolzenUIcfg.actionbar["actionbar_button_spacing"], 0)
+					elseif button == _G["MultiBarBottomRightButton"..i] then
+						button:SetPoint("LEFT", _G["MultiBarBottomRightButton"..i-1], "RIGHT", LolzenUIcfg.actionbar["actionbar_button_spacing"], 0)
+					elseif button == _G["MultiBarLeftButton"..i] then
+						button:SetPoint("BOTTOM", _G["MultiBarLeftButton"..i-1], "BOTTOM", 0, - LolzenUIcfg.actionbar["actionbar_button_size"] - LolzenUIcfg.actionbar["actionbar_button_spacing"])
+					elseif button == _G["MultiBarRightButton"..i] then
+						button:SetPoint("BOTTOM", _G["MultiBarRightButton"..i-1], "BOTTOM", 0, - LolzenUIcfg.actionbar["actionbar_button_size"] - LolzenUIcfg.actionbar["actionbar_button_spacing"])
+					elseif button == _G["PetActionButton"..i] then
+						button:SetPoint("LEFT", _G["PetActionButton"..i-1], "RIGHT", LolzenUIcfg.actionbar["actionbar_button_spacing"], 0)
+					elseif button == _G["OverrideActionBarButton"..i] then
+						button:SetPoint("LEFT", _G["OverrideActionBarButton"..i-1], "RIGHT", LolzenUIcfg.actionbar["actionbar_button_spacing"], 0)
+					end
+				end
+			end
+		end
+	end
+
+	function ns.UpdateActionBarSize()
+		local actionbars = {
+			"ActionButton",
+			"MultiBarBottomLeftButton",
+			"MultiBarBottomRightButton",
+			"MultiBarLeftButton",
+			"MultiBarRightButton",
+			"PetActionButton",
+			"OverrideActionBarButton",
+		}
+		for _, name in pairs(actionbars) do
+			for i = 1, NUM_ACTIONBAR_BUTTONS do
+				local button = _G[name..i]
+
+				if button then
+					button:SetSize(LolzenUIcfg.actionbar["actionbar_button_size"], LolzenUIcfg.actionbar["actionbar_button_size"])
+				end
+			end
+		end
+	end
 	-- hide pet hotkeys on login
 	if event == "PLAYER_ENTERING_WORLD" then
 		if LolzenUIcfg.modules["actionbars"] == false then return end
