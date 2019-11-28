@@ -134,8 +134,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 			-- petbar specific
 			if _G[name.."NormalTexture2"] then
 				if LolzenUIcfg.actionbar["actionbar_normal_texture"] == "Blizzard QuickSlot2" then
-					_G[name.."NormalTexture2"]:SetPoint("TOPLEFT", _G[name.."Icon"], "TOPLEFT", -13, 13)
-					_G[name.."NormalTexture2"]:SetPoint("BOTTOMRIGHT", _G[name.."Icon"], "BOTTOMRIGHT", 15, -15)
+					_G[name.."NormalTexture2"]:SetPoint("TOPLEFT", _G[name.."Icon"], "TOPLEFT", -10, 10)
+					_G[name.."NormalTexture2"]:SetPoint("BOTTOMRIGHT", _G[name.."Icon"], "BOTTOMRIGHT", 11, -11)
 				else
 					_G[name.."NormalTexture2"]:SetAllPoints(_G[name])
 				end
@@ -147,8 +147,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 
 			if _G[name.."AutoCastable"] then
-				_G[name.."AutoCastable"]:SetPoint("TOPLEFT", _G[name], "TOPLEFT", -2, 2)
-				_G[name.."AutoCastable"]:SetPoint("BOTTOMRIGHT", _G[name], "BOTTOMRIGHT", 2, -2)
+				--autocastable is unresizable as of last. simply hide it for now
+				_G[name.."AutoCastable"]:SetAlpha(0)
+			--	_G[name.."AutoCastable"]:SetPoint("TOPLEFT", _G[name], "TOPLEFT", -2, 2)
+			--	_G[name.."AutoCastable"]:SetPoint("BOTTOMRIGHT", _G[name], "BOTTOMRIGHT", -2, 2)
 			end
 		end
 
@@ -163,7 +165,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		--hook PetActionBar_Update, so it doesn't interfer with SetNormalTexture()
 		hooksecurefunc("PetActionBar_Update", function(self)
 			for i=1, NUM_PET_ACTION_SLOTS do
-				_G["PetActionButton"..i]:SetNormalTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.actionbar["actionbar_normal_texture"])
+				_G["PetActionButton"..i]:SetNormalTexture(LBT:Fetch("border", LolzenUIcfg.actionbar["actionbar_normal_texture"]))
 			end
 		end)
 
@@ -234,18 +236,34 @@ f:SetScript("OnEvent", function(self, event, addon)
 			"ExtraActionButton",
 		}
 		for _, name in pairs(actionbars) do
-
 			for i = 1, NUM_ACTIONBAR_BUTTONS do
-				_G[name..i.."Flash"]:SetTexture(LBT:Fetch("flashing", LolzenUIcfg.actionbar["actionbar_flash_texture"]))
-				_G[name..i]:SetNormalTexture(LBT:Fetch("border", LolzenUIcfg.actionbar["actionbar_normal_texture"]))
-				_G[name..i]:SetCheckedTexture(LBT:Fetch("checked", LolzenUIcfg.actionbar["actionbar_checked_texture"]))
-				_G[name..i]:SetHighlightTexture(LBT:Fetch("hover", LolzenUIcfg.actionbar["actionbar_hover_texture"]))
-				_G[name..i]:SetPushedTexture(LBT:Fetch("pushed", LolzenUIcfg.actionbar["actionbar_pushed_texture"]))
-				if LolzenUIcfg.actionbar["actionbar_normal_texture"] == "Blizzard QuickSlot2" then
-					_G[name..i.."NormalTexture"]:SetPoint("TOPLEFT", _G[name..i.."Icon"], "TOPLEFT", -10, 10)
-					_G[name..i.."NormalTexture"]:SetPoint("BOTTOMRIGHT", _G[name..i.."Icon"], "BOTTOMRIGHT", 11, -11)
-				else
-					_G[name..i.."NormalTexture"]:SetAllPoints(_G[name..i])
+				if _G[name..i] then
+					_G[name..i.."Flash"]:SetTexture(LBT:Fetch("flashing", LolzenUIcfg.actionbar["actionbar_flash_texture"]))
+					_G[name..i]:SetNormalTexture(LBT:Fetch("border", LolzenUIcfg.actionbar["actionbar_normal_texture"]))
+					_G[name..i]:SetCheckedTexture(LBT:Fetch("checked", LolzenUIcfg.actionbar["actionbar_checked_texture"]))
+					_G[name..i]:SetHighlightTexture(LBT:Fetch("hover", LolzenUIcfg.actionbar["actionbar_hover_texture"]))
+					_G[name..i]:SetPushedTexture(LBT:Fetch("pushed", LolzenUIcfg.actionbar["actionbar_pushed_texture"]))
+
+					if name ~= "PetActionButton" then
+						if _G[name..i.."NormalTexture"] then
+							if LolzenUIcfg.actionbar["actionbar_normal_texture"] == "Blizzard QuickSlot2" then
+								_G[name..i.."NormalTexture"]:SetPoint("TOPLEFT", _G[name..i.."Icon"], "TOPLEFT", -10, 10)
+								_G[name..i.."NormalTexture"]:SetPoint("BOTTOMRIGHT", _G[name..i.."Icon"], "BOTTOMRIGHT", 11, -11)
+							else
+								_G[name..i.."NormalTexture"]:SetAllPoints(_G[name..i])
+							end
+						end
+					end
+
+					--petbar
+					if _G[name..i.."NormalTexture2"] then
+						if LolzenUIcfg.actionbar["actionbar_normal_texture"] == "Blizzard QuickSlot2" then
+							_G[name..i.."NormalTexture2"]:SetPoint("TOPLEFT", _G[name..i.."Icon"], "TOPLEFT", -10, 10)
+							_G[name..i.."NormalTexture2"]:SetPoint("BOTTOMRIGHT", _G[name..i.."Icon"], "BOTTOMRIGHT", 11, -11)
+						else
+							_G[name..i.."NormalTexture2"]:SetAllPoints(_G[name..i])
+						end
+					end
 				end
 			end
 		end
