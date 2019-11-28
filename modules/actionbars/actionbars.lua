@@ -269,6 +269,31 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 	end
 
+	function ns.SetActionBarKeyBindToggle()
+		local actionbars = {
+			"ActionButton",
+			"MultiBarBottomLeftButton",
+			"MultiBarBottomRightButton",
+			"MultiBarLeftButton",
+			"MultiBarRightButton",
+			"PetActionButton",
+			"OverrideActionBarButton",
+			"ExtraActionButton",
+		}
+		
+		for i = 1, NUM_ACTIONBAR_BUTTONS do
+			for _, name in pairs(actionbars) do
+				if _G[name..i.."HotKey"] then
+					if LolzenUIcfg.actionbar["actionbar_show_keybinds"] == false then
+						_G[name..i.."HotKey"]:Hide()
+					else
+						_G[name..i.."HotKey"]:Show()
+					end
+				end
+			end
+		end
+	end
+
 	-- hide pet hotkeys on login
 	if event == "PLAYER_ENTERING_WORLD" then
 		if LolzenUIcfg.modules["actionbars"] == false then return end
