@@ -867,10 +867,54 @@ local OMFdefault = {
 _G["LolzenUIdefaultcfg"] = defaultconfig
 _G["LolzenUIOMFdefaultcfg"] = OMFdefault
 
+-- // Data Migration // --	
+--[[	
+	At the time of writing Live Patch is 8.2.5 on Nov 28th 2019.	
+	I will leave his codeblock in until 9.0 (Shadowlands prepatch) is live.	
+	Then i will remove it and hope every active user has already updated to a newer version.	
+]]--	
+
+ -- Make sure upgrading to new Saved Variables structure is seamingless while not overwriting user's settings	
+-- Copy over old data into temporary tables, wipe the saved variables clean and copy from temporary tables back
+local function migrateActionBarData()
+	local tempActionBar = {
+		["actionbar_show_keybinds"] = LolzenUIcfg.actionbar["actionbar_show_keybinds"],
+		["actionbar_button_spacing"] = LolzenUIcfg.actionbar["actionbar_button_spacing"],
+		["actionbar_button_size"] = LolzenUIcfg.actionbar["actionbar_button_size"],
+		["actionbar_normal_texture"] = "LolzenUI Standard",
+		["actionbar_flash_texture"] = "LolzenUI Standard",
+		["actionbar_checked_texture"] = "LolzenUI Standard",
+		["actionbar_hover_texture"] = "LolzenUI Standard",
+		["actionbar_pushed_texture"] = "LolzenUI Standard",
+		["actionbar_mmb_posx"] = LolzenUIcfg.actionbar["actionbar_mmb_posx"],
+		["actionbar_mmb_posy"] = LolzenUIcfg.actionbar["actionbar_mmb_posy"],
+		["actionbar_mbbl_posx"] = LolzenUIcfg.actionbar["actionbar_mbbl_posx"],
+		["actionbar_mbbl_posy"] = LolzenUIcfg.actionbar["actionbar_mbbl_posy"],
+		["actionbar_mbbr_posx"] = LolzenUIcfg.actionbar["actionbar_mbbr_posx"],
+		["actionbar_mbbr_posy"] = LolzenUIcfg.actionbar["actionbar_mbbr_posy"],
+		["actionbar_mbl_posx"] = LolzenUIcfg.actionbar["actionbar_mbl_posx"],
+		["actionbar_mbl_posy"] = LolzenUIcfg.actionbar["actionbar_mbl_posy"],
+		["actionbar_mbr_posx"] = LolzenUIcfg.actionbar["actionbar_mbr_posx"],
+		["actionbar_mbr_posy"] = LolzenUIcfg.actionbar["actionbar_mbr_posy"],
+		["actionbar_petb_posx"] = LolzenUIcfg.actionbar["actionbar_petb_posx"],
+		["actionbar_petb_posy"] = LolzenUIcfg.actionbar["actionbar_petb_posy"],
+	}	
+	table.wipe(LolzenUIcfg.actionbar)	
+	LolzenUIcfg.actionbar = tempActionBar
+}
+end
+
 -- // check default config and update if necessary // --
 local function updateDB(module)
 	local expansion, major, minor, revision = tonumber(strsub(LolzenUIcfg.version, 1, 1)), tonumber(strsub(LolzenUIcfg.version, 3, 3)), tonumber(strsub(LolzenUIcfg.version, 5, 5)), tonumber(strsub(LolzenUIcfg.version, 8))
 	for k, v in pairs(defaultconfig[module]) do
+		-- check if updating Save Variables is needed, based on stored LolzenUI version	
+		-- In revision 4 of 8.2.5 actionbar texturepaths have been changed, so we check up to version 9.0 for data migration	
+		if expansion == 9 and major < 0 then
+			if module == "actionbars" and LolzenUIcfg.actionbar["actionbar_normal_texture"] == "gloss" then
+				migrateActionBarData()
+			end
+		end
 		if not LolzenUIcfg[module][k] and v ~= nil then
 			if type(v) == "boolean" then
 				if v == true and LolzenUIcfg[module][k] == nil then
