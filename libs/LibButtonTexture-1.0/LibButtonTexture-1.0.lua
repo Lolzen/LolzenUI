@@ -41,7 +41,7 @@ lib.MediaType.PUSHED = "pushed"
 
 -- BORDER
 if not lib.MediaTable.border then lib.MediaTable.border = {} end
-lib.MediaTable.border["None"] = [[]]
+lib.MediaTable.border["None"] = [[Interface\Buttons\UI-PassiveHighlight]]
 lib.MediaTable.border["Blizzard QuickSlot2"] = [[Interface\Buttons\UI-Quickslot2]]
 lib.DefaultMedia.border = "Blizzard QuickSlot2"
 
