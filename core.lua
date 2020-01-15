@@ -32,10 +32,10 @@ ns.customModuleOptions = function(module, defaults)
 end
 
 -- pixel perfection
-if GetCVar("useuiscale") == "0" then
-	SetCVar("uiScale", 768/string.match(({GetScreenResolutions()})[GetCurrentResolution()], "%d+x(%d+)"))
-	SetCVar("useuiscale", 1)
-end
+--if GetCVar("useuiscale") == "0" then
+--	SetCVar("uiScale", 768/string.match(({GetScreenResolutions()})[GetCurrentResolution()], "%d+x(%d+)"))
+--	SetCVar("useuiscale", 1)
+--end
 
 local version, build, date, tocversion = GetBuildInfo()
 local addonversion = GetAddOnMetadata(addon, "Version")
