@@ -46,6 +46,14 @@ f:SetScript("OnEvent", function(self, event, addon)
 		GAME_TOOLTIP_BACKDROP_STYLE_AZERITE_ITEM["backdropBorderColor"] = CreateColor(1, 1, 1)
 		GAME_TOOLTIP_BACKDROP_STYLE_AZERITE_ITEM["backdropColor"] = CreateColor(1, 1, 1)
 
+		GAME_TOOLTIP_BACKDROP_STYLE_CORRUPTED_ITEM["bgFile"] = "Interface\\AddOns\\LolzenUI\\media\\tooltip-corrupted-bg"
+		GAME_TOOLTIP_BACKDROP_STYLE_CORRUPTED_ITEM["edgeFile"] = LSM:Fetch("border", LolzenUIcfg.tooltip["tip_border"])
+		GAME_TOOLTIP_BACKDROP_STYLE_CORRUPTED_ITEM["tile"] = false
+		GAME_TOOLTIP_BACKDROP_STYLE_CORRUPTED_ITEM["edgeSize"] = 16
+		GAME_TOOLTIP_BACKDROP_STYLE_CORRUPTED_ITEM["insets"] = { left = 3, right = 3, top = 3, bottom = 3 }
+		GAME_TOOLTIP_BACKDROP_STYLE_CORRUPTED_ITEM["backdropBorderColor"] = CreateColor(1, 1, 1)
+		GAME_TOOLTIP_BACKDROP_STYLE_CORRUPTED_ITEM["backdropColor"] = CreateColor(1, 1, 1)
+
 		-- customize the mobClassification
 		local mobType = {
 			["normal"] = "",
