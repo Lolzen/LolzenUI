@@ -22,13 +22,13 @@ f:SetScript("OnEvent", function(self, event, addon)
 		afbar:SetStatusBarColor(unpack(LolzenUIcfg.artifactbar["artifactbar_color"]))
 		afbar:SetFrameStrata("BACKGROUND")
 
-		--Background for our bar
+		-- Background for our bar
 		local bg = afbar:CreateTexture(nil, "BACKGROUND")
 		bg:SetAllPoints(afbar)
 		bg:SetTexture(LSM:Fetch("statusbar", LolzenUIcfg.artifactbar["artifactbar_texture"]))
 		bg:SetVertexColor(0, 0, 0, LolzenUIcfg.artifactbar["artifactbar_bg_alpha"])
 
-		--1px "border"
+		-- 1px "border"
 		if LolzenUIcfg.artifactbar["artifactbar_1px_border"] == true then
 			local lines = {}
 			for i = 1, 4 do
@@ -111,5 +111,30 @@ f:SetScript("OnEvent", function(self, event, addon)
 		afbar:RegisterEvent("UNIT_INVENTORY_CHANGED")
 		afbar:RegisterEvent("PLAYER_ENTERING_WORLD")
 		afbar:SetScript("OnEvent", function(self, event, ...) self[event](self, event, ...) end)
+
+		function ns.SetArtifactBarPosition()
+			afbar:ClearAllPoints()
+			afbar:SetPoint(LolzenUIcfg.artifactbar["artifactbar_anchor"], LolzenUIcfg.artifactbar["artifactbar_parent"], LolzenUIcfg.artifactbar["artifactbar_posx"], LolzenUIcfg.artifactbar["artifactbar_posy"])
+		end
+
+		function ns.SetArtifactBarHeight()
+			afbar:SetHeight(LolzenUIcfg.artifactbar["artifactbar_height"])
+		end
+
+		function ns.SetArtifactBarWidth()
+			afbar:SetWidth(LolzenUIcfg.artifactbar["artifactbar_width"])
+		end
+
+		function ns.SetArtifactBarTexture()
+			afbar:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.artifactbar["artifactbar_texture"]))
+		end
+
+		function ns.SetArtifactBarAlpha()
+			afbar:SetAlpha(LolzenUIcfg.artifactbar["artifactbar_alpha"])
+		end
+
+		function ns.SetArtifactBarBackgroundAlpha()
+			bg:SetAlpha(LolzenUIcfg.artifactbar["artifactbar_bg_alpha"])
+		end
 	end
 end)
