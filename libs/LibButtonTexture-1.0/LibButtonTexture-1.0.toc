@@ -1,0 +1,11 @@
+## Interface: 80205
+## Author: Lolzen
+## Title: Lib: ButtonTexture-1.0
+## Version: 1.0-1
+## Notes: SharedMedia like texture handling of Button Textures
+## x-Credits: Elkano
+## LoadOnDemand: 1
+
+LibStub\LibStub.lua
+CallbackHandler-1.0\CallbackHandler-1.0.lua
+
