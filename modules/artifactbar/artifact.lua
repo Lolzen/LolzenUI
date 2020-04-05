@@ -136,5 +136,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 		function ns.SetArtifactBarBackgroundAlpha()
 			bg:SetAlpha(LolzenUIcfg.artifactbar["artifactbar_bg_alpha"])
 		end
+		
+		function ns.setArtifactRGBColor(color)
+			afbar:SetStatusBarColor(unpack(LolzenUIcfg.artifactbar["artifactbar_color"]))
+		end
 	end
 end)
