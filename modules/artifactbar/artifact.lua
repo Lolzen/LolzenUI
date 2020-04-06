@@ -114,17 +114,13 @@ f:SetScript("OnEvent", function(self, event, addon)
 			if hasHeartOfAzeroth then
 				local azeriteItemLocation = C_AzeriteItem.FindActiveAzeriteItem()
 				local artifactXP, totalXP = C_AzeriteItem.GetAzeriteItemXPInfo(azeriteItemLocation)
-		--		if aritfactXP == totaltXp then
-		--			afbar:SetAlpha(0)
-		--		else
-					local xpForNextPoint = totalXP - artifactXP
-					local currentLevel = C_AzeriteItem.GetPowerLevel(azeriteItemLocation)
-					afbar:SetMinMaxValues(0, totalXP)
-					afbar:SetValue(artifactXP)
-					afbar:SetAlpha(LolzenUIcfg.artifactbar["artifactbar_alpha"])
-					-- use tostring to prevent integer overflow
-					xptext:SetFormattedText("[Level: %d] %s / %s (%.0f%%)", currentLevel, tostring(artifactXP), tostring(totalXP), tostring(artifactXP/totalXP*100))
-		--		end
+				local xpForNextPoint = totalXP - artifactXP
+				local currentLevel = C_AzeriteItem.GetPowerLevel(azeriteItemLocation)
+				afbar:SetMinMaxValues(0, totalXP)
+				afbar:SetValue(artifactXP)
+				afbar:SetAlpha(LolzenUIcfg.artifactbar["artifactbar_alpha"])
+				-- use tostring to prevent integer overflow
+				xptext:SetFormattedText("[Level: %d] %s / %s (%.0f%%)", currentLevel, tostring(artifactXP), tostring(totalXP), tostring(artifactXP/totalXP*100))
 			else
 				afbar:SetAlpha(0)
 			end
