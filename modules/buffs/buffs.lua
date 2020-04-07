@@ -3,6 +3,7 @@
 local _, ns = ...
 local L = ns.L
 local LSM = LibStub("LibSharedMedia-3.0")
+local LBT = LibStub("LibButtonTexture-1.0")
 
 ns.RegisterModule("buffs", L["desc_buffs"], true)
 
@@ -60,14 +61,14 @@ f:SetScript("OnEvent", function(self, event, addon)
 			if border then
 				-- Debuffborder
 				border:SetParent(button)
-				border:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.buffs["buff_debuff_texture"])
+				border:SetTexture(LBT:Fetch("debuff", LolzenUIcfg.buffs["buff_debuff_texture"]))
 				border:SetAllPoints(button)
 				border:SetTexCoord(0, 1, 0, 1)
 			else
 				-- Auraborder
 				if not button.border then
 					button.border = button:CreateTexture(nil, "BORDER")
-					button.border:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.buffs["buff_aura_texture"])
+					button.border:SetTexture(LBT:Fetch("buff", LolzenUIcfg.buffs["buff_aura_texture"]))
 					button.border:SetAllPoints(button)
 					button.border:SetVertexColor(0, 0, 0)
 				end
