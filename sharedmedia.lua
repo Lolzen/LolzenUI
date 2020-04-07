@@ -33,3 +33,10 @@ LBT:Register("hover", "LolzenUI Standard", [[Interface\Addons\LolzenUI\media\hov
 
 -- pushed
 LBT:Register("pushed", "LolzenUI Standard", [[Interface\Addons\LolzenUI\media\pushed]])
+
+-- [auras]
+-- buff
+LBT:Register("buff", "LolzenUI Standard", [[Interface\Addons\LolzenUI\media\auraborder]])
+
+--debuff
+LBT:Register("debuff", "LolzenUI Standard", [[Interface\Addons\LolzenUI\media\debuffborder]])
