@@ -38,6 +38,8 @@ lib.MediaType.FLASHING = "flashing"
 lib.MediaType.CHECKED = "checked"
 lib.MediaType.HOVER = "hover"
 lib.MediaType.PUSHED = "pushed"
+lib.MediaType.BUFF = "buff"
+lib.MediaType.DEBUFF = "debuff"
 
 -- BORDER
 if not lib.MediaTable.border then lib.MediaTable.border = {} end
@@ -68,6 +70,18 @@ if not lib.MediaTable.pushed then lib.MediaTable.pushed = {} end
 lib.MediaTable.pushed["None"] = [[]]
 lib.MediaTable.pushed["Blizzard UI-Quickslot-Depress"] = [[Interface\Buttons\UI-Quickslot-Depress]]
 lib.DefaultMedia.pushed = "Blizzard UI-Quickslot-Depress"
+
+-- BUFF
+if not lib.MediaTable.buff then lib.MediaTable.buff = {} end
+lib.MediaTable.buff["None"] = [[]]
+lib.MediaTable.buff["Blizzard QuickSlot2"] = [[Interface\Buttons\UI-Quickslot2]]
+lib.DefaultMedia.buff = "None"
+
+-- DEBUFF
+if not lib.MediaTable.debuff then lib.MediaTable.debuff = {} end
+lib.MediaTable.debuff["None"] = [[]]
+lib.MediaTable.debuff["Blizzard UI-Debuff-Border"] = [[Interface\Buttons\UI-Debuff-Border]]
+lib.DefaultMedia.debuff = "Blizzard UI-Debuff-Border"
 
 local function rebuildMediaList(mediatype)
 	local mtable = mediaTable[mediatype]
