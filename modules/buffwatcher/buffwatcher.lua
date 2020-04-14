@@ -14,7 +14,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 		-- add character to buffwatchlist
 		if not LolzenUIcfg.buffwatcher["buffwatchlist"][UnitName("player")] then
 			LolzenUIcfg.buffwatcher["buffwatchlist"][UnitName("player")] = {}
-			print(UnitName("player").." added to buffwatchlist")
 		end
 
 		local anchor = CreateFrame("Frame", "AnchorFrame", UIParent)
