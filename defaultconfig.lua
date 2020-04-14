@@ -106,8 +106,8 @@ defaultconfig.buffs = {
 	["buff_counter_font"] = "DroidSans",
 	["buff_counter_size"] = 16,
 	["buff_counter_font_flag"] = "OUTLINE",
-	["buff_aura_texture"] = "auraborder",
-	["buff_debuff_texture"] = "debuffborder",
+	["buff_aura_texture"] = "LolzenUI Standard",
+	["buff_debuff_texture"] = "LolzenUI Standard",
 }
 
 defaultconfig.buffwatcher ={
@@ -903,6 +903,37 @@ local function migrateActionBarData()
 	LolzenUIcfg.actionbar = tempActionBar
 end
 
+local function migrateBuffData()
+	local tempBuff = {
+		["buff_size"] = LolzenUIcfg.buffs["buff_size"],
+		["buff_debuff_size"] = LolzenUIcfg.buffs["buff_debuff_size"],
+		["buff_tempenchant_size"] = LolzenUIcfg.buffs["buff_tempenchant_size"],
+		["buff_anchor1"] = LolzenUIcfg.buffs["buff_anchor1"],
+		["buff_parent"] = LolzenUIcfg.buffs["buff_parent"],
+		["buff_anchor2"] = LolzenUIcfg.buffs["buff_anchor2"],
+		["buff_posx"] = LolzenUIcfg.buffs["buff_posx"],
+		["buff_posy"] = LolzenUIcfg.buffs["buff_posy"],
+		["buff_duration_anchor1"] = LolzenUIcfg.buffs["buff_duration_anchor1"],
+		["buff_duration_anchor2"] = LolzenUIcfg.buffs["buff_duration_anchor2"],
+		["buff_duration_posx"] = LolzenUIcfg.buffs["buff_duration_posx"],
+		["buff_duration_posy"] = LolzenUIcfg.buffs["buff_duration_posy"],
+		["buff_duration_detailed"] = LolzenUIcfg.buffs["buff_duration_detailed"],
+		["buff_duration_font"] = LolzenUIcfg.buffs["buff_duration_font"],
+		["buff_duration_font_size"] = LolzenUIcfg.buffs["buff_duration_font_size"],
+		["buff_duration_font_flag"] = LolzenUIcfg.buffs["buff_duration_font_flag"],
+		["buff_counter_anchor"] = LolzenUIcfg.buffs["buff_counter_anchor"],
+		["buff_counter_posx"] = LolzenUIcfg.buffs["buff_counter_posx"],
+		["buff_counter_posy"] = LolzenUIcfg.buffs["buff_counter_posy"],
+		["buff_counter_font"] = LolzenUIcfg.buffs["buff_counter_font"],
+		["buff_counter_size"] = LolzenUIcfg.buffs["buff_counter_size"],
+		["buff_counter_font_flag"] = LolzenUIcfg.buffs["buff_counter_font_flag"],
+		["buff_aura_texture"] = "LolzenUI Standard",
+		["buff_debuff_texture"] = "LolzenUI Standard",
+	}	
+	table.wipe(LolzenUIcfg.buffs)	
+	LolzenUIcfg.buffs = tempBuff
+end
+
 -- // check default config and update if necessary // --
 local function updateDB(module)
 	local expansion, major, minor, revision = tonumber(strsub(LolzenUIcfg.version, 1, 1)), tonumber(strsub(LolzenUIcfg.version, 3, 3)), tonumber(strsub(LolzenUIcfg.version, 5, 5)), tonumber(strsub(LolzenUIcfg.version, 8))
@@ -913,6 +944,10 @@ local function updateDB(module)
 			if module == "actionbar" then 
 				if LolzenUIcfg.actionbar["actionbar_normal_texture"] == "gloss" then
 					migrateActionBarData()
+				end
+			elseif module == "buffs" then
+				if LolzenUIcfg.buffs["buff_aura_texture"] == "auraborder" then
+					migrateBuffData()
 				end
 			end
 		end
