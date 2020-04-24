@@ -144,7 +144,6 @@ defaultconfig.chat = {
 	["chat_sticky_raidwarning"] = true,
 	["chat_sticky_whisper"] = false,
 	["chat_sticky_channel"] = true,
-	["chat_auto_who"] = true,
 	["chat_show_afkdnd_once"] = true,
 	["chat_posx"] = 8,
 	["chat_posy"] = 15,
