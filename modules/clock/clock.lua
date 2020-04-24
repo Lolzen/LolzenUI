@@ -101,20 +101,14 @@ f:SetScript("OnEvent", function(self, event, addon)
 		seconds:SetShadowOffset(1, -1)
 		seconds:SetTextColor(unpack(LolzenUIcfg.clock["clock_seconds_color"]))
 
-		local timer = clockFrame:CreateAnimationGroup()
-
-		local timerAnim = timer:CreateAnimation()
-		timerAnim:SetDuration(1)
-
-		timer:SetScript("OnFinished", function(self, requested)
+		local function setTime()
 			text:SetText(date("%H|c00ffffff\46|r%M|c00ffffff|r"))
 			if LolzenUIcfg.clock["clock_seconds_enabled"] == true then
 				seconds:SetText(date("%S"))
 			end
-
-			self:Play()
-		end)
-		timer:Play()
+			C_Timer.After(1, setTime)
+		end
+		setTime()
 
 		clockFrame:SetScript("OnEnter", function()
 			GameTooltip:SetOwner(clockFrame, "ANCHOR_TOPLEFT", 2, 5)
