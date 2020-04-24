@@ -12,25 +12,62 @@ f:RegisterEvent("PLAYER_ENTERING_WORLD")
 f:SetScript("OnEvent", function(self, event, addon)
 	if event == "ADDON_LOADED" and addon == "LolzenUI" then
 		if LolzenUIcfg.modules["chat"] == false then return end
-		
-		if LolzenUIcfg.chat["chat_custom_channel_stamps"] == true then
-			CHAT_GUILD_GET = "|Hchannel:Guild|hG| |h %s:\32"
-			CHAT_RAID_GET = "|Hchannel:raid|hR| |h %s:\32"
-			CHAT_PARTY_GET = "|Hchannel:Party|hP| |h %s:\32"
-			CHAT_PARTY_LEADER_GET = "|Hchannel:party|hP| |h %s:\32"
-			CHAT_PARTY_GUIDE_GET = "|Hchannel:party|hP| |h %s:\32"
-			CHAT_RAID_WARNING_GET = "RW| %s:\32"
-			CHAT_RAID_LEADER_GET = "|Hchannel:raid|hRL| |h %s:\32"
-			CHAT_OFFICER_GET = "|Hchannel:o|hO| |h %s:\32"
-			CHAT_BATTLEGROUND_GET = "|Hchannel:Battleground|hBG| |h %s:\32"
-			CHAT_BATTLEGROUND_LEADER_GET = "|Hchannel:Battleground|hBGL| |h %s:\32"
-			CHAT_SAY_GET = "%s:\32"
-			CHAT_YELL_GET = "%s:\32"
-			CHAT_WHISPER_GET = "W| >> %s:\32"
-			CHAT_WHISPER_INFORM_GET = "W| << %s:\32"
+
+		local orig_guild = CHAT_GUILD_GET
+		local orig_raid = CHAT_RAID_GET
+		local orig_party = CHAT_PARTY_GET
+		local orig_party_leader = CHAT_PARTY_LEADER_GET
+		local orig_party_guide = CHAT_PARTY_GUIDE_GET
+		local orig_raid_warning = CHAT_RAID_WARNING_GET
+		local orig_raid_leader = CHAT_RAID_LEADER_GET
+		local orig_officer = CHAT_OFFICER_GET
+		local orig_battleground = CHAT_BATTLEGROUND_GET
+		local orgi_battleground_leader = CHAT_BATTLEGROUND_LEADER_GET
+		local orig_say = CHAT_SAY_GET
+		local orig_yell = CHAT_YELL_GET
+		local orig_whisper_get = CHAT_WHISPER_GET
+		local orig_whisper_send = CHAT_WHISPER_INFORM_GET
+		ns.SetChatChannelStamps = function()
+			if LolzenUIcfg.chat["chat_custom_channel_stamps"] == true then
+				CHAT_GUILD_GET = "|Hchannel:Guild|hG| |h %s:\32"
+				CHAT_RAID_GET = "|Hchannel:raid|hR| |h %s:\32"
+				CHAT_PARTY_GET = "|Hchannel:Party|hP| |h %s:\32"
+				CHAT_PARTY_LEADER_GET = "|Hchannel:party|hP| |h %s:\32"
+				CHAT_PARTY_GUIDE_GET = "|Hchannel:party|hP| |h %s:\32"
+				CHAT_RAID_WARNING_GET = "RW| %s:\32"
+				CHAT_RAID_LEADER_GET = "|Hchannel:raid|hRL| |h %s:\32"
+				CHAT_OFFICER_GET = "|Hchannel:o|hO| |h %s:\32"
+				CHAT_BATTLEGROUND_GET = "|Hchannel:Battleground|hBG| |h %s:\32"
+				CHAT_BATTLEGROUND_LEADER_GET = "|Hchannel:Battleground|hBGL| |h %s:\32"
+				CHAT_SAY_GET = "%s says:\32"
+				CHAT_YELL_GET = "%s yells:\32"
+				CHAT_WHISPER_GET = "W| >> %s:\32"
+				CHAT_WHISPER_INFORM_GET = "W| << %s:\32"
+			else
+				--restore originals
+				CHAT_GUILD_GET = orig_guild
+				CHAT_RAID_GET = orig_raid
+				CHAT_PARTY_GET = orig_party
+				CHAT_PARTY_LEADER_GET = orig_party_leader
+				CHAT_PARTY_GUIDE_GET = orig_party_guide
+				CHAT_RAID_WARNING_GET = orig_raid_warning
+				CHAT_RAID_LEADER_GET = orig_raid_leader
+				CHAT_OFFICER_GET = orig_officer
+				CHAT_BATTLEGROUND_GET = orig_battleground
+				CHAT_BATTLEGROUND_LEADER_GET = orgi_battleground_leader
+				CHAT_SAY_GET = orig_say
+				CHAT_YELL_GET = orig_yell
+				CHAT_WHISPER_GET = orig_whisper_get
+				CHAT_WHISPER_INFORM_GET = orig_whisper_send
+			end
 		end
-		CHAT_FLAG_AFK = LolzenUIcfg.chat["chat_flag_afk"].." "
-		CHAT_FLAG_DND = LolzenUIcfg.chat["chat_flag_dnd"].." "
+		ns.SetChatChannelStamps()
+
+		ns.SetChatFlags = function()
+			CHAT_FLAG_AFK = LolzenUIcfg.chat["chat_flag_afk"].." "
+			CHAT_FLAG_DND = LolzenUIcfg.chat["chat_flag_dnd"].." "
+		end
+		ns.SetChatFlags()
 
 		local origs = {}
 
@@ -45,7 +82,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 					text = text:gsub("|Hplayer:([^%|]+)|h(.+)|h says:", "|Hplayer:%1|h%2|h:")
 					text = text:gsub("|Hplayer:([^%|]+)|h(.+)|h yells:", "|Hplayer:%1|h%2|h:")
 				end
-				
+
 				-- strip brackets from players, av's, item and spell links
 				if LolzenUIcfg.chat["chat_strip_brackets"] == true then
 					text = text:gsub("|H(.-)|h%[(.-)%]|h", "|H%1|h%2|h")
@@ -119,7 +156,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			local s2bb = cf["ScrollToBottomButton"]
 			local sb = cf["ScrollBar"]
 			local tt =_G["ChatFrame"..i.."ThumbTexture"]
-			
+
 			-- hide editbox textures and chat textures
 			for k, v in pairs(editboxTextures) do
 				_G["ChatFrame"..i..v]:SetAlpha(0)
@@ -143,12 +180,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 			-- disable fading out
 			if LolzenUIcfg.chat["chat_disable_fading"] == true then
 				cf:SetFading(false)
+			elseif LolzenUIcfg.chat["chat_disable_fading"] == false then
+				cf:SetFading(true)
 			end
 
 			-- hide quickjointoasts and chat buttons
-			-- TODO: do something to access 
-			-- ChatFrameChannelButton, ChatFrameToggleVoiceDeafenButton and ChatFrameToggleVoiceMuteButton
-			-- maybe unhide scrollbar and reshape/reskin
 			QuickJoinToastButton:Hide()
 			QuickJoinToastButton.Show = function() end
 
@@ -185,116 +221,221 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 
 			-- background
-			if LolzenUIcfg.chat["chat_background"] == true then
-				local bg = cf:CreateTexture("Background")
-				bg:SetTexture(LSM:Fetch("background", LolzenUIcfg.chat["chat_background_texture"]))
-				bg:SetVertexColor(0, 0, 0, LolzenUIcfg.chat["chat_background_alpha"])
-				bg:SetPoint("BOTTOMLEFT", cf, -2, -2)
-				bg:SetPoint("TOPRIGHT", cf, 2, 2)
+			cf.bg = cf:CreateTexture("Background")
+			cf.bg:SetTexture(LSM:Fetch("background", LolzenUIcfg.chat["chat_background_texture"]))
+			cf.bg:SetVertexColor(0, 0, 0, LolzenUIcfg.chat["chat_background_alpha"])
+			cf.bg:SetPoint("BOTTOMLEFT", cf, -2, -2)
+			cf.bg:SetPoint("TOPRIGHT", cf, 2, 2)
 
-				cf.border = CreateFrame("Frame", nil, cf)
-				cf.border:SetPoint("BOTTOMLEFT", cf, -5, -5)
-				cf.border:SetPoint("TOPRIGHT", cf, 5, 5)
+			cf.border = CreateFrame("Frame", nil, cf)
+			cf.border:SetPoint("BOTTOMLEFT", cf, -5, -5)
+			cf.border:SetPoint("TOPRIGHT", cf, 5, 5)
+			cf.border:SetBackdrop({
+				edgeFile = LSM:Fetch("border", LolzenUIcfg.chat["chat_background_border"]), edgeSize = 16,
+			})
+			cf.border:SetBackdropBorderColor(0, 0, 0)
+			if LolzenUIcfg.chat["chat_background"] == true then
+				cf.bg:Show()
+				cf.border:Show()
+			else
+				cf.bg:Hide()
+				cf.border:Hide()
+			end
+		end
+
+		-- sticky channels
+		ns.SetChatStickySay = function()
+			if LolzenUIcfg.chat["chat_sticky_say"] == true then
+				ChatTypeInfo["SAY"].sticky = 1
+			else
+				ChatTypeInfo["SAY"].sticky = 0
+			end
+		end
+		ns.SetChatStickyYell = function()
+			if LolzenUIcfg.chat["chat_sticky_yell"] == true then
+				ChatTypeInfo["YELL"].sticky = 1
+			else
+				ChatTypeInfo["YELL"].sticky = 0
+			end
+		end
+		ns.SetChatStickyParty = function()
+			if LolzenUIcfg.chat["chat_sticky_party"] == true then
+				ChatTypeInfo["PARTY"].sticky = 1
+			else
+				ChatTypeInfo["PARTY"].sticky = 0
+			end
+		end
+		ns.SetChatStickyGuild = function()
+			if LolzenUIcfg.chat["chat_sticky_guild"] == true then
+				ChatTypeInfo["GUILD"].sticky = 1
+			else
+				ChatTypeInfo["GUILD"].sticky = 0
+			end
+		end
+		ns.SetChatStickyOfficer = function()
+			if LolzenUIcfg.chat["chat_sticky_officer"] == true then
+				ChatTypeInfo["OFFICER"].sticky = 1
+			else
+				ChatTypeInfo["OFFICER"].sticky = 0
+			end
+		end
+		ns.SetChatStickyRaid = function()
+			if LolzenUIcfg.chat["chat_sticky_raid"] == true then
+				ChatTypeInfo["RAID"].sticky = 1
+			else
+				ChatTypeInfo["RAID"].sticky = 0
+			end
+		end
+		ns.SetChatStickyRaidWarning = function()
+			if LolzenUIcfg.chat["chat_sticky_raidwarning"] == true then
+				ChatTypeInfo["RAID_WARNING"].sticky = 1
+			else
+				ChatTypeInfo["RAID_WARNING"].sticky = 0
+			end
+		end
+		ns.SetChatStickyWhisper = function()
+			if LolzenUIcfg.chat["chat_sticky_whisper"] == true then
+				ChatTypeInfo["WHISPER"].sticky = 1
+			else
+				ChatTypeInfo["WHISPER"].sticky = 0
+			end
+		end
+		ns.SetChatStickyChannel = function()
+			if LolzenUIcfg.chat["chat_sticky_channel"] == true then
+				ChatTypeInfo["CHANNEL"].sticky = 1
+			else
+				ChatTypeInfo["CHANNEL"].sticky = 0
+			end
+		end
+
+		ns.SetChatStickySay()
+		ns.SetChatStickyYell()
+		ns.SetChatStickyParty()
+		ns.SetChatStickyGuild()
+		ns.SetChatStickyOfficer()
+		ns.SetChatStickyRaid()
+		ns.SetChatStickyRaidWarning()
+		ns.SetChatStickyWhisper()
+		ns.SetChatStickyChannel()
+
+		-- Show afk/dnd messages only one time (DontBugMe-like)
+		local data = {}
+		local chatEvent = function(msg, ...)
+			if LolzenUIcfg.chat["chat_show_afkdnd_once"] == true then
+				local arg1, arg2 = ...
+				if data[arg2] and data[arg2] == arg1 then
+					return true
+				else
+					data[arg2] = arg1
+				end
+			end
+		end
+		ChatFrame_AddMessageEventFilter("CHAT_MSG_AFK", chatEvent)
+		ChatFrame_AddMessageEventFilter("CHAT_MSG_DND", chatEvent)
+
+		-- Disable LolzenUI chatstamps if blizzard chatstamps are activated
+		if GetCVar("showTimestamps") ~= "none" then
+			LolzenUIcfg.chat["chat_timestamp"] = false
+		end
+
+		hooksecurefunc("InterfaceOptionsSocialPanelTimestamps_OnClick", function(self)
+			if GetCVar("showTimestamps") ~= "none" then
+				LolzenUIcfg.chat["chat_timestamp"] = false
+			end
+		end)
+
+		ns.SetChatFading = function()
+			for i=1, NUM_CHAT_WINDOWS do
+				local cf = _G["ChatFrame"..i]
+				if LolzenUIcfg.chat["chat_disable_fading"] == true then
+					cf:SetFading(false)
+				elseif LolzenUIcfg.chat["chat_disable_fading"] == false then
+					cf:SetFading(true)
+				end
+			end
+		end
+
+		ns.SetChatShadow = function()
+			for i=1, NUM_CHAT_WINDOWS do
+				local cf = _G["ChatFrame"..i]
+				if LolzenUIcfg.chat["chat_font_shadow"] == true then
+					cf:SetShadowOffset(1, -1)
+				else
+					cf:SetShadowOffset(0, 0)
+				end
+			end
+		end
+
+		ns.SetChatFont = function()
+			for i=1, NUM_CHAT_WINDOWS do
+				local cf = _G["ChatFrame"..i]
+				cf:SetFont(LSM:Fetch("font", LolzenUIcfg.chat["chat_font"]), LolzenUIcfg.chat["chat_font_size"], LolzenUIcfg.chat["chat_font_flag"])
+				cf:SetSpacing(LolzenUIcfg.chat["chat_font_spacing"])
+			end
+		end
+
+		ns.SetChatBackgroundVisible = function()
+			for i=1, NUM_CHAT_WINDOWS do
+				local cf = _G["ChatFrame"..i]
+				if LolzenUIcfg.chat["chat_background"] == true then
+					cf.bg:Show()
+					cf.border:Show()
+				else
+					cf.bg:Hide()
+					cf.border:Hide()
+				end
+			end
+		end
+
+		ns.SetChatBackgroundTexture = function()
+			for i=1, NUM_CHAT_WINDOWS do
+				local cf = _G["ChatFrame"..i]
+				cf.bg:SetTexture(LSM:Fetch("background", LolzenUIcfg.chat["chat_background_texture"]))
+			end
+		end
+
+		ns.SetChatBackgroundAlpha = function()
+			for i=1, NUM_CHAT_WINDOWS do
+				local cf = _G["ChatFrame"..i]
+				cf.bg:SetVertexColor(0, 0, 0, LolzenUIcfg.chat["chat_background_alpha"])
+			end
+		end
+
+		ns.SetChatBackgroundBorder = function()
+			for i=1, NUM_CHAT_WINDOWS do
+				local cf = _G["ChatFrame"..i]
 				cf.border:SetBackdrop({
 					edgeFile = LSM:Fetch("border", LolzenUIcfg.chat["chat_background_border"]), edgeSize = 16,
 				})
 				cf.border:SetBackdropBorderColor(0, 0, 0)
 			end
 		end
-
-		if LolzenUIcfg.chat["chat_sticky_say"] == true then
-			ChatTypeInfo["SAY"].sticky = 1
-		else
-			ChatTypeInfo["SAY"].sticky = 0
-		end
-		if LolzenUIcfg.chat["chat_sticky_yell"] == true then
-			ChatTypeInfo["YELL"].sticky = 1
-		else
-			ChatTypeInfo["YELL"].sticky = 0
-		end
-		if LolzenUIcfg.chat["chat_sticky_party"] == true then
-			ChatTypeInfo["PARTY"].sticky = 1
-		else
-			ChatTypeInfo["PARTY"].sticky = 0
-		end
-		if LolzenUIcfg.chat["chat_sticky_guild"] == true then
-			ChatTypeInfo["GUILD"].sticky = 1
-		else
-			ChatTypeInfo["GUILD"].sticky = 0
-		end
-		if LolzenUIcfg.chat["chat_sticky_officer"] == true then
-			ChatTypeInfo["OFFICER"].sticky = 1
-		else
-			ChatTypeInfo["OFFICER"].sticky = 0
-		end
-		if LolzenUIcfg.chat["chat_sticky_raid"] == true then
-			ChatTypeInfo["RAID"].sticky = 1
-		else
-			ChatTypeInfo["RAID"].sticky = 0
-		end
-		if LolzenUIcfg.chat["chat_sticky_raidwarning"] == true then
-			ChatTypeInfo["RAID_WARNING"].sticky = 1
-		else
-			ChatTypeInfo["RAID_WARNING"].sticky = 0
-		end
-		if LolzenUIcfg.chat["chat_sticky_whisper"] == true then
-			ChatTypeInfo["WHISPER"].sticky = 1
-		else
-			ChatTypeInfo["WHISPER"].sticky = 0
-		end
-		if LolzenUIcfg.chat["chat_sticky_channel"] == true then
-			ChatTypeInfo["CHANNEL"].sticky = 1
-		else
-			ChatTypeInfo["CHANNEL"].sticky = 0
-		end
-		
-		-- Show afk/dnd messages only one time (DontBugMe-like)
-		local data = {}
-		local chatEvent = function(msg, ...)
-			local arg1, arg2 = ...
-			if data[arg2] and data[arg2] == arg1 then
-				return true
-			else
-				data[arg2] = arg1
-			end
-		end
-		ChatFrame_AddMessageEventFilter("CHAT_MSG_AFK", chatEvent)
-		ChatFrame_AddMessageEventFilter("CHAT_MSG_DND", chatEvent)
-		
-		-- Disable LolzenUI chatstamps if blizzard chatstamps are activated
-			if GetCVar("showTimestamps") ~= "none" then
-				LolzenUIcfg.chat["chat_timestamp"] = false
-			end
-	
-		hooksecurefunc("InterfaceOptionsSocialPanelTimestamps_OnClick", function(self)
-			if GetCVar("showTimestamps") ~= "none" then
-				LolzenUIcfg.chat["chat_timestamp"] = false
-			end
-		end)
 	elseif event == "PLAYER_ENTERING_WORLD" then
 		if LolzenUIcfg.modules["chat"] == false then return end
 		-- disable UI forced positioning
 		FCF_ValidateChatFramePosition = function() end
 
-		for i=1, NUM_CHAT_WINDOWS do
-			local cf = _G["ChatFrame"..i]
-			
-			cf:SetClampedToScreen(false)
-			if cf.isDocked then
-				if i == 1 then
-					cf:SetMovable(true)
-					cf:SetUserPlaced(true)
-					cf:ClearAllPoints()
-					cf:SetPoint(LolzenUIcfg.chat["chat_anchor1"], UIParent, LolzenUIcfg.chat["chat_anchor2"], LolzenUIcfg.chat["chat_posx"], LolzenUIcfg.chat["chat_posy"])
-				end
-			else
-				if i == 1 then
-					cf:SetMovable(true)
-					cf:SetUserPlaced(true)
-					cf:ClearAllPoints()
-					cf:SetPoint(LolzenUIcfg.chat["chat_anchor1"], UIParent, LolzenUIcfg.chat["chat_anchor2"], LolzenUIcfg.chat["chat_posx"], LolzenUIcfg.chat["chat_posy"])
+		ns.SetChatPosition = function()
+			for i=1, NUM_CHAT_WINDOWS do
+				local cf = _G["ChatFrame"..i]
+				cf:SetClampedToScreen(false)
+				if cf.isDocked then
+					if i == 1 then
+						cf:SetMovable(true)
+						cf:SetUserPlaced(true)
+						cf:ClearAllPoints()
+						cf:SetPoint(LolzenUIcfg.chat["chat_anchor1"], UIParent, LolzenUIcfg.chat["chat_anchor2"], LolzenUIcfg.chat["chat_posx"], LolzenUIcfg.chat["chat_posy"])
+					end
+				else
+					if i == 1 then
+						cf:SetMovable(true)
+						cf:SetUserPlaced(true)
+						cf:ClearAllPoints()
+						cf:SetPoint(LolzenUIcfg.chat["chat_anchor1"], UIParent, LolzenUIcfg.chat["chat_anchor2"], LolzenUIcfg.chat["chat_posx"], LolzenUIcfg.chat["chat_posy"])
+					end
 				end
 			end
 		end
+		ns.SetChatPosition()
 	end
 end)
