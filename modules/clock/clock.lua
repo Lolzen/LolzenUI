@@ -105,6 +105,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 			text:SetText(date("%H|c00ffffff\46|r%M|c00ffffff|r"))
 			if LolzenUIcfg.clock["clock_seconds_enabled"] == true then
 				seconds:SetText(date("%S"))
+			else
+				seconds:SetText(nil)
 			end
 			C_Timer.After(1, setTime)
 		end
@@ -177,5 +179,27 @@ f:SetScript("OnEvent", function(self, event, addon)
 			local memAfter = gcinfo()
 			DEFAULT_CHAT_FRAME:AddMessage("Memory cleaned: |cff00FF00"..Memory(memBefore - memAfter))
 		end)
+
+		ns.SetClockFont = function()
+			text:SetFont(LSM:Fetch("font", LolzenUIcfg.clock["clock_font"]), LolzenUIcfg.clock["clock_font_size"], LolzenUIcfg.clock["clock_font_flag"])
+			
+		end
+
+		ns.SetClockFontColor = function()
+			text:SetTextColor(unpack(LolzenUIcfg.clock["clock_color"]))
+		end
+
+		ns.SetClockFontSeconds = function()
+			seconds:SetFont(LSM:Fetch("font", LolzenUIcfg.clock["clock_font_seconds"]), LolzenUIcfg.clock["clock_seconds_font_size"], LolzenUIcfg.clock["clock_seconds_font_flag"])
+		end
+
+		ns.SetClockFontSecondsColor = function()
+			seconds:SetTextColor(unpack(LolzenUIcfg.clock["clock_seconds_color"]))
+		end
+
+		ns.SetClockPosition = function()
+			clockFrame:ClearAllPoints()
+			clockFrame:SetPoint(LolzenUIcfg.clock["clock_anchor1"], UIParent, LolzenUIcfg.clock["clock_anchor2"], LolzenUIcfg.clock["clock_posx"], LolzenUIcfg.clock["clock_posy"])
+		end
 	end
 end)
