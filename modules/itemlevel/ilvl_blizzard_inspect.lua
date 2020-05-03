@@ -96,9 +96,14 @@ f:SetScript("OnEvent", function(self, event, addon)
 							s.str:SetTextColor(unpack(LolzenUIcfg.itemlevel["ilvl_font_color"]))
 						end
 					else
+						s.str:SetFont(LSM:Fetch("font", LolzenUIcfg.itemlevel["ilvl_font"]), LolzenUIcfg.itemlevel["ilvl_font_size"], LolzenUIcfg.itemlevel["ilvl_font_flag"])
+						s.str:ClearAllPoints()
+						s.str:SetPoint(LolzenUIcfg.itemlevel["ilvl_anchor"], s, LolzenUIcfg.itemlevel["ilvl_font_posx"], LolzenUIcfg.itemlevel["ilvl_font_posy"])
 						s.str:SetText(getItemlvl(InspectFrame.unit, i))
 						if LolzenUIcfg.itemlevel["ilvl_use_itemquality_color"] == true then
 							s.str:SetTextColor(getColorItemQuality(InspectFrame.unit, slots[i]))
+						else
+							s.str:SetTextColor(unpack(LolzenUIcfg.itemlevel["ilvl_font_color"]))
 						end
 					end
 				end
@@ -119,5 +124,31 @@ f:SetScript("OnEvent", function(self, event, addon)
 				print("LolzenUI - ilvl debug: "..event)
 			end 
 		end)
+
+		ns.SetItemlevelBlizzInspectVisibility = function()
+			if LolzenUIcfg.itemlevel["ilvl_inspectframe"] == true then
+				for i=1, #slots do
+					local s = _G["Inspect"..slots[i].."Slot"]
+				
+					if s.str then
+						s.str:Show()
+					end
+				end
+			else
+				for i=1, #slots do
+					local s = _G["Inspect"..slots[i].."Slot"]
+				
+					if s.str then
+						s.str:Hide()
+					end
+				end
+			end
+		end
+
+		ns.SetItemlevelBlizzInspect = function()
+			if LolzenUIcfg.itemlevel["ilvl_inspectframe"] == true then
+				updateInspectSlotInfo()
+			end
+		end
 	end
 end)
