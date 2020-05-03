@@ -36,22 +36,37 @@ f:SetScript("OnEvent", function(self, event, addon)
 				button.str = button:CreateFontString(nil, "OVERLAY")
 				button.str:SetFont(LSM:Fetch("font", LolzenUIcfg.itemlevel["ilvl_font"]), LolzenUIcfg.itemlevel["ilvl_font_size"], LolzenUIcfg.itemlevel["ilvl_font_flag"])
 				button.str:SetPoint(LolzenUIcfg.itemlevel["ilvl_anchor"], button, LolzenUIcfg.itemlevel["ilvl_font_posx"], LolzenUIcfg.itemlevel["ilvl_font_posy"])
-				button.str:SetText(getItemlvlBags(bag, button:GetID()))
+				if LolzenUIcfg.itemlevel["ilvl_bags"] == true then
+					button.str:SetText(getItemlvlBags(bag, button:GetID()))
+				else
+					button.str:SetText("")
+				end
 				if LolzenUIcfg.itemlevel["ilvl_use_itemquality_color"] == true then
 					button.str:SetTextColor(getColorItemQualityBags(bag, button:GetID()))
 				else
 					button.str:SetTextColor(unpack(LolzenUIcfg.itemlevel["ilvl_font_color"]))
 				end
 			else
-				button.str:SetText(getItemlvlBags(bag, button:GetID()))
+				button.str:SetFont(LSM:Fetch("font", LolzenUIcfg.itemlevel["ilvl_font"]), LolzenUIcfg.itemlevel["ilvl_font_size"], LolzenUIcfg.itemlevel["ilvl_font_flag"])
+				button.str:ClearAllPoints()
+				button.str:SetPoint(LolzenUIcfg.itemlevel["ilvl_anchor"], button, LolzenUIcfg.itemlevel["ilvl_font_posx"], LolzenUIcfg.itemlevel["ilvl_font_posy"])
+				if LolzenUIcfg.itemlevel["ilvl_bags"] == true then
+					button.str:SetText(getItemlvlBags(bag, button:GetID()))
+				else
+					button.str:SetText("")
+				end
 				if LolzenUIcfg.itemlevel["ilvl_use_itemquality_color"] == true then
 					button.str:SetTextColor(getColorItemQualityBags(bag, button:GetID()))
+				else
+					button.str:SetTextColor(unpack(LolzenUIcfg.itemlevel["ilvl_font_color"]))
 				end
 			end
 		end
 
-		if LolzenUIcfg.itemlevel["ilvl_bags"] == true then
-			hooksecurefunc(Combuctor.ItemSlot, "Update", updateBagSlotInfo)
+		hooksecurefunc(Combuctor.Item, "Update", updateBagSlotInfo)
+
+		ns.UpdateItemlevelCombuctor = function()
+			Combuctor:SendSignal('UPDATE_ALL', 'Update')
 		end
 	end
 end)

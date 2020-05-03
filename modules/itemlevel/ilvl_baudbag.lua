@@ -43,16 +43,29 @@ f:SetScript("OnEvent", function(self, event, addon)
 							s.str = s:CreateFontString(nil, "OVERLAY")
 							s.str:SetFont(LSM:Fetch("font", LolzenUIcfg.itemlevel["ilvl_font"]), LolzenUIcfg.itemlevel["ilvl_font_size"], LolzenUIcfg.itemlevel["ilvl_font_flag"])
 							s.str:SetPoint(LolzenUIcfg.itemlevel["ilvl_anchor"], s, LolzenUIcfg.itemlevel["ilvl_font_posx"], LolzenUIcfg.itemlevel["ilvl_font_posy"])
-							s.str:SetText(getItemlvlBags(bag, slot))
+							if LolzenUIcfg.itemlevel["ilvl_bags"] == true then
+								s.str:SetText(getItemlvlBags(bag, slot))
+							else
+								s.str:SetText("")
+							end
 							if LolzenUIcfg.itemlevel["ilvl_use_itemquality_color"] == true then
 								s.str:SetTextColor(getColorItemQualityBags(bag, slot))
 							else
 								s.str:SetTextColor(unpack(LolzenUIcfg.itemlevel["ilvl_font_color"]))
 							end
 						else
-							s.str:SetText(getItemlvlBags(bag, slot))
+							s.str:SetFont(LSM:Fetch("font", LolzenUIcfg.itemlevel["ilvl_font"]), LolzenUIcfg.itemlevel["ilvl_font_size"], LolzenUIcfg.itemlevel["ilvl_font_flag"])
+							s.str:ClearAllPoints()
+							s.str:SetPoint(LolzenUIcfg.itemlevel["ilvl_anchor"], s, LolzenUIcfg.itemlevel["ilvl_font_posx"], LolzenUIcfg.itemlevel["ilvl_font_posy"])
+							if LolzenUIcfg.itemlevel["ilvl_bags"] == true then
+								s.str:SetText(getItemlvlBags(bag, slot))
+							else
+								s.str:SetText("")
+							end
 							if LolzenUIcfg.itemlevel["ilvl_use_itemquality_color"] == true then
 								s.str:SetTextColor(getColorItemQualityBags(bag, slot))
+							else
+								s.str:SetTextColor(unpack(LolzenUIcfg.itemlevel["ilvl_font_color"]))
 							end
 						end
 					end
@@ -79,5 +92,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 				print("LolzenUI - ilvl debug: "..event)
 			end 
 		end)
+
+		ns.UpdateItemlevelBaudBag = function()
+			updateBagSlotInfo()
+		end
 	end
 end)
