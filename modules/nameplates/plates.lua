@@ -107,11 +107,23 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 		end
 
+		local function UpdateAuraTimer(self, elapsed)
+			if self.expiration then
+				self.expiration = math.max(self.expiration - elapsed, 0)
+
+				if self.expiration > 0 and self.expiration <= 60 then
+					self.Duration:SetFormattedText("%d", self.expiration)
+				else
+					self.Duration:SetText("")
+				end
+			end
+		end
+
 		local PostCreateIcon = function(Auras, button)
-		--	local count = button.count
-		--	count:ClearAllPoints()
-		--	count:SetPoint"BOTTOM"
-			--button.count:SetFont(LSM:Fetch("font", LolzenUIcfg.nameplates["np_cbtime_font"]), 2, LolzenUIcfg.nameplates["np_cbtime_font_flag"])
+			--TODO: create own options & variables for this
+			button.count:ClearAllPoints()
+			button.count:SetPoint("BOTTOMRIGHT")
+			button.count:SetFont(LSM:Fetch("font", LolzenUIcfg.nameplates.general["np_lvlname_font"]), 7, LolzenUIcfg.nameplates.general["np_lvlname_font_flag"])
 
 			button.icon:SetTexCoord(.07, .93, .07, .93)
 
@@ -121,8 +133,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 				insets = {left = 4, right = 4, top = 4, bottom = 4},
 			})
 			iconborder:SetParent(button)
-			iconborder:SetPoint("TOPLEFT", button, -2, 3)
-			iconborder:SetPoint("BOTTOMRIGHT", button, 3, -2)
+			iconborder:SetPoint("TOPLEFT", button, -2, 2)
+			iconborder:SetPoint("BOTTOMRIGHT", button, 2, -2)
 			iconborder:SetBackdropBorderColor(0, 0, 0)
 			iconborder:SetFrameLevel(3)
 
@@ -131,9 +143,30 @@ f:SetScript("OnEvent", function(self, event, addon)
 			button.overlay.Hide = function(self)
 				self:SetVertexColor(0, 0, 0)
 			end
+
+			-- hide the fuckhuge numbers
+			button.cd:SetHideCountdownNumbers(true)
+			
+			-- and replace with a custom timer
+			local AuraDuration = CreateFrame("Frame", nil, button)
+			AuraDuration:SetFrameLevel(20)
+			
+			local Duration = AuraDuration:CreateFontString(nil, "OVERLAY")
+			--TODO: create own options & variables for this
+			Duration:SetFont(LSM:Fetch("font", LolzenUIcfg.nameplates.general["np_lvlname_font"]), 8, LolzenUIcfg.nameplates.general["np_lvlname_font_flag"])
+			Duration:SetPoint("TOPLEFT", button, 0, 0)
+			button.Duration = Duration
+	
+			button:HookScript("OnUpdate", UpdateAuraTimer)
 		end
 
-		local PostUpdateIcon = function(icons, unit, button, index, offset, filter, isDebuff)
+		local PostUpdateIcon = function(icons, unit, button, index, position, duration, expiration, debuffType, isStealable)
+			if(duration and duration > 0 and duration <= 60) then
+				button.expiration = expiration - GetTime()
+			else
+				button.expiration = math.huge
+			end
+
 			if LolzenUIcfg.nameplates.general["np_aura_desature_nonplayer_auras"] == true then 
 				if button.isPlayer then
 					button.icon:SetDesaturated(false)
