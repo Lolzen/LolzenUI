@@ -13,12 +13,15 @@ f:SetScript("OnEvent", function(self, event, addon)
 	if event == "ADDON_LOADED" and addon == "LolzenUI" then
 		if LolzenUIcfg.modules["objectivetracker"] == false then return end
 
+		local of_fake = CreateFrame("Frame", nil, UIParent)
+		of_fake:SetHeight(650)
+		of_fake:SetWidth(200)
 		local of = ObjectiveTrackerFrame
-
 		of:ClearAllPoints()
 		of.ClearAllPoints = function() end
-		of:SetPoint(LolzenUIcfg.objectivetracker["objectivetracker_anchor"], UIParent, LolzenUIcfg.objectivetracker["objectivetracker_anchor"], LolzenUIcfg.objectivetracker["objectivetracker_posx"], LolzenUIcfg.objectivetracker["objectivetracker_posy"])
+		of:SetPoint("TOPLEFT", of_fake, "TOPLEFT")
 		of.SetPoint = function() end
+		of_fake:SetPoint(LolzenUIcfg.objectivetracker["objectivetracker_anchor"], UIParent, LolzenUIcfg.objectivetracker["objectivetracker_anchor"], LolzenUIcfg.objectivetracker["objectivetracker_posx"], LolzenUIcfg.objectivetracker["objectivetracker_posy"])
 		of:SetHeight(650)
 		of:SetScale(LolzenUIcfg.objectivetracker["objectivetracker_scale"])
 		if LolzenUIcfg.objectivetracker["objectivetracker_logincollapse"] == true then
@@ -26,6 +29,15 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 		-- bring the HM aesthetically in line with the button, wherever the ObjectiveTrackerFrame's position is set
 		of.HeaderMenu.Title:SetPoint("TOPLEFT", of, "TOPLEFT", -170, -5)
+
+		ns.setOTPos = function()
+			of_fake:ClearAllPoints()
+			of_fake:SetPoint(LolzenUIcfg.objectivetracker["objectivetracker_anchor"], UIParent, LolzenUIcfg.objectivetracker["objectivetracker_anchor"], LolzenUIcfg.objectivetracker["objectivetracker_posx"], LolzenUIcfg.objectivetracker["objectivetracker_posy"])
+		end
+
+		ns.setOTScale = function()
+			of:SetScale(LolzenUIcfg.objectivetracker["objectivetracker_scale"])
+		end
 	elseif event == "PLAYER_REGEN_DISABLED" then
 		if LolzenUIcfg.objectivetracker["objectivetracker_combatcollapse"] == false then return end
 		ObjectiveTracker_Collapse()
