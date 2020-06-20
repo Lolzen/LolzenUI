@@ -9,6 +9,7 @@ local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:RegisterEvent("PLAYER_REGEN_DISABLED")
 f:RegisterEvent("PLAYER_REGEN_ENABLED")
+f:RegisterEvent("PLAYER_ENTERING_WORLD")
 f:SetScript("OnEvent", function(self, event, addon)
 	if event == "ADDON_LOADED" and addon == "LolzenUI" then
 		if LolzenUIcfg.modules["objectivetracker"] == false then return end
@@ -43,9 +44,15 @@ f:SetScript("OnEvent", function(self, event, addon)
 		ObjectiveTracker_Collapse()
 	elseif event == "PLAYER_REGEN_ENABLED" then
 		if LolzenUIcfg.objectivetracker["objectivetracker_combatcollapse"] == false then return end
+		if LolzenUIcfg.objectivetracker["objectivetracker_dungeoncollapse"] == true and IsInInstance() then return end
 		local of = ObjectiveTrackerFrame
 		if of.collapsed and not InCombatLockdown() then
 			ObjectiveTracker_Expand()
+		end
+	elseif event == "PLAYER_ENTERING_WORLD" then
+		if LolzenUIcfg.objectivetracker["objectivetracker_dungeoncollapse"] == false then return end
+		if IsInInstance() then
+			ObjectiveTracker_Collapse()
 		end
 	end
 end)
