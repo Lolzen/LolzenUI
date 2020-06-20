@@ -361,6 +361,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end)
 		oUF:SpawnNamePlates("Lolzen - Nameplates", UpdateTargetIndicator, cvars)
 
+		-- General Nameplate option functions
+
 		ns.setNPTargetIndicator = function()
 			for i, v in pairs(oUF.objects) do
 				if v.unit:match("nameplate") then
@@ -548,6 +550,92 @@ f:SetScript("OnEvent", function(self, event, addon)
 					PostUpdateIcon(v.Buffs)
 					PostUpdateIcon(v.Debuffs)
 					PostUpdateIcon(v.Auras)
+				end
+			end
+		end
+
+		-- Castbar Nameplate option functions
+
+		ns.setNP_CBPos = function()
+			for i, v in pairs(oUF.objects) do
+				if v.unit:match("nameplate") then
+					v.Castbar:ClearAllPoints()
+					v.Castbar:SetPoint(LolzenUIcfg.nameplates.castbar["np_cb_anchor"], v.Health, LolzenUIcfg.nameplates.castbar["np_cb_anchor2"], LolzenUIcfg.nameplates.castbar["np_cb_posx"], LolzenUIcfg.nameplates.castbar["np_cb_posy"])
+				end
+			end
+		end
+
+		ns.setNP_CBSize = function()
+			for i, v in pairs(oUF.objects) do
+				if v.unit:match("nameplate") then
+					v.Castbar:SetSize(LolzenUIcfg.nameplates.castbar["np_cb_width"], LolzenUIcfg.nameplates.castbar["np_cb_height"])
+				end
+			end
+		end
+
+		ns.setNP_CBTexture = function()
+			for i, v in pairs(oUF.objects) do
+				if v.unit:match("nameplate") then
+					v.Castbar:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.nameplates.castbar["np_cb_texture"]))
+				end
+			end
+		end
+
+		ns.setNP_CBSparkSize = function()
+			for i, v in pairs(oUF.objects) do
+				if v.unit:match("nameplate") then
+					v.Castbar.Spark:SetSize(LolzenUIcfg.nameplates.castbar["np_spark_width"], LolzenUIcfg.nameplates.castbar["np_spark_height"])
+				end
+			end
+		end
+
+		ns.setNP_CBIconPos = function()
+			for i, v in pairs(oUF.objects) do
+				if v.unit:match("nameplate") then
+					v.Castbar.Icon:ClearAllPoints()
+					v.Castbar.Icon:SetPoint(LolzenUIcfg.nameplates.castbar["np_cbicon_anchor"], health, LolzenUIcfg.nameplates.castbar["np_cbicon_anchor2"], LolzenUIcfg.nameplates.castbar["np_cbicon_posx"], LolzenUIcfg.nameplates.castbar["np_cbicon_posy"])
+				end
+			end
+		end
+
+		ns.setNP_CBIconSize = function()
+			for i, v in pairs(oUF.objects) do
+				if v.unit:match("nameplate") then
+					v.Castbar.Icon:SetSize(LolzenUIcfg.nameplates.castbar["np_cbicon_size"], LolzenUIcfg.nameplates.castbar["np_cbicon_size"])
+				end
+			end
+		end
+
+		ns.setNP_CBTimeFont = function()
+			for i, v in pairs(oUF.objects) do
+				if v.unit:match("nameplate") then
+					v.Castbar.Time:SetFont(LSM:Fetch("font", LolzenUIcfg.nameplates.castbar["np_cbtime_font"]), LolzenUIcfg.nameplates.castbar["np_cbtime_font_size"], LolzenUIcfg.nameplates.castbar["np_cbtime_font_flag"])
+				end
+			end
+		end
+
+		ns.setNP_CBTimePos = function()
+			for i, v in pairs(oUF.objects) do
+				if v.unit:match("nameplate") then
+					v.Castbar.Time:ClearAllPoints()
+					v.Castbar.Time:SetPoint(LolzenUIcfg.nameplates.castbar["np_cbtime_anchor"], v.Castbar, LolzenUIcfg.nameplates.castbar["np_cbtime_anchor2"], LolzenUIcfg.nameplates.castbar["np_cbtime_posx"], LolzenUIcfg.nameplates.castbar["np_cbtime_posy"])
+				end
+			end
+		end
+
+		ns.setNP_CBTextFont = function()
+			for i, v in pairs(oUF.objects) do
+				if v.unit:match("nameplate") then
+					v.Castbar.Text:SetFont(LSM:Fetch("font", LolzenUIcfg.nameplates.castbar["np_cbtext_font"]), LolzenUIcfg.nameplates.castbar["np_cbtext_font_size"], LolzenUIcfg.nameplates.castbar["np_cbtext_font_flag"])
+				end
+			end
+		end
+
+		ns.setNP_CBTextPos = function()
+			for i, v in pairs(oUF.objects) do
+				if v.unit:match("nameplate") then
+					v.Castbar.Text:ClearAllPoints()
+					v.Castbar.Text:SetPoint(LolzenUIcfg.nameplates.castbar["np_cbtext_anchor"], v.Castbar, LolzenUIcfg.nameplates.castbar["np_cbtext_anchor2"], LolzenUIcfg.nameplates.castbar["np_cbtext_posx"], LolzenUIcfg.nameplates.castbar["np_cbtext_posy"])
 				end
 			end
 		end
