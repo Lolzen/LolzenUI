@@ -289,6 +289,7 @@ defaultconfig.objectivetracker = {
 	["objectivetracker_posy"] = -30,
 	["objectivetracker_combatcollapse"] = true,
 	["objectivetracker_logincollapse"] = true,
+	["objectivetracker_dungeoncollapse"] = true,
 	["objectivetracker_scale"] = 0.8,
 }
 
