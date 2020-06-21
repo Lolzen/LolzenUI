@@ -18,6 +18,20 @@ LSM:Register("statusbar", "LolzenUI Standard", [[Interface\Addons\LolzenUI\media
 -- backgrounds
 LSM:Register("background", "LolzenUI Standard", [[Interface\Addons\LolzenUI\media\statusbar]])
 
+-- sounds
+LSM:Register("sound", "UT2004_female: Denied", [[Interface\Addons\LolzenUI\sounds\UT2004_female\Denied.mp3]])
+LSM:Register("sound", "UT2004_female: Play", [[Interface\Addons\LolzenUI\sounds\UT2004_female\Play.mp3]])
+LSM:Register("sound", "UT2004_female: one", [[Interface\Addons\LolzenUI\sounds\UT2004_female\one.mp3]])
+LSM:Register("sound", "UT2004_female: two", [[Interface\Addons\LolzenUI\sounds\UT2004_female\two.mp3]])
+LSM:Register("sound", "UT2004_female: three", [[Interface\Addons\LolzenUI\sounds\UT2004_female\three.mp3]])
+LSM:Register("sound", "UT2004_female: four", [[Interface\Addons\LolzenUI\sounds\UT2004_female\four.mp3]])
+LSM:Register("sound", "UT2004_female: five", [[Interface\Addons\LolzenUI\sounds\UT2004_female\five.mp3]])
+LSM:Register("sound", "UT2004_female: six", [[Interface\Addons\LolzenUI\sounds\UT2004_female\six.mp3]])
+LSM:Register("sound", "UT2004_female: seven", [[Interface\Addons\LolzenUI\sounds\UT2004_female\seven.mp3]])
+LSM:Register("sound", "UT2004_female: eight", [[Interface\Addons\LolzenUI\sounds\UT2004_female\eight.mp3]])
+LSM:Register("sound", "UT2004_female: nine", [[Interface\Addons\LolzenUI\sounds\UT2004_female\nine.mp3]])
+LSM:Register("sound", "UT2004_female: ten", [[Interface\Addons\LolzenUI\sounds\UT2004_female\ten.mp3]])
+
 -- [buttons]
 -- border
 LBT:Register("border", "LolzenUI Standard", [[Interface\Addons\LolzenUI\media\gloss]])
