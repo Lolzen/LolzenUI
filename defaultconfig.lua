@@ -312,17 +312,18 @@ defaultconfig.pullcount = {
 	["pull_count_range"] = 3,
 	["pull_msg_count"] = "Pull in !n",
 	["pull_msg_now"] = ">> Pull Now <<",
-	["pull_sound_1"] = "one.mp3",
-	["pull_sound_2"] = "two.mp3",
-	["pull_sound_3"] = "three.mp3",
-	["pull_sound_4"] = "four.mp3",
-	["pull_sound_5"] = "five.mp3",
-	["pull_sound_6"] = "six.mp3",
-	["pull_sound_7"] = "seven.mp3",
-	["pull_sound_8"] = "eight.mp3",
-	["pull_sound_9"] = "nine.mp3",
-	["pull_sound_10"] = "ten.mp3",
-	["pull_sound_pull"] = "Play.mp3",
+	["pull_sound_1"] = "UT2004_female: one",
+	["pull_sound_2"] = "UT2004_female: two",
+	["pull_sound_3"] = "UT2004_female: three",
+	["pull_sound_4"] = "UT2004_female: four",
+	["pull_sound_5"] = "UT2004_female: five",
+	["pull_sound_6"] = "UT2004_female: six",
+	["pull_sound_7"] = "UT2004_female: seven",
+	["pull_sound_8"] = "UT2004_female: eight",
+	["pull_sound_9"] = "UT2004_female: nine",
+	["pull_sound_10"] = "UT2004_female: ten",
+	["pull_sound_pull"] = "UT2004_female: Play",
+--	["pull_sound_abort"] = "UT2004_female: Denied"
 	["pull_filter_guild"] = true,
 	["pull_filter_party"] = true,
 	["pull_filter_instance"] = true,
@@ -934,6 +935,33 @@ local function migrateBuffData()
 	LolzenUIcfg.buffs = tempBuff
 end
 
+local function migratePullCountData()
+	local tempPullCount = {
+		["pull_count_range"] = LolzenUIcfg.pullcount["pull_count_range"],
+		["pull_msg_count"] = LolzenUIcfg.pullcount["pull_msg_count"],
+		["pull_msg_now"] = LolzenUIcfg.pullcount["pull_msg_now"],
+		["pull_sound_1"] = "UT2004_female: one",
+		["pull_sound_2"] = "UT2004_female: two",
+		["pull_sound_3"] = "UT2004_female: three",
+		["pull_sound_4"] = "UT2004_female: four",
+		["pull_sound_5"] = "UT2004_female: five",
+		["pull_sound_6"] = "UT2004_female: six",
+		["pull_sound_7"] = "UT2004_female: seven",
+		["pull_sound_8"] = "UT2004_female: eight",
+		["pull_sound_9"] = "UT2004_female: nine",
+		["pull_sound_10"] = "UT2004_female: ten",
+		["pull_sound_pull"] = "UT2004_female: Play",
+		["pull_sound_abort"] = "UT2004_female: Denied",
+		["pull_filter_guild"] = LolzenUIcfg.pullcount["pull_filter_guild"],
+		["pull_filter_party"] = LolzenUIcfg.pullcount["pull_filter_party"],
+		["pull_filter_instance"] = LolzenUIcfg.pullcount["pull_filter_instance"],
+		["pull_filter_say"] = LolzenUIcfg.pullcount["pull_filter_say"],
+		["pull_filter_channel"] = LolzenUIcfg.pullcount["pull_filter_channel"],
+	}
+	table.wipe(LolzenUIcfg.pullcount)	
+	LolzenUIcfg.pullcount = tempPullCount
+end
+
 -- // check default config and update if necessary // --
 local function updateDB(module)
 	local expansion, major, minor, revision = tonumber(strsub(LolzenUIcfg.version, 1, 1)), tonumber(strsub(LolzenUIcfg.version, 3, 3)), tonumber(strsub(LolzenUIcfg.version, 5, 5)), tonumber(strsub(LolzenUIcfg.version, 8))
@@ -948,6 +976,10 @@ local function updateDB(module)
 			elseif module == "buffs" then
 				if LolzenUIcfg.buffs["buff_aura_texture"] == "auraborder" then
 					migrateBuffData()
+				end
+			elseif module == "pullcount" then
+				if LolzenUIcfg.pullcount["pull_sound_1"] == "one.mp3" then
+					migratePullCountData()
 				end
 			end
 		end
