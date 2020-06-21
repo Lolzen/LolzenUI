@@ -191,3 +191,47 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 	end
 end)
+
+ns.setOHBVisibility = function()
+	if LolzenUIcfg.orderhallbar["ohb_always_show"] == true then
+		LoadAddOn("Blizzard_OrderHallUI")
+		OrderHallCommandBar:Show()
+		getAreaText()
+		getCurrencies()
+	else
+		OrderHallCommandBar:Hide()
+	end
+end
+
+ns.setOHBBGTexture = function()
+	OrderHallCommandBar.Background:SetTexture(LSM:Fetch("background", LolzenUIcfg.orderhallbar["ohb_background"]))
+end
+
+ns.setOHBBGColor = function()
+	OrderHallCommandBar.Background:SetVertexColor(unpack(LolzenUIcfg.orderhallbar["ohb_background_color"]))
+	OrderHallCommandBar.Background:SetAlpha(LolzenUIcfg.orderhallbar["ohb_background_alpha"])
+end
+
+ns.setOHBBGAlpha = function()
+	OrderHallCommandBar.Background:SetAlpha(LolzenUIcfg.orderhallbar["ohb_background_alpha"])
+end
+
+ns.setOHBZoneFontColor = function()
+	OrderHallCommandBar.AreaName:SetTextColor(unpack(LolzenUIcfg.orderhallbar["ohb_zone_color"]))
+end
+
+ns.setOHBZoneFont = function()
+	OrderHallCommandBar.AreaName:SetFont(LSM:Fetch("font", LolzenUIcfg.orderhallbar["ohb_zone_font"]), LolzenUIcfg.orderhallbar["ohb_zone_font_size"], LolzenUIcfg.orderhallbar["ohb_zone_font_flag"])
+end
+
+ns.setOHBCurrencyFont = function()
+	for i=1, #currency do
+		currency[i].text:SetFont(LSM:Fetch("font", LolzenUIcfg.orderhallbar["ohb_currency_font"]), LolzenUIcfg.orderhallbar["ohb_currency_font_size"], LolzenUIcfg.orderhallbar["ohb_currency_font_flag"])
+	end
+end
+
+ns.setOHBCurrenyIconSize = function()
+	for i=1, #currency do
+		currency[i]:SetSize(LolzenUIcfg.orderhallbar["ohb_currency_icon_size"], LolzenUIcfg.orderhallbar["ohb_currency_icon_size"])
+	end
+end
