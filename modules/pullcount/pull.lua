@@ -87,6 +87,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 				PlaySoundFile(LSM:Fetch("sound", LolzenUIcfg.pullcount["pull_sound_pull"]), "master")
 			end
 		end
+		LolzenUI_FilterFuc = filter
 
 		if LolzenUIcfg.pullcount["pull_filter_channel"] == true then
 			ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", filter)
@@ -159,5 +160,49 @@ else
 				SendPull(num)
 			end
 		end
+	end
+end
+
+ns.setPCMsgFilterGuild = function()
+	if LolzenUIcfg.pullcount["pull_filter_guild"] == true then
+		ChatFrame_AddMessageEventFilter("CHAT_MSG_GUILD", LolzenUI_FilterFuc)
+	elseif LolzenUIcfg.pullcount["pull_filter_guild"] == false then
+		ChatFrame_RemoveMessageEventFilter("CHAT_MSG_GUILD", LolzenUI_FilterFuc)
+	end
+end
+
+ns.setPCMsgFilterParty = function()
+	if LolzenUIcfg.pullcount["pull_filter_party"] == true then
+		ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY", LolzenUI_FilterFuc)
+		ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY_LEADER", LolzenUI_FilterFuc)
+	elseif LolzenUIcfg.pullcount["pull_filter_party"] == false then
+		ChatFrame_RemoveMessageEventFilter("CHAT_MSG_PARTY", LolzenUI_FilterFuc)
+		ChatFrame_RemoveMessageEventFilter("CHAT_MSG_PARTY_LEADER", LolzenUI_FilterFuc)
+	end
+end
+
+ns.setPCMsgFilterInstance = function()
+	if LolzenUIcfg.pullcount["pull_filter_instance"] == true then
+		ChatFrame_AddMessageEventFilter("CHAT_MSG_INSTANCE", LolzenUI_FilterFuc)
+		ChatFrame_AddMessageEventFilter("CHAT_MSG_INSTANCE_LEADER", LolzenUI_FilterFuc)
+	elseif LolzenUIcfg.pullcount["pull_filter_instance"] == false then
+		ChatFrame_RemoveMessageEventFilter("CHAT_MSG_INSTANCE", LolzenUI_FilterFuc)
+		ChatFrame_RemoveMessageEventFilter("CHAT_MSG_INSTANCE_LEADER", LolzenUI_FilterFuc)
+	end
+end
+
+ns.setPCMsgFilterSay = function()
+	if LolzenUIcfg.pullcount["pull_filter_say"] == true then
+		ChatFrame_AddMessageEventFilter("CHAT_MSG_SAY", LolzenUI_FilterFuc)
+	elseif LolzenUIcfg.pullcount["pull_filter_say"] == false then
+		ChatFrame_RemoveMessageEventFilter("CHAT_MSG_SAY", LolzenUI_FilterFuc)
+	end
+end
+
+ns.setPCMsgFilterCustom = function()
+	if LolzenUIcfg.pullcount["pull_filter_channel"] == true then
+		ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", LolzenUI_FilterFuc)
+	elseif LolzenUIcfg.pullcount["pull_filter_channel"] == false then
+		ChatFrame_RemoveMessageEventFilter("CHAT_MSG_CHANNEL", LolzenUI_FilterFuc)
 	end
 end
