@@ -2,6 +2,7 @@
 
 local _, ns = ...
 local L = ns.L
+local LSM = LibStub("LibSharedMedia-3.0")
 
 ns.RegisterModule("pullcount", L["desc_pullcount"] , true)
 
@@ -20,10 +21,10 @@ timer:SetScript("OnFinished", function(self, requested)
 	if pullNum-1 <= LolzenUIcfg.pullcount["pull_count_range"] then
 		if LolzenUIcfg.pullcount["pull_sound_"..pullNum -1] then
 			if LolzenUIcfg.pullcount["pull_sound_"..pullNum-1] then
-				PlaySoundFile("Interface\\AddOns\\LolzenUI\\sounds\\"..LolzenUIcfg.pullcount["pull_sound_"..pullNum-1], "master")
+				PlaySoundFile(LSM:Fetch("sound", LolzenUIcfg.pullcount["pull_sound_"..pullNum-1]), "master")
 			end
 		elseif pullNum-1 == 0 then
-			PlaySoundFile("Interface\\AddOns\\LolzenUI\\sounds\\"..LolzenUIcfg.pullcount["pull_sound_pull"], "master")
+			PlaySoundFile(LSM:Fetch("sound", LolzenUIcfg.pullcount["pull_sound_pull"]), "master")
 			C_Timer.After(1, function(self) isCounting = false end)
 		end
 	end
@@ -39,7 +40,7 @@ local function initiateOrAbortCountdown(num)
 		isCounting = false
 		--pullNum = 0
 		timer:Stop()
-		PlaySoundFile("Interface\\AddOns\\LolzenUI\\sounds\\Denied.mp3", "master") --TBD option
+		PlaySoundFile(LSM:Fetch("sound", LolzenUIcfg.pullcount["pull_sound_abort"]), "master")
 		-- cancel timer
 		TimerTracker_OnEvent(TimerTracker, "PLAYER_ENTERING_WORLD")
 		-- alert that the timer has been stopped
@@ -48,7 +49,7 @@ local function initiateOrAbortCountdown(num)
 		if isCounting == true then return end
 		isCounting = true
 		if LolzenUIcfg.pullcount["pull_sound_"..num] then
-			PlaySoundFile("Interface\\AddOns\\LolzenUI\\sounds\\"..LolzenUIcfg.pullcount["pull_sound_"..num], "master")
+			PlaySoundFile(LSM:Fetch("sound", LolzenUIcfg.pullcount["pull_sound_"..num]), "master")
 		end
 		pullNum = num
 		timer:Play()
@@ -79,11 +80,11 @@ f:SetScript("OnEvent", function(self, event, ...)
 				local msg = LolzenUIcfg.pullcount["pull_msg_count"]
 				msg = string.gsub(msg, "!n", i)
 				if message:match(msg) then
-					PlaySoundFile("Interface\\AddOns\\LolzenUI\\sounds\\"..LolzenUIcfg.pullcount["pull_sound_"..i], "master")
+					PlaySoundFile(LSM:Fetch("sound", LolzenUIcfg.pullcount["pull_sound_"..i]), "master")
 				end
 			end
 			if message:match(LolzenUIcfg.pullcount["pull_msg_now"]) then
-				PlaySoundFile("Interface\\AddOns\\LolzenUI\\sounds\\"..LolzenUIcfg.pullcount["pull_sound_pull"], "master")
+				PlaySoundFile(LSM:Fetch("sound", LolzenUIcfg.pullcount["pull_sound_pull"]), "master")
 			end
 		end
 
