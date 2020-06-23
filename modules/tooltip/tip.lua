@@ -361,6 +361,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			if not pcall(tooltip.GetCenter, tooltip) then
 				tooltip:SetOwner(parent, "ANCHOR_CURSOR")
 			else
+				tooltip:ClearAllPoints()
 				tooltip:SetPoint(LolzenUIcfg.tooltip["tip_anchor1"], UIParent, LolzenUIcfg.tooltip["tip_anchor2"], LolzenUIcfg.tooltip["tip_posx"], LolzenUIcfg.tooltip["tip_posy"])
 			end
 		end)
@@ -415,5 +416,14 @@ f:SetScript("OnEvent", function(self, event, addon)
 		-- register the tooltip with UNIT_TARGET event, which fires when a unit switches the target
 		GameTooltip:RegisterEvent("UNIT_TARGET")
 		GameTooltip:SetScript("OnEvent", function(self, event, ...) self[event](self, event, ...) end)
+
+		ns.setTTBorder = function()
+			GAME_TOOLTIP_BACKDROP_STYLE_DEFAULT["edgeFile"] = LSM:Fetch("border", LolzenUIcfg.tooltip["tip_border"])
+			GAME_TOOLTIP_BACKDROP_STYLE_CORRUPTED_ITEM["edgeFile"] = LSM:Fetch("border", LolzenUIcfg.tooltip["tip_border"])
+		end
+
+		ns.setTTHBTexture = function()
+			GameTooltipStatusBar:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.tooltip["tip_healthbar_texture"]))
+		end
 	end
 end)
