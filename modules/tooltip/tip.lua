@@ -419,6 +419,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		ns.setTTBorder = function()
 			GAME_TOOLTIP_BACKDROP_STYLE_DEFAULT["edgeFile"] = LSM:Fetch("border", LolzenUIcfg.tooltip["tip_border"])
+			GAME_TOOLTIP_BACKDROP_STYLE_EMBEDDED["edgeFile"] = LSM:Fetch("border", LolzenUIcfg.tooltip["tip_border"])
 			GAME_TOOLTIP_BACKDROP_STYLE_CORRUPTED_ITEM["edgeFile"] = LSM:Fetch("border", LolzenUIcfg.tooltip["tip_border"])
 		end
 
