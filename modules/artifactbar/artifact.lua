@@ -150,6 +150,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		function ns.SetArtifactBarTexture()
 			afbar:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.artifactbar["artifactbar_texture"]))
+			bg:SetTexture(LSM:Fetch("statusbar", LolzenUIcfg.artifactbar["artifactbar_texture"]))
 		end
 
 		function ns.SetArtifactBarAlpha()
