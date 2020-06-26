@@ -40,43 +40,54 @@ f:SetScript("OnEvent", function(self, event, addon)
 		bg:SetVertexColor(0, 0, 0, LolzenUIcfg.xpbar["xpbar_bg_alpha"])
 
 		--1px "border"
-		if LolzenUIcfg.xpbar["xpbar_1px_border"] == true then
-			local lines = {}
-			for i = 1, 4 do
-				if not lines[i] then
-					lines[i] = xpbar:CreateTexture(nil, "OVERLAY")
-					lines[i]:SetTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
-					lines[i]:SetVertexColor(0, 0, 0, 1)
-				end
-				if i == 1 then
-					lines[i]:SetHeight(1)
-					lines[i]:SetPoint("TOPLEFT", xpbar, 0, 1)
-					lines[i]:SetPoint("TOPRIGHT", xpbar, 0, 1)
-				elseif i == 2 then
-					lines[i]:SetHeight(1)
-					lines[i]:SetPoint("BOTTOMLEFT", xpbar, 0, -1)
-					lines[i]:SetPoint("BOTTOMRIGHT", xpbar, 0, -1)
-				elseif i == 3 then
-					lines[i]:SetWidth(1)
-					if LolzenUIcfg.xpbar["xpbar_1px_border_round"] == true then
-						lines[i]:SetPoint("TOPLEFT", xpbar, -1, 0)
-						lines[i]:SetPoint("BOTTOMLEFT", xpbar, -1, 0)
-					else
-						lines[i]:SetPoint("TOPLEFT", xpbar, 0, 0)
-						lines[i]:SetPoint("BOTTOMLEFT", xpbar, 0, 0)
+		local lines = {}
+		function ns.setXPBarBorder()
+			if LolzenUIcfg.xpbar["xpbar_1px_border"] == true then
+				for i = 1, 4 do
+					if not lines[i] then
+						lines[i] = xpbar:CreateTexture(nil, "OVERLAY")
+						lines[i]:SetTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
+						lines[i]:SetVertexColor(0, 0, 0, 1)
 					end
-				elseif i == 4 then
-					lines[i]:SetWidth(1)
-					if LolzenUIcfg.xpbar["xpbar_1px_border_round"] == true then
-						lines[i]:SetPoint("TOPRIGHT", xpbar, 1, 0)
-						lines[i]:SetPoint("BOTTOMRIGHT", xpbar, 1, 0)
-					else
-						lines[i]:SetPoint("TOPRIGHT", xpbar, 0, 0)
-						lines[i]:SetPoint("BOTTOMRIGHT", xpbar, 0, 0)
+					if i == 1 then
+						lines[i]:SetHeight(1)
+						lines[i]:SetPoint("TOPLEFT", xpbar, 0, 1)
+						lines[i]:SetPoint("TOPRIGHT", xpbar, 0, 1)
+					elseif i == 2 then
+						lines[i]:SetHeight(1)
+						lines[i]:SetPoint("BOTTOMLEFT", xpbar, 0, -1)
+						lines[i]:SetPoint("BOTTOMRIGHT", xpbar, 0, -1)
+					elseif i == 3 then
+						lines[i]:SetWidth(1)
+						if LolzenUIcfg.xpbar["xpbar_1px_border_round"] == true then
+							lines[i]:SetPoint("TOPLEFT", xpbar, -1, 0)
+							lines[i]:SetPoint("BOTTOMLEFT", xpbar, -1, 0)
+						else
+							lines[i]:SetPoint("TOPLEFT", xpbar, 0, 0)
+							lines[i]:SetPoint("BOTTOMLEFT", xpbar, 0, 0)
+						end
+					elseif i == 4 then
+						lines[i]:SetWidth(1)
+						if LolzenUIcfg.xpbar["xpbar_1px_border_round"] == true then
+							lines[i]:SetPoint("TOPRIGHT", xpbar, 1, 0)
+							lines[i]:SetPoint("BOTTOMRIGHT", xpbar, 1, 0)
+						else
+							lines[i]:SetPoint("TOPRIGHT", xpbar, 0, 0)
+							lines[i]:SetPoint("BOTTOMRIGHT", xpbar, 0, 0)
+						end
+					end
+					lines[i]:SetAlpha(1)
+				end
+			else
+				for i = 1, 4 do
+					if lines[i] then
+						lines[i]:SetAlpha(0)
 					end
 				end
 			end
 		end
+		-- call this function on login/reload
+		ns.setXPBarBorder()
 
 		-- fontstring
 		local xptext = xpbar:CreateFontString(nil, "OVERLAY")
@@ -85,15 +96,27 @@ f:SetScript("OnEvent", function(self, event, addon)
 		xptext:SetFont(LSM:Fetch("font", LolzenUIcfg.xpbar["xpbar_font"]), LolzenUIcfg.xpbar["xpbar_font_size"], LolzenUIcfg.xpbar["xpbar_font_flag"])
 		xptext:SetTextColor(unpack(LolzenUIcfg.xpbar["xpbar_font_color"]))
 
-		if LolzenUIcfg.xpbar["xpbar_mouseover_text"] == true then
-			xptext:Hide()
-			xpbar:SetScript("OnEnter", function(self)
-				xptext:Show()
-			end)
-			xpbar:SetScript("OnLeave", function(self)
+		function ns.setXPBarTextVisible()
+			if LolzenUIcfg.xpbar["xpbar_mouseover_text"] == true then
 				xptext:Hide()
-			end)
+				xpbar:SetScript("OnEnter", function(self)
+					xptext:Show()
+				end)
+				xpbar:SetScript("OnLeave", function(self)
+					xptext:Hide()
+				end)
+			else
+				xptext:Show()
+				xpbar:SetScript("OnEnter", function(self)
+					return
+				end)
+				xpbar:SetScript("OnLeave", function(self)
+					return
+				end)
+			end
 		end
+		-- call this function on login/reload
+		ns.setXPBarTextVisible()
 
 		function xpbar:Update()
 			-- Proprity #1: If in BGs show the HonorXP
@@ -185,5 +208,48 @@ f:SetScript("OnEvent", function(self, event, addon)
 		xpbar:RegisterEvent("UPDATE_EXHAUSTION")
 		xpbar:RegisterEvent("PLAYER_ENTERING_WORLD")
 		xpbar:SetScript("OnEvent", function(self, event, ...) self[event](self, event, ...) end)
+
+		function ns.setXPBarPosition()
+			xpbar:ClearAllPoints()
+			xpbar:SetPoint(LolzenUIcfg.xpbar["xpbar_anchor"], LolzenUIcfg.xpbar["xpbar_parent"], LolzenUIcfg.xpbar["xpbar_posx"], LolzenUIcfg.xpbar["xpbar_posy"])
+		end
+
+		function ns.setXPBarHeight()
+			xpbar:SetHeight(LolzenUIcfg.xpbar["xpbar_height"])
+		end
+
+		function ns.setXPBarWidth()
+			xpbar:SetWidth(LolzenUIcfg.xpbar["xpbar_width"])
+		end
+
+		function ns.setXPBarTexture()
+			xpbar:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.xpbar["xpbar_texture"]))
+			bg:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.xpbar["xpbar_texture"])
+		end
+
+		function ns.setXPBarAlpha()
+			xpbar:SetAlpha(LolzenUIcfg.xpbar["xpbar_alpha"])
+		end
+
+		function ns.setXPBarBackgroundAlpha()
+			bg:SetVertexColor(0, 0, 0, LolzenUIcfg.xpbar["xpbar_bg_alpha"])
+		end
+
+		function ns.setXPBarRGBColor()
+			xpbar:Update()
+		end
+
+		function ns.setXPBarTextPosition()
+			xptext:ClearAllPoints()
+			xptext:SetPoint(LolzenUIcfg.xpbar["xpbar_text_anchor1"], xpbar, LolzenUIcfg.xpbar["xpbar_text_posx"], LolzenUIcfg.xpbar["xpbar_text_posy"])
+		end
+
+		function ns.setXPBarTextColor()
+			xptext:SetTextColor(unpack(LolzenUIcfg.xpbar["xpbar_font_color"]))
+		end
+
+		function ns.setXPBarFont()
+			xptext:SetFont(LSM:Fetch("font", LolzenUIcfg.xpbar["xpbar_font"]), LolzenUIcfg.xpbar["xpbar_font_size"], LolzenUIcfg.xpbar["xpbar_font_flag"])
+		end
 	end
 end)
