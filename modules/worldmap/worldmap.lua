@@ -137,5 +137,23 @@ f:SetScript("OnEvent", function(self, event, addon)
 				timer:Stop()
 			end
 		end)
+
+		ns.setWMTitleColor = function()
+			WorldMapFrameTitleText:SetTextColor(unpack(LolzenUIcfg.worldmap["worldmap_title_color"]))
+		end
+
+		local origtitle = WorldMapFrameTitleText:GetText()
+		ns.setWMCoordinates = function()
+			if LolzenUIcfg.worldmap["worldmap_coordinates"] == true then
+				if not timer:IsPlaying() then
+					timer:Play()
+				end
+			else
+				if timer:IsPlaying() then
+					timer:Stop()
+					WorldMapFrameTitleText:SetText(origtitle)
+				end
+			end
+		end
 	end
 end)
