@@ -372,7 +372,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		-- Azerite Essences
 		hooksecurefunc(GameTooltip, "SetAzeriteEssence", colorEssenceQuality)
 		hooksecurefunc(GameTooltip, "SetAzeriteEssenceSlot", colorEssenceSlotQuality)
-		hooksecurefunc("GameTooltip_SetBackdropStyle",  colorEssenceSlotQuality)
+		--hooksecurefunc("SharedTooltip_SetBackdropStyle",  colorEssenceSlotQuality)
 
 		-- clear textures when the tooltip is hidden
 		GameTooltip:HookScript("OnHide", function(self)

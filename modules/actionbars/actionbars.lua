@@ -110,7 +110,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 			if _G[name.."HotKey"] then
 				if LolzenUIcfg.actionbar["actionbar_show_keybinds"] == false then
-					_G[name.."HotKey"]:Hide()
+					_G[name.."HotKey"]:SetAlpha(0)
+					--_G[name.."HotKey"].Show = function() end
 				end
 			end
 
@@ -155,12 +156,14 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 
 		-- hide those pesky hotkeys, ffs
-		hooksecurefunc("ActionButton_UpdateHotkeys", function(self, actionButtonType)
-			if LolzenUIcfg.actionbar["actionbar_show_keybinds"] == false then
-				local name = self:GetName()
-				_G[name.."HotKey"]:Hide()
-			end
-		end)
+--		hooksecurefunc(ActionBarActionButtonMixin, "Update", function(self, actionButtonType)
+--			print("test")
+			--if LolzenUIcfg.actionbar["actionbar_show_keybinds"] == false then
+--				local name = self:GetName()
+				--_G[name.."HotKey"]:Hide()
+				--print(self)
+			--end
+--		end)
 
 		--hook PetActionBar_Update, so it doesn't interfer with SetNormalTexture()
 		hooksecurefunc("PetActionBar_Update", function(self)
@@ -285,9 +288,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 			for _, name in pairs(actionbars) do
 				if _G[name..i.."HotKey"] then
 					if LolzenUIcfg.actionbar["actionbar_show_keybinds"] == false then
-						_G[name..i.."HotKey"]:Hide()
+						_G[name..i.."HotKey"]:SetAlpha(0)
 					else
-						_G[name..i.."HotKey"]:Show()
+						_G[name..i.."HotKey"]:SetAlpha(1)
 					end
 				end
 			end
@@ -391,7 +394,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		if LolzenUIcfg.modules["actionbars"] == false then return end
 		if LolzenUIcfg.actionbar["actionbar_show_keybinds"] == false then
 			for i=1, NUM_PET_ACTION_SLOTS do
-				_G["PetActionButton"..i.."HotKey"]:Hide()
+				_G["PetActionButton"..i.."HotKey"]:SetAlpha(0)
 			end
 		end
 	end
