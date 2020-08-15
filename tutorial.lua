@@ -24,7 +24,7 @@ local helpframe, tex
 helpframe = CreateFrame("Frame", nil, UIParent)
 helpframe:SetFrameStrata("TOOLTIP")
 tex = helpframe:CreateTexture(nil, "BACKGROUND")
-helpframe.box = CreateFrame("Frame", nil, helpframe)
+helpframe.box = CreateFrame("Frame", nil, helpframe, BackdropTemplateMixin and "BackdropTemplate")
 helpframe.box:SetBackdrop({
 	bgFile = "Interface\\FrameGeneral\\UI-Background-Rock",
 	edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",

@@ -14,7 +14,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		UIPanelWindows["WorldMapFrame"] = { area = nil, pushable = 0, xoffset = 0, yoffset = 0, whileDead = 1, minYOffset = 0, maximizePoint = "TOP" }
 		tinsert(UISpecialFrames, "WorldMapFrame")
 
-		WorldMapFrame.BorderFrame.NineSlice:Hide()
+		WorldMapFrame.BorderFrame.NineSlice:SetAlpha(0)
 		WorldMapFramePortrait:SetAlpha(0)
 		WorldMapFrame.BorderFrame.Tutorial:SetAlpha(0)
 		WorldMapFrame.BorderFrame.Tutorial:EnableMouse(false)
@@ -35,7 +35,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		WorldMapFrame.BorderFrame.TitleBg:SetPoint("TOPRIGHT", WorldMapFrame, -3, -3)
 
 		-- Cutsom border
-		local border = CreateFrame("Frame")
+		local border = CreateFrame("Frame", nil, nil, BackdropTemplateMixin and "BackdropTemplate")
 		border:SetBackdrop({
 			edgeFile = "Interface\\AddOns\\LolzenUI\\media\\border", edgeSize = 12,
 			insets = {left = 4, right = 4, top = 4, bottom = 4},
