@@ -155,10 +155,14 @@ ns.SetupPlayer = function(self, unit)
 			self.Castbar.background:SetAllPoints(self.Castbar)
 			self.Castbar.border:SetPoint("TOPLEFT", self.Castbar, -2, 3)
 			self.Castbar.border:SetPoint("BOTTOMRIGHT", self.Castbar, 3, -2)
+			self.Castbar.border:SetAlpha(1)
+			self.Castbar.background:SetAlpha(1)
 		else
 			self.Castbar:SetAllPoints(self.Health)
 			self.Castbar.background:ClearAllPoints()
 			self.Castbar.border:ClearAllPoints()
+			self.Castbar.border:SetAlpha(0)
+			self.Castbar.background:SetAlpha(0)
 		end
 	end
 
@@ -201,10 +205,6 @@ ns.SetupPlayer = function(self, unit)
 		self.Castbar.Time:SetPoint(LolzenUIcfg.unitframes.player["uf_player_cb_time_anchor1"], self.Castbar.Icon, LolzenUIcfg.unitframes.player["uf_player_cb_time_anchor2"], LolzenUIcfg.unitframes.player["uf_player_cb_time_posx"], LolzenUIcfg.unitframes.player["uf_player_cb_time_posy"])
 	end
 
-	ns.SetUFPlayerCBTimeFont = function()
-		self.Castbar.Time:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.player["uf_player_cb_font"]), LolzenUIcfg.unitframes.player["uf_player_cb_font_size"], LolzenUIcfg.unitframes.player["uf_player_cb_font_flag"])
-	end
-
 	ns.SetUFPlayerCBTextPos = function()
 		self.Castbar.Text:ClearAllPoints()
 		self.Castbar.Text:SetPoint(LolzenUIcfg.unitframes.player["uf_player_cb_text_anchor1"], self.Castbar, LolzenUIcfg.unitframes.player["uf_player_cb_text_anchor2"], LolzenUIcfg.unitframes.player["uf_player_cb_text_posx"], LolzenUIcfg.unitframes.player["uf_player_cb_text_posy"])
@@ -212,6 +212,7 @@ ns.SetupPlayer = function(self, unit)
 
 	ns.SetUFPlayerCBTextFont = function()
 		self.Castbar.Text:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.player["uf_player_cb_font"]), LolzenUIcfg.unitframes.player["uf_player_cb_font_size"], LolzenUIcfg.unitframes.player["uf_player_cb_font_flag"])
+		self.Castbar.Time:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.player["uf_player_cb_font"]), LolzenUIcfg.unitframes.player["uf_player_cb_font_size"], LolzenUIcfg.unitframes.player["uf_player_cb_font_flag"])
 	end
 
 	ns.SetUFPlayerCBTextColor = function()
