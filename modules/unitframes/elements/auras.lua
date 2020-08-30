@@ -91,6 +91,8 @@ local PostUpdateIcon = function(icons, unit, button, index, offset, filter, isDe
 		else
 			button.icon:SetDesaturated(true)
 		end
+	else
+		button.icon:SetDesaturated(false)
 	end
 end
 
