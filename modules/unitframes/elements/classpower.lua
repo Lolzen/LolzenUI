@@ -28,7 +28,7 @@ function ns.AddClassPower(self, unit)
 			tile=true, tileSize=4, edgeSize=4,
 			insets={left=0.5, right=0.5, top=0.5, bottom=0.5}
 		})
-		ClassPower[i].border:SetPoint("TOPLEFT", ClassPower[i], -1.5, 1.5)
+		ClassPower[i].border:SetPoint("TOPLEFT", ClassPower[i], -1, 0.5)
 		ClassPower[i].border:SetPoint("BOTTOMRIGHT", ClassPower[i], 1, -1)
 		ClassPower[i].border:SetBackdropBorderColor(0, 0, 0)
 		ClassPower[i].border:SetFrameLevel(3)
