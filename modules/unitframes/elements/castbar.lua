@@ -46,8 +46,8 @@ function ns.AddCastBar(self, unit)
 		insets = {left = 4, right = 4, top = 4, bottom = 4},
 	})
 	iconborder:SetParent(Castbar)
-	iconborder:SetPoint("TOPLEFT", icon, -2, 3)
-	iconborder:SetPoint("BOTTOMRIGHT", icon, 2, -2)
+	iconborder:SetPoint("TOPLEFT", icon, -2, 2)
+	iconborder:SetPoint("BOTTOMRIGHT", icon, 3, -2)
 	iconborder:SetBackdropBorderColor(0, 0, 0)
 	iconborder:SetFrameLevel(3)
 	self.Castbar.Iconborder = iconborder
