@@ -1,7 +1,7 @@
 ## Interface: 80300
 ## Author: Lolzen
 ## Title: Lolzen User Interface
-## Version: 8.3.0_r1
+## Version: 8.3.7_r1
 ## Notes: Restyle the whole WoW UI
 ## x-Credits: haste, Neal, p3lim, tekkub, Seerah
 ## X-oUF: LolzenUI
