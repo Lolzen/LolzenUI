@@ -593,7 +593,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			for i, v in pairs(oUF.objects) do
 				if v.unit:match("nameplate") then
 					v.Castbar.Icon:ClearAllPoints()
-					v.Castbar.Icon:SetPoint(LolzenUIcfg.nameplates.castbar["np_cbicon_anchor"], health, LolzenUIcfg.nameplates.castbar["np_cbicon_anchor2"], LolzenUIcfg.nameplates.castbar["np_cbicon_posx"], LolzenUIcfg.nameplates.castbar["np_cbicon_posy"])
+					v.Castbar.Icon:SetPoint(LolzenUIcfg.nameplates.castbar["np_cbicon_anchor"], v.Health, LolzenUIcfg.nameplates.castbar["np_cbicon_anchor2"], LolzenUIcfg.nameplates.castbar["np_cbicon_posx"], LolzenUIcfg.nameplates.castbar["np_cbicon_posy"])
 				end
 			end
 		end
