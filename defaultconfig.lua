@@ -1000,9 +1000,9 @@ local function updateDB(module)
 						-- handle the case tables in tables are present, but new defaults are available
 						if not LolzenUIcfg[module][k][a] then
 							if type(b) == "boolean" then
-								if b == true then
+								if b == true and LolzenUIcfg[module][k][a] == nil then
 									LolzenUIcfg[module][k][a] = true
-								else
+								elseif b == false and LolzenUIcfg[module][k][a] == nil then
 									LolzenUIcfg[module][k][a] = false
 								end
 							else
