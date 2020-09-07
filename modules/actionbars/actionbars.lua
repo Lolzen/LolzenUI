@@ -2,6 +2,7 @@
 
 local _, ns = ...
 local L = ns.L
+local LBT = LibStub("LibButtonTexture-1.0")
 
 ns.RegisterModule("actionbars", L["desc_actionbars"], true)
 
@@ -38,7 +39,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		
 		MainMenuBarArtFrame:UnregisterAllEvents()
 
-		-- Hide the SStatusTrackingBarManager
+		-- Hide the StatusTrackingBarManager
 		StatusTrackingBarManager:UnregisterAllEvents()
 		StatusTrackingBarManager:Hide()
 		StatusTrackingBarManager.show = StatusTrackingBarManager.Hide
@@ -92,11 +93,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 			_G[name.."Icon"]:SetPoint("TOPLEFT", _G[name], "TOPLEFT", 2, -2)
 			_G[name.."Icon"]:SetPoint("BOTTOMRIGHT", _G[name], "BOTTOMRIGHT", -2, 2)
 
-			_G[name.."Flash"]:SetTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.actionbar["actionbar_flash_texture"])
-			_G[name]:SetNormalTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.actionbar["actionbar_normal_texture"])
-			_G[name]:SetCheckedTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.actionbar["actionbar_checked_texture"])
-			_G[name]:SetHighlightTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.actionbar["actionbar_hover_texture"])
-			_G[name]:SetPushedTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.actionbar["actionbar_pushed_texture"])
+			_G[name.."Flash"]:SetTexture(LBT:Fetch("flashing", LolzenUIcfg.actionbar["actionbar_flash_texture"]))
+			_G[name]:SetNormalTexture(LBT:Fetch("border", LolzenUIcfg.actionbar["actionbar_normal_texture"]))
+			_G[name]:SetCheckedTexture(LBT:Fetch("checked", LolzenUIcfg.actionbar["actionbar_checked_texture"]))
+			_G[name]:SetHighlightTexture(LBT:Fetch("hover", LolzenUIcfg.actionbar["actionbar_hover_texture"]))
+			_G[name]:SetPushedTexture(LBT:Fetch("pushed", LolzenUIcfg.actionbar["actionbar_pushed_texture"]))
 
 			if _G[name.."Border"] then
 				_G[name.."Border"]:SetTexture(nil)
@@ -122,12 +123,22 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 
 			if _G[name.."NormalTexture"] then
-				_G[name.."NormalTexture"]:SetAllPoints(_G[name])
+				if LolzenUIcfg.actionbar["actionbar_normal_texture"] == "Blizzard QuickSlot2" then
+					_G[name.."NormalTexture"]:SetPoint("TOPLEFT", _G[name.."Icon"], "TOPLEFT", -10, 10)
+					_G[name.."NormalTexture"]:SetPoint("BOTTOMRIGHT", _G[name.."Icon"], "BOTTOMRIGHT", 11, -11)
+				else
+					_G[name.."NormalTexture"]:SetAllPoints(_G[name])
+				end
 			end
 
 			-- petbar specific
 			if _G[name.."NormalTexture2"] then
-				_G[name.."NormalTexture2"]:SetAllPoints(_G[name])
+				if LolzenUIcfg.actionbar["actionbar_normal_texture"] == "Blizzard QuickSlot2" then
+					_G[name.."NormalTexture2"]:SetPoint("TOPLEFT", _G[name.."Icon"], "TOPLEFT", -10, 10)
+					_G[name.."NormalTexture2"]:SetPoint("BOTTOMRIGHT", _G[name.."Icon"], "BOTTOMRIGHT", 11, -11)
+				else
+					_G[name.."NormalTexture2"]:SetAllPoints(_G[name])
+				end
 			end
 
 			if _G[name.."Shine"] then
@@ -136,8 +147,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 
 			if _G[name.."AutoCastable"] then
-				_G[name.."AutoCastable"]:SetPoint("TOPLEFT", _G[name], "TOPLEFT", -2, 2)
-				_G[name.."AutoCastable"]:SetPoint("BOTTOMRIGHT", _G[name], "BOTTOMRIGHT", 2, -2)
+				--autocastable is unresizable as of last. simply hide it for now
+				_G[name.."AutoCastable"]:SetAlpha(0)
+			--	_G[name.."AutoCastable"]:SetPoint("TOPLEFT", _G[name], "TOPLEFT", -2, 2)
+			--	_G[name.."AutoCastable"]:SetPoint("BOTTOMRIGHT", _G[name], "BOTTOMRIGHT", -2, 2)
 			end
 		end
 
@@ -152,7 +165,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		--hook PetActionBar_Update, so it doesn't interfer with SetNormalTexture()
 		hooksecurefunc("PetActionBar_Update", function(self)
 			for i=1, NUM_PET_ACTION_SLOTS do
-				_G["PetActionButton"..i]:SetNormalTexture("Interface\\AddOns\\LolzenUI\\media\\"..LolzenUIcfg.actionbar["actionbar_normal_texture"])
+				_G["PetActionButton"..i]:SetNormalTexture(LBT:Fetch("border", LolzenUIcfg.actionbar["actionbar_normal_texture"]))
 			end
 		end)
 
@@ -210,6 +223,169 @@ f:SetScript("OnEvent", function(self, event, addon)
 			setActionBarPosition(name)
 		end
 	end
+
+	function ns.SetActionBarTheme()
+		local actionbars = {
+			"ActionButton",
+			"MultiBarBottomLeftButton",
+			"MultiBarBottomRightButton",
+			"MultiBarLeftButton",
+			"MultiBarRightButton",
+			"PetActionButton",
+			"OverrideActionBarButton",
+			"ExtraActionButton",
+		}
+		for _, name in pairs(actionbars) do
+			for i = 1, NUM_ACTIONBAR_BUTTONS do
+				if _G[name..i] then
+					_G[name..i.."Flash"]:SetTexture(LBT:Fetch("flashing", LolzenUIcfg.actionbar["actionbar_flash_texture"]))
+					_G[name..i]:SetNormalTexture(LBT:Fetch("border", LolzenUIcfg.actionbar["actionbar_normal_texture"]))
+					_G[name..i]:SetCheckedTexture(LBT:Fetch("checked", LolzenUIcfg.actionbar["actionbar_checked_texture"]))
+					_G[name..i]:SetHighlightTexture(LBT:Fetch("hover", LolzenUIcfg.actionbar["actionbar_hover_texture"]))
+					_G[name..i]:SetPushedTexture(LBT:Fetch("pushed", LolzenUIcfg.actionbar["actionbar_pushed_texture"]))
+
+					if name ~= "PetActionButton" then
+						if _G[name..i.."NormalTexture"] then
+							if LolzenUIcfg.actionbar["actionbar_normal_texture"] == "Blizzard QuickSlot2" then
+								_G[name..i.."NormalTexture"]:SetPoint("TOPLEFT", _G[name..i.."Icon"], "TOPLEFT", -10, 10)
+								_G[name..i.."NormalTexture"]:SetPoint("BOTTOMRIGHT", _G[name..i.."Icon"], "BOTTOMRIGHT", 11, -11)
+							else
+								_G[name..i.."NormalTexture"]:SetAllPoints(_G[name..i])
+							end
+						end
+					end
+
+					--petbar
+					if _G[name..i.."NormalTexture2"] then
+						if LolzenUIcfg.actionbar["actionbar_normal_texture"] == "Blizzard QuickSlot2" then
+							_G[name..i.."NormalTexture2"]:SetPoint("TOPLEFT", _G[name..i.."Icon"], "TOPLEFT", -10, 10)
+							_G[name..i.."NormalTexture2"]:SetPoint("BOTTOMRIGHT", _G[name..i.."Icon"], "BOTTOMRIGHT", 11, -11)
+						else
+							_G[name..i.."NormalTexture2"]:SetAllPoints(_G[name..i])
+						end
+					end
+				end
+			end
+		end
+	end
+
+	function ns.SetActionBarKeyBindToggle()
+		local actionbars = {
+			"ActionButton",
+			"MultiBarBottomLeftButton",
+			"MultiBarBottomRightButton",
+			"MultiBarLeftButton",
+			"MultiBarRightButton",
+			"PetActionButton",
+			"OverrideActionBarButton",
+			"ExtraActionButton",
+		}
+		
+		for i = 1, NUM_ACTIONBAR_BUTTONS do
+			for _, name in pairs(actionbars) do
+				if _G[name..i.."HotKey"] then
+					if LolzenUIcfg.actionbar["actionbar_show_keybinds"] == false then
+						_G[name..i.."HotKey"]:Hide()
+					else
+						_G[name..i.."HotKey"]:Show()
+					end
+				end
+			end
+		end
+	end
+
+	function ns.UpdateActionBarSpacing()
+		local actionbars = {
+			"ActionButton",
+			"MultiBarBottomLeftButton",
+			"MultiBarBottomRightButton",
+			"MultiBarLeftButton",
+			"MultiBarRightButton",
+			"PetActionButton",
+			"OverrideActionBarButton",
+			"ExtraActionButton",
+		}
+		for _, name in pairs(actionbars) do
+			for i = 1, NUM_ACTIONBAR_BUTTONS do
+				local button = _G[name..i]
+				
+				if i >= 2 then
+					if button == _G["ActionButton"..i] then
+						button:SetPoint("LEFT", _G["ActionButton"..i-1], "RIGHT", LolzenUIcfg.actionbar["actionbar_button_spacing"], 0)
+					elseif button == _G["MultiBarBottomLeftButton"..i] then
+						button:SetPoint("LEFT", _G["MultiBarBottomLeftButton"..i-1], "RIGHT", LolzenUIcfg.actionbar["actionbar_button_spacing"], 0)
+					elseif button == _G["MultiBarBottomRightButton"..i] then
+						button:SetPoint("LEFT", _G["MultiBarBottomRightButton"..i-1], "RIGHT", LolzenUIcfg.actionbar["actionbar_button_spacing"], 0)
+					elseif button == _G["MultiBarLeftButton"..i] then
+						button:SetPoint("BOTTOM", _G["MultiBarLeftButton"..i-1], "BOTTOM", 0, - LolzenUIcfg.actionbar["actionbar_button_size"] - LolzenUIcfg.actionbar["actionbar_button_spacing"])
+					elseif button == _G["MultiBarRightButton"..i] then
+						button:SetPoint("BOTTOM", _G["MultiBarRightButton"..i-1], "BOTTOM", 0, - LolzenUIcfg.actionbar["actionbar_button_size"] - LolzenUIcfg.actionbar["actionbar_button_spacing"])
+					elseif button == _G["PetActionButton"..i] then
+						button:SetPoint("LEFT", _G["PetActionButton"..i-1], "RIGHT", LolzenUIcfg.actionbar["actionbar_button_spacing"], 0)
+					elseif button == _G["OverrideActionBarButton"..i] then
+						button:SetPoint("LEFT", _G["OverrideActionBarButton"..i-1], "RIGHT", LolzenUIcfg.actionbar["actionbar_button_spacing"], 0)
+					end
+				end
+			end
+		end
+	end
+
+	function ns.UpdateActionBarSize()
+		local actionbars = {
+			"ActionButton",
+			"MultiBarBottomLeftButton",
+			"MultiBarBottomRightButton",
+			"MultiBarLeftButton",
+			"MultiBarRightButton",
+			"PetActionButton",
+			"OverrideActionBarButton",
+		}
+		for _, name in pairs(actionbars) do
+			for i = 1, NUM_ACTIONBAR_BUTTONS do
+				local button = _G[name..i]
+
+				if button then
+					button:SetSize(LolzenUIcfg.actionbar["actionbar_button_size"], LolzenUIcfg.actionbar["actionbar_button_size"])
+				end
+			end
+		end
+	end
+
+	function ns.UpdateActionBarPositions()
+		-- ToDo: ExtraActionButton Options
+		ns.mmb_holder:SetPoint("BOTTOM", UIParent, "BOTTOM", LolzenUIcfg.actionbar["actionbar_mmb_posx"], LolzenUIcfg.actionbar["actionbar_mmb_posy"])
+		ns.mbbl_holder:SetPoint("BOTTOM", UIParent, "BOTTOM", LolzenUIcfg.actionbar["actionbar_mbbl_posx"], LolzenUIcfg.actionbar["actionbar_mbbl_posy"])
+		ns.mbbr_holder:SetPoint("BOTTOM", UIParent, "BOTTOM", LolzenUIcfg.actionbar["actionbar_mbbr_posx"], LolzenUIcfg.actionbar["actionbar_mbbr_posy"])
+		ns.pet_holder:SetPoint("BOTTOM", UIParent, "BOTTOM", LolzenUIcfg.actionbar["actionbar_petb_posx"], LolzenUIcfg.actionbar["actionbar_petb_posy"])
+
+		local actionbars = {
+			"MultiBarLeftButton",
+			"MultiBarRightButton",
+			"OverrideActionBarButton",
+--			"ExtraActionButton",
+		}
+
+		for _, name in pairs(actionbars) do
+			for i = 1, NUM_ACTIONBAR_BUTTONS do
+				local button = _G[name..i]
+
+				if button then
+					if i == 1 then
+						if button == _G["MultiBarLeftButton"..i] then
+							button:SetPoint("RIGHT", UIParent, "RIGHT", LolzenUIcfg.actionbar["actionbar_mbl_posx"], LolzenUIcfg.actionbar["actionbar_mbl_posy"])
+						elseif button == _G["MultiBarRightButton"..i] then
+							button:SetPoint("RIGHT", UIParent, "RIGHT", LolzenUIcfg.actionbar["actionbar_mbr_posx"], LolzenUIcfg.actionbar["actionbar_mbr_posy"])
+						elseif button == _G["OverrideActionBarButton"..i] then
+							button:SetPoint("BOTTOMLEFT", ActionButton1)
+--						elseif button == _G["ExtraActionButton"..i] then
+--							button:SetPoint("BOTTOM", UIParent, 0, 200)
+						end
+					end
+				end
+			end
+		end
+	end
+
 	-- hide pet hotkeys on login
 	if event == "PLAYER_ENTERING_WORLD" then
 		if LolzenUIcfg.modules["actionbars"] == false then return end

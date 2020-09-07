@@ -2,6 +2,7 @@
 
 local _, ns = ...
 local L = ns.L
+local LSM = LibStub("LibSharedMedia-3.0")
 
 ns.RegisterModule("pullcount", L["desc_pullcount"] , true)
 
@@ -20,10 +21,10 @@ timer:SetScript("OnFinished", function(self, requested)
 	if pullNum-1 <= LolzenUIcfg.pullcount["pull_count_range"] then
 		if LolzenUIcfg.pullcount["pull_sound_"..pullNum -1] then
 			if LolzenUIcfg.pullcount["pull_sound_"..pullNum-1] then
-				PlaySoundFile("Interface\\AddOns\\LolzenUI\\sounds\\"..LolzenUIcfg.pullcount["pull_sound_"..pullNum-1], "master")
+				PlaySoundFile(LSM:Fetch("sound", LolzenUIcfg.pullcount["pull_sound_"..pullNum-1]), "master")
 			end
 		elseif pullNum-1 == 0 then
-			PlaySoundFile("Interface\\AddOns\\LolzenUI\\sounds\\"..LolzenUIcfg.pullcount["pull_sound_pull"], "master")
+			PlaySoundFile(LSM:Fetch("sound", LolzenUIcfg.pullcount["pull_sound_pull"]), "master")
 			C_Timer.After(1, function(self) isCounting = false end)
 		end
 	end
@@ -39,7 +40,7 @@ local function initiateOrAbortCountdown(num)
 		isCounting = false
 		--pullNum = 0
 		timer:Stop()
-		PlaySoundFile("Interface\\AddOns\\LolzenUI\\sounds\\Denied.mp3", "master") --TBD option
+		PlaySoundFile(LSM:Fetch("sound", LolzenUIcfg.pullcount["pull_sound_abort"]), "master")
 		-- cancel timer
 		TimerTracker_OnEvent(TimerTracker, "PLAYER_ENTERING_WORLD")
 		-- alert that the timer has been stopped
@@ -48,7 +49,7 @@ local function initiateOrAbortCountdown(num)
 		if isCounting == true then return end
 		isCounting = true
 		if LolzenUIcfg.pullcount["pull_sound_"..num] then
-			PlaySoundFile("Interface\\AddOns\\LolzenUI\\sounds\\"..LolzenUIcfg.pullcount["pull_sound_"..num], "master")
+			PlaySoundFile(LSM:Fetch("sound", LolzenUIcfg.pullcount["pull_sound_"..num]), "master")
 		end
 		pullNum = num
 		timer:Play()
@@ -79,13 +80,14 @@ f:SetScript("OnEvent", function(self, event, ...)
 				local msg = LolzenUIcfg.pullcount["pull_msg_count"]
 				msg = string.gsub(msg, "!n", i)
 				if message:match(msg) then
-					PlaySoundFile("Interface\\AddOns\\LolzenUI\\sounds\\"..LolzenUIcfg.pullcount["pull_sound_"..i], "master")
+					PlaySoundFile(LSM:Fetch("sound", LolzenUIcfg.pullcount["pull_sound_"..i]), "master")
 				end
 			end
 			if message:match(LolzenUIcfg.pullcount["pull_msg_now"]) then
-				PlaySoundFile("Interface\\AddOns\\LolzenUI\\sounds\\"..LolzenUIcfg.pullcount["pull_sound_pull"], "master")
+				PlaySoundFile(LSM:Fetch("sound", LolzenUIcfg.pullcount["pull_sound_pull"]), "master")
 			end
 		end
+		LolzenUI_FilterFuc = filter
 
 		if LolzenUIcfg.pullcount["pull_filter_channel"] == true then
 			ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", filter)
@@ -158,5 +160,49 @@ else
 				SendPull(num)
 			end
 		end
+	end
+end
+
+ns.setPCMsgFilterGuild = function()
+	if LolzenUIcfg.pullcount["pull_filter_guild"] == true then
+		ChatFrame_AddMessageEventFilter("CHAT_MSG_GUILD", LolzenUI_FilterFuc)
+	elseif LolzenUIcfg.pullcount["pull_filter_guild"] == false then
+		ChatFrame_RemoveMessageEventFilter("CHAT_MSG_GUILD", LolzenUI_FilterFuc)
+	end
+end
+
+ns.setPCMsgFilterParty = function()
+	if LolzenUIcfg.pullcount["pull_filter_party"] == true then
+		ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY", LolzenUI_FilterFuc)
+		ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY_LEADER", LolzenUI_FilterFuc)
+	elseif LolzenUIcfg.pullcount["pull_filter_party"] == false then
+		ChatFrame_RemoveMessageEventFilter("CHAT_MSG_PARTY", LolzenUI_FilterFuc)
+		ChatFrame_RemoveMessageEventFilter("CHAT_MSG_PARTY_LEADER", LolzenUI_FilterFuc)
+	end
+end
+
+ns.setPCMsgFilterInstance = function()
+	if LolzenUIcfg.pullcount["pull_filter_instance"] == true then
+		ChatFrame_AddMessageEventFilter("CHAT_MSG_INSTANCE", LolzenUI_FilterFuc)
+		ChatFrame_AddMessageEventFilter("CHAT_MSG_INSTANCE_LEADER", LolzenUI_FilterFuc)
+	elseif LolzenUIcfg.pullcount["pull_filter_instance"] == false then
+		ChatFrame_RemoveMessageEventFilter("CHAT_MSG_INSTANCE", LolzenUI_FilterFuc)
+		ChatFrame_RemoveMessageEventFilter("CHAT_MSG_INSTANCE_LEADER", LolzenUI_FilterFuc)
+	end
+end
+
+ns.setPCMsgFilterSay = function()
+	if LolzenUIcfg.pullcount["pull_filter_say"] == true then
+		ChatFrame_AddMessageEventFilter("CHAT_MSG_SAY", LolzenUI_FilterFuc)
+	elseif LolzenUIcfg.pullcount["pull_filter_say"] == false then
+		ChatFrame_RemoveMessageEventFilter("CHAT_MSG_SAY", LolzenUI_FilterFuc)
+	end
+end
+
+ns.setPCMsgFilterCustom = function()
+	if LolzenUIcfg.pullcount["pull_filter_channel"] == true then
+		ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", LolzenUI_FilterFuc)
+	elseif LolzenUIcfg.pullcount["pull_filter_channel"] == false then
+		ChatFrame_RemoveMessageEventFilter("CHAT_MSG_CHANNEL", LolzenUI_FilterFuc)
 	end
 end

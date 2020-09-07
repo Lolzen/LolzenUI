@@ -22,50 +22,61 @@ f:SetScript("OnEvent", function(self, event, addon)
 		afbar:SetStatusBarColor(unpack(LolzenUIcfg.artifactbar["artifactbar_color"]))
 		afbar:SetFrameStrata("BACKGROUND")
 
-		--Background for our bar
+		-- Background for our bar
 		local bg = afbar:CreateTexture(nil, "BACKGROUND")
 		bg:SetAllPoints(afbar)
 		bg:SetTexture(LSM:Fetch("statusbar", LolzenUIcfg.artifactbar["artifactbar_texture"]))
 		bg:SetVertexColor(0, 0, 0, LolzenUIcfg.artifactbar["artifactbar_bg_alpha"])
 
-		--1px "border"
-		if LolzenUIcfg.artifactbar["artifactbar_1px_border"] == true then
-			local lines = {}
-			for i = 1, 4 do
-				if not lines[i] then
-					lines[i] = afbar:CreateTexture(nil, "OVERLAY")
-					lines[i]:SetTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
-					lines[i]:SetVertexColor(0, 0, 0, 1)
-				end
-				if i == 1 then
-					lines[i]:SetHeight(1)
-					lines[i]:SetPoint("TOPLEFT", afbar, 0, 1)
-					lines[i]:SetPoint("TOPRIGHT", afbar, 0, 1)
-				elseif i == 2 then
-					lines[i]:SetHeight(1)
-					lines[i]:SetPoint("BOTTOMLEFT", afbar, 0, -1)
-					lines[i]:SetPoint("BOTTOMRIGHT", afbar, 0, -1)
-				elseif i == 3 then
-					lines[i]:SetWidth(1)
-					if LolzenUIcfg.artifactbar["artifactbar_1px_border_round"] == true then
-						lines[i]:SetPoint("TOPLEFT", afbar, -1, 0)
-						lines[i]:SetPoint("BOTTOMLEFT", afbar, -1, 0)
-					else
-						lines[i]:SetPoint("TOPLEFT", afbar, 0, 0)
-						lines[i]:SetPoint("BOTTOMLEFT", afbar, 0, 0)
+		-- 1px "border"
+		local lines = {}
+		function ns.SetArtifactBorder()
+			if LolzenUIcfg.artifactbar["artifactbar_1px_border"] == true then
+				for i = 1, 4 do
+					if not lines[i] then
+						lines[i] = afbar:CreateTexture(nil, "OVERLAY")
+						lines[i]:SetTexture("Interface\\AddOns\\LolzenUI\\media\\statusbar")
+						lines[i]:SetVertexColor(0, 0, 0, 1)
 					end
-				elseif i == 4 then
-					lines[i]:SetWidth(1)
-					if LolzenUIcfg.artifactbar["artifactbar_1px_border_round"] == true then
-						lines[i]:SetPoint("TOPRIGHT", afbar, 1, 0)
-						lines[i]:SetPoint("BOTTOMRIGHT", afbar, 1, 0)
-					else
-						lines[i]:SetPoint("TOPRIGHT", afbar, 0, 0)
-						lines[i]:SetPoint("BOTTOMRIGHT", afbar, 0, 0)
+					if i == 1 then
+						lines[i]:SetHeight(1)
+						lines[i]:SetPoint("TOPLEFT", afbar, 0, 1)
+						lines[i]:SetPoint("TOPRIGHT", afbar, 0, 1)
+					elseif i == 2 then
+						lines[i]:SetHeight(1)
+						lines[i]:SetPoint("BOTTOMLEFT", afbar, 0, -1)
+						lines[i]:SetPoint("BOTTOMRIGHT", afbar, 0, -1)
+					elseif i == 3 then
+						lines[i]:SetWidth(1)
+						if LolzenUIcfg.artifactbar["artifactbar_1px_border_round"] == true then
+							lines[i]:SetPoint("TOPLEFT", afbar, -1, 0)
+							lines[i]:SetPoint("BOTTOMLEFT", afbar, -1, 0)
+						else
+							lines[i]:SetPoint("TOPLEFT", afbar, 0, 0)
+							lines[i]:SetPoint("BOTTOMLEFT", afbar, 0, 0)
+						end
+					elseif i == 4 then
+						lines[i]:SetWidth(1)
+						if LolzenUIcfg.artifactbar["artifactbar_1px_border_round"] == true then
+							lines[i]:SetPoint("TOPRIGHT", afbar, 1, 0)
+							lines[i]:SetPoint("BOTTOMRIGHT", afbar, 1, 0)
+						else
+							lines[i]:SetPoint("TOPRIGHT", afbar, 0, 0)
+							lines[i]:SetPoint("BOTTOMRIGHT", afbar, 0, 0)
+						end
+					end
+					lines[i]:SetAlpha(1)
+				end
+			else
+				for i = 1, 4 do
+					if lines[i] then
+						lines[i]:SetAlpha(0)
 					end
 				end
 			end
 		end
+		-- call this function on login/reload
+		ns.SetArtifactBorder()
 
 		-- fontstring
 		local xptext = afbar:CreateFontString(nil, "OVERLAY")
@@ -74,15 +85,27 @@ f:SetScript("OnEvent", function(self, event, addon)
 		xptext:SetFont(LSM:Fetch("font", LolzenUIcfg.artifactbar["artifactbar_font"]), LolzenUIcfg.artifactbar["artifactbar_font_size"], LolzenUIcfg.artifactbar["artifactbar_font_flag"])
 		xptext:SetTextColor(unpack(LolzenUIcfg.artifactbar["artifactbar_font_color"]))
 
-		if LolzenUIcfg.artifactbar["artifactbar_mouseover_text"] == true then
-			xptext:Hide()
-			afbar:SetScript("OnEnter", function(self)
-				xptext:Show()
-			end)
-			afbar:SetScript("OnLeave", function(self)
+		function ns.SetArtifactTextVisible()
+			if LolzenUIcfg.artifactbar["artifactbar_mouseover_text"] == true then
 				xptext:Hide()
-			end)
+				afbar:SetScript("OnEnter", function(self)
+					xptext:Show()
+				end)
+				afbar:SetScript("OnLeave", function(self)
+					xptext:Hide()
+				end)
+			else
+				xptext:Show()
+				afbar:SetScript("OnEnter", function(self)
+					return
+				end)
+				afbar:SetScript("OnLeave", function(self)
+					return
+				end)
+			end
 		end
+		-- call this function on login/reload
+		ns.SetArtifactTextVisible()
 
 		-- get artifact power data
 		function afbar:ARTIFACT_XP_UPDATE()
@@ -111,5 +134,48 @@ f:SetScript("OnEvent", function(self, event, addon)
 		afbar:RegisterEvent("UNIT_INVENTORY_CHANGED")
 		afbar:RegisterEvent("PLAYER_ENTERING_WORLD")
 		afbar:SetScript("OnEvent", function(self, event, ...) self[event](self, event, ...) end)
+
+		function ns.SetArtifactBarPosition()
+			afbar:ClearAllPoints()
+			afbar:SetPoint(LolzenUIcfg.artifactbar["artifactbar_anchor"], LolzenUIcfg.artifactbar["artifactbar_parent"], LolzenUIcfg.artifactbar["artifactbar_posx"], LolzenUIcfg.artifactbar["artifactbar_posy"])
+		end
+
+		function ns.SetArtifactBarHeight()
+			afbar:SetHeight(LolzenUIcfg.artifactbar["artifactbar_height"])
+		end
+
+		function ns.SetArtifactBarWidth()
+			afbar:SetWidth(LolzenUIcfg.artifactbar["artifactbar_width"])
+		end
+
+		function ns.SetArtifactBarTexture()
+			afbar:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.artifactbar["artifactbar_texture"]))
+			bg:SetTexture(LSM:Fetch("statusbar", LolzenUIcfg.artifactbar["artifactbar_texture"]))
+		end
+
+		function ns.SetArtifactBarAlpha()
+			afbar:SetAlpha(LolzenUIcfg.artifactbar["artifactbar_alpha"])
+		end
+
+		function ns.SetArtifactBarBackgroundAlpha()
+			bg:SetAlpha(LolzenUIcfg.artifactbar["artifactbar_bg_alpha"])
+		end
+
+		function ns.SetArtifactRGBColor()
+			afbar:SetStatusBarColor(unpack(LolzenUIcfg.artifactbar["artifactbar_color"]))
+		end
+
+		function ns.SetArtifactBarTextPosition()
+			xptext:ClearAllPoints()
+			xptext:SetPoint(LolzenUIcfg.artifactbar["artifactbar_text_anchor1"], afbar, LolzenUIcfg.artifactbar["artifactbar_text_posx"], LolzenUIcfg.artifactbar["artifactbar_text_posy"])
+		end
+
+		function ns.SetArtifactRGBTextColor()
+			xptext:SetTextColor(unpack(LolzenUIcfg.artifactbar["artifactbar_font_color"]))
+		end
+
+		function ns.SetArtifactBarFont()
+			xptext:SetFont(LSM:Fetch("font", LolzenUIcfg.artifactbar["artifactbar_font"]), LolzenUIcfg.artifactbar["artifactbar_font_size"], LolzenUIcfg.artifactbar["artifactbar_font_flag"])
+		end
 	end
 end)
