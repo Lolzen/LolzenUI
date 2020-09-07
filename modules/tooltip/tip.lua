@@ -406,8 +406,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 
 		-- inspect when INSPECT_READY is fired
-		if LolzenUIcfg.tooltip["tip_display_talents"] == true then
-			function GameTooltip:INSPECT_READY()
+		
+		function GameTooltip:INSPECT_READY()
+			if LolzenUIcfg.tooltip["tip_display_talents"] == true then
 				GameTooltip:UnregisterEvent("INSPECT_READY")
 				InspectTalents(1, getTooltipUnit())
 			end
