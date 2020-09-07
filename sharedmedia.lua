@@ -45,6 +45,19 @@ LSM:Register("sound", "UT3_female: eight", [[Interface\Addons\LolzenUI\sounds\UT
 LSM:Register("sound", "UT3_female: nine", [[Interface\Addons\LolzenUI\sounds\UT3_female\nine.ogg]])
 LSM:Register("sound", "UT3_female: ten", [[Interface\Addons\LolzenUI\sounds\UT3_female\ten.ogg]])
 
+LSM:Register("sound", "Nyanners: Cucked", [[Interface\Addons\LolzenUI\sounds\Nyanners\cucked.ogg]])
+LSM:Register("sound", "Nyanners: Blastoff", [[Interface\Addons\LolzenUI\sounds\Nyanners\blastoff.ogg]])
+LSM:Register("sound", "Nyanners: one", [[Interface\Addons\LolzenUI\sounds\Nyanners\one.ogg]])
+LSM:Register("sound", "Nyanners: two", [[Interface\Addons\LolzenUI\sounds\Nyanners\two.ogg]])
+LSM:Register("sound", "Nyanners: three", [[Interface\Addons\LolzenUI\sounds\Nyanners\three.ogg]])
+LSM:Register("sound", "Nyanners: four", [[Interface\Addons\LolzenUI\sounds\Nyanners\four.ogg]])
+LSM:Register("sound", "Nyanners: five", [[Interface\Addons\LolzenUI\sounds\Nyanners\five.ogg]])
+LSM:Register("sound", "Nyanners: six", [[Interface\Addons\LolzenUI\sounds\Nyanners\six.ogg]])
+LSM:Register("sound", "Nyanners: seven", [[Interface\Addons\LolzenUI\sounds\Nyanners\seven.ogg]])
+LSM:Register("sound", "Nyanners: eight", [[Interface\Addons\LolzenUI\sounds\Nyanners\eight.ogg]])
+LSM:Register("sound", "Nyanners: nine", [[Interface\Addons\LolzenUI\sounds\Nyanners\nine.ogg]])
+LSM:Register("sound", "Nyanners: ten", [[Interface\Addons\LolzenUI\sounds\Nyanners\ten.ogg]])
+
 -- [buttons]
 -- border
 LBT:Register("border", "LolzenUI Standard", [[Interface\Addons\LolzenUI\media\gloss]])
