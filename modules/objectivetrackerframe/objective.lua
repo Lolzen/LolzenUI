@@ -14,6 +14,13 @@ f:SetScript("OnEvent", function(self, event, addon)
 	if event == "ADDON_LOADED" and addon == "LolzenUI" then
 		if LolzenUIcfg.modules["objectivetracker"] == false then return end
 
+		local function loginCollapse()
+			if LolzenUIcfg.objectivetracker["objectivetracker_logincollapse"] == true then
+				ObjectiveTracker_Collapse()
+			end
+		end
+		hooksecurefunc("ObjectiveTracker_Initialize", loginCollapse)
+
 		local of_fake = CreateFrame("Frame", nil, UIParent)
 		of_fake:SetHeight(650)
 		of_fake:SetWidth(200)
@@ -25,9 +32,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 		of_fake:SetPoint(LolzenUIcfg.objectivetracker["objectivetracker_anchor"], UIParent, LolzenUIcfg.objectivetracker["objectivetracker_anchor"], LolzenUIcfg.objectivetracker["objectivetracker_posx"], LolzenUIcfg.objectivetracker["objectivetracker_posy"])
 		of:SetHeight(650)
 		of:SetScale(LolzenUIcfg.objectivetracker["objectivetracker_scale"])
-		if LolzenUIcfg.objectivetracker["objectivetracker_logincollapse"] == true then
-			ObjectiveTracker_Collapse()
-		end
 		-- bring the HM aesthetically in line with the button, wherever the ObjectiveTrackerFrame's position is set
 		of.HeaderMenu.Title:SetPoint("TOPLEFT", of, "TOPLEFT", -170, -5)
 
@@ -44,9 +48,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 		ObjectiveTracker_Collapse()
 	elseif event == "PLAYER_REGEN_ENABLED" then
 		if LolzenUIcfg.objectivetracker["objectivetracker_combatcollapse"] == false then return end
+		-- it seems the folowing check is unnecessary as even when i do /run ObjectiveTracker_Expand() it won't expand
+		-- i'll leave this check in place in case this i sa blizz bug, but i'm unsure. The checks are working, i tripple checked.
 		if LolzenUIcfg.objectivetracker["objectivetracker_dungeoncollapse"] == true and IsInInstance() then return end
-		local of = ObjectiveTrackerFrame
-		if of.collapsed and not InCombatLockdown() then
+		if ObjectiveTrackerFrame.collapsed and not InCombatLockdown() then
 			ObjectiveTracker_Expand()
 		end
 	elseif event == "PLAYER_ENTERING_WORLD" then
