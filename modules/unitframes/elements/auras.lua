@@ -2,19 +2,18 @@ local _, ns = ...
 
 local function FormatTime(seconds)
 	local day, hour, minute = 86400, 3600, 60
---	if (seconds >= day) then
---		return format('%dd', floor(seconds/day + 0.5))
---	elseif (seconds >= hour) then
---		return format('%dh', floor(seconds/hour + 0.5))
---	elseif (seconds >= minute) then
---		if (seconds <= minute * 5) then
---			return format('%d:%02d', floor(seconds/minute), seconds % minute)
---		end
---		return format('%dm', floor(seconds/minute + 0.5))
---	else
---		return format('%d', ceil(seconds))
---	end
-		return seconds
+	if (seconds >= day) then
+		return format('%dd', floor(seconds/day + 0.5))
+	elseif (seconds >= hour) then
+		return format('%dh', floor(seconds/hour + 0.5))
+	elseif (seconds >= minute) then
+		if (seconds <= minute * 5) then
+			return format('%d:%02d', floor(seconds/minute), seconds % minute)
+		end
+		return format('%dm', floor(seconds/minute + 0.5))
+	else
+		return format('%d', ceil(seconds))
+	end
 end
 		
 local function UpdateAuraTimer(self, elapsed)
@@ -70,8 +69,6 @@ local PostUpdateIcon = function(icons, unit, button, index, offset, filter, isDe
 	local _, _, _, _, duration, expiration, owner, canStealOrPurge = UnitAura(unit, index, button.filter)
 	if(duration and duration > 0) then
 		button.expiration = expiration - GetTime()
-	else
-		button.expiration = math.huge
 	end
 
 	-- fix for boss, party & raid
