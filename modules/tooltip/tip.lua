@@ -194,6 +194,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			if _G["GameTooltipTextLeft1"]:GetText() == nil then return end
 			local selectedEssenceName = string.gsub(_G["GameTooltipTextLeft1"]:GetText(), " %b()", "")
 			local essences = C_AzeriteEssence.GetEssences()
+			if not essences or not type(essences) == "table" then return end
 			for _, slot in pairs(essences) do
 				local essence = C_AzeriteEssence.GetEssenceInfo(slot.ID)
 				if selectedEssenceName == essence.name then
