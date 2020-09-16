@@ -155,16 +155,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 		end
 
-		-- hide those pesky hotkeys, ffs
---		hooksecurefunc(ActionBarActionButtonMixin, "Update", function(self, actionButtonType)
---			print("test")
-			--if LolzenUIcfg.actionbar["actionbar_show_keybinds"] == false then
---				local name = self:GetName()
-				--_G[name.."HotKey"]:Hide()
-				--print(self)
-			--end
---		end)
-
 		--hook PetActionBar_Update, so it doesn't interfer with SetNormalTexture()
 		hooksecurefunc("PetActionBar_Update", function(self)
 			for i=1, NUM_PET_ACTION_SLOTS do
