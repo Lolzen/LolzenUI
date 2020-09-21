@@ -140,6 +140,7 @@ local function modifyOHB()
 	OrderHallCommandBar:RegisterEvent("CURRENCY_DISPLAY_UPDATE")
 	OrderHallCommandBar:RegisterEvent("PLAYER_STARTED_MOVING")
 	OrderHallCommandBar:RegisterEvent("PLAYER_STOPPED_MOVING")
+	OrderHallCommandBar:RegisterEvent("UNIT_FLAGS")
 	OrderHallCommandBar:SetScript("OnEvent", function(self, event)
 		if event == "CHAT_MSG_CURRENCY" or event == "CURRENCY_DISPLAY_UPDATE" then
 			getCurrencies()
@@ -147,6 +148,12 @@ local function modifyOHB()
 			timer:Stop()
 		elseif event == "PLAYER_STARTED_MOVING" then
 			timer:Play()
+		elseif event == "UNIT_FLAGS" then
+			if UnitOnTaxi("player") then
+				timer:Play()
+			else
+				timer:Stop()
+			end
 		end
 	end)
 
