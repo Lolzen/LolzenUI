@@ -120,6 +120,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 
 		local PostCreateIcon = function(Auras, button)
+			button.spacing = LolzenUIcfg.nameplates.general["np_aura_spacing"]
+			
 			--TODO: create own options & variables for this
 			button.count:ClearAllPoints()
 			button.count:SetPoint("BOTTOMRIGHT")
@@ -323,6 +325,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				
 				local Auras = CreateAura(frame, LolzenUIcfg.nameplates.general["np_aura_maxnum"])
 				Auras.showDebuffType = true
+				Auras.gap = true
 				frame.Auras = Auras
 				
 				if LolzenUIcfg.nameplates.general["np_aura_show_type"] == "Buffs" then
@@ -465,6 +468,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 					end
 				end
 			end
+			self:UpdateAllElements('RefreshUnit')
 		end
 
 		ns.setNPAuraMaxNum = function()
@@ -473,17 +477,20 @@ f:SetScript("OnEvent", function(self, event, addon)
 					v.Buffs.num = LolzenUIcfg.nameplates.general["np_aura_maxnum"]
 					v.Debuffs.num = LolzenUIcfg.nameplates.general["np_aura_maxnum"]
 					v.Auras.numTotal = LolzenUIcfg.nameplates.general["np_aura_maxnum"]
+					v:UpdateAllElements('RefreshUnit')
 				end
 			end
 		end
 
 		ns.setNPAuraSpacing = function()
-			--todo really refresh "old" auras
 			for i, v in pairs(oUF.objects) do
 				if v.unit:match("nameplate") then
 					v.Buffs.spacing = LolzenUIcfg.nameplates.general["np_aura_spacing"]
 					v.Debuffs.spacing = LolzenUIcfg.nameplates.general["np_aura_spacing"]
 					v.Auras.spacing = LolzenUIcfg.nameplates.general["np_aura_spacing"]
+					v.Buffs:ForceUpdate()
+					v.Debuffs:ForceUpdate()
+					v.Auras:ForceUpdate()
 				end
 			end
 		end
@@ -494,6 +501,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 					v.Buffs.size = LolzenUIcfg.nameplates.general["np_aura_size"]
 					v.Debuffs.size = LolzenUIcfg.nameplates.general["np_aura_size"]
 					v.Auras.size = LolzenUIcfg.nameplates.general["np_aura_size"]
+					v:UpdateAllElements('RefreshUnit')
 				end
 			end
 		end
@@ -524,6 +532,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 					v.Debuffs["growth-y"] = LolzenUIcfg.nameplates.general["np_aura_growth_y"]
 					v.Auras["growth-x"] = LolzenUIcfg.nameplates.general["np_aura_growth_x"]
 					v.Auras["growth-y"] = LolzenUIcfg.nameplates.general["np_aura_growth_y"]
+					v.Buffs:ForceUpdate()
+					v.Debuffs:ForceUpdate()
+					v.Auras:ForceUpdate()
 				end
 			end
 		end
@@ -540,6 +551,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 						v.Debuffs.onlyShowPlayer = false
 						v.Auras.onlyShowPlayer = false
 					end
+					v:UpdateAllElements('RefreshUnit')
 				end
 			end
 		end
