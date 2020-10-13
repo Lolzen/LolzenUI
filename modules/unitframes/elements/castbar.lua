@@ -1,8 +1,7 @@
 local _, ns = ...
 local LSM = LibStub("LibSharedMedia-3.0")
 
-local PostCastStart = function(Castbar, unit, spell, spellrank)
-	Castbar.Text:SetText(spell)
+local PostCastStart = function(Castbar, unit)
 	if Castbar.notInterruptible then
 		Castbar.Icon:SetDesaturated(true)
 	else
