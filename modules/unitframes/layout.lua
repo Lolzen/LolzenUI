@@ -179,7 +179,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			ns.SetUFPartyRoleIndicatorPos = function()
 				for k,v in ipairs(party) do
 					v.GroupRoleIndicator:ClearAllPoints()
-					v.GroupRoleIndicator:SetPoint(LolzenUIcfg.unitframes.party["uf_party_ri_anchor"], self.Health, LolzenUIcfg.unitframes.party["uf_party_ri_posx"], LolzenUIcfg.unitframes.party["uf_party_ri_posy"])
+					v.GroupRoleIndicator:SetPoint(LolzenUIcfg.unitframes.party["uf_party_ri_anchor"], v.Health, LolzenUIcfg.unitframes.party["uf_party_ri_posx"], LolzenUIcfg.unitframes.party["uf_party_ri_posy"])
 				end
 			end
 
@@ -192,34 +192,123 @@ f:SetScript("OnEvent", function(self, event, addon)
 			ns.SetUFPartyReadyCheckIndicatorPos = function()
 				for k,v in ipairs(party) do
 					v.ReadyCheckIndicator:ClearAllPoints()
-					v.ReadyCheckIndicator:SetPoint(LolzenUIcfg.unitframes.party["uf_party_rc_anchor"], self.Health, LolzenUIcfg.unitframes.party["uf_party_rc_posx"], LolzenUIcfg.unitframes.party["uf_party_rc_posy"])
+					v.ReadyCheckIndicator:SetPoint(LolzenUIcfg.unitframes.party["uf_party_rc_anchor"], v.Health, LolzenUIcfg.unitframes.party["uf_party_rc_posx"], LolzenUIcfg.unitframes.party["uf_party_rc_posy"])
 				end
 			end
 
-			if LolzenUIcfg.unitframes.raid["uf_raid_enabled"] == true then
-				self:SetActiveStyle("Lolzen - Raid")
-				local raid = self:SpawnHeader(
-					nil, nil, 'raid',
-					'showPlayer', true,
-					'showSolo', false,
-					'showParty', false,
-					'showRaid', true,
-					'xoffset', 7,
-					'yOffset', -5,
-					'oUF-initialConfigFunction', [[
-						self:SetHeight(19)
-						self:SetWidth(50)
-					]],
-					'groupFilter', '1,2,3,4,5,6,7,8',
-					'groupingOrder', '1,2,3,4,5,6,7,8',
-					'sortMethod', 'GROUP',
-					'groupBy', 'GROUP',
-					'maxColumns', 8,
-					'unitsPerColumn', 5,
-					'columnSpacing', 7,
-					'columnAnchorPoint', "RIGHT"
-				)
-				raid:SetPoint("LEFT", UIParent, 20, 0)
+			
+			self:SetActiveStyle("Lolzen - Raid")
+			local raid = self:SpawnHeader(
+				nil, nil, 'raid',
+				'showPlayer', LolzenUIcfg.unitframes.raid["uf_raid_enabled"],
+				'showSolo', false,
+				'showParty', false,
+				'showRaid', LolzenUIcfg.unitframes.raid["uf_raid_enabled"],
+				'xoffset', 7,
+				'yOffset', -5,
+				'oUF-initialConfigFunction', [[
+					self:SetHeight(19)
+					self:SetWidth(50)
+				]],
+				'groupFilter', '1,2,3,4,5,6,7,8',
+				'groupingOrder', '1,2,3,4,5,6,7,8',
+				'sortMethod', 'GROUP',
+				'groupBy', 'GROUP',
+				'maxColumns', 8,
+				'unitsPerColumn', 5,
+				'columnSpacing', 7,
+				'columnAnchorPoint', "RIGHT"
+			)
+			raid:SetPoint("LEFT", UIParent, 20, 0)
+
+			ns.ToggleOUFRaid = function()
+				raid:SetAttribute('showRaid', LolzenUIcfg.unitframes.raid["uf_raid_enabled"])
+				raid:SetAttribute('showPlayer', LolzenUIcfg.unitframes.raid["uf_raid_enabled"])
+				if LolzenUIcfg.unitframes.raid["uf_raid_enabled"] == true then
+					RegisterStateDriver(CompactRaidFrameManager, 'visibility', 'hide')
+					RegisterStateDriver(CompactRaidFrameContainer, 'visibility', 'hide')
+				else
+					--reenable default blizzard raidframes
+					RegisterStateDriver(CompactRaidFrameManager, 'visibility', 'show')
+					RegisterStateDriver(CompactRaidFrameContainer, 'visibility', 'show')
+				end	
+			end
+
+			ns.SetUFRaidSize = function()
+				for k,v in ipairs(raid) do
+					v:SetSize(LolzenUIcfg.unitframes.raid["uf_raid_width"], LolzenUIcfg.unitframes.raid["uf_raid_height"])
+				end
+			end
+
+			ns.SetUFRaidOwnFont = function()
+				if LolzenUIcfg.unitframes.raid["uf_raid_use_own_hp_font_settings"] == true then
+					for k,v in ipairs(raid) do
+						v.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.raid["uf_raid_hp_font"]), LolzenUIcfg.unitframes.raid["uf_raid_hp_font_size"], LolzenUIcfg.unitframes.raid["uf_raid_hp_font_flag"])
+						v.Health.value:ClearAllPoints()
+						v.Health.value:SetPoint(LolzenUIcfg.unitframes.raid["uf_raid_hp_anchor"], LolzenUIcfg.unitframes.raid["uf_raid_hp_posx"], LolzenUIcfg.unitframes.raid["uf_raid_hp_posy"])
+					end
+				else
+					for k,v in ipairs(raid) do
+						v.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.general["uf_general_hp_font"]), LolzenUIcfg.unitframes.general["uf_general_hp_font_size"], LolzenUIcfg.unitframes.general["uf_general_hp_font_flag"])
+						v.Health.value:ClearAllPoints()
+						v.Health.value:SetPoint(LolzenUIcfg.unitframes.general["uf_general_hp_anchor"], LolzenUIcfg.unitframes.general["uf_general_hp_posx"], LolzenUIcfg.unitframes.general["uf_general_hp_posy"])
+					end
+				end
+			end
+
+			ns.SetUFRaidHPPos = function()
+				if LolzenUIcfg.unitframes.raid["uf_raid_use_own_hp_font_settings"] == true then
+					for k,v in ipairs(raid) do
+						v.Health.value:ClearAllPoints()
+						v.Health.value:SetPoint(LolzenUIcfg.unitframes.raid["uf_raid_hp_anchor"], LolzenUIcfg.unitframes.raid["uf_raid_hp_posx"], LolzenUIcfg.unitframes.raid["uf_raid_hp_posy"])
+					end
+				end
+			end
+
+			ns.SetUFRaidHPFont = function()
+				if LolzenUIcfg.unitframes.raid["uf_raid_use_own_hp_font_settings"] == true then
+					for k,v in ipairs(raid) do
+						v.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.raid["uf_raid_hp_font"]), LolzenUIcfg.unitframes.raid["uf_raid_hp_font_size"], LolzenUIcfg.unitframes.raid["uf_raid_hp_font_flag"])
+					end
+				end
+			end
+
+			ns.SetUFRaidShowRoleIndicator = function()
+				if LolzenUIcfg.unitframes.raid["uf_raid_showroleindicator"] == true then
+					for k,v in ipairs(raid) do
+						v.GroupRoleIndicator:Show()
+					end
+				else
+					for k,v in ipairs(raid) do
+						v.GroupRoleIndicator:Hide()
+					end
+				end
+			end
+
+			ns.SetUFRaidRoleIndicatorSize = function()
+				for k,v in ipairs(raid) do
+					v.GroupRoleIndicator:SetSize(LolzenUIcfg.unitframes.raid["uf_raid_ri_size"], LolzenUIcfg.unitframes.raid["uf_raid_ri_size"])
+				end
+			end
+
+			ns.SetUFRaidRoleIndicatorPos = function()
+				for k,v in ipairs(raid) do
+					v.GroupRoleIndicator:ClearAllPoints()
+					v.GroupRoleIndicator:SetPoint(LolzenUIcfg.unitframes.raid["uf_raid_ri_anchor"], v.Health, LolzenUIcfg.unitframes.raid["uf_raid_ri_posx"], LolzenUIcfg.unitframes.raid["uf_raid_ri_posy"])
+				end
+			end
+
+			ns.SetUFRaidReadyCheckIndicatorSize = function()
+				for k,v in ipairs(raid) do
+					v.ReadyCheckIndicator:SetSize(LolzenUIcfg.unitframes.raid["uf_raid_rc_size"], LolzenUIcfg.unitframes.raid["uf_raid_rc_size"])
+				end
+			end
+
+			ns.SetUFRaidReadyCheckIndicatorPos = function()
+				for k,v in ipairs(raid) do
+					v.ReadyCheckIndicator:ClearAllPoints()
+					v.ReadyCheckIndicator:SetPoint(LolzenUIcfg.unitframes.raid["uf_raid_rc_anchor"], v.Health, LolzenUIcfg.unitframes.raid["uf_raid_rc_posx"], LolzenUIcfg.unitframes.raid["uf_raid_rc_posy"])
+				end
 			end
 		end)
 	end
