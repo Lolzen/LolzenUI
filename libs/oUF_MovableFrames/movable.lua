@@ -461,6 +461,7 @@ do
 
 	getBackdrop = function(obj, isHeader)
 		local target = isHeader or obj
+		if target.unit:match("nameplate") then return end
 		if(not target:GetCenter()) then return end
 		if(backdropPool[target]) then return backdropPool[target] end
 
