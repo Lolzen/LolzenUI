@@ -22,13 +22,13 @@ function ns.AddClassPower(self, unit)
 			ClassPower[i]:SetPoint("LEFT", ClassPower[i-1], "RIGHT", LolzenUIcfg.unitframes.player["uf_player_classpower_spacing"], 0)
 		end
 
-		ClassPower[i].border = CreateFrame("Frame", nil, ClassPower[i])
+		ClassPower[i].border = CreateFrame("Frame", nil, ClassPower[i], "BackdropTemplate")
 		ClassPower[i].border:SetBackdrop({
 			edgeFile = LSM:Fetch("border", LolzenUIcfg.unitframes.player["uf_player_classpower_border"]),
 			tile=true, tileSize=4, edgeSize=4,
 			insets={left=0.5, right=0.5, top=0.5, bottom=0.5}
 		})
-		ClassPower[i].border:SetPoint("TOPLEFT", ClassPower[i], -1.5, 1.5)
+		ClassPower[i].border:SetPoint("TOPLEFT", ClassPower[i], -1, 0.5)
 		ClassPower[i].border:SetPoint("BOTTOMRIGHT", ClassPower[i], 1, -1)
 		ClassPower[i].border:SetBackdropBorderColor(0, 0, 0)
 		ClassPower[i].border:SetFrameLevel(3)

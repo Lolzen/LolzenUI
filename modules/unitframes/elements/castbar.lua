@@ -23,7 +23,7 @@ function ns.AddCastBar(self, unit)
 	cbbg:SetAlpha(1)
 	self.Castbar.background = cbbg
 
-	local cbborder = CreateFrame("Frame")
+	local cbborder = CreateFrame("Frame", nil, self, "BackdropTemplate")
 	cbborder:SetBackdrop({
 		edgeFile = LSM:Fetch("border", LolzenUIcfg.unitframes.general["uf_border"]), edgeSize = 12,
 		insets = {left = 4, right = 4, top = 4, bottom = 4},
@@ -41,14 +41,14 @@ function ns.AddCastBar(self, unit)
 	icon:SetDrawLayer("OVERLAY", 0)
 	self.Castbar.Icon = icon
 
-	local iconborder = CreateFrame("Frame")
+	local iconborder = CreateFrame("Frame", nil, self, "BackdropTemplate")
 	iconborder:SetBackdrop({
 		edgeFile = LSM:Fetch("border", LolzenUIcfg.unitframes.general["uf_border"]), edgeSize = 12,
 		insets = {left = 4, right = 4, top = 4, bottom = 4},
 	})
 	iconborder:SetParent(Castbar)
 	iconborder:SetPoint("TOPLEFT", icon, -2, 3)
-	iconborder:SetPoint("BOTTOMRIGHT", icon, 3, -2)
+	iconborder:SetPoint("BOTTOMRIGHT", icon, 2, -2)
 	iconborder:SetBackdropBorderColor(0, 0, 0)
 	iconborder:SetFrameLevel(3)
 	self.Castbar.Iconborder = iconborder

@@ -13,7 +13,7 @@ local UpdateThreat = function(self, event, unit)
 end
 
 function ns.AddThreatBorder(self, unit)
-	local Glow = CreateFrame("Frame", nil, self)
+	local Glow = CreateFrame("Frame", nil, self, "BackdropTemplate")
 	Glow:SetBackdrop({
 		edgeFile ="Interface\\AddOns\\LolzenUI\\media\\glow", edgeSize = 5,
 		insets = {left = 4, right = 4, top = 4, bottom = 4}

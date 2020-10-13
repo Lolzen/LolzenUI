@@ -33,7 +33,7 @@ local PostCreateIcon = function(Auras, button)
 
 	button.icon:SetTexCoord(.07, .93, .07, .93)
 
-	local iconborder = CreateFrame("Frame")
+	local iconborder = CreateFrame("Frame", nil, button, "BackdropTemplate")
 	iconborder:SetBackdrop({
 		edgeFile = "Interface\\AddOns\\LolzenUI\\media\\border", edgeSize = 12,
 		insets = {left = 4, right = 4, top = 4, bottom = 4},
@@ -69,8 +69,6 @@ local PostUpdateIcon = function(icons, unit, button, index, offset, filter, isDe
 	local _, _, _, _, duration, expiration, owner, canStealOrPurge = UnitAura(unit, index, button.filter)
 	if(duration and duration > 0) then
 		button.expiration = expiration - GetTime()
-	else
-		button.expiration = math.huge
 	end
 
 	-- fix for boss, party & raid
@@ -91,6 +89,8 @@ local PostUpdateIcon = function(icons, unit, button, index, offset, filter, isDe
 		else
 			button.icon:SetDesaturated(true)
 		end
+	else
+		button.icon:SetDesaturated(false)
 	end
 end
 

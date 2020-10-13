@@ -23,7 +23,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		}
 
 		-- overwrite tooltip styles
-		GAME_TOOLTIP_BACKDROP_STYLE_DEFAULT = {
+		TOOLTIP_BACKDROP_STYLE_DEFAULT = {
 			bgFile = "Interface\\Buttons\\WHITE8x8",
 			edgeFile = LSM:Fetch("border", LolzenUIcfg.tooltip["tip_border"]),
 			tile = false,
@@ -36,7 +36,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			backdropColor = CreateColor(0, 0, 0),
 		}
 
-		GAME_TOOLTIP_BACKDROP_STYLE_EMBEDDED = GAME_TOOLTIP_BACKDROP_STYLE_DEFAULT
+		GAME_TOOLTIP_BACKDROP_STYLE_EMBEDDED = TOOLTIP_BACKDROP_STYLE_DEFAULT
 
 		GAME_TOOLTIP_BACKDROP_STYLE_AZERITE_ITEM["bgFile"] = "Interface\\AddOns\\LolzenUI\\media\\tooltip-azerite-bg"
 		GAME_TOOLTIP_BACKDROP_STYLE_AZERITE_ITEM["edgeFile"] = "Interface\\AddOns\\LolzenUI\\media\\border-azerite"
@@ -183,6 +183,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		-- colorize tooltipborder accordingly to Azerite Essence rank
 		local function colorEssenceQuality(self)
+			if _G["GameTooltipTextLeft1"]:GetText() == nil then return end
 			local selectedEssenceRank = string.gsub(_G["GameTooltipTextLeft1"]:GetText(), "[%a%p%s]", "")
 			local r, g, b = GetItemQualityColor(selectedEssenceRank+1)
 			self:SetBackdropBorderColor(r, g, b)
@@ -190,8 +191,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		-- colorize tooltipborder accordingly to Azerite EssenceSlot rank
 		local function colorEssenceSlotQuality(self)
+			if _G["GameTooltipTextLeft1"]:GetText() == nil then return end
 			local selectedEssenceName = string.gsub(_G["GameTooltipTextLeft1"]:GetText(), " %b()", "")
 			local essences = C_AzeriteEssence.GetEssences()
+			if not essences or not type(essences) == "table" then return end
 			for _, slot in pairs(essences) do
 				local essence = C_AzeriteEssence.GetEssenceInfo(slot.ID)
 				if selectedEssenceName == essence.name then
@@ -372,7 +375,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		-- Azerite Essences
 		hooksecurefunc(GameTooltip, "SetAzeriteEssence", colorEssenceQuality)
 		hooksecurefunc(GameTooltip, "SetAzeriteEssenceSlot", colorEssenceSlotQuality)
-		hooksecurefunc("GameTooltip_SetBackdropStyle",  colorEssenceSlotQuality)
+		hooksecurefunc("SharedTooltip_SetBackdropStyle",  colorEssenceSlotQuality)
 
 		-- clear textures when the tooltip is hidden
 		GameTooltip:HookScript("OnHide", function(self)
@@ -396,7 +399,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		-- also modify more tooltip types
 		for i=1, #tooltips, 1 do
 			tooltips[i]:HookScript("OnTooltipSetItem", colorItemQuality)
-			tooltips[i]:SetBackdrop(GAME_TOOLTIP_BACKDROP_STYLE_DEFAULT)
+			tooltips[i]:SetBackdrop(TOOLTIP_BACKDROP_STYLE_DEFAULT)
 			hooksecurefunc(tooltips[i], "SetOwner", colorBG)
 		end
 
@@ -419,7 +422,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		GameTooltip:SetScript("OnEvent", function(self, event, ...) self[event](self, event, ...) end)
 
 		ns.setTTBorder = function()
-			GAME_TOOLTIP_BACKDROP_STYLE_DEFAULT["edgeFile"] = LSM:Fetch("border", LolzenUIcfg.tooltip["tip_border"])
+			TOOLTIP_BACKDROP_STYLE_DEFAULT["edgeFile"] = LSM:Fetch("border", LolzenUIcfg.tooltip["tip_border"])
 			GAME_TOOLTIP_BACKDROP_STYLE_EMBEDDED["edgeFile"] = LSM:Fetch("border", LolzenUIcfg.tooltip["tip_border"])
 			GAME_TOOLTIP_BACKDROP_STYLE_CORRUPTED_ITEM["edgeFile"] = LSM:Fetch("border", LolzenUIcfg.tooltip["tip_border"])
 		end

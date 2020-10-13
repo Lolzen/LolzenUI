@@ -9,7 +9,7 @@ function ns.AddInfoPanel(self, unit)
 	panel:SetPoint("TOP", self.Health, "BOTTOM", 0, -4)
 	self.Panel = panel
 
-	local Panelborder = CreateFrame("Frame", nil, self)
+	local Panelborder = CreateFrame("Frame", nil, self, "BackdropTemplate")
 	Panelborder:SetBackdrop({
 		bgFile = "Interface\\AddOns\\LolzenUI\\media\\statusbar",
 		edgeFile = LSM:Fetch("border", LolzenUIcfg.unitframes.general["uf_border"]), edgeSize = 12,

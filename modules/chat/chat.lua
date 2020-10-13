@@ -227,7 +227,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			cf.bg:SetPoint("BOTTOMLEFT", cf, -2, -2)
 			cf.bg:SetPoint("TOPRIGHT", cf, 2, 2)
 
-			cf.border = CreateFrame("Frame", nil, cf)
+			cf.border = CreateFrame("Frame", nil, cf, "BackdropTemplate")
 			cf.border:SetPoint("BOTTOMLEFT", cf, -5, -5)
 			cf.border:SetPoint("TOPRIGHT", cf, 5, 5)
 			cf.border:SetBackdrop({

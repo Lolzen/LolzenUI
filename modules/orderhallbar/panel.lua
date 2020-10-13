@@ -77,16 +77,15 @@ local function getCurrencies()
 		end
 	end
 	local counter = 1
-	for i=1, GetCurrencyListSize() do
-		local name, _, _, _, isWatched, count, icon = GetCurrencyListInfo(i)
-		if isWatched then
-			local link = GetCurrencyListLink(i)
+	for i=1, C_CurrencyInfo.GetCurrencyListSize() do
+		if C_CurrencyInfo.GetCurrencyListInfo(i).isShowInBackpack then
+			local link = C_CurrencyInfo.GetCurrencyListLink(i)
 			local id = tonumber(strmatch(link, "currency:(%d+)"))
 			if currency[counter] then
-				currency[counter]:SetTexture(icon)
-				currency[counter].text:SetText(count)
+				currency[counter]:SetTexture(C_CurrencyInfo.GetCurrencyListInfo(i).iconFileID)
+				currency[counter].text:SetText(C_CurrencyInfo.GetCurrencyListInfo(i).quantity)
 				if not currency[counter].name then
-					currency[counter].name = name
+					currency[counter].name = C_CurrencyInfo.GetCurrencyListInfo(i).name
 				end
 				-- make the currency id available
 				if not currency[counter].id then

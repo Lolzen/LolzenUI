@@ -2,7 +2,7 @@ local _, ns = ...
 local LSM = LibStub("LibSharedMedia-3.0")
 
 function ns.AddBorder(self, unit)
-	local Border = CreateFrame("Frame", nil, self)
+	local Border = CreateFrame("Frame", nil, self, "BackdropTemplate")
 	Border:SetBackdrop({
 		edgeFile = LSM:Fetch("border", LolzenUIcfg.unitframes.general["uf_border"]), edgeSize = 12,
 		insets = {left = 4, right = 4, top = 4, bottom = 4},
