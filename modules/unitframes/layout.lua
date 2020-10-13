@@ -82,30 +82,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 
 			self:SetActiveStyle("Lolzen - Party")
-			-- ToDo: can this be solved with a single party header?
-			-- setting up two party headers requires much code duplication, also requires to change party positioning code changes
-			-- (& OMF, saved variables..)
-			local vert_party = self:SpawnHeader(
+			local party = self:SpawnHeader(
 				nil, nil, 'party',
-				'showParty', LolzenUIcfg.unitframes.party["uf_party_use_vertical_layout"] and LolzenUIcfg.unitframes.party["uf_party_enabled"],
-				'showPlayer', LolzenUIcfg.unitframes.party["uf_party_use_vertical_layout"] and LolzenUIcfg.unitframes.party["uf_party_enabled"],
-				'xOffset', 0,
-				'yOffset', 0,
-				'oUF-initialConfigFunction', [[
-					self:SetHeight(19)
-					self:SetWidth(70)
-				]],
-				'maxColumns', 5,
-				'unitsperColumn', 1,
-				'columnSpacing', 5,
-				'columnAnchorPoint', "TOP"
-			)
-			vert_party:SetPoint("BOTTOM", UIParent, 0, 140)
-			
-			local hor_party = self:SpawnHeader(
-				nil, nil, 'party',
-				'showParty', LolzenUIcfg.unitframes.party["uf_party_use_vertical_layout"]==false and LolzenUIcfg.unitframes.party["uf_party_enabled"],
-				'showPlayer', LolzenUIcfg.unitframes.party["uf_party_use_vertical_layout"]==false and LolzenUIcfg.unitframes.party["uf_party_enabled"],
+				'showParty', LolzenUIcfg.unitframes.party["uf_party_enabled"],
+				'showPlayer', LolzenUIcfg.unitframes.party["uf_party_enabled"],
 				'xOffset', 7,
 				'yOffset', 0,
 				'oUF-initialConfigFunction', [[
@@ -115,15 +95,13 @@ f:SetScript("OnEvent", function(self, event, addon)
 				'maxColumns', 5,
 				'unitsperColumn', 1,
 				'columnSpacing', 7,
-				'columnAnchorPoint', "RIGHT"
+				'columnAnchorPoint', 'RIGHT'
 			)
-			hor_party:SetPoint("BOTTOM", UIParent, 0, 140)
+			party:SetPoint("BOTTOM", UIParent, 0, 140)
 
 			ns.ToggleOUFParty = function()
-				vert_party:SetAttribute('showParty', LolzenUIcfg.unitframes.party["uf_party_use_vertical_layout"] and LolzenUIcfg.unitframes.party["uf_party_enabled"])
-				hor_party:SetAttribute('showParty', LolzenUIcfg.unitframes.party["uf_party_use_vertical_layout"]==false and LolzenUIcfg.unitframes.party["uf_party_enabled"])
-				vert_party:SetAttribute('showPlayer', LolzenUIcfg.unitframes.party["uf_party_use_vertical_layout"] and LolzenUIcfg.unitframes.party["uf_party_enabled"])
-				hor_party:SetAttribute('showPlayer', LolzenUIcfg.unitframes.party["uf_party_use_vertical_layout"]==false and LolzenUIcfg.unitframes.party["uf_party_enabled"])
+				party:SetAttribute('showParty', LolzenUIcfg.unitframes.party["uf_party_enabled"])
+				party:SetAttribute('showPlayer', LolzenUIcfg.unitframes.party["uf_party_enabled"])
 				if LolzenUIcfg.unitframes.party["uf_party_enabled"] == true then
 					for i=1, 4 do
 						ns.oUF:DisableBlizzard("party"..i)
@@ -142,33 +120,20 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 
 			ns.SetUFPartySize = function()
-				for k,v in ipairs(vert_party) do
-					v:SetSize(LolzenUIcfg.unitframes.party["uf_party_width"], LolzenUIcfg.unitframes.party["uf_party_height"])
-				end
-				for k,v in ipairs(hor_party) do
+				for k,v in ipairs(party) do
 					v:SetSize(LolzenUIcfg.unitframes.party["uf_party_width"], LolzenUIcfg.unitframes.party["uf_party_height"])
 				end
 			end
 
 			ns.SetUFPartyOwnFont = function()
 				if LolzenUIcfg.unitframes.party["uf_party_use_own_hp_font_settings"] == true then
-					for k,v in ipairs(vert_party) do
-						v.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.party["uf_party_hp_font"]), LolzenUIcfg.unitframes.party["uf_party_hp_font_size"], LolzenUIcfg.unitframes.party["uf_party_hp_font_flag"])
-						v.Health.value:ClearAllPoints()
-						v.Health.value:SetPoint(LolzenUIcfg.unitframes.party["uf_party_hp_anchor"], LolzenUIcfg.unitframes.party["uf_party_hp_posx"], LolzenUIcfg.unitframes.party["uf_party_hp_posy"])
-					end
-					for k,v in ipairs(hor_party) do
+					for k,v in ipairs(party) do
 						v.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.party["uf_party_hp_font"]), LolzenUIcfg.unitframes.party["uf_party_hp_font_size"], LolzenUIcfg.unitframes.party["uf_party_hp_font_flag"])
 						v.Health.value:ClearAllPoints()
 						v.Health.value:SetPoint(LolzenUIcfg.unitframes.party["uf_party_hp_anchor"], LolzenUIcfg.unitframes.party["uf_party_hp_posx"], LolzenUIcfg.unitframes.party["uf_party_hp_posy"])
 					end
 				else
-					for k,v in ipairs(vert_party) do
-						v.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.general["uf_general_hp_font"]), LolzenUIcfg.unitframes.general["uf_general_hp_font_size"], LolzenUIcfg.unitframes.general["uf_general_hp_font_flag"])
-						v.Health.value:ClearAllPoints()
-						v.Health.value:SetPoint(LolzenUIcfg.unitframes.general["uf_general_hp_anchor"], LolzenUIcfg.unitframes.general["uf_general_hp_posx"], LolzenUIcfg.unitframes.general["uf_general_hp_posy"])
-					end
-					for k,v in ipairs(hor_party) do
+					for k,v in ipairs(party) do
 						v.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.general["uf_general_hp_font"]), LolzenUIcfg.unitframes.general["uf_general_hp_font_size"], LolzenUIcfg.unitframes.general["uf_general_hp_font_flag"])
 						v.Health.value:ClearAllPoints()
 						v.Health.value:SetPoint(LolzenUIcfg.unitframes.general["uf_general_hp_anchor"], LolzenUIcfg.unitframes.general["uf_general_hp_posx"], LolzenUIcfg.unitframes.general["uf_general_hp_posy"])
@@ -178,11 +143,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 			ns.SetUFPartyHPPos = function()
 				if LolzenUIcfg.unitframes.party["uf_party_use_own_hp_font_settings"] == true then
-					for k,v in ipairs(vert_party) do
-						v.Health.value:ClearAllPoints()
-						v.Health.value:SetPoint(LolzenUIcfg.unitframes.party["uf_party_hp_anchor"], LolzenUIcfg.unitframes.party["uf_party_hp_posx"], LolzenUIcfg.unitframes.party["uf_party_hp_posy"])
-					end
-					for k,v in ipairs(hor_party) do
+					for k,v in ipairs(party) do
 						v.Health.value:ClearAllPoints()
 						v.Health.value:SetPoint(LolzenUIcfg.unitframes.party["uf_party_hp_anchor"], LolzenUIcfg.unitframes.party["uf_party_hp_posx"], LolzenUIcfg.unitframes.party["uf_party_hp_posy"])
 					end
@@ -191,10 +152,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 			ns.SetUFPartyHPFont = function()
 				if LolzenUIcfg.unitframes.party["uf_party_use_own_hp_font_settings"] == true then
-					for k,v in ipairs(vert_party) do
-						v.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.party["uf_party_hp_font"]), LolzenUIcfg.unitframes.party["uf_party_hp_font_size"], LolzenUIcfg.unitframes.party["uf_party_hp_font_flag"])
-					end
-					for k,v in ipairs(hor_party) do
+					for k,v in ipairs(party) do
 						v.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.party["uf_party_hp_font"]), LolzenUIcfg.unitframes.party["uf_party_hp_font_size"], LolzenUIcfg.unitframes.party["uf_party_hp_font_flag"])
 					end
 				end
@@ -202,57 +160,37 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 			ns.SetUFPartyShowRoleIndicator = function()
 				if LolzenUIcfg.unitframes.party["uf_party_showroleindicator"] == true then
-					for k,v in ipairs(vert_party) do
-						v.GroupRoleIndicator:Show()
-					end
-					for k,v in ipairs(hor_party) do
+					for k,v in ipairs(party) do
 						v.GroupRoleIndicator:Show()
 					end
 				else
-					for k,v in ipairs(vert_party) do
-						v.GroupRoleIndicator:Hide()
-					end
-					for k,v in ipairs(hor_party) do
+					for k,v in ipairs(party) do
 						v.GroupRoleIndicator:Hide()
 					end
 				end
 			end
 
 			ns.SetUFPartyRoleIndicatorSize = function()
-				for k,v in ipairs(vert_party) do
-					v.GroupRoleIndicator:SetSize(LolzenUIcfg.unitframes.party["uf_party_ri_size"], LolzenUIcfg.unitframes.party["uf_party_ri_size"])
-				end
-				for k,v in ipairs(hor_party) do
+				for k,v in ipairs(party) do
 					v.GroupRoleIndicator:SetSize(LolzenUIcfg.unitframes.party["uf_party_ri_size"], LolzenUIcfg.unitframes.party["uf_party_ri_size"])
 				end
 			end
 
 			ns.SetUFPartyRoleIndicatorPos = function()
-				for k,v in ipairs(vert_party) do
-					v.GroupRoleIndicator:ClearAllPoints()
-					v.GroupRoleIndicator:SetPoint(LolzenUIcfg.unitframes.party["uf_party_ri_anchor"], self.Health, LolzenUIcfg.unitframes.party["uf_party_ri_posx"], LolzenUIcfg.unitframes.party["uf_party_ri_posy"])
-				end
-				for k,v in ipairs(hor_party) do
+				for k,v in ipairs(party) do
 					v.GroupRoleIndicator:ClearAllPoints()
 					v.GroupRoleIndicator:SetPoint(LolzenUIcfg.unitframes.party["uf_party_ri_anchor"], self.Health, LolzenUIcfg.unitframes.party["uf_party_ri_posx"], LolzenUIcfg.unitframes.party["uf_party_ri_posy"])
 				end
 			end
 
 			ns.SetUFPartyReadyCheckIndicatorSize = function()
-				for k,v in ipairs(vert_party) do
-					v.ReadyCheckIndicator:SetSize(LolzenUIcfg.unitframes.party["uf_party_rc_size"], LolzenUIcfg.unitframes.party["uf_party_rc_size"])
-				end
-				for k,v in ipairs(hor_party) do
+				for k,v in ipairs(party) do
 					v.ReadyCheckIndicator:SetSize(LolzenUIcfg.unitframes.party["uf_party_rc_size"], LolzenUIcfg.unitframes.party["uf_party_rc_size"])
 				end
 			end
 
 			ns.SetUFPartyReadyCheckIndicatorPos = function()
-				for k,v in ipairs(vert_party) do
-					v.ReadyCheckIndicator:ClearAllPoints()
-					v.ReadyCheckIndicator:SetPoint(LolzenUIcfg.unitframes.party["uf_party_rc_anchor"], self.Health, LolzenUIcfg.unitframes.party["uf_party_rc_posx"], LolzenUIcfg.unitframes.party["uf_party_rc_posy"])
-				end
-				for k,v in ipairs(hor_party) do
+				for k,v in ipairs(party) do
 					v.ReadyCheckIndicator:ClearAllPoints()
 					v.ReadyCheckIndicator:SetPoint(LolzenUIcfg.unitframes.party["uf_party_rc_anchor"], self.Health, LolzenUIcfg.unitframes.party["uf_party_rc_posx"], LolzenUIcfg.unitframes.party["uf_party_rc_posy"])
 				end
