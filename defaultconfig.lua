@@ -509,7 +509,6 @@ defaultconfig.unitframes = {
 	},
 	["party"] = {
 		["uf_party_enabled"] = true,
-		["uf_party_use_vertical_layout"] = false,
 		["uf_party_use_own_hp_font_settings"] = true,
 		["uf_party_hp_font"] = "DroidSansBold",
 		["uf_party_hp_font_size"] = 13,
