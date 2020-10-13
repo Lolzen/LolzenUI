@@ -129,7 +129,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 			button.icon:SetTexCoord(.07, .93, .07, .93)
 
-			local iconborder = CreateFrame("Frame")
+			local iconborder = CreateFrame("Frame", nil, button, "BackdropTemplate")
 			iconborder:SetBackdrop({
 				edgeFile = "Interface\\AddOns\\LolzenUI\\media\\border", edgeSize = 12,
 				insets = {left = 4, right = 4, top = 4, bottom = 4},
@@ -150,7 +150,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			button.cd:SetHideCountdownNumbers(true)
 			
 			-- and replace with a custom timer
-			local AuraDuration = CreateFrame("Frame", nil, button)
+			local AuraDuration = CreateFrame("Frame")
 			AuraDuration:SetFrameLevel(20)
 			
 			local Duration = AuraDuration:CreateFontString(nil, "OVERLAY")
@@ -286,7 +286,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				frame.Targetindicator = targetindicator
 				frame:RegisterEvent("PLAYER_TARGET_CHANGED", UpdateTargetIndicator, true)
 
-				local Glow = CreateFrame("Frame", nil, frame)
+				local Glow = CreateFrame("Frame", nil, frame, "BackdropTemplate")
 				Glow:SetBackdrop({
 					edgeFile ="Interface\\AddOns\\LolzenUI\\media\\glow", edgeSize = 5,
 					insets = {left = 4, right = 4, top = 4, bottom = 4}
@@ -301,7 +301,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 					Override = UpdateThreat,
 				}
 
-				local exploGlow = CreateFrame("Frame", nil, frame)
+				local exploGlow = CreateFrame("Frame", nil, frame, "BackdropTemplate")
 				exploGlow:SetBackdrop({
 					edgeFile ="Interface\\AddOns\\LolzenUI\\media\\glow", edgeSize = 5,
 					insets = {left = 4, right = 4, top = 4, bottom = 4}
