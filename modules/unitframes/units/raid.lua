@@ -14,16 +14,18 @@ ns.SetupRaid = function(self, unit)
 	self.Border:SetPoint("TOPLEFT", self, -3, 3)
 	self.Border:SetPoint("BOTTOMRIGHT", self, 3, -2)
 
+	ns.AddLeadIndicator(self, unit)
 	ns.AddRangeIndicator(self, unit)
 	ns.AddReadycheckIndicator(self, unit)
 	self.ReadyCheckIndicator:SetSize(LolzenUIcfg.unitframes.raid["uf_raid_rc_size"], LolzenUIcfg.unitframes.raid["uf_raid_rc_size"])
 	self.ReadyCheckIndicator:SetPoint(LolzenUIcfg.unitframes.raid["uf_raid_rc_anchor"], self.Health, LolzenUIcfg.unitframes.raid["uf_raid_rc_posx"], LolzenUIcfg.unitframes.raid["uf_raid_rc_posy"])
 
+	ns.AddRoleIndicator(self, unit)
+	self.GroupRoleIndicator:SetSize(LolzenUIcfg.unitframes.raid["uf_raid_ri_size"], LolzenUIcfg.unitframes.raid["uf_raid_ri_size"])
+	self.GroupRoleIndicator:SetPoint(LolzenUIcfg.unitframes.raid["uf_raid_ri_anchor"], self.Health, LolzenUIcfg.unitframes.raid["uf_raid_ri_posx"], LolzenUIcfg.unitframes.raid["uf_raid_ri_posy"])
 	if LolzenUIcfg.unitframes.raid["uf_raid_showroleindicator"] == true then
-		ns.AddRoleIndicator(self, unit)
-		self.GroupRoleIndicator:SetSize(LolzenUIcfg.unitframes.raid["uf_raid_ri_size"], LolzenUIcfg.unitframes.raid["uf_raid_ri_size"])
-		self.GroupRoleIndicator:SetPoint(LolzenUIcfg.unitframes.raid["uf_raid_ri_anchor"], self.Health, LolzenUIcfg.unitframes.raid["uf_raid_ri_posx"], LolzenUIcfg.unitframes.raid["uf_raid_ri_posy"])
+		self.GroupRoleIndicator:Show()
+	else
+		self.GroupRoleIndicator:Hide()
 	end
-
-	ns.AddLeadIndicator(self, unit)
 end
