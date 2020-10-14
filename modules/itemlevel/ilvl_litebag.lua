@@ -82,7 +82,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 		end
 
-		hooksecurefunc("LiteBagItemButton_Update", updateBagSlotInfo)
+		LiteBag_RegisterHook('LiteBagItemButton_Update', updateBagSlotInfo)
 
 		ns.UpdateItemlevelLitebag = function()
 			-- current max: 28 base + 7x 32 = 252
