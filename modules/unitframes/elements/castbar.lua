@@ -34,6 +34,7 @@ function ns.AddCastBar(self, unit)
 
 	local Spark = Castbar:CreateTexture(nil, "OVERLAY")
 	Spark:SetBlendMode("ADD")
+	Spark:SetPoint("CENTER", Castbar:GetStatusBarTexture(), "RIGHT", 0, 0)
 	self.Castbar.Spark = Spark
 
 	local icon = Castbar:CreateTexture(nil, "BACKGROUND")
