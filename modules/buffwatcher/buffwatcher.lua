@@ -42,7 +42,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 				-- border
 				if not icon[i].border then
-					icon[i].border = CreateFrame("Frame")
+					icon[i].border = CreateFrame("Frame", nil, UIParent, "BackdropTemplate")
 					icon[i].border:SetBackdrop({
 						edgeFile = "Interface\\AddOns\\LolzenUI\\media\\darkborder", edgeSize = 12,
 						insets = {left = 4, right = 4, top = 4, bottom = 4},
