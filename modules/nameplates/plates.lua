@@ -150,7 +150,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			button.cd:SetHideCountdownNumbers(true)
 			
 			-- and replace with a custom timer
-			local AuraDuration = CreateFrame("Frame")
+			local AuraDuration = CreateFrame("Frame", nil, button)
 			AuraDuration:SetFrameLevel(20)
 			
 			local Duration = AuraDuration:CreateFontString(nil, "OVERLAY")
@@ -165,8 +165,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 		local PostUpdateIcon = function(icons, unit, button, index, position, duration, expiration, debuffType, isStealable)
 			if(duration and duration > 0 and duration <= 60) then
 				button.expiration = expiration - GetTime()
-			else
-				button.expiration = math.huge
 			end
 
 			if LolzenUIcfg.nameplates.general["np_aura_desature_nonplayer_auras"] == true then 
