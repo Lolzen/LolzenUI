@@ -1,4 +1,4 @@
-## Interface: 90000
+## Interface: 90001
 ## Author: Lolzen
 ## Title: Lolzen User Interface
 ## Version: 9.0.1_r4
