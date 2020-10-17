@@ -13,7 +13,7 @@ function ns.AddRunes(self, unit)
 			Runes[i]:SetPoint("LEFT", Runes[i-1], "RIGHT", LolzenUIcfg.unitframes.player["uf_player_classpower_spacing"], 0)
 		end
 
-		Runes[i].border = CreateFrame("Frame", nil, Runes[i])
+		Runes[i].border = CreateFrame("Frame", nil, Runes[i], "BackdropTemplate")
 		Runes[i].border:SetBackdrop({
 			edgeFile = LSM:Fetch("border", LolzenUIcfg.unitframes.player["uf_player_classpower_border"]),
 			tile=true, tileSize=4, edgeSize=4,
