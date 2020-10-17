@@ -102,11 +102,41 @@ f:SetScript("OnEvent", function(self, event, addon)
 		seconds:SetTextColor(unpack(LolzenUIcfg.clock["clock_seconds_color"]))
 
 		local function setTime()
-			text:SetText(date("%H|c00ffffff\46|r%M|c00ffffff|r"))
-			if LolzenUIcfg.clock["clock_seconds_enabled"] == true then
-				seconds:SetText(date("%S"))
+			if LolzenUIcfg.clock["clock_dateformat"] == "US" then
+				if tonumber(date("%H")) > 12 then
+					local pm = tonumber(date("%H")) - 12
+					if pm < 10 then
+						pm = tonumber("0")..tonumber(date("%H")) - 12
+					else
+						pm = tonumber(date("%H")) - 12
+					end
+					text:SetText(pm.."|c00ffffff\46|r"..date("%M|c00ffffff|r"))
+				else
+					text:SetText(date("%H|c00ffffff\46|r%M|c00ffffff|r"))
+				end
 			else
-				seconds:SetText(nil)
+				text:SetText(date("%H|c00ffffff\46|r%M|c00ffffff|r"))
+			end
+			if LolzenUIcfg.clock["clock_seconds_enabled"] == true then
+				if LolzenUIcfg.clock["clock_dateformat"] == "US" then
+					if tonumber(date("%H")) > 12 then
+						seconds:SetText(date("%S").." PM")
+					else
+						seconds:SetText(date("%S").." AM")
+					end
+				else
+					seconds:SetText(date("%S"))
+				end
+			else
+				if LolzenUIcfg.clock["clock_dateformat"] == "US" then
+					if tonumber(date("%H")) > 12 then
+						seconds:SetText("PM")
+					else
+						seconds:SetText("AM")
+					end
+				else
+					seconds:SetText(nil)
+				end
 			end
 			C_Timer.After(1, setTime)
 		end
