@@ -6,8 +6,6 @@ local LSM = LibStub("LibSharedMedia-3.0")
 
 ns.RegisterModule("orderhallbar", L["desc_orderhallbar"], true)
 
--- thanks to elcius for this
--- http://www.wowinterface.com/forums/showpost.php?p=328355&postcount=3
 local MapRects = {}
 local TempVec2D = CreateVector2D(0, 0)
 function getCoordinates()
@@ -16,17 +14,13 @@ function getCoordinates()
 		return ""
 	else
 		local MapID = C_Map.GetBestMapForUnit("player")
-		local R, P, _ = MapRects[MapID], TempVec2D
-		if not R then
-			R = {};
-			_, R[1] = C_Map.GetWorldPosFromMapPos(MapID, CreateVector2D(0, 0))
-			_, R[2] = C_Map.GetWorldPosFromMapPos(MapID, CreateVector2D(1, 1))
-			R[2]:Subtract(R[1])
-			MapRects[MapID] = R
+		local vector = C_Map.GetPlayerMapPosition(MapID, "player")
+		if vector then
+			local x, y = vector:GetXY()
+			return format(" [%.1f/%.1f]", x*100, y*100)
+		else
+			return ""
 		end
-		P.x, P.y = UnitPosition("Player")
-		P:Subtract(R[1])
-		return format(" [%.1f/%.1f]", (1/R[2].y)*P.y*100, (1/R[2].x)*P.x*100)
 	end
 end
 
