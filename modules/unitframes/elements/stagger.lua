@@ -7,7 +7,7 @@ function ns.AddStagger(self, unit)
 	Stagger:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes.general["uf_statusbar_texture"]))
 	Stagger:SetPoint(LolzenUIcfg.unitframes.player["uf_player_classpower_anchor1"], self, LolzenUIcfg.unitframes.player["uf_player_classpower_anchor2"], LolzenUIcfg.unitframes.player["uf_player_classpower_posx"], LolzenUIcfg.unitframes.player["uf_player_classpower_posy"])
 
-	Stagger.border = CreateFrame("Frame", nil, Stagger)
+	Stagger.border = CreateFrame("Frame", nil, Stagger, "BackdropTemplate")
 	Stagger.border:SetBackdrop({
 		edgeFile = LSM:Fetch("border", LolzenUIcfg.unitframes.player["uf_player_classpower_border"]),
 		tile=true, tileSize=4, edgeSize=4,
