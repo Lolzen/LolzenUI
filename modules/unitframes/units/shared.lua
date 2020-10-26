@@ -40,6 +40,25 @@ ns.shared = function(self, unit)
 		end
 	end
 
+	ns.SetUFTexture = function()
+		for i, v in pairs(oUF.objects) do
+			if v.unit:match("nameplate") then return end
+			v.Health:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes.general["uf_statusbar_texture"]))
+			v.Background:SetTexture(LSM:Fetch("statusbar", LolzenUIcfg.unitframes.general["uf_statusbar_texture"]))
+		end
+	end
+
+	ns.SetUFBorder = function()
+		for i, v in pairs(oUF.objects) do
+			if v.unit:match("nameplate") then return end
+			v.Border:SetBackdrop({
+				edgeFile = LSM:Fetch("border", LolzenUIcfg.unitframes.general["uf_border"]), edgeSize = 12,
+				insets = {left = 4, right = 4, top = 4, bottom = 4},
+			})
+			v.Border:SetBackdropBorderColor(0, 0, 0)
+		end
+	end
+
 	ns.SetUFPowerColorMana = function()
 		self.colors.power["MANA"] = LolzenUIcfg.unitframes.powercolors[0]
 		for i, v in pairs(oUF.objects) do
