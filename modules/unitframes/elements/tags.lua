@@ -4,7 +4,7 @@ local tags = oUF.Tags.Methods or oUF.Tags
 local tagevents = oUF.TagEvents or oUF.Tags.Events
 
 local valueFormat = function(min, max)
-	local val, perc
+	local val, perc = 0, nil
 
 	-- determine if local val should be siValue or pure integer
 	if LolzenUIcfg.unitframes.general["uf_use_sivalue"] == true then
