@@ -34,6 +34,12 @@ ns.shared = function(self, unit)
 	ns.AddHealthBar(self, unit)
 	ns.AddHealthPoints(self, unit)
 
+	ns.SetUFTagUpdate = function()
+		for i, v in pairs(oUF.objects) do
+			v:UpdateTags()
+		end
+	end
+
 	ns.SetUFPowerColorMana = function()
 		self.colors.power["MANA"] = LolzenUIcfg.unitframes.powercolors[0]
 		for i, v in pairs(oUF.objects) do
