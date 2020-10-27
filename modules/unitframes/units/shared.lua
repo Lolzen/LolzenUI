@@ -59,6 +59,47 @@ ns.shared = function(self, unit)
 		end
 	end
 
+	ns.SetUFRaidMarkSize = function()
+		for i, v in pairs(oUF.objects) do
+			if v.unit:match("nameplate") then return end
+			v.RaidTargetIndicator:SetSize(LolzenUIcfg.unitframes.general["uf_ri_size"], LolzenUIcfg.unitframes.general["uf_ri_size"])
+		end
+	end
+
+	ns.SetUFRaidMarkPos = function()
+		for i, v in pairs(oUF.objects) do
+			if v.unit:match("nameplate") then return end
+			v.RaidTargetIndicator:ClearAllPoints()
+			v.RaidTargetIndicator:SetPoint(LolzenUIcfg.unitframes.general["uf_ri_anchor"], v.Health, LolzenUIcfg.unitframes.general["uf_ri_posx"], LolzenUIcfg.unitframes.general["uf_ri_posy"])
+		end
+	end
+
+	ns.SetUFLeadIndicatorSize = function()
+		for i, v in pairs(oUF.objects) do
+			if v.unit:match("nameplate") then return end
+			v.LeaderIndicator:SetSize(LolzenUIcfg.unitframes.general["uf_lead_size"], LolzenUIcfg.unitframes.general["uf_lead_size"])
+		end
+	end
+
+	ns.SetUFLeadIndicatorPos = function()
+		for i, v in pairs(oUF.objects) do
+			if v.unit:match("nameplate") then return end
+			v.LeaderIndicator:ClearAllPoints()
+			v.LeaderIndicator:SetPoint(LolzenUIcfg.unitframes.general["uf_lead_anchor"], v.Health, LolzenUIcfg.unitframes.general["uf_lead_posx"], LolzenUIcfg.unitframes.general["uf_lead_posy"])
+		end
+	end
+
+	ns.SetUFCombatFade = function()
+		for i, v in pairs(oUF.objects) do
+			if v.unit:match("nameplate") or string.find(unit, "party") or string.find(unit, "raid") then return end
+			if LolzenUIcfg.unitframes.general["uf_fade_combat"] == true then
+				ns.EnableCombatFade(v, v.unit)
+			else
+				ns.DisableCombatFade(v, v.unit)
+			end
+		end
+	end
+
 	ns.SetUFPowerColorMana = function()
 		self.colors.power["MANA"] = LolzenUIcfg.unitframes.powercolors[0]
 		for i, v in pairs(oUF.objects) do
