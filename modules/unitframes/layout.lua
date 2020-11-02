@@ -196,6 +196,15 @@ f:SetScript("OnEvent", function(self, event, addon)
 				end
 			end
 
+			ns.SetUFPartyReachIndicatorToggle = function()
+				for k,v in ipairs(party) do
+					if LolzenUIcfg.unitframes.general["uf_fade_outofreach"] == true then
+						v:EnableElement("Range")
+					else
+						v:DisableElement("Range")
+					end
+				end
+			end
 			
 			self:SetActiveStyle("Lolzen - Raid")
 			local raid = self:SpawnHeader(
@@ -308,6 +317,16 @@ f:SetScript("OnEvent", function(self, event, addon)
 				for k,v in ipairs(raid) do
 					v.ReadyCheckIndicator:ClearAllPoints()
 					v.ReadyCheckIndicator:SetPoint(LolzenUIcfg.unitframes.raid["uf_raid_rc_anchor"], v.Health, LolzenUIcfg.unitframes.raid["uf_raid_rc_posx"], LolzenUIcfg.unitframes.raid["uf_raid_rc_posy"])
+				end
+			end
+
+			ns.SetUFRaidReachIndicatorToggle = function()
+				for k,v in ipairs(raid) do
+					if LolzenUIcfg.unitframes.general["uf_fade_outofreach"] == true then
+						v:EnableElement("Range")
+					else
+						v:DisableElement("Range")
+					end
 				end
 			end
 		end)
