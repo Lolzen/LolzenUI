@@ -33,6 +33,10 @@ function ns.AddCombatFade(self, unit)
 	end
 end
 
+function ns.UpdateCombatFade(self, unit)
+	CombatFade(self, unit)
+end
+
 function ns.EnableCombatFade(self, unit)
 	self:RegisterEvent("PLAYER_REGEN_ENABLED", CombatFade, true)
 	self:RegisterEvent('PLAYER_REGEN_DISABLED', CombatFade, true)
