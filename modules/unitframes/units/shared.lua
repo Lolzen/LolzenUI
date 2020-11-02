@@ -100,6 +100,72 @@ ns.shared = function(self, unit)
 		end
 	end
 
+	ns.SetUFCombatFadeAlpha = function()
+		for i, v in pairs(oUF.objects) do
+			if v.unit:match("nameplate") or string.find(unit, "party") or string.find(unit, "raid") then return end
+			if LolzenUIcfg.unitframes.general["uf_fade_combat"] == true then
+				ns.UpdateCombatFade(v, v.unit)
+			end
+		end
+	end
+
+	ns.SetUFGeneralHPFont = function()
+		for i, v in pairs(oUF.objects) do
+			if v.unit:match("nameplate") then return end
+			local UNIT
+			if string.find(v.unit, "player") then
+				UNIT = "player"
+			elseif string.find(v.unit, "target") then
+				UNIT = "target"
+			elseif string.find(v.unit, "targettarget") then
+				UNIT = "targettarget"
+			elseif string.find(v.unit, "pet") then
+				UNIT = "pet"
+			elseif string.find(v.unit, "focus") then
+				UNIT = "focus"
+			elseif string.find(v.unit, "boss") then
+				UNIT = "boss"
+			elseif string.find(v.unit, "party") then
+				UNIT = "party"
+			elseif string.find(v.unit, "raid") then
+				UNIT = "raid"
+			elseif string.find(v.unit, "arena") then
+				UNIT = "arena"
+			end
+			if LolzenUIcfg.unitframes[UNIT]["uf_"..UNIT.."_use_own_hp_font_settings"] == true then return end
+			v.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.general["uf_general_hp_font"]), LolzenUIcfg.unitframes.general["uf_general_hp_font_size"], LolzenUIcfg.unitframes.general["uf_general_hp_font_flag"])
+		end
+	end
+
+	ns.SetUFGeneralHPPos = function()
+		for i, v in pairs(oUF.objects) do
+			if v.unit:match("nameplate") then return end
+			local UNIT
+			if string.find(v.unit, "player") then
+				UNIT = "player"
+			elseif string.find(v.unit, "target") then
+				UNIT = "target"
+			elseif string.find(v.unit, "targettarget") then
+				UNIT = "targettarget"
+			elseif string.find(v.unit, "pet") then
+				UNIT = "pet"
+			elseif string.find(v.unit, "focus") then
+				UNIT = "focus"
+			elseif string.find(v.unit, "boss") then
+				UNIT = "boss"
+			elseif string.find(v.unit, "party") then
+				UNIT = "party"
+			elseif string.find(v.unit, "raid") then
+				UNIT = "raid"
+			elseif string.find(v.unit, "arena") then
+				UNIT = "arena"
+			end
+			if LolzenUIcfg.unitframes[UNIT]["uf_"..UNIT.."_use_own_hp_font_settings"] == true then return end
+			v.Health.value:ClearAllPoints()
+			v.Health.value:SetPoint(LolzenUIcfg.unitframes.general["uf_general_hp_anchor"], LolzenUIcfg.unitframes.general["uf_general_hp_posx"], LolzenUIcfg.unitframes.general["uf_general_hp_posy"])
+		end
+	end
+
 	ns.SetUFPowerColorMana = function()
 		self.colors.power["MANA"] = LolzenUIcfg.unitframes.powercolors[0]
 		for i, v in pairs(oUF.objects) do
