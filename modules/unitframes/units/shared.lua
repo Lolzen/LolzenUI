@@ -62,30 +62,38 @@ ns.shared = function(self, unit)
 	ns.SetUFRaidMarkSize = function()
 		for i, v in pairs(oUF.objects) do
 			if v.unit:match("nameplate") then return end
-			v.RaidTargetIndicator:SetSize(LolzenUIcfg.unitframes.general["uf_ri_size"], LolzenUIcfg.unitframes.general["uf_ri_size"])
+			if v.RaidTargetIndicator then
+				v.RaidTargetIndicator:SetSize(LolzenUIcfg.unitframes.general["uf_ri_size"], LolzenUIcfg.unitframes.general["uf_ri_size"])
+			end
 		end
 	end
 
 	ns.SetUFRaidMarkPos = function()
 		for i, v in pairs(oUF.objects) do
 			if v.unit:match("nameplate") then return end
-			v.RaidTargetIndicator:ClearAllPoints()
-			v.RaidTargetIndicator:SetPoint(LolzenUIcfg.unitframes.general["uf_ri_anchor"], v.Health, LolzenUIcfg.unitframes.general["uf_ri_posx"], LolzenUIcfg.unitframes.general["uf_ri_posy"])
+			if v.RaidTargetIndicator then
+				v.RaidTargetIndicator:ClearAllPoints()
+				v.RaidTargetIndicator:SetPoint(LolzenUIcfg.unitframes.general["uf_ri_anchor"], v.Health, LolzenUIcfg.unitframes.general["uf_ri_posx"], LolzenUIcfg.unitframes.general["uf_ri_posy"])
+			end
 		end
 	end
 
 	ns.SetUFLeadIndicatorSize = function()
 		for i, v in pairs(oUF.objects) do
 			if v.unit:match("nameplate") then return end
-			v.LeaderIndicator:SetSize(LolzenUIcfg.unitframes.general["uf_lead_size"], LolzenUIcfg.unitframes.general["uf_lead_size"])
+			if v.LeaderIndicator then
+				v.LeaderIndicator:SetSize(LolzenUIcfg.unitframes.general["uf_lead_size"], LolzenUIcfg.unitframes.general["uf_lead_size"])
+			end
 		end
 	end
 
 	ns.SetUFLeadIndicatorPos = function()
 		for i, v in pairs(oUF.objects) do
 			if v.unit:match("nameplate") then return end
-			v.LeaderIndicator:ClearAllPoints()
-			v.LeaderIndicator:SetPoint(LolzenUIcfg.unitframes.general["uf_lead_anchor"], v.Health, LolzenUIcfg.unitframes.general["uf_lead_posx"], LolzenUIcfg.unitframes.general["uf_lead_posy"])
+			if v.LeaderIndicator then
+				v.LeaderIndicator:ClearAllPoints()
+				v.LeaderIndicator:SetPoint(LolzenUIcfg.unitframes.general["uf_lead_anchor"], v.Health, LolzenUIcfg.unitframes.general["uf_lead_posx"], LolzenUIcfg.unitframes.general["uf_lead_posy"])
+			end
 		end
 	end
 
