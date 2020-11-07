@@ -205,7 +205,16 @@ f:SetScript("OnEvent", function(self, event, addon)
 					end
 				end
 			end
-			
+
+			ns.SetUFPartyReachIndicatorAlpha = function()
+				for k,v in ipairs(party) do
+					if LolzenUIcfg.unitframes.general["uf_fade_outofreach"] == true then
+						v.Range.outsideAlpha = LolzenUIcfg.unitframes.general["uf_fade_outofreach_alpha"]
+						--v:UpdateAllElements("CUSTOM_CLASS_COLORS")
+					end
+				end
+			end
+
 			self:SetActiveStyle("Lolzen - Raid")
 			local raid = self:SpawnHeader(
 				nil, nil, 'raid',
@@ -326,6 +335,14 @@ f:SetScript("OnEvent", function(self, event, addon)
 						v:EnableElement("Range")
 					else
 						v:DisableElement("Range")
+					end
+				end
+			end
+
+			ns.SetUFRaidReachIndicatorAlpha = function()
+				for k,v in ipairs(raid) do
+					if LolzenUIcfg.unitframes.general["uf_fade_outofreach"] == true then
+						v.Range.outsideAlpha = LolzenUIcfg.unitframes.general["uf_fade_outofreach_alpha"]
 					end
 				end
 			end
