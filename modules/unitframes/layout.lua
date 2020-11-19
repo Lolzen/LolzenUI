@@ -375,8 +375,10 @@ f:SetScript("OnEvent", function(self, event, addon)
 		-- restore the original unit when the panel is closed
 		ns.UFrestoreOriginalUnit = function()
 			for k, v in next, oUF.objects do
-				v.unit = v.origUnit
-				v:Enable()
+				if v.origUnit and v.origUnit ~= nil then
+					v.unit = v.origUnit
+					v:Enable()
+				end
 			end
 		end
 	end
