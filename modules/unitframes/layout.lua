@@ -210,7 +210,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 				for k,v in ipairs(party) do
 					if LolzenUIcfg.unitframes.general["uf_fade_outofreach"] == true then
 						v.Range.outsideAlpha = LolzenUIcfg.unitframes.general["uf_fade_outofreach_alpha"]
-						--v:UpdateAllElements("CUSTOM_CLASS_COLORS")
 					end
 				end
 			end
@@ -360,13 +359,32 @@ f:SetScript("OnEvent", function(self, event, addon)
 						v:Show()
 					end
 				end
-			elseif self.element:GetName() == "unitframe_arenapanel" then
+			else
+				for k, v in next, oUF.objects do
+					if v.origUnit and v.origUnit ~= nil and v.unit == "player" then
+						if v.origUnit == "boss1" or v.origUnit == "boss2" or v.origUnit == "boss3" or v.origUnit == "boss4" or v.origUnit == "boss5" then
+							v.unit = v.origUnit
+							v:Enable()
+						end
+					end
+				end
+			end
+			if self.element:GetName() == "unitframe_arenapanel" then
 				for k, v in next, oUF.objects do
 					if v.unit == "arena1" or v.unit == "arena2" or v.unit == "arena3" then
 						v.origUnit = v.unit
 						v.unit = 'player'
 						v:Disable()
 						v:Show()
+					end
+				end
+			else
+				for k, v in next, oUF.objects do
+					if v.origUnit and v.origUnit ~= nil and v.unit == "player" then
+						if v.origUnit == "arena1" or v.origUnit == "arena2" or v.origUnit == "arena3" then
+							v.unit = v.origUnit
+							v:Enable()
+						end
 					end
 				end
 			end
