@@ -37,6 +37,24 @@ end
 --	SetCVar("useuiscale", 1)
 --end
 
+-- make the InterfaceOptionsFrame movable
+InterfaceOptionsFrame:SetMovable(true)
+InterfaceOptionsFrame:EnableMouse(true)
+InterfaceOptionsFrame:SetScript("OnMouseDown", function(self, button)
+	self:StartMoving()
+	self.isMoving = true
+end)
+InterfaceOptionsFrame:SetScript("OnMouseUp", function(self, button)
+	self:StopMovingOrSizing()
+	self.isMoving = false
+end)
+InterfaceOptionsFrame:SetScript("OnHide", function(self)
+	if self.isMoving then
+		self:StopMovingOrSizing()
+		self.isMoving = false
+	end
+end)
+
 local version, build, date, tocversion = GetBuildInfo()
 local addonversion = GetAddOnMetadata(addon, "Version")
 if not string.find(addonversion, version) then
