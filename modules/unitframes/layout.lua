@@ -347,5 +347,37 @@ f:SetScript("OnEvent", function(self, event, addon)
 				end
 			end
 		end)
+		
+		-- configuring boss and arenaframes is not an easy task and simply not possible during combat
+		-- so we spoof the player as placeholder to make configuring these possible
+		hooksecurefunc("InterfaceOptionsListButton_OnClick", function(self, button)
+			if self.element:GetName() == "unitframe_bosspanel" then
+				for k, v in next, oUF.objects do
+					if v.unit == "boss1" or v.unit == "boss2" or v.unit == "boss3" or v.unit == "boss4" or v.unit == "boss5" then
+						v.origUnit = v.unit
+						v.unit = 'player'
+						v:Disable()
+						v:Show()
+					end
+				end
+			elseif self.element:GetName() == "unitframe_arenapanel" then
+				for k, v in next, oUF.objects do
+					if v.unit == "arena1" or v.unit == "arena2" or v.unit == "arena3" then
+						v.origUnit = v.unit
+						v.unit = 'player'
+						v:Disable()
+						v:Show()
+					end
+				end
+			end
+		end)
+
+		-- restore the original unit when the panel is closed
+		ns.UFrestoreOriginalUnit = function()
+			for k, v in next, oUF.objects do
+				v.unit = v.origUnit
+				v:Enable()
+			end
+		end
 	end
 end)
