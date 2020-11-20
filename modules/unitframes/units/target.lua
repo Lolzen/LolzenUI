@@ -146,34 +146,42 @@ ns.SetupTarget = function(self, unit)
 
 	ns.SetUFTargetAuraType = function()
 		if LolzenUIcfg.unitframes.target["uf_target_aura_show_type"] == "Buffs" then
-			if self.Debuffs then
-				self.Debuffs:Hide()
-			elseif self.Auras then
-				self.Auras:Hide()
+			self.Buffs:SetPoint(LolzenUIcfg.unitframes.target["uf_target_aura_anchor1"], self, LolzenUIcfg.unitframes.target["uf_target_aura_anchor2"], LolzenUIcfg.unitframes.target["uf_target_aura_posx"], LolzenUIcfg.unitframes.target["uf_target_aura_posy"])
+			self.Buffs.num = LolzenUIcfg.unitframes.target["uf_target_aura_maxnum"]
+			if LolzenUIcfg.unitframes.target["uf_target_aura_show_only_player"] == true then
+				self.Buffs.onlyShowPlayer = true
 			end
+			self.Buffs["growth-x"] = LolzenUIcfg.unitframes.target["uf_target_aura_growth_x"]
+			self.Buffs["growth-y"] = LolzenUIcfg.unitframes.target["uf_target_aura_growth_y"]
+			self.Debuffs:Hide()
+			self.Auras:Hide()
 			self.Buffs:Show()
 		elseif LolzenUIcfg.unitframes.target["uf_target_aura_show_type"] == "Debuffs" then
-			if self.Buffs then
-				self.Buffs:Hide()
-			elseif self.Auras then
-				self.Auras:Hide()
+			self.Debuffs:SetPoint(LolzenUIcfg.unitframes.target["uf_target_aura_anchor1"], self, LolzenUIcfg.unitframes.target["uf_target_aura_anchor2"], LolzenUIcfg.unitframes.target["uf_target_aura_posx"], LolzenUIcfg.unitframes.target["uf_target_aura_posy"])
+			self.Debuffs.num = LolzenUIcfg.unitframes.target["uf_target_aura_maxnum"]
+			if LolzenUIcfg.unitframes.target["uf_target_aura_show_only_player"] == true then
+				self.Debuffs.onlyShowPlayer = true
 			end
+			self.Debuffs["growth-x"] = LolzenUIcfg.unitframes.target["uf_target_aura_growth_x"]
+			self.Debuffs["growth-y"] = LolzenUIcfg.unitframes.target["uf_target_aura_growth_y"]
+			self.Buffs:Hide()
+			self.Auras:Hide()
 			self.Debuffs:Show()
 		elseif LolzenUIcfg.unitframes.target["uf_target_aura_show_type"] == "Both" then
-			if self.Buffs then
-				self.Buffs:Hide()
-			elseif self.Debuffs then
-				self.Debuffs:Hide()
+			self.Auras:SetPoint(LolzenUIcfg.unitframes.target["uf_target_aura_anchor1"], self, LolzenUIcfg.unitframes.target["uf_target_aura_anchor2"], LolzenUIcfg.unitframes.target["uf_target_aura_posx"], LolzenUIcfg.unitframes.target["uf_target_aura_posy"])
+			self.Auras.numTotal = LolzenUIcfg.unitframes.target["uf_target_aura_maxnum"]
+			if LolzenUIcfg.unitframes.target["uf_target_aura_show_only_player"] == true then
+				self.Auras.onlyShowPlayer = true
 			end
+			self.Auras["growth-x"] = LolzenUIcfg.unitframes.target["uf_target_aura_growth_x"]
+			self.Auras["growth-y"] = LolzenUIcfg.unitframes.target["uf_target_aura_growth_y"]
+			self.Buffs:Hide()
+			self.Debuffs:Hide()
 			self.Auras:Show()
 		else
-			if self.Buffs then
-				self.Buffs:Hide()
-			elseif self.Debuffs then
-				self.Debuffs:Hide()
-			elseif self.Auras then
-				self.Auras:Hide()
-			end
+			self.Buffs:Hide()
+			self.Debuffs:Hide()
+			self.Auras:Hide()
 		end
 		self:UpdateAllElements('RefreshUnit')
 	end
@@ -186,10 +194,12 @@ ns.SetupTarget = function(self, unit)
 	end
 
 	ns.SetUFTargetAuraSpacing = function()
-		--todo really refresh "old" auras
 		self.Buffs.spacing = LolzenUIcfg.unitframes.target["uf_target_aura_spacing"]
 		self.Debuffs.spacing = LolzenUIcfg.unitframes.target["uf_target_aura_spacing"]
 		self.Auras.spacing = LolzenUIcfg.unitframes.target["uf_target_aura_spacing"]
+		self.Buffs:ForceUpdate()
+		self.Debuffs:ForceUpdate()
+		self.Auras:ForceUpdate()
 	end
 
 	ns.SetUFTagetAuraSize = function()
@@ -209,13 +219,15 @@ ns.SetupTarget = function(self, unit)
 	end
 
 	ns.SetUFTargetAuraGrowth = function()
-		--todo really refresh "old" auras
 		self.Buffs["growth-x"] = LolzenUIcfg.unitframes.target["uf_target_aura_growth_x"]
 		self.Buffs["growth-y"] = LolzenUIcfg.unitframes.target["uf_target_aura_growth_y"]
 		self.Debuffs["growth-x"] = LolzenUIcfg.unitframes.target["uf_target_aura_growth_x"]
 		self.Debuffs["growth-y"] = LolzenUIcfg.unitframes.target["uf_target_aura_growth_y"]
 		self.Debuffs["growth-x"] = LolzenUIcfg.unitframes.target["uf_target_aura_growth_x"]
 		self.Debuffs["growth-y"] = LolzenUIcfg.unitframes.target["uf_target_aura_growth_y"]
+		self.Buffs:ForceUpdate()
+		self.Debuffs:ForceUpdate()
+		self.Auras:ForceUpdate()
 	end
 
 	ns.SetUFTargetAuraShowOnlyPlayerAuras = function()
