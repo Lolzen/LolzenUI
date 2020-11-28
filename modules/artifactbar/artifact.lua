@@ -111,7 +111,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		function afbar:ARTIFACT_XP_UPDATE()
 			local hasHeartOfAzeroth = C_AzeriteItem.HasActiveAzeriteItem()
 			-- prioritize Heart of Azeroth over Artifact Weapon
-			if hasHeartOfAzeroth then
+			if hasHeartOfAzeroth and UnitLevel("player") <= 50 then
 				local azeriteItemLocation = C_AzeriteItem.FindActiveAzeriteItem()
 				local artifactXP, totalXP = C_AzeriteItem.GetAzeriteItemXPInfo(azeriteItemLocation)
 				local xpForNextPoint = totalXP - artifactXP
