@@ -22,8 +22,13 @@ f:SetScript("OnEvent", function(self, event, addon)
 			ShoppingTooltip3,
 		}
 
+		--9.1.5 fix
+		for i=1, #tooltips do
+			Mixin(tooltips[i], BackdropTemplateMixin)
+		end
+
 		-- overwrite tooltip styles
-		TOOLTIP_BACKDROP_STYLE_DEFAULT = {
+		local tt_style = {
 			bgFile = "Interface\\Buttons\\WHITE8x8",
 			edgeFile = LSM:Fetch("border", LolzenUIcfg.tooltip["tip_border"]),
 			tile = false,
@@ -35,24 +40,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 			backdropBorderColor = CreateColor(1, 1, 1),
 			backdropColor = CreateColor(0, 0, 0),
 		}
-
-		GAME_TOOLTIP_BACKDROP_STYLE_EMBEDDED = TOOLTIP_BACKDROP_STYLE_DEFAULT
-
-		GAME_TOOLTIP_BACKDROP_STYLE_AZERITE_ITEM["bgFile"] = "Interface\\AddOns\\LolzenUI\\media\\tooltip-azerite-bg"
-		GAME_TOOLTIP_BACKDROP_STYLE_AZERITE_ITEM["edgeFile"] = "Interface\\AddOns\\LolzenUI\\media\\border-azerite"
-		GAME_TOOLTIP_BACKDROP_STYLE_AZERITE_ITEM["tile"] = false
-		GAME_TOOLTIP_BACKDROP_STYLE_AZERITE_ITEM["edgeSize"] = 16
-		GAME_TOOLTIP_BACKDROP_STYLE_AZERITE_ITEM["insets"] = { left = 3, right = 3, top = 3, bottom = 3 }
-		GAME_TOOLTIP_BACKDROP_STYLE_AZERITE_ITEM["backdropBorderColor"] = CreateColor(1, 1, 1)
-		GAME_TOOLTIP_BACKDROP_STYLE_AZERITE_ITEM["backdropColor"] = CreateColor(1, 1, 1)
-
-		GAME_TOOLTIP_BACKDROP_STYLE_CORRUPTED_ITEM["bgFile"] = "Interface\\AddOns\\LolzenUI\\media\\tooltip-corrupted-bg"
-		GAME_TOOLTIP_BACKDROP_STYLE_CORRUPTED_ITEM["edgeFile"] = LSM:Fetch("border", LolzenUIcfg.tooltip["tip_border"])
-		GAME_TOOLTIP_BACKDROP_STYLE_CORRUPTED_ITEM["tile"] = false
-		GAME_TOOLTIP_BACKDROP_STYLE_CORRUPTED_ITEM["edgeSize"] = 16
-		GAME_TOOLTIP_BACKDROP_STYLE_CORRUPTED_ITEM["insets"] = { left = 3, right = 3, top = 3, bottom = 3 }
-		GAME_TOOLTIP_BACKDROP_STYLE_CORRUPTED_ITEM["backdropBorderColor"] = CreateColor(1, 1, 1)
-		GAME_TOOLTIP_BACKDROP_STYLE_CORRUPTED_ITEM["backdropColor"] = CreateColor(1, 1, 1)
 
 		-- customize the mobClassification
 		local mobType = {
@@ -174,9 +161,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 				if quality then
 					local r, g, b = GetItemQualityColor(quality)
 					self:SetBackdropBorderColor(r, g, b)
-					if self.TopOverlay:IsShown() then
-						self:SetBackdropColor(r, g, b)
-					end
 				end
 			end
 		end
@@ -200,7 +184,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 				if selectedEssenceName == essence.name then
 					local r, g, b = GetItemQualityColor(essence.rank+1)
 					self:SetBackdropBorderColor(r, g, b)
-					self:SetBackdropColor(r, g, b)
 				end
 			end
 		end
@@ -394,12 +377,16 @@ f:SetScript("OnEvent", function(self, event, addon)
 		-- set the background color
 		local function colorBG(self)
 			self:SetBackdropColor(0, 0, 0, 1)
+			self:SetBackdropBorderColor(1, 1, 1, 1)
+			if self.NineSlice then
+				self.NineSlice:SetAlpha(0)
+			end
 		end
 
 		-- also modify more tooltip types
 		for i=1, #tooltips, 1 do
 			tooltips[i]:HookScript("OnTooltipSetItem", colorItemQuality)
-			tooltips[i]:SetBackdrop(TOOLTIP_BACKDROP_STYLE_DEFAULT)
+			tooltips[i]:SetBackdrop(tt_style)
 			hooksecurefunc(tooltips[i], "SetOwner", colorBG)
 		end
 
@@ -422,9 +409,22 @@ f:SetScript("OnEvent", function(self, event, addon)
 		GameTooltip:SetScript("OnEvent", function(self, event, ...) self[event](self, event, ...) end)
 
 		ns.setTTBorder = function()
-			TOOLTIP_BACKDROP_STYLE_DEFAULT["edgeFile"] = LSM:Fetch("border", LolzenUIcfg.tooltip["tip_border"])
-			GAME_TOOLTIP_BACKDROP_STYLE_EMBEDDED["edgeFile"] = LSM:Fetch("border", LolzenUIcfg.tooltip["tip_border"])
-			GAME_TOOLTIP_BACKDROP_STYLE_CORRUPTED_ITEM["edgeFile"] = LSM:Fetch("border", LolzenUIcfg.tooltip["tip_border"])
+			-- reapply the tooltip "skin"
+			tt_style = {
+				bgFile = "Interface\\Buttons\\WHITE8x8",
+				edgeFile = LSM:Fetch("border", LolzenUIcfg.tooltip["tip_border"]),
+				tile = false,
+				tileEdge = true,
+				tileSize = 16,
+				edgeSize = 16,
+				insets = { left = 3, right = 3, top = 3, bottom = 3 },
+
+				backdropBorderColor = CreateColor(1, 1, 1),
+				backdropColor = CreateColor(0, 0, 0),
+			}
+			for i=1, #tooltips, 1 do
+				tooltips[i]:SetBackdrop(tt_style)
+			end
 		end
 
 		ns.setTTHBTexture = function()
