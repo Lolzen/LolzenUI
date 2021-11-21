@@ -240,12 +240,12 @@ ns.SetupTarget = function(self, unit)
 			self.Debuffs.onlyShowPlayer = false
 			self.Auras.onlyShowPlayer = false
 		end
+		self:UpdateAllElements('RefreshUnit')
 	end
 
 	ns.SetUFTargetAuraDesatureNonPlayerAuras = function()
-		self.Buffs.PostUpdateIcon(self.Buffs)
-		self.Debuffs.PostUpdateIcon(self.Debuffs)
 		self.Auras.PostUpdateIcon(self.Auras)
+		self.Auras:ForceUpdate()
 	end
 
 	ns.SetUFTargetCBStandalone = function()
