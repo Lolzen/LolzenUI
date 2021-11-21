@@ -65,32 +65,35 @@ local PostCreateIcon = function(Auras, button)
 	button:HookScript('OnUpdate', UpdateAuraTimer)
 end
 
-local PostUpdateIcon = function(icons, unit, button, index, offset, filter, isDebuff)
-	local _, _, _, _, duration, expiration, owner, canStealOrPurge = UnitAura(unit, index, button.filter)
-	if(duration and duration > 0) then
+local PostUpdateIcon = function(self, unit, button, index, position, duration, expiration, debuffType, isStealable)
+	if(duration and duration > 0 and duration <= 60) then
 		button.expiration = expiration - GetTime()
 	end
 
 	-- fix for boss, party & raid
 	-- these have a number attached to their names
-	if string.find(unit, "boss") then
-		unit = "boss"
-	elseif string.find(unit, "party") then
-		unit = "party"
-	elseif string.find(unit, "raid") then
-		unit = "raid"
-	elseif string.find(unit, "arena") then
-		unit = "arena"
+	if unit ~= nil then
+		if string.find(unit, "boss") then
+			unit = "boss"
+		elseif string.find(unit, "party") then
+			unit = "party"
+		elseif string.find(unit, "raid") then
+			unit = "raid"
+		elseif string.find(unit, "arena") then
+			unit = "arena"
+		end
 	end
 
-	if LolzenUIcfg.unitframes[unit] and LolzenUIcfg.unitframes[unit]["uf_"..unit.."_aura_desature_nonplayer_auras"] == true then
-		if button.isPlayer then
-			button.icon:SetDesaturated(false)
+	if button and button.icon then
+		if LolzenUIcfg.unitframes[unit] and LolzenUIcfg.unitframes[unit]["uf_"..unit.."_aura_desature_nonplayer_auras"] == true then
+			if button.isPlayer then
+				button.icon:SetDesaturated(false)
+			else
+				button.icon:SetDesaturated(true)
+			end
 		else
-			button.icon:SetDesaturated(true)
+			button.icon:SetDesaturated(false)
 		end
-	else
-		button.icon:SetDesaturated(false)
 	end
 end
 
