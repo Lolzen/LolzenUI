@@ -277,7 +277,7 @@ ns.SetupBoss = function(self, unit)
 		end
 	end
 
-	ns.SetUBossAuraPos = function()
+	ns.SetUFBossAuraPos = function()
 		for i, v in pairs(oUF.objects) do
 			if v.origUnit == "boss1" or v.origUnit == "boss2" or v.origUnit == "boss3" or v.origUnit == "boss4" or v.origUnit == "boss5" then
 				v.Buffs:ClearAllPoints()
