@@ -583,8 +583,6 @@ defaultconfig.unitframes = {
 	["boss"] = {
 		["uf_boss_width"] = 160,
 		["uf_boss_height"] = 11,
-		["uf_boss_additional_pos"] = "ABOVE",
-		["uf_boss_additional_spacing"] = 30,
 		["uf_boss_show_power"] = false,
 		["uf_boss_use_own_hp_font_settings"] = true,
 		["uf_boss_hp_font"] = "DroidSansBold",
@@ -686,8 +684,6 @@ defaultconfig.unitframes = {
 		["uf_focus_cb_font_color"] = {1, 1, 1},
 	},
 	["arena"] = {
-		["uf_arena_additional_pos"] = "BELOW",
-		["uf_arena_additional_spacing"] = 30,
 		["uf_arena_use_own_hp_font_settings"] = true,
 		["uf_arena_hp_font"] = "DroidSansBold",
 		["uf_arena_hp_font_size"] = 18,
