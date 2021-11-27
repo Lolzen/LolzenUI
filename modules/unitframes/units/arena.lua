@@ -141,24 +141,6 @@ ns.SetupArena = function(self, unit)
 		end
 	end
 
-	ns.SetUFArenaPowerToggle = function()
-		if LolzenUIcfg.unitframes.arena["uf_arena_show_power"] == true then
-			for i, v in pairs(oUF.objects) do
-				if v.origUnit == "arena1" or v.origUnit == "arena2" or v.origUnit == "arena3" or v.origUnit == "arena4" or v.origUnit == "arena5" then
-					v.Power:SetAlpha(1)
-					v.Power.value:SetAlpha(1)
-				end
-			end
-		else
-			for i, v in pairs(oUF.objects) do
-				if v.origUnit == "arena1" or v.origUnit == "arena2" or v.origUnit == "arena3" or v.origUnit == "arena4" or v.origUnit == "arena5" then
-					v.Power:SetAlpha(0)
-					v.Power.value:SetAlpha(0)
-				end
-			end
-		end
-	end
-
 	ns.SetUFArenaPowerFont = function()
 		for i, v in pairs(oUF.objects) do
 			if v.origUnit == "arena1" or v.origUnit == "arena2" or v.origUnit == "arena3" or v.origUnit == "arena4" or v.origUnit == "arena5" then
