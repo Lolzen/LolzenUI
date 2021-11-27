@@ -58,27 +58,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 			spawnHelper(self, "pet", "CENTER", -300, -177)
 
 			for i=1, MAX_BOSS_FRAMES do
-				if LolzenUIcfg.unitframes.boss["uf_boss_additional_pos"] == "ABOVE" then
-					spawnHelper(self, "boss" .. i, "CENTER", 0, -200 - LolzenUIcfg.unitframes.boss["uf_boss_height"] + (LolzenUIcfg.unitframes.boss["uf_boss_height"] * i) - LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] + (LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] * i))
-				elseif LolzenUIcfg.unitframes.boss["uf_boss_additional_pos"] == "BELOW" then
-					spawnHelper(self, "boss" .. i, "CENTER", 0, -200 + LolzenUIcfg.unitframes.boss["uf_boss_height"] - (LolzenUIcfg.unitframes.boss["uf_boss_height"] * i) + LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] - (LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] * i))
-				elseif 	LolzenUIcfg.unitframes.boss["uf_boss_additional_pos"] == "LEFT" then
-					spawnHelper(self, "boss" .. i, "CENTER", (0 + LolzenUIcfg.unitframes.boss["uf_boss_width"]) - (LolzenUIcfg.unitframes.boss["uf_boss_width"] * i) + LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] - (LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] * i), -200)
-				elseif 	LolzenUIcfg.unitframes.boss["uf_boss_additional_pos"] == "RIGHT" then
-					spawnHelper(self, "boss" .. i, "CENTER", (0 - LolzenUIcfg.unitframes.boss["uf_boss_width"]) + (LolzenUIcfg.unitframes.boss["uf_boss_width"] * i) - LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] + (LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] * i), -200)
-				end
+				spawnHelper(self, "boss" .. i, "CENTER", 0, -200 - LolzenUIcfg.unitframes.boss["uf_boss_height"] + (LolzenUIcfg.unitframes.boss["uf_boss_height"] * i) - LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] + (LolzenUIcfg.unitframes.boss["uf_boss_additional_spacing"] * i))
 			end
 
-			for i=1, 3 do
-				if LolzenUIcfg.unitframes.arena["uf_arena_additional_pos"] == "ABOVE" then
-					spawnHelper(self, "arena" .. i, "CENTER", 0, -200 - LolzenUIcfg.unitframes.arena["uf_arena_height"] + (LolzenUIcfg.unitframes.arena["uf_arena_height"] * i) - LolzenUIcfg.unitframes.arena["uf_arena_additional_spacing"] + (LolzenUIcfg.unitframes.arena["uf_arena_additional_spacing"] * i))
-				elseif LolzenUIcfg.unitframes.arena["uf_arena_additional_pos"] == "BELOW" then
-					spawnHelper(self, "arena" .. i, "CENTER", 0, -200 + LolzenUIcfg.unitframes.arena["uf_arena_height"] - (LolzenUIcfg.unitframes.arena["uf_arena_height"] * i) + LolzenUIcfg.unitframes.arena["uf_arena_additional_spacing"] - (LolzenUIcfg.unitframes.arena["uf_arena_additional_spacing"] * i))
-				elseif 	LolzenUIcfg.unitframes.arena["uf_arena_additional_pos"] == "LEFT" then
-					spawnHelper(self, "arena" .. i, "CENTER", (0 + LolzenUIcfg.unitframes.arena["uf_arena_width"]) - (LolzenUIcfg.unitframes.arena["uf_arena_width"] * i) + LolzenUIcfg.unitframes.arena["uf_arena_additional_spacing"] - (LolzenUIcfg.unitframes.arena["uf_arena_additional_spacing"] * i), -200)
-				elseif 	LolzenUIcfg.unitframes.arena["uf_arena_additional_pos"] == "RIGHT" then
-					spawnHelper(self, "arena" .. i, "CENTER", (0 - LolzenUIcfg.unitframes.arena["uf_arena_width"]) + (LolzenUIcfg.unitframes.arena["uf_arena_width"] * i) - LolzenUIcfg.unitframes.arena["uf_arena_additional_spacing"] + (LolzenUIcfg.unitframes.arena["uf_arena_additional_spacing"] * i), -200)
-				end
+			for i=1, MAX_ARENA_FRAMES or 5 do
+				spawnHelper(self, "arena" .. i, "CENTER", 0, -200 + LolzenUIcfg.unitframes.arena["uf_arena_height"] - (LolzenUIcfg.unitframes.arena["uf_arena_height"] * i) + LolzenUIcfg.unitframes.arena["uf_arena_additional_spacing"] - (LolzenUIcfg.unitframes.arena["uf_arena_additional_spacing"] * i))
 			end
 
 			self:SetActiveStyle("Lolzen - Party")
@@ -346,7 +330,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				end
 			end
 		end)
-		
+
 		-- configuring boss and arenaframes is not an easy task and simply not possible during combat
 		-- so we spoof the player as placeholder to make configuring these possible
 		hooksecurefunc("InterfaceOptionsListButton_OnClick", function(self, button)
