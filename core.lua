@@ -48,12 +48,6 @@ InterfaceOptionsFrame:SetScript("OnMouseUp", function(self, button)
 	self:StopMovingOrSizing()
 	self.isMoving = false
 end)
-InterfaceOptionsFrame:SetScript("OnHide", function(self)
-	if self.isMoving then
-		self:StopMovingOrSizing()
-		self.isMoving = false
-	end
-end)
 
 local version, build, date, tocversion = GetBuildInfo()
 local addonversion = GetAddOnMetadata(addon, "Version")
