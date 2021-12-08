@@ -150,11 +150,14 @@ local function modifyOHB()
 		end
 	end)
 
+	local covenantID = C_Covenants.GetActiveCovenantID()
 	local ohbframe = CreateFrame("Frame")
 	ohbframe:SetAllPoints(OrderHallCommandBar.ClassIcon)
 	ohbframe:EnableMouse(true)
 	ohbframe:SetFrameStrata("HIGH")
-	ohbframe:SetScript("OnMouseDown", GarrisonLandingPage_Toggle)
+	if covenantID and covenantID ~= 0 then
+		ohbframe:SetScript("OnMouseDown", GarrisonLandingPage_Toggle)
+	end
 
 	--reposition BG display
 	UIWidgetTopCenterContainerFrame:SetPoint("TOP", OrderHallCommandBar, "BOTTOM", 0, -10)
@@ -166,6 +169,7 @@ local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:RegisterEvent("CINEMATIC_STOP")
 f:RegisterEvent("PLAYER_ENTERING_WORLD")
+f:RegisterEvent("COVENANT_CHOSEN")
 f:SetScript("OnEvent", function(self, event, addon)
 	if event == "ADDON_LOADED" then
 		if addon == "LolzenUI" then
@@ -188,6 +192,14 @@ f:SetScript("OnEvent", function(self, event, addon)
 				OrderHallCommandBar:Show()
 				getAreaText()
 			end
+
+			if OrderHallCommandBar then
+				modifyOHB()
+			end
+		end
+	elseif event == "COVENANT_CHOSEN" then
+		if OrderHallCommandBar then
+			modifyOHB()
 		end
 	end
 end)
