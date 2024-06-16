@@ -31,25 +31,11 @@ defaultconfig.modules = {
 
 defaultconfig.actionbar = {
 	["actionbar_show_keybinds"] = false,
-	["actionbar_button_spacing"] = 6,
-	["actionbar_button_size"] = 26,
 	["actionbar_normal_texture"] = "LolzenUI Standard",
 	["actionbar_flash_texture"] = "LolzenUI Standard",
 	["actionbar_checked_texture"] = "LolzenUI Standard",
 	["actionbar_hover_texture"] = "LolzenUI Standard",
 	["actionbar_pushed_texture"] = "LolzenUI Standard",
-	["actionbar_mmb_posx"] = 0,
-	["actionbar_mmb_posy"] = 22,
-	["actionbar_mbbl_posx"] = 0,
-	["actionbar_mbbl_posy"] = 54,
-	["actionbar_mbbr_posx"] = 0,
-	["actionbar_mbbr_posy"] = 86,
-	["actionbar_mbl_posx"] = -34,
-	["actionbar_mbl_posy"] = 150,
-	["actionbar_mbr_posx"] = -2,
-	["actionbar_mbr_posy"] = 150,
-	["actionbar_petb_posx"] = 32,
-	["actionbar_petb_posy"] = 170,
 }
 
 defaultconfig.artifactbar = {
