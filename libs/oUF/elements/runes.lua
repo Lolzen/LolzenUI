@@ -18,7 +18,7 @@ A default texture will be applied if the sub-widgets are StatusBars and don't ha
 ## Options
 
 .colorSpec - Use `self.colors.runes[specID]` to color the bar based on player's spec. `specID` is defined by the return
-             value of [GetSpecialization](http://wowprogramming.com/docs/api/GetSpecialization.html) (boolean)
+             value of [C_SpecializationInfo.GetSpecialization](https://warcraft.wiki.gg/wiki/API_C_SpecializationInfo.GetSpecialization) (boolean)
 .sortOrder - Sorting order. Sorts by the remaining cooldown time, 'asc' - from the least cooldown time remaining (fully
              charged) to the most (fully depleted), 'desc' - the opposite (string?)['asc', 'desc']
 
@@ -83,7 +83,7 @@ end
 local function UpdateColor(self, event)
 	local element = self.Runes
 
-	local spec = GetSpecialization() or 0
+	local spec = C_SpecializationInfo.GetSpecialization() or 0
 
 	local color
 	if(spec > 0 and spec < 4 and element.colorSpec) then
@@ -142,6 +142,7 @@ local function Update(self, event)
 		hasSortOrder = false
 	end
 
+	local currentTime = GetTime()
 	local rune, start, duration, runeReady
 	for index, runeID in next, runemap do
 		rune = element[index]
@@ -156,7 +157,7 @@ local function Update(self, event)
 				rune:SetValue(1)
 				rune:SetScript('OnUpdate', nil)
 			elseif(start) then
-				rune.duration = GetTime() - start
+				rune.duration = currentTime - start
 				rune:SetMinMaxValues(0, duration)
 				rune:SetValue(0)
 				rune:SetScript('OnUpdate', onUpdate)
@@ -206,7 +207,7 @@ local function Enable(self, unit)
 
 		for i = 1, #element do
 			local rune = element[i]
-			if(rune:IsObjectType('StatusBar') and not (rune:GetStatusBarTexture() or rune:GetStatusBarAtlas())) then
+			if(rune:IsObjectType('StatusBar') and not rune:GetStatusBarTexture()) then
 				rune:SetStatusBarTexture([[Interface\TargetingFrame\UI-StatusBar]])
 			end
 		end

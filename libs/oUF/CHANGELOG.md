@@ -1,3 +1,242 @@
+**Changes in 12.1.0:**
+
+- _Adrian L Lange (23):_
+    1. castbar: Fix holdTime being ignored on nameplates ([#721](https://github.com/oUF-wow/oUF/issues/721))
+    2. Add workflow to keep TOC updated ([#720](https://github.com/oUF-wow/oUF/issues/720))
+    3. stagger: Add PostVisibility callback ([#719](https://github.com/oUF-wow/oUF/issues/719))
+    4. colors: Load class colors on PEW ([#708](https://github.com/oUF-wow/oUF/issues/708))
+    5. portrait: Cleanup ([#709](https://github.com/oUF-wow/oUF/issues/709))
+    6. power: Add support for atlas textures ([#694](https://github.com/oUF-wow/oUF/issues/694))
+    7. power: Store and forward the used minimum value correctly ([#695](https://github.com/oUF-wow/oUF/issues/695))
+    8. leaderindicator: Show indicator for other leaders too ([#693](https://github.com/oUF-wow/oUF/issues/693))
+    9. runes: Be less wasteful with API calls ([#690](https://github.com/oUF-wow/oUF/issues/690))
+    10. portrait: Use UnitClass to get accurate info on AI players ([#691](https://github.com/oUF-wow/oUF/issues/691))
+    11. combatindicator: Support more units ([#692](https://github.com/oUF-wow/oUF/issues/692))
+    12. totems: Don't mess with forbidden tooltips
+    13. phaseindicator: Don't mess with forbidden tooltips
+    14. alternativepower: Don't mess with forbidden tooltips
+    15. blizzard: Try to hide an extended set of boss frames ([#697](https://github.com/oUF-wow/oUF/issues/697))
+    16. Make the license file easier to read on Windows ([#698](https://github.com/oUF-wow/oUF/issues/698))
+    17. core: Nameplate sub-widgets should ignore alpha ([#699](https://github.com/oUF-wow/oUF/issues/699))
+    18. totems: Follow priorities used by Blizzard ([#700](https://github.com/oUF-wow/oUF/issues/700))
+    19. totems: Use 4 elements in the example ([#702](https://github.com/oUF-wow/oUF/issues/702))
+    20. alternativepower: Add class color for AI units
+    21. power: Add class color for AI units
+    22. health: Add class color for AI units
+    23. core: Add support for passing header attributes as a table
+- _Val Voronov (7):_
+    1. Make linter happy
+    2. tags: Update deprecated API
+    3. stagger: Update deprecated API
+    4. runes: Update deprecated API
+    5. classpower: Update deprecated API
+    6. core: Update private API ([#715](https://github.com/oUF-wow/oUF/issues/715))
+    7. core: Handle up to 10 boss frames ([#713](https://github.com/oUF-wow/oUF/issues/713))
+- _cbdgv (2):_
+    1. portrait: Update colors on party member state change ([#706](https://github.com/oUF-wow/oUF/issues/706))
+    2. power: Update colors on party member state change ([#707](https://github.com/oUF-wow/oUF/issues/707))
+- _dependabot[bot] (2):_
+    1. build(deps): bump actions/checkout from 4 to 5 ([#718](https://github.com/oUF-wow/oUF/issues/718))
+    2. build(deps): bump peter-evans/create-pull-request from 6 to 7 ([#687](https://github.com/oUF-wow/oUF/issues/687))
+- _github-actions[bot] (2):_
+    1. Update Interface version ([#722](https://github.com/oUF-wow/oUF/issues/722))
+    2. Update license ([#705](https://github.com/oUF-wow/oUF/issues/705))
+- 24 files changed, 196 insertions(+), 85 deletions(-)
+
+**Changes in 12.0.1:**
+
+- _Val Voronov (1):_
+    1. range: Register updater
+- 1 file changed, 1 insertion(+), 1 deletion(-)
+
+**Changes in 12.0.0:**
+
+- _Adrian L Lange (9):_
+    1. colors: We like fallback values
+    2. Update source comments
+    3. classpower: Update docs to match implementation
+    4. auras: Link directly to symbol
+    5. colors: Use provided enum
+    6. Point links to warcraft.wiki.gg
+    7. Update README and links for Discussions ([#681](https://github.com/oUF-wow/oUF/issues/681))
+    8. castbar: Add override for unit checks ([#677](https://github.com/oUF-wow/oUF/issues/677))
+    9. castbar: Don't force using frames for pips ([#675](https://github.com/oUF-wow/oUF/issues/675))
+- _Val Voronov (15):_
+    1. healthprediction: Add showRawAbsorb option
+    2. health: Update docs
+    3. healthprediction: Add missing docs
+    4. powerprediction: Add dynamic size adjustment
+    5. core: Only update visible eventless frames
+    6. healthprediction: Add dynamic size adjustment
+    7. healthprediction: Remove dynamic size adjustment
+    8. healthprediction: Use legit events
+    9. health: Keep max hp reduction event registered
+    10. powerprediction: Update API
+    11. Make linter happy
+    12. healthprediction: Add optional element size adjustment
+    13. range: Use events to drive updates
+    14. grouproleindicator: Update API
+    15. health: Add temp max health loss sub-widget
+- 23 files changed, 310 insertions(+), 134 deletions(-)
+
+**Changes in 11.3.0:**
+
+- _Adrian L Lange (1):_
+    1. core: Use new ping template and add support for nameplates ([#670](https://github.com/oUF-wow/oUF/issues/670))
+- _Val Voronov (6):_
+    1. tags: Fix threatcolor tag ([#674](https://github.com/oUF-wow/oUF/issues/674))
+    2. classpower: Use UPU ([#625](https://github.com/oUF-wow/oUF/issues/625))
+    3. colors: Update color fetching ([#667](https://github.com/oUF-wow/oUF/issues/667))
+    4. healthprediction: Remove unnecessary hack ([#669](https://github.com/oUF-wow/oUF/issues/669))
+    5. auras: Update element ([#668](https://github.com/oUF-wow/oUF/issues/668))
+    6. healthprediction: Fix unwanted statusbar behaviour ([#664](https://github.com/oUF-wow/oUF/issues/664))
+- _dependabot[bot] (1):_
+    1. build(deps): bump peter-evans/create-pull-request from 5 to 6 ([#672](https://github.com/oUF-wow/oUF/issues/672))
+- _p3lim (1):_
+    1. Update license
+- 8 files changed, 32 insertions(+), 38 deletions(-)
+
+**Changes in 11.2.3:**
+
+- _Adrian L Lange (2):_
+    1. Update Interface version ([#663](https://github.com/oUF-wow/oUF/issues/663))
+    2. colors: Update stagger logic to upstream ([#660](https://github.com/oUF-wow/oUF/issues/660))
+- 2 files changed, 13 insertions(+), 3 deletions(-)
+
+**Changes in 11.2.2:**
+
+- _Adrian L Lange (5):_
+    1. core: Fix contextual ping on header children ([#661](https://github.com/oUF-wow/oUF/issues/661))
+    2. core: Fix contextual ping on suffix units ([#659](https://github.com/oUF-wow/oUF/issues/659))
+    3. Update Interface version ([#657](https://github.com/oUF-wow/oUF/issues/657))
+    4. core: Support contextual pings ([#656](https://github.com/oUF-wow/oUF/issues/656))
+    5. blizzard: Hide the new compact arena frames ([#653](https://github.com/oUF-wow/oUF/issues/653))
+- _Val Voronov (6):_
+    1. castbar: Improve empowered cast handling ([#654](https://github.com/oUF-wow/oUF/issues/654))
+    2. readycheckindicator: Hardcode icon textures
+    3. Update Interface version
+    4. powerprediction: Update vars
+    5. additionalpower: Update vars
+    6. Make linter happy
+- _dependabot[bot] (2):_
+    1. build(deps): bump actions/checkout from 3 to 4 ([#658](https://github.com/oUF-wow/oUF/issues/658))
+    2. build(deps): bump actions/checkout from 2 to 3
+- 12 files changed, 97 insertions(+), 35 deletions(-)
+
+**Changes in 11.2.1:**
+
+- _Val Voronov (1):_
+    1. core: Update API
+- 2 files changed, 2 insertions(+), 2 deletions(-)
+
+**Changes in 11.2.0:**
+
+- _Adrian L Lange (2):_
+    1. Add dependabot to help out
+    2. Update Interface version
+- _Val Voronov (8):_
+    1. core: Clean up nameplate hooks
+    2. core: Reparent soft target and widget containers
+    3. tags: Adjust eventTimerThreshold ([#638](https://github.com/oUF-wow/oUF/issues/638))
+    4. core: Fix nameplate code ([#637](https://github.com/oUF-wow/oUF/issues/637))
+    5. tags: Update element ([#635](https://github.com/oUF-wow/oUF/issues/635))
+    6. core: Update nameplate hook ([#636](https://github.com/oUF-wow/oUF/issues/636))
+    7. auras: Take numTotal into account when adding gap ([#632](https://github.com/oUF-wow/oUF/issues/632))
+    8. auras: Process subtables in proper order ([#634](https://github.com/oUF-wow/oUF/issues/634))
+- _dependabot[bot] (2):_
+    1. build(deps): bump p3lim/license-year-updater from 1 to 2
+    2. build(deps): bump peter-evans/create-pull-request from 3 to 5
+- _github-actions[bot] (1):_
+    1. Update license ([#631](https://github.com/oUF-wow/oUF/issues/631))
+- 8 files changed, 296 insertions(+), 232 deletions(-)
+
+**Changes in 11.1.1:**
+
+- _Adrian L Lange (1):_
+    1. Update Interface version
+- 1 file changed, 1 insertion(+), 1 deletion(-)
+
+**Changes in 11.1.0:**
+
+- _Adrian L Lange (2):_
+    1. blizzard: Disable PlayerFrame.classPowerBar
+    2. blizzard: Remove legacy code that is now causing problems
+- _Val Voronov (8):_
+    1. events: Remove unnecessary workaround ([#629](https://github.com/oUF-wow/oUF/issues/629))
+    2. auras: Update element ([#624](https://github.com/oUF-wow/oUF/issues/624))
+    3. blizzard: Better way of disabling unit frames ([#623](https://github.com/oUF-wow/oUF/issues/623))
+    4. blizzard: Properly disable unit frames ([#619](https://github.com/oUF-wow/oUF/issues/619))
+    5. castbar: Fix element disabling ([#618](https://github.com/oUF-wow/oUF/issues/618))
+    6. blizzard: Properly disable unit frames ([#617](https://github.com/oUF-wow/oUF/issues/617))
+    7. auras: Add isPlayerAura to data ([#616](https://github.com/oUF-wow/oUF/issues/616))
+    8. classpower: All classes can have charged points ([#615](https://github.com/oUF-wow/oUF/issues/615))
+- 6 files changed, 381 insertions(+), 282 deletions(-)
+
+**Changes in 11.0.0:**
+
+- _Adrian L Lange (19):_
+    1. colors: Document CreateColor
+    2. colors: Use pre-generated hex color
+    3. colors: Use existing methods of ColorMixin
+    4. auras: Linting fix
+    5. castbar: Update docs
+    6. auras: Update docs
+    7. leaderindicator: Rename variable to be more descriptive
+    8. auras: Linting pass
+    9. auras: Rename Icon -> Button to be consistent
+    10. Update Interface version
+    11. castbar: Fix linting
+    12. castbar: Fix error with empowered casts on nameplates
+    13. castbar: Fix empowering holding "stage"
+    14. castbar: Fix error in docs
+    15. castbar: Fix error in pips updater
+    16. castbar: Follow styleguide
+    17. elements: StatusBar:GetStatusBarAtlas() method removed
+    18. castbar: Fix linting
+    19. castbar: Add untested/unfinished empowering stages
+- _Rainrider (3):_
+    1. elements: reference color components by index instead of name ([#605](https://github.com/oUF-wow/oUF/issues/605))
+    2. core: use ColorMixin for colors ([#604](https://github.com/oUF-wow/oUF/issues/604))
+    3. tags: look for args in the suffix only ([#602](https://github.com/oUF-wow/oUF/issues/602))
+- _Val Voronov (18):_
+    1. colors: Override Blizz SetRGBA
+    2. blizzard: Update arena frame handling
+    3. castbar: Update pip code
+    4. auras: Update sub-element name capitalisation
+    5. leaderindicator: Revamp element
+    6. auras: Fix UpdateAuras flow
+    7. castbar: Fix more errors
+    8. core: Fix eventless object handling
+    9. auras: Remove registration for clicks
+    10. auras: Element revamp
+    11. castbar: Add basic empowerment support
+    12. castbar: Fix errors
+    13. classpower: Add Evoker Essence support
+    14. auras: SetText now only accepts strings and nil
+    15. portrait: Update element ([#609](https://github.com/oUF-wow/oUF/issues/609))
+    16. castbar: Use proper spell names ([#610](https://github.com/oUF-wow/oUF/issues/610))
+    17. core: Run UAE on UEV ([#606](https://github.com/oUF-wow/oUF/issues/606))
+    18. core: Rework how eventless units are handled ([#603](https://github.com/oUF-wow/oUF/issues/603))
+- 20 files changed, 968 insertions(+), 464 deletions(-)
+
+**Changes in 10.1.1:**
+
+- _Adrian L Lange (5):_
+    1. core: Delay arena prep if in combat ([#598](https://github.com/oUF-wow/oUF/issues/598))
+    2. core: Check if event is unitless ([#599](https://github.com/oUF-wow/oUF/issues/599))
+    3. Bump packager version ([#597](https://github.com/oUF-wow/oUF/issues/597))
+    4. Update Interface version ([#596](https://github.com/oUF-wow/oUF/issues/596))
+    5. Disable color output from luacheck ([#591](https://github.com/oUF-wow/oUF/issues/591))
+- _Rainrider (1):_
+    1. Add linting configuration ([#557](https://github.com/oUF-wow/oUF/issues/557))
+- _Val Voronov (3):_
+    1. core: Evaluate units on PEW ([#601](https://github.com/oUF-wow/oUF/issues/601))
+    2. threatindicator: Fix docs
+    3. tags: Use UnitEffectiveLevel instead of UnitLevel
+- _github-actions[bot] (1):_
+    1. Update license ([#595](https://github.com/oUF-wow/oUF/issues/595))
+- 26 files changed, 276 insertions(+), 76 deletions(-)
+
 **Changes in 10.1.0:**
 
 - _Adrian L Lange (7):_

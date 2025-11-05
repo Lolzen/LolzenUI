@@ -42,6 +42,11 @@ local Private = oUF.Private
 
 local unitExists = Private.unitExists
 
+-- TODO: Replace with atlases in the next major
+local READY_CHECK_READY_TEXTURE = "Interface\\RaidFrame\\ReadyCheck-Ready"
+local READY_CHECK_NOT_READY_TEXTURE = "Interface\\RaidFrame\\ReadyCheck-NotReady"
+local READY_CHECK_WAITING_TEXTURE = "Interface\\RaidFrame\\ReadyCheck-Waiting"
+
 local function OnFinished(self)
 	local element = self:GetParent()
 	element:Hide()
