@@ -31,11 +31,25 @@ defaultconfig.modules = {
 
 defaultconfig.actionbar = {
 	["actionbar_show_keybinds"] = false,
+	["actionbar_button_spacing"] = 6,
+	["actionbar_button_size"] = 26,
 	["actionbar_normal_texture"] = "LolzenUI Standard",
 	["actionbar_flash_texture"] = "LolzenUI Standard",
 	["actionbar_checked_texture"] = "LolzenUI Standard",
 	["actionbar_hover_texture"] = "LolzenUI Standard",
 	["actionbar_pushed_texture"] = "LolzenUI Standard",
+	["actionbar_mmb_posx"] = 0,
+	["actionbar_mmb_posy"] = 22,
+	["actionbar_mbbl_posx"] = 0,
+	["actionbar_mbbl_posy"] = 54,
+	["actionbar_mbbr_posx"] = 0,
+	["actionbar_mbbr_posy"] = 86,
+	["actionbar_mbl_posx"] = -34,
+	["actionbar_mbl_posy"] = 150,
+	["actionbar_mbr_posx"] = -2,
+	["actionbar_mbr_posy"] = 150,
+	["actionbar_petb_posx"] = 32,
+	["actionbar_petb_posy"] = 170,
 }
 
 defaultconfig.artifactbar = {
@@ -1004,7 +1018,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		if LolzenUIcfg == nil then
 			LolzenUIcfg = defaultconfig
 			-- store LolzenUI version in SV
-			LolzenUIcfg.version = GetAddOnMetadata("LolzenUI", "version")
+			LolzenUIcfg.version = C_AddOns.GetAddOnMetadata("LolzenUI", "version")
 		else
 			-- update saved variables upon finding new entries
 			for k, v in pairs(defaultconfig) do
@@ -1012,8 +1026,8 @@ f:SetScript("OnEvent", function(self, event, addon)
 					LolzenUIcfg[k] = v
 				else
 					-- update LolzenUIcfg.version if necessary
-					if LolzenUIcfg.version ~= GetAddOnMetadata("LolzenUI", "version") then
-						LolzenUIcfg.version = GetAddOnMetadata("LolzenUI", "version")
+					if LolzenUIcfg.version ~= C_AddOns.GetAddOnMetadata("LolzenUI", "version") then
+						LolzenUIcfg.version = C_AddOns.GetAddOnMetadata("LolzenUI", "version")
 					end
 					updateDB(k)
 				end
