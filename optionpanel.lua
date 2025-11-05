@@ -2,7 +2,7 @@
 
 local addon, ns = ...
 local L = ns.L
-
+--[[
 ns.panel = CreateFrame("Frame", "LolzenUIPanel")
 ns.panel.name = addon
 InterfaceOptions_AddCategory(ns.panel)
@@ -127,3 +127,4 @@ ns.panel:SetScript("OnEvent", function(self, event, addon)
 		ns.createButtons()
 	end
 end)
+]]

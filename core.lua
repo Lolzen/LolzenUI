@@ -36,7 +36,7 @@ end
 --	SetCVar("uiScale", 768/string.match(({GetScreenResolutions()})[GetCurrentResolution()], "%d+x(%d+)"))
 --	SetCVar("useuiscale", 1)
 --end
-
+--[[
 -- make the InterfaceOptionsFrame movable
 InterfaceOptionsFrame:SetMovable(true)
 InterfaceOptionsFrame:EnableMouse(true)
@@ -56,3 +56,4 @@ if not string.find(addonversion, version) then
 	print("Please look for an update at: http://www.wowinterface.com/downloads/info24512-LolzenUI.html or https://github.com/Lolzen/LolzenUI (dev version)")
 	print("WoW patch version: "..version..", LolzenUI version: "..addonversion)
 end
+]]
