@@ -67,12 +67,13 @@ f:SetScript("OnEvent", function(self, event, ...)
 		if LolzenUIcfg.modules["pullcount"] == false then return end
 		-- Register BigWigs and DBM prefixes so we can get their pullcounters too
 		-- but only if we don't run them already
-		if not IsAddOnLoaded("BigWigs") then
+		if not C_AddOns.IsAddOnLoaded("BigWigs") then
 			C_ChatInfo.RegisterAddonMessagePrefix("BigWigs")
 		end
-		if not IsAddOnLoaded("DBM-Core") then
+		if not C_AddOns.IsAddOnLoaded("DBM-Core") then
 			C_ChatInfo.RegisterAddonMessagePrefix("D4")
 		end
+
 
 		local filter = function(frame, event, message, ...)
 			if isCounting == true then return end
@@ -108,7 +109,7 @@ f:SetScript("OnEvent", function(self, event, ...)
 		end
 	elseif event == "CHAT_MSG_ADDON" then
 		if LolzenUIcfg.modules["pullcount"] == false then return end
-		if IsAddOnLoaded("DBM-Core") or IsAddOnLoaded("BigWigs") then return end
+		if C_AddOns.IsAddOnLoaded("DBM-Core") or C_AddOns.IsAddOnLoaded("BigWigs") then return end
 		
 		local prefix, msg, channel, sender = ...
 		--print(prefix)
@@ -145,7 +146,7 @@ local function SendPull(num)
 end
 
 -- Disable the /pull command if either DBM or BigWigs are running, else use our /pull slashcommand
-if IsAddOnLoaded("DBM-Core") or IsAddOnLoaded("BigWigs") then
+if C_AddOns.IsAddOnLoaded("DBM-Core") or C_AddOns.IsAddOnLoaded("BigWigs") then
 	--do nothing
 else
 	SLASH_PULL1 = "/pull"
