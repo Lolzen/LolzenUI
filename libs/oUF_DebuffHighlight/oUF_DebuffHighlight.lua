@@ -13,11 +13,11 @@ local CanDispel = {
 }
 
 local blackList = {
-	[GetSpellInfo(140546)] = true, --Fully Mutated
-	[GetSpellInfo(136184)] = true, --Thick Bones
-	[GetSpellInfo(136186)] = true, --Clear mind
-	[GetSpellInfo(136182)] = true, --Improved Synapses
-	[GetSpellInfo(136180)] = true, --Keen Eyesight
+	[C_Spell.GetSpellInfo(140546)] = true, --Fully Mutated
+	[C_Spell.GetSpellInfo(136184)] = true, --Thick Bones
+	[C_Spell.GetSpellInfo(136186)] = true, --Clear mind
+	[C_Spell.GetSpellInfo(136182)] = true, --Improved Synapses
+	[C_Spell.GetSpellInfo(136180)] = true, --Keen Eyesight
 }
 
 local dispellist = CanDispel[playerClass] or {}
@@ -29,7 +29,7 @@ local function GetDebuffType(unit, filter, filterTable)
 	if not unit or not UnitCanAssist("player", unit) then return nil end
 	local i = 1
 	while true do
-		local name, texture, _, debufftype, _,_,_,_,_, spellID = UnitAura(unit, i, "HARMFUL")
+		local name, texture, _, debufftype, _,_,_,_,_, spellID = C_UnitAuras.GetAuraDataByIndex(unit, i, "HARMFUL")
 		if not texture then break end
 
 	--	local filterSpell = filterTable[spellID] or filterTable[name]
