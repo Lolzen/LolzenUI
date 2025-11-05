@@ -14,12 +14,12 @@ f:SetScript("OnEvent", function(self, event, addon)
 	if event == "ADDON_LOADED" and addon == "LolzenUI" then
 		if LolzenUIcfg.modules["objectivetracker"] == false then return end
 
-		local function loginCollapse()
-			if LolzenUIcfg.objectivetracker["objectivetracker_logincollapse"] == true then
-				ObjectiveTracker_Collapse()
-			end
-		end
-		hooksecurefunc("ObjectiveTracker_Initialize", loginCollapse)
+--		local function loginCollapse()
+--			if LolzenUIcfg.objectivetracker["objectivetracker_logincollapse"] == true then
+--				ObjectiveTracker_Collapse()
+--			end
+--		end
+--		hooksecurefunc("ObjectiveTracker_Initialize", loginCollapse)
 
 		local of_fake = CreateFrame("Frame", nil, UIParent)
 		of_fake:SetHeight(650)
@@ -33,11 +33,15 @@ f:SetScript("OnEvent", function(self, event, addon)
 		of:SetHeight(650)
 		of:SetScale(LolzenUIcfg.objectivetracker["objectivetracker_scale"])
 		-- bring the HM aesthetically in line with the button, wherever the ObjectiveTrackerFrame's position is set
-		of.HeaderMenu.Title:SetPoint("TOPLEFT", of, "TOPLEFT", -170, -5)
+--		of:SetPoint("TOPLEFT", of_fake, "TOPLEFT", -170, -5)
 
 		ns.setOTPos = function()
 			of_fake:ClearAllPoints()
 			of_fake:SetPoint(LolzenUIcfg.objectivetracker["objectivetracker_anchor"], UIParent, LolzenUIcfg.objectivetracker["objectivetracker_anchor"], LolzenUIcfg.objectivetracker["objectivetracker_posx"], LolzenUIcfg.objectivetracker["objectivetracker_posy"])
+		end
+		
+		if LolzenUIcfg.objectivetracker["objectivetracker_logincollapse"] == true then
+			of:SetCollapsed(true)
 		end
 
 		ns.setOTScale = function()
@@ -45,19 +49,25 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 	elseif event == "PLAYER_REGEN_DISABLED" then
 		if LolzenUIcfg.objectivetracker["objectivetracker_combatcollapse"] == false then return end
-		ObjectiveTracker_Collapse()
+		--ObjectiveTracker_Collapse()
+		local of = ObjectiveTrackerFrame
+		of:SetCollapsed(true)
 	elseif event == "PLAYER_REGEN_ENABLED" then
 		if LolzenUIcfg.objectivetracker["objectivetracker_combatcollapse"] == false then return end
 		-- it seems the folowing check is unnecessary as even when i do /run ObjectiveTracker_Expand() it won't expand
 		-- i'll leave this check in place in case this i sa blizz bug, but i'm unsure. The checks are working, i tripple checked.
 		if LolzenUIcfg.objectivetracker["objectivetracker_dungeoncollapse"] == true and IsInInstance() then return end
 		if ObjectiveTrackerFrame.collapsed and not InCombatLockdown() then
-			ObjectiveTracker_Expand()
+			--ObjectiveTracker_Expand()
+			local of = ObjectiveTrackerFrame
+			of:SetCollapsed(false)
 		end
 	elseif event == "PLAYER_ENTERING_WORLD" then
 		if LolzenUIcfg.objectivetracker["objectivetracker_dungeoncollapse"] == false then return end
 		if IsInInstance() then
-			ObjectiveTracker_Collapse()
+			--ObjectiveTracker_Collapse()
+			local of = ObjectiveTrackerFrame
+			of:SetCollapsed(true)
 		end
 	end
 end)
