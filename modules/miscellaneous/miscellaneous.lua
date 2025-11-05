@@ -10,21 +10,33 @@ f:RegisterEvent("PLAYER_LOGIN")
 f:SetScript("OnEvent", function(self, event, addon)
 	if LolzenUIcfg.modules["miscellaneous"] == false then return end
 
-	-- ReputationFrame
-	local function customizeReputationColors()
+	-- ReputationFrame (DNW)
+	--Mixin(WorldMapFrame.BorderFrame.TitleContainer, ReputationBarMixin)
+		
+	local FactionTextToNum = {
+		["Hated"] = 1,
+		["Hostile"] = 2,
+		["Unfriendly"] = 3,
+		["Neutral"] = 4,
+		["Friendly"] = 5,
+		["Honored"] = 6,
+		["Revered"] = 7,
+		["Exalted"] = 8
+	}
+		
+	--replace/extend this Blizzard code
+	function ReputationBarMixin:UpdateBarColor(color)
 		if LolzenUIcfg.miscellaneous["misc_alternative_faction_colors"] == true then
-			local factionOffset = FauxScrollFrame_GetOffset(ReputationListScrollFrame)
-			for i=1, NUM_FACTIONS_DISPLAYED, 1 do
-				local factionIndex = factionOffset + i
-				local factionBar = _G["ReputationBar"..i.."ReputationBar"]
-				local name, description, standingID, barMin, barMax, barValue, atWarWith, canToggleAtWar, isHeader, isCollapsed, hasRep, isWatched, isChild, factionID, hasBonusRepGain, canBeLFGBonus = GetFactionInfo(factionIndex) 
-				local color = LolzenUIcfg.miscellaneous["misc_faction_colors"][standingID]
-				factionBar:SetStatusBarColor(unpack(color))
+			local beautyColors = FactionTextToNum[self.reputationStandingText]
+			if beautyColors ~= nil then
+				self:SetStatusBarColor(unpack(LolzenUIcfg.miscellaneous["misc_faction_colors"][beautyColors]));
+			else
+				self:SetStatusBarColor(color:GetRGB());
 			end
 		end
 	end
-	hooksecurefunc("ReputationFrame_Update", customizeReputationColors)
-
+		
+		
 	-- MicroButtons
 	local MicroButtons = {
 		CharacterMicroButton, SpellbookMicroButton, TalentMicroButton, 
