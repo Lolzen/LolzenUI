@@ -159,9 +159,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 			addons = {}
 			total = 0
 			UpdateAddOnMemoryUsage()
-			for i = 1, GetNumAddOns(), 1 do
+			for i = 1, C_AddOns.GetNumAddOns(), 1 do
 				if GetAddOnMemoryUsage(i) == 0 then
-					isLoD = IsAddOnLoadOnDemand(i)
+					isLoD = C_AddOns.IsAddOnLoadOnDemand(i)
 					memory = GetAddOnMemoryUsage(i)
 					if isLoD then
 						state = "LoD"
@@ -173,7 +173,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 				end
 				memory = GetAddOnMemoryUsage(i)
 					entry = {
-						name = GetAddOnInfo(i),
+						name = C_AddOns.GetAddOnInfo(i),
 						memory = memory,
 						state = state,
 					}
