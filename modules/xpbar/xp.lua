@@ -130,13 +130,15 @@ f:SetScript("OnEvent", function(self, event, addon)
 				xpbar:SetValue(current)
 				xpbar:SetStatusBarColor(unpack(LolzenUIcfg.xpbar["xpbar_pvp_color"]))
 				xptext:SetFormattedText("%s (%.0f%%)", "[L:"..level.."] "..current.."/"..max, current/max*100)
-			elseif GetWatchedFactionInfo() ~= nil then
+			elseif C_Reputation.GetWatchedFactionData() ~= nil then
 				-- Reputation (including Paragon)
-				for i = 1, GetNumFactions() do
-					local paraName, _, _, _, _, _, _, _, _, _, _, isWatched, _, factionID = GetFactionInfo(i)
-					if isWatched and factionID then
-						if C_Reputation.IsFactionParagon(factionID) then
-							local currentValue, threshold, rewardQuestID, hasRewardPending = C_Reputation.GetFactionParagonInfo(factionID)
+				for i = 1, C_Reputation.GetNumFactions() do
+					--local paraName, _, _, _, _, _, _, _, _, _, _, isWatched, _, factionID = C_Reputation.GetFactionInfo(i)
+						--local factionID, paraName, _, _, _, _, _, _, _, _, _, _, _, _, _, isWatched = C_Reputation.GetFactionDataByIndex(i)
+						local factionData = C_Reputation.GetFactionDataByIndex(i)
+					if factionData.isWatched and factionData.factionID then
+						if C_Reputation.IsFactionParagon(factionData.factionID) then
+							local currentValue, threshold, rewardQuestID, hasRewardPending = C_Reputation.GetFactionParagonInfo(factionData.factionID)
 							local value = mod(currentValue, threshold)
 							if paraRewardPending then
 								value = value + threshold
@@ -144,15 +146,19 @@ f:SetScript("OnEvent", function(self, event, addon)
 							xpbar:SetMinMaxValues(0, threshold)
 							xpbar:SetValue(value)
 							xpbar:SetStatusBarColor(unpack(LolzenUIcfg.xpbar["xpbar_paragon_color"]))
-							xptext:SetText("("..paraName..") "..value.." / "..threshold)
+							xptext:SetText("("..factionData.name..") "..value.." / "..threshold)
 						else
-							local name, standing, min, max, value = GetWatchedFactionInfo()
-							max, min = (max-min), (value-min)
+							--local name, standing, min, max, value = C_Reputation.GetWatchedFactionData()
+							local watchedFactionData = C_Reputation.GetWatchedFactionData()
+							--local min = watchedFactionData.currentReactionThreshold
+							local max = watchedFactionData.nextReactionThreshold
+							local value = watchedFactionData.currentStanding
+							--max, min = (max-min), (value-min)
 							if LolzenUIcfg.modules["miscellaneous"] == true and LolzenUIcfg.miscellaneous["misc_alternative_faction_colors"] == true then
-								local color = LolzenUIcfg.miscellaneous["misc_faction_colors"][standing]
+								local color = LolzenUIcfg.miscellaneous["misc_faction_colors"][watchedFactionData.reaction]
 								xpbar:SetStatusBarColor(unpack(color))
 							else
-								local baseColor = FACTION_BAR_COLORS_LOCAL[standing]
+								local baseColor = FACTION_BAR_COLORS_LOCAL[watchedFactionData.reaction]
 								local color = {}
 								for key, value in pairs(baseColor) do 
 									color[key] = math.min(1, value * 1.25)
@@ -165,9 +171,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 								xpbar:SetValue(1)
 							else
 								xpbar:SetMinMaxValues(0, max)
-								xpbar:SetValue(min)
+								xpbar:SetValue(value)
 							end
-							xptext:SetText("("..name..") "..min.." / "..max)
+							xptext:SetText("("..watchedFactionData.name..") "..value.." / "..max)
 						end
 					end
 				end
