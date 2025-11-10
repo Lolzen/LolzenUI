@@ -22,17 +22,15 @@ f:SetScript("OnEvent", function(self, event, addon)
 		-- Change Text Color
 		WorldMapFrameTitleText:SetTextColor(unpack(LolzenUIcfg.worldmap["worldmap_title_color"]))
 
-		-- reposition the minMax button
-		WorldMapFrame.BorderFrame.MaximizeMinimizeFrame.MaximizeButton:SetPoint("TOPRIGHT", WorldMapFrame.BorderFrame, "TOPRIGHT", -50, 5)
-		WorldMapFrame.BorderFrame.MaximizeMinimizeFrame.MaximizeButton:SetPoint("TOPRIGHT", WorldMapFrame.BorderFrame, "TOPRIGHT", -18, 5)
-
-		-- reposition the close button
-		WorldMapFrameCloseButton:SetPoint("TOPRIGHT", WorldMapFrame.BorderFrame, "TOPRIGHT", -30, 5)
-		WorldMapFrameCloseButton:SetPoint("TOPRIGHT", WorldMapFrame.BorderFrame, "TOPRIGHT", 4, 5)
-
 		-- Stretch the TitleBg out
-		WorldMapFrame.BorderFrame.TitleBg:SetPoint("TOPLEFT", WorldMapFrame, 3, -3)
-		WorldMapFrame.BorderFrame.TitleBg:SetPoint("TOPRIGHT", WorldMapFrame, -3, -3)
+		WorldMapFrame.BorderFrame.TitleContainer:SetPoint("TOPLEFT", WorldMapFrame, 3, -3)
+		WorldMapFrame.BorderFrame.TitleContainer:SetPoint("TOPRIGHT", WorldMapFrame, -3, -3)
+			
+		Mixin(WorldMapFrame.BorderFrame.TitleContainer, BackdropTemplateMixin)
+		WorldMapFrame.BorderFrame.TitleContainer:SetBackdrop({
+			bgFile = "Interface\\ChatFrame\\ChatFrameBackground", tile = true, tileSize = 16,
+		})
+		WorldMapFrame.BorderFrame.TitleContainer:SetBackdropColor(0.1, 0.1, 0.1, 0.5)
 
 		-- Cutsom border
 		local border = CreateFrame("Frame", nil, nil, "BackdropTemplate")
@@ -47,41 +45,43 @@ f:SetScript("OnEvent", function(self, event, addon)
 		border:SetFrameLevel(3)
 
 		-- make the WorldMap movable
-		local frames = {
-			WorldMapFrame,
-			WorldMapFrame.ScollContainer,
-		}
-
-		for _, frame in pairs(frames) do
-			frame:EnableMouse(true)
-			frame:SetMovable(true)
-			frame:SetUserPlaced(true)
-
-			-- Script for moving the frame
-			local registerClicks = function(self, button)
-				frame:ClearAllPoints()
-				frame:StartMoving()
+		WorldMapFrame.BorderFrame.TitleContainer:EnableMouse(true)
+		WorldMapFrame.BorderFrame.TitleContainer:SetMovable(true)
+		
+		WorldMapFrame.BorderFrame.TitleContainer:SetScript("OnMouseDown", function(self, button)
+			if button == "LeftButton" then
+				WorldMapFrame:StartMoving()
 			end
-			frame:SetScript("OnMouseDown", registerClicks)
-
-			frame:SetScript("OnMouseUp", function()
-				frame:StopMovingOrSizing()
+		end)
+		
+		WorldMapFrame.BorderFrame.TitleContainer:SetScript("OnMouseUp", function(self, button)
+			if button == "LeftButton" then
+				WorldMapFrame:StopMovingOrSizing()
 				if LolzenUIcfg.worldmap["worldmap_save_position"] == true then
-					local anchor1, _, anchor2, x, y = WorldMapFrame:GetPoint()
-					LolzenUIcfg.worldmap["worldmap_saved_position"] = {anchor1, UIParent, anchor2, x, y}
+					local point, _, relativePoint, x, y = WorldMapFrame:GetPoint()
+					if point and relativePoint and x and y then
+						LolzenUIcfg.worldmap["worldmap_saved_position"] = {point, UIParent, relativePoint, x, y}
+					end
 				end
-			end)
-		end
+			end
+		end)
+		
+
+		WorldMapFrame:SetMovable(true)
+		WorldMapFrame:SetUserPlaced(true)
 
 		-- Position and Scale
 		hooksecurefunc(WorldMapFrame, "SynchronizeDisplayState", function()
 			if not WorldMapFrame:IsMaximized() then
 				WorldMapFrame:ClearAllPoints()
 				if LolzenUIcfg.worldmap["worldmap_save_position"] == true then
-					local anchor1, _, anchor2, x, y = unpack(LolzenUIcfg.worldmap["worldmap_saved_position"])
-					WorldMapFrame:SetPoint(anchor1, UIParent, anchor2, x, y)
-				else
-					WorldMapFrame:SetPoint("BOTTOM", UIParent, "BOTTOM", 0, 320/LolzenUIcfg.worldmap["worldmap_scale"])
+					local savedPos = LolzenUIcfg.worldmap["worldmap_saved_position"]
+					if savedPos[1] and savedPos[3] and savedPos[4] and savedPos[5] then
+						WorldMapFrame:SetPoint(savedPos[1], UIParent, savedPos[3], savedPos[4], savedPos[5])
+					else
+						-- Fallback zu Standardposition wenn Daten ungültig
+						WorldMapFrame:SetPoint("BOTTOM", UIParent, "BOTTOM", 0, 320/LolzenUIcfg.worldmap["worldmap_scale"])
+					end
 				end
 				WorldMapFrame:SetScale(LolzenUIcfg.worldmap["worldmap_scale"])
 			end
@@ -97,32 +97,35 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		local int = 0
 		timer:SetScript("OnFinished", function(self, requested)
-			if not WorldMapFrame:IsVisible() then end
+			if not WorldMapFrame:IsVisible() then return end
 			int = int + 1
 			if int >= 3 then
-				local x, y = 0, 0
-
-				x = math.floor(100 * x)
-				y = math.floor(100 * y)
-
 				local scale = WorldMapFrame.ScrollContainer:GetEffectiveScale()
 				local width = WorldMapFrame.ScrollContainer:GetWidth()
 				local height = WorldMapFrame.ScrollContainer:GetHeight()
 				local centerX, centerY = WorldMapFrame.ScrollContainer:GetCenter()
-				local x, y = GetCursorPosition()
-				local adjustedX = (x / scale - (centerX - (width/2))) / width
-				local adjustedY = (centerY + (height/2) - y / scale) / height
-
-				if (adjustedX >= 0  and adjustedY >= 0 and adjustedX <= 1 and adjustedY <= 1) then
+				
+				-- Nil-Check für centerX und centerY
+				if not centerX or not centerY or width == 0 or height == 0 then
+					int = 0
+					self:Play()
+					return
+				end
+				
+				local cursorX, cursorY = GetCursorPosition()
+				local adjustedX = (cursorX / scale - (centerX - (width/2))) / width
+				local adjustedY = (centerY + (height/2) - cursorY / scale) / height
+		
+				if (adjustedX >= 0 and adjustedY >= 0 and adjustedX <= 1 and adjustedY <= 1) then
 					adjustedX = math.floor(100 * adjustedX)
 					adjustedY = math.floor(100 * adjustedY)
 					WorldMapFrameTitleText:SetText("Cursor Coordinates: "..adjustedX..", "..adjustedY)
 				else
-					WorldMapFrameTitleText:SetText(" ")
+					WorldMapFrameTitleText:SetText("Map & Questlog")
 				end
 				int = 0
 			end
-
+		
 			self:Play()
 		end)
 
@@ -142,7 +145,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 			WorldMapFrameTitleText:SetTextColor(unpack(LolzenUIcfg.worldmap["worldmap_title_color"]))
 		end
 
-		local origtitle = WorldMapFrameTitleText:GetText()
+		local origtitle = "Map & Questlog"
 		ns.setWMCoordinates = function()
 			if LolzenUIcfg.worldmap["worldmap_coordinates"] == true then
 				if not timer:IsPlaying() then
