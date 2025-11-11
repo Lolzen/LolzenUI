@@ -24,7 +24,9 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		-- Stretch the TitleBg out
 		WorldMapFrame.BorderFrame.TitleContainer:SetPoint("TOPLEFT", WorldMapFrame, 3, -3)
-		WorldMapFrame.BorderFrame.TitleContainer:SetPoint("TOPRIGHT", WorldMapFrame, -3, -3)
+		WorldMapFrame.BorderFrame.TitleContainer:SetPoint("TOPRIGHT", WorldMapFrame, -23, -3)
+		--WorldMapFrame.BorderFrame.TitleContainer:SetFrameStrata("MEDIUM")
+
 			
 		Mixin(WorldMapFrame.BorderFrame.TitleContainer, BackdropTemplateMixin)
 		WorldMapFrame.BorderFrame.TitleContainer:SetBackdrop({
