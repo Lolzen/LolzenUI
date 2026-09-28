@@ -1,4 +1,6 @@
 --// orderhallbar // --
+-- An info bar: class icon (opens the expansion landing page), backpack currencies,
+-- zone name and coordinates.
 
 local _, ns = ...
 local L = ns.L
@@ -6,324 +8,223 @@ local LSM = LibStub("LibSharedMedia-3.0")
 
 ns.RegisterModule("orderhallbar", L["desc_orderhallbar"], true)
 
--- Erstelle Ersatz für OrderHallCommandBar
-local OrderHallCommandBar = CreateFrame("Frame", "LolzenUI_OrderHallBar", UIParent)
-OrderHallCommandBar:SetSize(GetScreenWidth() * 1.41, 24)
-OrderHallCommandBar:SetPoint("TOP", UIParent, "TOP", 0, 0)
-OrderHallCommandBar:SetFrameStrata("LOW")
-OrderHallCommandBar:SetFrameLevel(10)
-OrderHallCommandBar:SetClipsChildren(true)
+local MAX_CURRENCIES = 3
+local COORD_INTERVAL = 0.5
 
--- Background
-OrderHallCommandBar.Background = OrderHallCommandBar:CreateTexture(nil, "BACKGROUND")
-OrderHallCommandBar.Background:SetAllPoints()
+local cfg
+local bar
+local currencies = {}
 
--- Class Icon
-OrderHallCommandBar.ClassIcon = OrderHallCommandBar:CreateTexture(nil, "ARTWORK")
-OrderHallCommandBar.ClassIcon:SetSize(48, 48)
-OrderHallCommandBar.ClassIcon:SetPoint("LEFT", OrderHallCommandBar, "LEFT", 10, 0)
-local _, class = UnitClass("player")
-OrderHallCommandBar.ClassIcon:SetTexture("Interface\\TargetingFrame\\UI-Classes-Circles")
-OrderHallCommandBar.ClassIcon:SetTexCoord(unpack(CLASS_ICON_TCOORDS[class]))
-OrderHallCommandBar.ClassIcon:SetAlpha(0.5)
+--[[ zone & coordinates ]]-----------------------------------------------------
 
--- Area Name
-OrderHallCommandBar.AreaName = OrderHallCommandBar:CreateFontString(nil, "OVERLAY")
-OrderHallCommandBar.AreaName:SetPoint("CENTER", OrderHallCommandBar, "CENTER", 0, 0)
+local function getCoordinates()
+	local _, instanceType = IsInInstance()
+	if instanceType == "party" or instanceType == "raid" then return "" end
+	local mapID = C_Map.GetBestMapForUnit("player")
+	local position = mapID and C_Map.GetPlayerMapPosition(mapID, "player")
+	if not position then return "" end
+	local x, y = position:GetXY()
+	return (" [%.1f/%.1f]"):format(x * 100, y * 100)
+end
 
-local MapRects = {}
-local TempVec2D = CreateVector2D(0, 0)
-function getCoordinates()
-	local inInstance, instanceType = IsInInstance()
-	if inInstance and (instanceType == "party" or instanceType == "raid") then
-		return ""
+local function updateArea()
+	local zone = GetZoneText() or ""
+	local subzone = GetSubZoneText() or ""
+	if subzone == "" or subzone == zone then
+		bar.AreaName:SetText(zone..getCoordinates())
 	else
-		local MapID = C_Map.GetBestMapForUnit("player")
-		if MapID then
-			local position = C_Map.GetPlayerMapPosition(MapID, "player")
-			if position then
-				local x, y = position:GetXY()
-				return format(" [%.1f/%.1f]", x*100, y*100)
-			end
-		end
-		return ""
+		bar.AreaName:SetText(("%s (%s)%s"):format(zone, subzone, getCoordinates()))
 	end
 end
 
-local function getAreaText()
-	if not OrderHallCommandBar then return end  -- ADD THIS CHECK
-	
-	local mapInfo = C_Map.GetMapInfo(C_Map.GetBestMapForUnit("player"))
-	if not mapInfo then return end
-	
-	local zoneName = mapInfo.name or ""
-	local subzoneName = GetSubZoneText() or ""
-	
-	if subzoneName == "" or subzoneName == zoneName then
-		OrderHallCommandBar.AreaName:SetText(zoneName..getCoordinates())
-	else
-		OrderHallCommandBar.AreaName:SetText(zoneName.." ("..subzoneName..")"..getCoordinates())
+local function onUpdate(self, elapsed)
+	self.elapsed = (self.elapsed or 0) + elapsed
+	if self.elapsed >= COORD_INTERVAL then
+		self.elapsed = 0
+		updateArea()
 	end
 end
 
-local currency = {}
-local function getCurrencies()
-	if not OrderHallCommandBar then return end
-	for i=1, 3 do
-		if not currency[i] then
-			currency[i] = OrderHallCommandBar:CreateTexture("currencyTexture"..i)
-			currency[i]:SetSize(LolzenUIcfg.orderhallbar["ohb_currency_icon_size"], LolzenUIcfg.orderhallbar["ohb_currency_icon_size"])
-			currency[i]:SetTexCoord(.04, .94, .04, .94)
+-- coordinates only change while moving, so only poll then
+local function setMoving(moving)
+	bar:SetScript("OnUpdate", moving and onUpdate or nil)
+	updateArea()
+end
 
-			if not currency[i].text then
-				currency[i].text = OrderHallCommandBar:CreateFontString(nil, "OVERLAY")
-				currency[i].text:SetFont(LSM:Fetch("font", LolzenUIcfg.orderhallbar["ohb_currency_font"]), LolzenUIcfg.orderhallbar["ohb_currency_font_size"], LolzenUIcfg.orderhallbar["ohb_currency_font_flag"])
-				currency[i].text:SetTextColor(1, 1, 1)
-				currency[i].text:SetPoint("LEFT", currency[i], "RIGHT", 5, 0)
-			end
+--[[ currencies ]]-------------------------------------------------------------
 
-			if not currency[i].frame then
-				currency[i].frame = CreateFrame("Frame", nil, OrderHallCommandBar)
-				currency[i].frame:SetAllPoints(currency[i])
-				currency[i].frame:SetScript("OnEnter", function(self)
-					GameTooltip:SetOwner(currency[i], "ANCHOR_BOTTOMRIGHT")
-					if currency[i].id ~= nil then
-						GameTooltip:SetCurrencyByID(currency[i].id)
-						GameTooltip:Show()
-					end
-				end)
-				currency[i].frame:SetScript("OnLeave", function(self)
-					GameTooltip:Hide()
-				end)
-			end
+local function currencyOnEnter(self)
+	if not self.currencyID then return end
+	GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")
+	GameTooltip:SetCurrencyByID(self.currencyID)
+	GameTooltip:Show()
+end
 
-			if i == 1 then
-				currency[i]:SetPoint("LEFT", OrderHallCommandBar.ClassIcon, "RIGHT", 10, 0)
-			else
-				currency[i]:SetPoint("LEFT", currency[i-1].text, "RIGHT", 10, 0)
-			end
+local function getCurrencyButton(index)
+	local button = currencies[index]
+	if button then return button end
+
+	button = CreateFrame("Frame", nil, bar)
+	button.icon = button:CreateTexture(nil, "ARTWORK")
+	button.icon:SetAllPoints()
+	button.icon:SetTexCoord(.04, .94, .04, .94)
+	button.text = button:CreateFontString(nil, "OVERLAY")
+	button.text:SetPoint("LEFT", button, "RIGHT", 5, 0)
+	button.text:SetTextColor(1, 1, 1)
+	button:SetScript("OnEnter", currencyOnEnter)
+	button:SetScript("OnLeave", GameTooltip_Hide)
+	if index == 1 then
+		button:SetPoint("LEFT", bar.ClassIcon, "RIGHT", 10, 0)
+	else
+		button:SetPoint("LEFT", currencies[index - 1].text, "RIGHT", 10, 0)
+	end
+	currencies[index] = button
+	return button
+end
+
+local function styleCurrency(button)
+	local size = cfg["ohb_currency_icon_size"]
+	button:SetSize(size, size)
+	ns.SetFont(button.text, cfg["ohb_currency_font"], cfg["ohb_currency_font_size"], cfg["ohb_currency_font_flag"])
+end
+
+local function updateCurrencies()
+	for i = 1, MAX_CURRENCIES do
+		local info = C_CurrencyInfo.GetBackpackCurrencyInfo(i)
+		if info then
+			local button = getCurrencyButton(i)
+			styleCurrency(button)
+			button.currencyID = info.currencyTypesID
+			button.icon:SetTexture(info.iconFileID)
+			button.text:SetText(BreakUpLargeNumbers(info.quantity))
+			button:Show()
+		elseif currencies[i] then
+			currencies[i].currencyID = nil
+			currencies[i]:Hide()
 		end
 	end
-	local counter = 1
-	for i=1, C_CurrencyInfo.GetCurrencyListSize() do
-		if C_CurrencyInfo.GetCurrencyListInfo(i).isShowInBackpack then
-			local link = C_CurrencyInfo.GetCurrencyListLink(i)
-			local id = tonumber(strmatch(link, "currency:(%d+)"))
-			if currency[counter] then
-				currency[counter]:SetTexture(C_CurrencyInfo.GetCurrencyListInfo(i).iconFileID)
-				currency[counter].text:SetText(C_CurrencyInfo.GetCurrencyListInfo(i).quantity)
-				if not currency[counter].name then
-					currency[counter].name = C_CurrencyInfo.GetCurrencyListInfo(i).name
-				end
-				-- make the currency id available
-				if not currency[counter].id then
-					currency[counter].id = id
-				end
-				currency[counter]:Show()
-				currency[counter].text:Show()
-				counter = counter + 1
-			end
+end
+
+--[[ bar ]]--------------------------------------------------------------------
+
+local function toggleLandingPage()
+	local button = ExpansionLandingPageMinimapButton
+	if button and button.ToggleLandingPage then
+		button:ToggleLandingPage()
+	elseif ToggleExpansionLandingPage then
+		ToggleExpansionLandingPage()
+	end
+end
+
+local function applyStyle()
+	bar:SetSize(UIParent:GetWidth(), cfg["ohb_height"])
+	bar.Background:SetTexture(LSM:Fetch("background", cfg["ohb_background"]))
+	bar.Background:SetVertexColor(ns.RGB(cfg["ohb_background_color"]))
+	bar.Background:SetAlpha(cfg["ohb_background_alpha"])
+	ns.SetFont(bar.AreaName, cfg["ohb_zone_font"], cfg["ohb_zone_font_size"], cfg["ohb_zone_font_flag"])
+	bar.AreaName:SetTextColor(ns.RGB(cfg["ohb_zone_color"]))
+	for _, button in ipairs(currencies) do
+		styleCurrency(button)
+	end
+	bar:SetShown(cfg["ohb_always_show"] or ns.EditMode:IsActive())
+end
+
+local function createBar()
+	bar = CreateFrame("Frame", "LolzenUI_InfoBar", UIParent)
+	bar:SetFrameStrata("LOW")
+	bar:SetFrameLevel(10)
+
+	bar.Background = bar:CreateTexture(nil, "BACKGROUND")
+	bar.Background:SetAllPoints()
+
+	local _, class = UnitClass("player")
+	bar.ClassIcon = bar:CreateTexture(nil, "ARTWORK")
+	bar.ClassIcon:SetSize(48, 48)
+	bar.ClassIcon:SetPoint("LEFT", bar, "LEFT", 10, 0)
+	bar.ClassIcon:SetTexture("Interface\\TargetingFrame\\UI-Classes-Circles")
+	bar.ClassIcon:SetTexCoord(unpack(CLASS_ICON_TCOORDS[class]))
+	bar.ClassIcon:SetAlpha(0.5)
+
+	local iconButton = CreateFrame("Button", nil, bar)
+	iconButton:SetAllPoints(bar.ClassIcon)
+	iconButton:SetScript("OnClick", toggleLandingPage)
+
+	bar.AreaName = bar:CreateFontString(nil, "OVERLAY")
+	bar.AreaName:SetPoint("CENTER")
+
+	applyStyle()
+end
+
+ns.setOHBVisibility = applyStyle
+ns.setOHBBGTexture = applyStyle
+ns.setOHBBGColor = applyStyle
+ns.setOHBZoneFont = applyStyle
+ns.setOHBCurrencyFont = applyStyle
+
+ns.OnInit("orderhallbar", function()
+	cfg = LolzenUIcfg.orderhallbar
+	createBar()
+
+	local options = ns.Options.New("orderhallbar", function() return LolzenUIcfg.orderhallbar end, ns.defaults.orderhallbar, applyStyle)
+	options:Header(L["background"])
+	options:Toggle("ohb_always_show", L["ohb_always_show"])
+	options:Range("ohb_height", L["height"], 10, 60, 1)
+	options:Media("ohb_background", L["texture"], "background")
+	options:Color("ohb_background_color", L["color"])
+	options:Range("ohb_background_alpha", L["alpha"], 0, 1, 0.05)
+	options:Header(L["ohb_zonetext_header"])
+	options:FontGroup("ohb_zone_font")
+	options:Color("ohb_zone_color", L["color"])
+	options:Header(L["ohb_currency_header"])
+	options:Range("ohb_currency_icon_size", L["ohb_icon_size"], 8, 48, 1)
+	options:FontGroup("ohb_currency_font")
+
+	ns.EditMode:AddFrame(bar, {
+		name = L["LolzenUI: Info Bar"],
+		pos = {
+			db = function() return LolzenUIcfg.orderhallbar end,
+			point = "ohb_anchor",
+			x = "ohb_posx",
+			y = "ohb_posy",
+		},
+		defaults = ns.defaults.orderhallbar,
+		options = options,
+	})
+	ns.EditMode:RegisterCallback("enter", applyStyle)
+	ns.EditMode:RegisterCallback("exit", applyStyle)
+
+	local events = CreateFrame("Frame")
+	for _, event in ipairs({
+		"PLAYER_ENTERING_WORLD", "ZONE_CHANGED", "ZONE_CHANGED_INDOORS", "ZONE_CHANGED_NEW_AREA",
+		"PLAYER_STARTED_MOVING", "PLAYER_STOPPED_MOVING", "PLAYER_CONTROL_LOST", "PLAYER_CONTROL_GAINED",
+		"CURRENCY_DISPLAY_UPDATE", "UI_SCALE_CHANGED", "DISPLAY_SIZE_CHANGED",
+	}) do
+		events:RegisterEvent(event)
+	end
+	events:SetScript("OnEvent", function(_, event)
+		if event == "PLAYER_STARTED_MOVING" then
+			setMoving(true)
+		elseif event == "PLAYER_CONTROL_LOST" then
+			-- taxis
+			setMoving(UnitOnTaxi("player"))
+		elseif event == "PLAYER_STOPPED_MOVING" or event == "PLAYER_CONTROL_GAINED" then
+			setMoving(false)
+		elseif event == "CURRENCY_DISPLAY_UPDATE" then
+			updateCurrencies()
+		elseif event == "UI_SCALE_CHANGED" or event == "DISPLAY_SIZE_CHANGED" then
+			applyStyle()
 		else
-			for int=counter, #currency do
-				if currency[int] then
-					currency[int].text:SetText(nil)
-					currency[int].id = nil
-					currency[int]:Hide()
-				end
+			updateArea()
+			if event == "PLAYER_ENTERING_WORLD" then
+				updateCurrencies()
 			end
 		end
-	end
-end
---hooksecurefunc("TokenFrame_Update", getCurrencies)
-
-
--- Hook into currency updates
-local currencyUpdateFrame = CreateFrame("Frame")
-currencyUpdateFrame:RegisterEvent("CURRENCY_DISPLAY_UPDATE")
-currencyUpdateFrame:SetScript("OnEvent", function()
---	if OrderHallCommandBar then  -- ADD THIS CHECK
-		getCurrencies()
---	end
+	end)
 end)
 
-local function modifyOHB()
-	if not OrderHallCommandBar then return end  -- ADD THIS CHECK
-	if OrderHallCommandBar.modded == true then return end
-	
-	OrderHallCommandBar.AreaName:SetTextColor(unpack(LolzenUIcfg.orderhallbar["ohb_zone_color"]))
-	OrderHallCommandBar.AreaName:SetFont(LSM:Fetch("font", LolzenUIcfg.orderhallbar["ohb_zone_font"]), LolzenUIcfg.orderhallbar["ohb_zone_font_size"], LolzenUIcfg.orderhallbar["ohb_zone_font_flag"])
-
-	-- Create an AG based timer to update Area text and coordinates
-	local timer = OrderHallCommandBar:CreateAnimationGroup()
-	local timerAnim = timer:CreateAnimation()
-	timerAnim:SetDuration(0.5)
-	timer:SetScript("OnFinished", function(self, requested)
-		getAreaText()
-		self:Play()
-	end)
-
-	-- hide troop info
-	OrderHallCommandBar.RefreshCategories = function() end
-	OrderHallCommandBar.RequestCategoryInfo = function() end
-				
-	OrderHallCommandBar.Background:SetTexture(LSM:Fetch("background", LolzenUIcfg.orderhallbar["ohb_background"]))
-	OrderHallCommandBar.Background:SetVertexColor(unpack(LolzenUIcfg.orderhallbar["ohb_background_color"]))
-	OrderHallCommandBar.Background:SetAlpha(LolzenUIcfg.orderhallbar["ohb_background_alpha"])
-
---	OrderHallCommandBar.WorldMapButton:Hide()
---	OrderHallCommandBar.CurrencyIcon:Hide()
---	OrderHallCommandBar.CurrencyHitTest:Hide()
---	OrderHallCommandBar.Currency:Hide()
-
-	OrderHallCommandBar:RegisterEvent("CHAT_MSG_CURRENCY")
-	OrderHallCommandBar:RegisterEvent("CURRENCY_DISPLAY_UPDATE")
-	OrderHallCommandBar:RegisterEvent("PLAYER_STARTED_MOVING")
-	OrderHallCommandBar:RegisterEvent("PLAYER_STOPPED_MOVING")
-	OrderHallCommandBar:RegisterEvent("UNIT_FLAGS")
-	OrderHallCommandBar:SetScript("OnEvent", function(self, event)
-		if event == "CHAT_MSG_CURRENCY" or event == "CURRENCY_DISPLAY_UPDATE" then
-			getCurrencies()
-		elseif event == "PLAYER_STOPPED_MOVING" then
-			timer:Stop()
-		elseif event == "PLAYER_STARTED_MOVING" then
-			timer:Play()
-		elseif event == "UNIT_FLAGS" then
-			if UnitOnTaxi("player") then
-				timer:Play()
-			else
-				timer:Stop()
-			end
-		end
-	end)
-
-	local covenantID = C_Covenants.GetActiveCovenantID()
-	local ohbframe = CreateFrame("Frame")
-	ohbframe:SetAllPoints(OrderHallCommandBar.ClassIcon)
-	ohbframe:EnableMouse(true)
-	ohbframe:SetFrameStrata("HIGH")
-	if covenantID and covenantID ~= 0 then
-		ohbframe:SetScript("OnMouseDown", function()
-			if ExpansionLandingPage and ExpansionLandingPage.ToggleLandingPage then
-				ExpansionLandingPage.ToggleLandingPage()
-			end
-		end)
-	end
-
-	--reposition BG display
-	if UIWidgetTopCenterContainerFrame then  -- ADD THIS CHECK
-		UIWidgetTopCenterContainerFrame:SetPoint("TOP", OrderHallCommandBar, "BOTTOM", 0, -10)
-	end
-
-	OrderHallCommandBar.modded = true
-
-	hooksecurefunc(OrderHallCommandBar, "Hide", function(self)
-		if LolzenUIcfg.orderhallbar["ohb_always_show"] == true then
-			self:Show()
-		end
-	end)
-end
-
-local f = CreateFrame("Frame")
-f:RegisterEvent("ADDON_LOADED")
-f:RegisterEvent("CINEMATIC_STOP")
-f:RegisterEvent("PLAYER_ENTERING_WORLD")
-f:RegisterEvent("COVENANT_CHOSEN")
-f:SetScript("OnEvent", function(self, event, addon)
-	if event == "ADDON_LOADED" then
-		if addon == "LolzenUI" then
-			if LolzenUIcfg.modules["orderhallbar"] == false then return end
---[[
-			local OrderHallClassBar = CreateFrame("Frame", "OrderHallClassBar", UIParent)
-			OrderHallClassBar:SetSize(UIParent:GetWidth(), 30)
-			OrderHallClassBar:SetPoint("TOP", UIParent, "TOP", 0, 0)
-			OrderHallClassBar:SetFrameStrata("LOW")
-				
-			-- Background
-			OrderHallClassBar.Background = OrderHallClassBar:CreateTexture(nil, "BACKGROUND")
-			OrderHallClassBar.Background:SetAllPoints()
-			OrderHallClassBar.Background:SetTexture(LSM:Fetch("background", LolzenUIcfg.orderhallbar["ohb_background"]))
-			OrderHallClassBar.Background:SetVertexColor(unpack(LolzenUIcfg.orderhallbar["ohb_background_color"]))
-			OrderHallClassBar.Background:SetAlpha(LolzenUIcfg.orderhallbar["ohb_background_alpha"])
-
-				
-			-- Class Icon
-			OrderHallClassBar.ClassIcon = OrderHallClassBar:CreateTexture(nil, "ARTWORK")
-			OrderHallClassBar.ClassIcon:SetSize(24, 24)
-			OrderHallClassBar.ClassIcon:SetPoint("LEFT", OrderHallClassBar, "LEFT", 10, 0)
-			local _, class = UnitClass("player")
-			OrderHallClassBar.ClassIcon:SetTexture("Interface\\TargetingFrame\\UI-Classes-Circles")
-			OrderHallClassBar.ClassIcon:SetTexCoord(unpack(CLASS_ICON_TCOORDS[class]))
-				
-				-- Area Name
-			OrderHallClassBar.AreaName = OrderHallClassBar:CreateFontString(nil, "OVERLAY")
-			OrderHallClassBar.AreaName:SetPoint("CENTER", OrderHallClassBar, "CENTER", 0, 0)
-]]
-			modifyOHB()
-			getCurrencies()  -- Initialize currencies after loading
-		end
-	elseif event == "CINEMATIC_STOP" or event == "PLAYER_ENTERING_WORLD" then
-		getAreaText()
-		modifyOHB()
-	elseif event == "COVENANT_CHOSEN" then
-		modifyOHB()
+ns.OnLogin("orderhallbar", function()
+	-- the default top widgets (e.g. battleground scores) go below the bar
+	if UIWidgetTopCenterContainerFrame and cfg["ohb_anchor"] == "TOP" then
+		UIWidgetTopCenterContainerFrame:SetPoint("TOP", bar, "BOTTOM", 0, -10)
 	end
 end)
-
-ns.setOHBVisibility = function()
-	if LolzenUIcfg.orderhallbar["ohb_always_show"] == true then
-		C_AddOns.LoadAddOn("Blizzard_OrderHallUI")
-		if OrderHallCommandBar then  -- ADD THIS CHECK
-			OrderHallCommandBar:Show()
-			getAreaText()
-			getCurrencies()
-		end
-	else
-		if OrderHallCommandBar then  -- ADD THIS CHECK
-			OrderHallCommandBar:Hide()
-		end
-	end
-end
-
-ns.setOHBBGTexture = function()
-	if not OrderHallCommandBar then return end  -- ADD THIS CHECK
-	OrderHallCommandBar.Background:SetTexture(LSM:Fetch("background", LolzenUIcfg.orderhallbar["ohb_background"]))
-end
-
-ns.setOHBBGColor = function()
-	if not OrderHallCommandBar then return end  -- ADD THIS CHECK
-	OrderHallCommandBar.Background:SetVertexColor(unpack(LolzenUIcfg.orderhallbar["ohb_background_color"]))
-	OrderHallCommandBar.Background:SetAlpha(LolzenUIcfg.orderhallbar["ohb_background_alpha"])
-end
-
-ns.setOHBBGAlpha = function()
-	if not OrderHallCommandBar then return end  -- ADD THIS CHECK
-	OrderHallCommandBar.Background:SetAlpha(LolzenUIcfg.orderhallbar["ohb_background_alpha"])
-end
-
-ns.setOHBZoneFontColor = function()
-	if not OrderHallCommandBar then return end  -- ADD THIS CHECK
-	OrderHallCommandBar.AreaName:SetTextColor(unpack(LolzenUIcfg.orderhallbar["ohb_zone_color"]))
-end
-
-ns.setOHBZoneFont = function()
-	if not OrderHallCommandBar then return end  -- ADD THIS CHECK
-	OrderHallCommandBar.AreaName:SetFont(LSM:Fetch("font", LolzenUIcfg.orderhallbar["ohb_zone_font"]), LolzenUIcfg.orderhallbar["ohb_zone_font_size"], LolzenUIcfg.orderhallbar["ohb_zone_font_flag"])
-end
-
-ns.setOHBCurrencyFont = function()
-	if not OrderHallCommandBar then return end  -- ADD THIS CHECK
-	for i=1, #currency do
-		if currency[i] and currency[i].text then
-			currency[i].text:SetFont(LSM:Fetch("font", LolzenUIcfg.orderhallbar["ohb_currency_font"]), LolzenUIcfg.orderhallbar["ohb_currency_font_size"], LolzenUIcfg.orderhallbar["ohb_currency_font_flag"])
-		end
-	end
-end
-
-ns.setOHBCurrenyIconSize = function()
-	if not OrderHallCommandBar then return end  -- ADD THIS CHECK
-	for i=1, #currency do
-		if currency[i] then
-			currency[i]:SetSize(LolzenUIcfg.orderhallbar["ohb_currency_icon_size"], LolzenUIcfg.orderhallbar["ohb_currency_icon_size"])
-		end
-	end
-end

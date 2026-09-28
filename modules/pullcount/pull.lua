@@ -1,209 +1,154 @@
 --// pullcount // --
+-- Plays sounds for Blizzard's countdown (/pull, DBM, BigWigs all use it nowadays)
+-- and for pull messages in the chat.
 
 local _, ns = ...
 local L = ns.L
 local LSM = LibStub("LibSharedMedia-3.0")
 
-ns.RegisterModule("pullcount", L["desc_pullcount"] , true)
+ns.RegisterModule("pullcount", L["desc_pullcount"], true)
 
-local f = CreateFrame("Frame")
-f:RegisterEvent("ADDON_LOADED")
-f:RegisterEvent("CHAT_MSG_ADDON")
+local cfg
+local ticker
+local remaining = 0
 
-local timer = f:CreateAnimationGroup()
+local FILTER_EVENTS = {
+	pull_filter_guild = {"CHAT_MSG_GUILD"},
+	pull_filter_party = {"CHAT_MSG_PARTY", "CHAT_MSG_PARTY_LEADER"},
+	pull_filter_instance = {"CHAT_MSG_INSTANCE_CHAT", "CHAT_MSG_INSTANCE_CHAT_LEADER"},
+	pull_filter_say = {"CHAT_MSG_SAY"},
+	pull_filter_channel = {"CHAT_MSG_CHANNEL"},
+}
 
-local timerAnim = timer:CreateAnimation()
-timerAnim:SetDuration(1)
-
-local isCounting = false
-local pullNum = 0
-timer:SetScript("OnFinished", function(self, requested)
-	if pullNum-1 <= LolzenUIcfg.pullcount["pull_count_range"] then
-		if LolzenUIcfg.pullcount["pull_sound_"..pullNum -1] then
-			if LolzenUIcfg.pullcount["pull_sound_"..pullNum-1] then
-				PlaySoundFile(LSM:Fetch("sound", LolzenUIcfg.pullcount["pull_sound_"..pullNum-1]), "master")
-			end
-		elseif pullNum-1 == 0 then
-			PlaySoundFile(LSM:Fetch("sound", LolzenUIcfg.pullcount["pull_sound_pull"]), "master")
-			C_Timer.After(1, function(self) isCounting = false end)
-		end
+local function playSound(key)
+	local sound = cfg[key]
+	if sound then
+		PlaySoundFile(LSM:Fetch("sound", sound), "Master")
 	end
-	if pullNum -1 ~= 0 then
-		self:Play()
-	end
-	pullNum = pullNum -1
-end)
+end
 
-local deniedicon = string.format("|T%s:%d:%d:0:0|t", "Interface\\RaidFrame\\ReadyCheck-NotReady", 20, 20)
-local function initiateOrAbortCountdown(num)
+local function playNumber(num)
 	if num == 0 then
-		isCounting = false
-		--pullNum = 0
-		timer:Stop()
-		PlaySoundFile(LSM:Fetch("sound", LolzenUIcfg.pullcount["pull_sound_abort"]), "master")
-		-- cancel timer
-		TimerTracker_OnEvent(TimerTracker, "PLAYER_ENTERING_WORLD")
-		-- alert that the timer has been stopped
-		RaidNotice_AddMessage(RaidBossEmoteFrame, deniedicon.."  |cffff0000PULL ABORTED|r   "..deniedicon, ChatTypeInfo["RAID_BOSS_EMOTE"])
-	else
-		if isCounting == true then return end
-		isCounting = true
-		if LolzenUIcfg.pullcount["pull_sound_"..num] then
-			PlaySoundFile(LSM:Fetch("sound", LolzenUIcfg.pullcount["pull_sound_"..num]), "master")
-		end
-		pullNum = num
-		timer:Play()
-		TimerTracker_OnEvent(TimerTracker, "START_TIMER", 2, num, num)
+		playSound("pull_sound_pull")
+	elseif num <= cfg["pull_count_range"] then
+		playSound("pull_sound_"..num)
 	end
 end
 
-f:SetScript("OnEvent", function(self, event, ...)
-	local arg1 = ...
-	if event == "ADDON_LOADED" and arg1 == "Blizzard_ChallengesUI" then
-		if LolzenUIcfg.modules["pullcount"] == false then return end
-		-- set the framestrata to LOW so the TimerTracker numbers aren't hidden
-		ChallengesKeystoneFrame:SetFrameStrata("LOW")
-	elseif event == "ADDON_LOADED" and arg1 == "LolzenUI" then
-		if LolzenUIcfg.modules["pullcount"] == false then return end
-		-- Register BigWigs and DBM prefixes so we can get their pullcounters too
-		-- but only if we don't run them already
-		if not C_AddOns.IsAddOnLoaded("BigWigs") then
-			C_ChatInfo.RegisterAddonMessagePrefix("BigWigs")
-		end
-		if not C_AddOns.IsAddOnLoaded("DBM-Core") then
-			C_ChatInfo.RegisterAddonMessagePrefix("D4")
-		end
+local function stopCountdown()
+	if ticker then
+		ticker:Cancel()
+		ticker = nil
+	end
+end
 
+local function tick()
+	remaining = remaining - 1
+	playNumber(remaining)
+	if remaining <= 0 then
+		stopCountdown()
+	end
+end
 
-		local filter = function(frame, event, message, ...)
-			if isCounting == true then return end
-			for i = 1, LolzenUIcfg.pullcount["pull_count_range"] do
-				local msg = LolzenUIcfg.pullcount["pull_msg_count"]
-				msg = string.gsub(msg, "!n", i)
-				if message:match(msg) then
-					PlaySoundFile(LSM:Fetch("sound", LolzenUIcfg.pullcount["pull_sound_"..i]), "master")
-				end
-			end
-			if message:match(LolzenUIcfg.pullcount["pull_msg_now"]) then
-				PlaySoundFile(LSM:Fetch("sound", LolzenUIcfg.pullcount["pull_sound_pull"]), "master")
-			end
-		end
-		LolzenUI_FilterFuc = filter
+local function startCountdown(seconds)
+	stopCountdown()
+	remaining = math.floor(seconds + 0.5)
+	playNumber(remaining)
+	if remaining > 0 then
+		ticker = C_Timer.NewTicker(1, tick, remaining)
+	end
+end
 
-		if LolzenUIcfg.pullcount["pull_filter_channel"] == true then
-			ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", filter)
+local DENIED = "|TInterface\\RaidFrame\\ReadyCheck-NotReady:20:20:0:0|t"
+local function abortCountdown()
+	if not ticker then return end
+	stopCountdown()
+	playSound("pull_sound_abort")
+	RaidNotice_AddMessage(RaidBossEmoteFrame, DENIED.."  |cffff0000"..L["PULL ABORTED"].."|r  "..DENIED, ChatTypeInfo["RAID_BOSS_EMOTE"])
+end
+
+-- pull messages of people without DBM/BigWigs
+local function chatFilter(_, _, message)
+	if ticker or ns.IsSecret(message) or type(message) ~= "string" then return end
+	local countMsg = cfg["pull_msg_count"]
+	for i = 1, cfg["pull_count_range"] do
+		if message:find((countMsg:gsub("!n", i)), 1, true) then
+			playSound("pull_sound_"..i)
+			return
 		end
-		if LolzenUIcfg.pullcount["pull_filter_guild"] == true then
-			ChatFrame_AddMessageEventFilter("CHAT_MSG_GUILD", filter)
-		end
-		if LolzenUIcfg.pullcount["pull_filter_party"] == true then
-			ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY", filter)
-			ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY_LEADER", filter)
-		end
-		if LolzenUIcfg.pullcount["pull_filter_instance"] == true then
-			ChatFrame_AddMessageEventFilter("CHAT_MSG_INSTANCE", filter)
-			ChatFrame_AddMessageEventFilter("CHAT_MSG_INSTANCE_LEADER", filter)
-		end
-		if LolzenUIcfg.pullcount["pull_filter_say"] == true then
-			ChatFrame_AddMessageEventFilter("CHAT_MSG_SAY", filter)
-		end
-	elseif event == "CHAT_MSG_ADDON" then
-		if LolzenUIcfg.modules["pullcount"] == false then return end
-		if C_AddOns.IsAddOnLoaded("DBM-Core") or C_AddOns.IsAddOnLoaded("BigWigs") then return end
-		
-		local prefix, msg, channel, sender = ...
-		--print(prefix)
-		if prefix == "BigWigs" then
-			local bwPrefix, bwMsg, extra = strsplit("^", msg)
-			--print(bwPrefix)
-			
-			if bwPrefix == "P" and bwMsg == "Pull" then
-				--print("recieved pull timer from BigWigs :"..tonumber(extra))
-				initiateOrAbortCountdown(tonumber(extra))
-			end
-		elseif prefix == "D4" then
-			local dbmPrefix, time, _, _, _ = strsplit("\t", msg)
-			
-			if dbmPrefix == "PT" then
-				--print("recieved pull timer from DBM : "..tonumber(time))
-				initiateOrAbortCountdown(tonumber(time))
+	end
+	if message:find(cfg["pull_msg_now"], 1, true) then
+		playSound("pull_sound_pull")
+	end
+end
+
+local function applyFilters()
+	for key, events in pairs(FILTER_EVENTS) do
+		for _, event in ipairs(events) do
+			if cfg[key] then
+				ChatFrame_AddMessageEventFilter(event, chatFilter)
+			else
+				ChatFrame_RemoveMessageEventFilter(event, chatFilter)
 			end
 		end
 	end
+end
+
+-- compatibility with the old option callbacks
+ns.setPCMsgFilterGuild = applyFilters
+ns.setPCMsgFilterParty = applyFilters
+ns.setPCMsgFilterInstance = applyFilters
+ns.setPCMsgFilterSay = applyFilters
+ns.setPCMsgFilterCustom = applyFilters
+
+local function onEvent(_, event, ...)
+	if event == "START_PLAYER_COUNTDOWN" then
+		local _, timeRemaining = ...
+		startCountdown(timeRemaining)
+	elseif event == "CANCEL_PLAYER_COUNTDOWN" then
+		abortCountdown()
+	elseif event == "ADDON_LOADED" and ... == "Blizzard_ChallengesUI" then
+		-- keep the countdown numbers above the keystone frame
+		ChallengesKeystoneFrame:SetFrameStrata("LOW")
+	end
+end
+
+ns.OnInit("pullcount", function()
+	cfg = LolzenUIcfg.pullcount
+	applyFilters()
+
+	local events = CreateFrame("Frame")
+	pcall(events.RegisterEvent, events, "START_PLAYER_COUNTDOWN")
+	pcall(events.RegisterEvent, events, "CANCEL_PLAYER_COUNTDOWN")
+	events:RegisterEvent("ADDON_LOADED")
+	events:SetScript("OnEvent", onEvent)
+
+	local options = ns.Options.New("pullcount", function() return LolzenUIcfg.pullcount end, ns.defaults.pullcount, applyFilters)
+	options:Header(L["count_play_sound_from"])
+	options:Toggle("pull_filter_guild", L["count_guild"])
+	options:Toggle("pull_filter_party", L["count_party"])
+	options:Toggle("pull_filter_instance", L["count_instance"])
+	options:Toggle("pull_filter_say", L["count_say"])
+	options:Toggle("pull_filter_channel", L["count_custom_channels"])
+	options:Header(L["count_custom_message_to_react_header"])
+	options:Text("pull_msg_count", L["count_countdown_message"]):SetDesc(L["count_!n_represents"])
+	options:Text("pull_msg_now", L["count_file_pull"])
+	options:Header(L["count_range_header"])
+	options:Range("pull_count_range", L["count_range"], 1, 10, 1)
+	for i = 1, 10 do
+		options:Media("pull_sound_"..i, L["count_file"].." "..i, "sound")
+	end
+	options:Media("pull_sound_pull", L["count_file_pull"], "sound")
+	options:Media("pull_sound_abort", L["count_file_abort"], "sound")
+	ns.SettingsPanel:AddCategory("pullcount", options)
 end)
 
-local function SendPull(num)
-	if IsInGroup(LE_PARTY_CATEGORY_INSTANCE) then
-		C_ChatInfo.SendAddonMessage("D4", "PT\t"..num, "INSTANCE_CHAT") --DBM
-		--C_ChatInfo.SendAddonMessage("BigWigs", "P^Pull^"..num, "INSTANCE_CHAT") --BigWigs
-	elseif IsInGroup(LE_PARTY_CATEGORY_HOME) then
-		C_ChatInfo.SendAddonMessage("D4", "PT\t"..num, "PARTY") --DBM
-		--C_ChatInfo.SendAddonMessage("BigWigs", "P^Pull^"..num, "PARTY") --BigWigs
-	else
-		C_ChatInfo.SendAddonMessage("D4", "PT\t"..num, "WHISPER", UnitName("player")) --DBM
-		--C_ChatInfo.SendAddonMessage("BigWigs", "P^Pull^"..num, "WHISPER", UnitName("player")) --BigWigs
+ns.OnLogin("pullcount", function()
+	-- DBM and BigWigs bring their own /pull
+	if SlashCmdList["PULL"] or C_AddOns.IsAddOnLoaded("DBM-Core") or C_AddOns.IsAddOnLoaded("BigWigs") then return end
+	SLASH_LOLZENUI_PULL1 = "/pull"
+	SlashCmdList["LOLZENUI_PULL"] = function(msg)
+		local seconds = tonumber(msg) or cfg["pull_count_range"]
+		C_PartyInfo.DoCountdown(seconds)
 	end
-end
-
--- Disable the /pull command if either DBM or BigWigs are running, else use our /pull slashcommand
-if C_AddOns.IsAddOnLoaded("DBM-Core") or C_AddOns.IsAddOnLoaded("BigWigs") then
-	--do nothing
-else
-	SLASH_PULL1 = "/pull"
-	SlashCmdList["PULL"] = function(num)
-		if LolzenUIcfg.modules["pullcount"] == false then return end
-		
-		if num and type(num) == "string" then
-			--print(num)
-			if num == "" then
-				SendPull(LolzenUIcfg.pullcount["pull_count_range"])
-			else
-				SendPull(num)
-			end
-		end
-	end
-end
-
-ns.setPCMsgFilterGuild = function()
-	if LolzenUIcfg.pullcount["pull_filter_guild"] == true then
-		ChatFrame_AddMessageEventFilter("CHAT_MSG_GUILD", LolzenUI_FilterFuc)
-	elseif LolzenUIcfg.pullcount["pull_filter_guild"] == false then
-		ChatFrame_RemoveMessageEventFilter("CHAT_MSG_GUILD", LolzenUI_FilterFuc)
-	end
-end
-
-ns.setPCMsgFilterParty = function()
-	if LolzenUIcfg.pullcount["pull_filter_party"] == true then
-		ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY", LolzenUI_FilterFuc)
-		ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY_LEADER", LolzenUI_FilterFuc)
-	elseif LolzenUIcfg.pullcount["pull_filter_party"] == false then
-		ChatFrame_RemoveMessageEventFilter("CHAT_MSG_PARTY", LolzenUI_FilterFuc)
-		ChatFrame_RemoveMessageEventFilter("CHAT_MSG_PARTY_LEADER", LolzenUI_FilterFuc)
-	end
-end
-
-ns.setPCMsgFilterInstance = function()
-	if LolzenUIcfg.pullcount["pull_filter_instance"] == true then
-		ChatFrame_AddMessageEventFilter("CHAT_MSG_INSTANCE", LolzenUI_FilterFuc)
-		ChatFrame_AddMessageEventFilter("CHAT_MSG_INSTANCE_LEADER", LolzenUI_FilterFuc)
-	elseif LolzenUIcfg.pullcount["pull_filter_instance"] == false then
-		ChatFrame_RemoveMessageEventFilter("CHAT_MSG_INSTANCE", LolzenUI_FilterFuc)
-		ChatFrame_RemoveMessageEventFilter("CHAT_MSG_INSTANCE_LEADER", LolzenUI_FilterFuc)
-	end
-end
-
-ns.setPCMsgFilterSay = function()
-	if LolzenUIcfg.pullcount["pull_filter_say"] == true then
-		ChatFrame_AddMessageEventFilter("CHAT_MSG_SAY", LolzenUI_FilterFuc)
-	elseif LolzenUIcfg.pullcount["pull_filter_say"] == false then
-		ChatFrame_RemoveMessageEventFilter("CHAT_MSG_SAY", LolzenUI_FilterFuc)
-	end
-end
-
-ns.setPCMsgFilterCustom = function()
-	if LolzenUIcfg.pullcount["pull_filter_channel"] == true then
-		ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", LolzenUI_FilterFuc)
-	elseif LolzenUIcfg.pullcount["pull_filter_channel"] == false then
-		ChatFrame_RemoveMessageEventFilter("CHAT_MSG_CHANNEL", LolzenUI_FilterFuc)
-	end
-end
+end)

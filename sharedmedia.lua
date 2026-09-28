@@ -1,4 +1,4 @@
-﻿--// sharedmedia //--
+--// sharedmedia //--
 -- standard textures, fonts, sounds, etc from LolzenUI
 
 local LSM = LibStub("LibSharedMedia-3.0")
@@ -7,7 +7,7 @@ local LBT = LibStub("LibButtonTexture-1.0")
 -- fonts
 LSM:Register("font", "DroidSans", [[Interface\Addons\LolzenUI\fonts\DroidSans.ttf]])
 LSM:Register("font", "DroidSansBold", [[Interface\Addons\LolzenUI\fonts\DroidSansBold.ttf]])
-LSM:Register("font", "Semplice Regular", [[Interface\Addons\LolzenUI\fonts\SEMPRG.ttf]])
+LSM:Register("font", "Semplice Regular", [[Interface\Addons\LolzenUI\fonts\SEMPRG.TTF]])
 
 -- borders
 LSM:Register("border", "LolzenUI Standard", [[Interface\Addons\LolzenUI\media\border]])
@@ -80,3 +80,9 @@ LBT:Register("buff", "LolzenUI Standard", [[Interface\Addons\LolzenUI\media\aura
 
 --debuff
 LBT:Register("debuff", "LolzenUI Standard", [[Interface\Addons\LolzenUI\media\debuffborder]])
+
+-- outline style (matches ns.Outline)
+LBT:Register("border", "LolzenUI Outline", [[Interface\Addons\LolzenUI\media\button-normal]])
+LBT:Register("border", "LolzenUI Outline Gloss", [[Interface\Addons\LolzenUI\media\button-gloss]])
+LBT:Register("buff", "LolzenUI Outline", [[Interface\Addons\LolzenUI\media\button-normal]])
+LBT:Register("debuff", "LolzenUI Outline", [[Interface\Addons\LolzenUI\media\aura-debuff]])

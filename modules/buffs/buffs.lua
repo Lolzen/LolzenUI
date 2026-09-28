@@ -1,373 +1,199 @@
 --// buffs // --
+-- Skins Blizzard's buff/debuff frames. Size and layout are handled by the Edit Mode,
+-- the skin options are attached to the buff frame dialog in the Edit Mode.
 
 local _, ns = ...
 local L = ns.L
-local LSM = LibStub("LibSharedMedia-3.0")
 local LBT = LibStub("LibButtonTexture-1.0")
 
 ns.RegisterModule("buffs", L["desc_buffs"], true)
 
--- Cache frequently used functions for performance
-local format = string.format
-local ipairs = ipairs
-local GetTime = GetTime
-local C_Timer = C_Timer
+local format, floor = string.format, math.floor
 
--- Throttling variables for CPU optimization
-local updateTimer = 0
-local FULL_UPDATE_INTERVAL = 0.2 -- Full update every 200ms
-local DURATION_UPDATE_INTERVAL = 0.1 -- Duration updates every 100ms
-local lastFullUpdate = 0
-local lastDurationUpdate = 0
+local cfg
+local containers = {}
 
--- Store styled buttons to avoid repeated styling
-local styledButtons = {}
-local hookedContainers = {}
+local function formatTime(seconds)
+	if seconds >= 172800 then
+		return format("%dd", floor(seconds / 86400 + 0.5))
+	elseif seconds >= 3600 then
+		return format("%d:%02d", floor(seconds / 3600), floor(seconds % 3600 / 60))
+	elseif seconds >= 60 then
+		return format("%d:%02d", floor(seconds / 60), floor(seconds % 60))
+	elseif seconds > 4 then
+		return format("%d", floor(seconds + 0.5))
+	end
+	return format("|cffffff00%.1f|r", seconds)
+end
 
-local f = CreateFrame("Frame")
-f:RegisterEvent("ADDON_LOADED")
-f:RegisterEvent("UNIT_AURA")
-f:SetScript("OnEvent", function(self, event, addon, unit)
-	if event == "ADDON_LOADED" and addon == "LolzenUI" then
-		if LolzenUIcfg.modules["buffs"] == false then return end
+-- Blizzard updates the duration text itself; this only replaces it with a more detailed format
+local function updateDuration(button, timeLeft)
+	if not cfg["buff_duration_detailed"] then return end
+	local duration = button.Duration
+	if not duration or timeLeft == nil or ns.IsSecret(timeLeft) then return end
+	if timeLeft > 0 then
+		duration:SetText(formatTime(timeLeft))
+	else
+		duration:SetText("")
+	end
+end
 
-		-- Optimized time formatting with caching
-		local timeCache = {}
-		local function GetFormattedTime(seconds)
-			if seconds <= 0 then return "" end
-			
-			-- Use cached result if available (reduces string operations)
-			local key = math.floor(seconds * 10) / 10 -- Round to 1 decimal
-			if timeCache[key] then
-				return timeCache[key]
-			end
-			
-			local result
-			if seconds >= 86400 then 
-				result = format("|cffffffff%.1fd|r", seconds/86400)
-			elseif seconds >= 3600 then 
-				result = format("|cffffffff%.2fh|r", seconds/3600)
-			elseif seconds >= 60 then 
-				result = format("|cffffffff%d:%02d|r", seconds/60, seconds%60)
-			else
-				result = format("|cffffffff%ds|r", seconds)
-			end
-			
-			timeCache[key] = result
-			-- Clear cache periodically to prevent memory buildup
-			if math.random(1, 100) == 1 then
-				wipe(timeCache)
-			end
-			
-			return result
-		end
-
-		-- Optimized duration update with throttling
-		local function UpdateDuration(self, timeLeft)
-			if not self.Duration then return end
-			
-			if LolzenUIcfg.buffs["buff_duration_detailed"] == true then
-				if timeLeft and timeLeft > 0 then
-					self.Duration:SetText(GetFormattedTime(timeLeft))
-					if not self.durationPositioned then
-						self.Duration:ClearAllPoints()
-						self.Duration:SetPoint(
-							LolzenUIcfg.buffs["buff_duration_anchor1"], 
-							self, 
-							LolzenUIcfg.buffs["buff_duration_anchor2"], 
-							LolzenUIcfg.buffs["buff_duration_posx"], 
-							LolzenUIcfg.buffs["buff_duration_posy"] + 7
-						)
-						self.durationPositioned = true
-					end
-				else
-					self.Duration:SetText("")
-				end
-			else
-				self.Duration:SetText(SecondsToTimeAbbrev(timeLeft or 0))
-			end
-		end
-
-		-- Optimized container update hook with throttling
-		local function HookAuraContainerUpdate(container)
-			if hookedContainers[container] then return end
-			
-			hooksecurefunc(container, "UpdateGridLayout", function(self, auras, ...)
-				local currentTime = GetTime()
-				
-				-- Throttle full updates
-				if currentTime - lastFullUpdate < FULL_UPDATE_INTERVAL then
-					return
-				end
-				lastFullUpdate = currentTime
-				
-				if not auras then return end
-				
-				for i = 1, #auras do
-					local aura = auras[i]
-					if aura and not aura.hook then
-						if aura.UpdateDuration then
-							hooksecurefunc(aura, "UpdateDuration", UpdateDuration)
-							aura.hook = true
-						end
-					end
-				end
-			end)
-			
-			hookedContainers[container] = true
-		end
-
-		-- Apply hooks to containers
-		if BuffFrame and BuffFrame.AuraContainer then
-			HookAuraContainerUpdate(BuffFrame.AuraContainer)
-		end
-		if DebuffFrame and DebuffFrame.AuraContainer then
-			HookAuraContainerUpdate(DebuffFrame.AuraContainer)
-		end
-
-		-- Optimized aura styling with memoization
-		local function StyleAuras(button)
-			if not button or styledButtons[button] then return end
-			
-			-- Icon texture coordinates
-			if button.Icon and button.Icon.SetTexCoord then
-				button.Icon:SetTexCoord(0.1, 0.9, 0.1, 0.9)
-			end
-	
-			-- Duration font styling
-			if button.Duration and button.Duration.SetFont then
-				button.Duration:SetFont(
-					LSM:Fetch("font", LolzenUIcfg.buffs["buff_duration_font"]), 
-					LolzenUIcfg.buffs["buff_duration_font_size"], 
-					LolzenUIcfg.buffs["buff_duration_font_flag"]
-				)
-				button.Duration:SetDrawLayer("OVERLAY")
-				button.durationPositioned = false -- Reset positioning flag
-			end
-
-			-- Count styling
-			if button.Count then
-				button.Count:ClearAllPoints()
-				button.Count:SetPoint(
-					LolzenUIcfg.buffs["buff_counter_anchor"], 
-					button, 
-					LolzenUIcfg.buffs["buff_counter_posx"], 
-					LolzenUIcfg.buffs["buff_counter_posy"]
-				)
-				button.Count:SetFont(
-					LSM:Fetch("font", LolzenUIcfg.buffs["buff_counter_font"]), 
-					LolzenUIcfg.buffs["buff_counter_size"], 
-					LolzenUIcfg.buffs["buff_counter_font_flag"]
-				)
-				button.Count:SetDrawLayer("OVERLAY")
-			end
-
-			styledButtons[button] = true
-		end
-
-		-- Optimized debuff styling
-		local function StyleDebuffs(button)
-			if not button or button.styled then return end
-			
-			if button.DebuffBorder then
-				local texture = LBT:Fetch("debuff", LolzenUIcfg.buffs["buff_debuff_texture"])
-				if button.DebuffBorder:GetTexture() ~= texture then
-					button.DebuffBorder:SetParent(button)
-					button.DebuffBorder:SetTexture(texture)
-					button.DebuffBorder:SetPoint("TOPLEFT", button, "TOPLEFT", -2, 2)
-					button.DebuffBorder:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 2, 7)
-					button.DebuffBorder:SetTexCoord(0, 1, 0, 1)
-				end
-			end
-			button.styled = true
-		end
-		
-		-- Optimized buff styling
-		local function StyleBuffs(button)
-			if not button or button.styled then return end
-			
-			if not button.border then
-				button.border = button:CreateTexture(nil, "BORDER")
-			end
-			
-			local texture = LBT:Fetch("buff", LolzenUIcfg.buffs["buff_aura_texture"])
-			if button.border:GetTexture() ~= texture then
-				button.border:SetTexture(texture)
-				
-				if LolzenUIcfg.buffs["buff_aura_texture"] == "Blizzard QuickSlot2" then
-					button.border:SetPoint("TOPLEFT", button, "TOPLEFT", -10, 10)
-					button.border:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 10, -1)
-					button.border:SetVertexColor(1, 1, 1, 1)
-				else
-					button.border:SetPoint("TOPLEFT", button, "TOPLEFT", -2, 2)
-					button.border:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 2, 7)
-					button.border:SetVertexColor(0, 0, 0, 1)
-				end
-				button.border:SetDrawLayer("OVERLAY")
-			end
-			button.styled = true
-		end
-
-		-- Batch styling function with error protection
-		local function StyleAllAuras()
-			-- Style buff buttons
-			if BuffFrame and BuffFrame.AuraContainer then
-				local buffChildren = {BuffFrame.AuraContainer:GetChildren()}
-				for i = 1, #buffChildren do
-					local button = buffChildren[i]
-					if button then
-						StyleAuras(button)
-						StyleBuffs(button)
-					end
-				end
-			end
-			
-			-- Style debuff buttons
-			if DebuffFrame and DebuffFrame.AuraContainer then
-				local debuffChildren = {DebuffFrame.AuraContainer:GetChildren()}
-				for i = 1, #debuffChildren do
-					local button = debuffChildren[i]
-					if button then
-						StyleAuras(button)
-						StyleDebuffs(button)
-					end
-				end
-			end
-		end
-
-		-- Initial styling
-		StyleAllAuras()
-		
-		-- Periodic styling update with throttling
-		local function PeriodicUpdate()
-			local currentTime = GetTime()
-			if currentTime - lastDurationUpdate >= DURATION_UPDATE_INTERVAL then
-				StyleAllAuras()
-				lastDurationUpdate = currentTime
-			end
-		end
-		
-		-- Use C_Timer for more efficient periodic updates
-		C_Timer.NewTicker(DURATION_UPDATE_INTERVAL, PeriodicUpdate)
-			
-		-- Hide UI elements
-		if BuffFrame and BuffFrame.CollapseAndExpandButton then
-			BuffFrame.CollapseAndExpandButton:SetAlpha(0)
-			BuffFrame.CollapseAndExpandButton:EnableMouse(false)
-		end
-
-		-- Hide private anchors
-		if DebuffFrame then
-			if DebuffFrame.privateAuraAnchor1 then
-				DebuffFrame.privateAuraAnchor1:Hide()
-			end
-			if DebuffFrame.privateAuraAnchor2 then
-				DebuffFrame.privateAuraAnchor2:Hide()
-			end
-		end
-		
-		-- Unregister ADDON_LOADED after initialization
-		self:UnregisterEvent("ADDON_LOADED")
-		
-	elseif event == "UNIT_AURA" and unit == "player" then
-		-- Only update on player aura changes and throttle updates
-		local currentTime = GetTime()
-		if currentTime - lastFullUpdate >= FULL_UPDATE_INTERVAL then
-			StyleAllAuras()
-			lastFullUpdate = currentTime
-		end
+local function styleBorder(button, isDebuff)
+	local icon = button.Icon
+	if isDebuff then
+		local border = button.DebuffBorder
+		if not border then return end
+		border:SetTexture(LBT:Fetch("debuff", cfg["buff_debuff_texture"]))
+		border:SetTexCoord(0, 1, 0, 1)
+		border:ClearAllPoints()
+		border:SetPoint("TOPLEFT", icon, "TOPLEFT", -2, 2)
+		border:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", 2, -2)
+		return
 	end
 
-	ns.SetBuffAuraTexture = function()
-			for _, button in ipairs({ BuffFrame.AuraContainer:GetChildren() }) do
-				if not button then return end
+	local border = button.LolzenBorder
+	if not border then
+		border = button:CreateTexture(nil, "OVERLAY")
+		button.LolzenBorder = border
+	end
+	local texture = cfg["buff_aura_texture"]
+	border:SetTexture(LBT:Fetch("buff", texture))
+	border:ClearAllPoints()
+	if texture == "Blizzard QuickSlot2" then
+		border:SetPoint("TOPLEFT", icon, "TOPLEFT", -10, 10)
+		border:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", 10, -10)
+		border:SetVertexColor(1, 1, 1, 1)
+	else
+		border:SetPoint("TOPLEFT", icon, "TOPLEFT", -2, 2)
+		border:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", 2, -2)
+		border:SetVertexColor(0, 0, 0, 1)
+	end
+end
 
-				if not button.border then
-					button.border = button:CreateTexture(nil, "BORDER")
-					button.border:SetTexture(LBT:Fetch("buff", LolzenUIcfg.buffs["buff_aura_texture"]))
-				else
-					button.border:SetTexture(LBT:Fetch("buff", LolzenUIcfg.buffs["buff_aura_texture"]))
-				end
-				
-				if LolzenUIcfg.buffs["buff_aura_texture"] == "Blizzard QuickSlot2" then
-					button.border:SetPoint("TOPLEFT", button, "TOPLEFT", -10, 10)
-					button.border:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 10, -1)
-					button.border:SetVertexColor(1, 1, 1, 1)
-				else
-					button.border:SetPoint("TOPLEFT", button, "TOPLEFT", -2, 2)
-					button.border:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 2, 7)
-					button.border:SetVertexColor(0, 0, 0, 1)
-				end
+local function styleText(button)
+	local duration = button.Duration
+	if duration then
+		ns.SetFont(duration, cfg["buff_duration_font"], cfg["buff_duration_font_size"], cfg["buff_duration_font_flag"])
+		duration:SetDrawLayer("OVERLAY")
+		duration:ClearAllPoints()
+		duration:SetPoint(cfg["buff_duration_anchor1"], button.Icon, cfg["buff_duration_anchor2"], cfg["buff_duration_posx"], cfg["buff_duration_posy"])
+	end
+
+	local count = button.Count
+	if count then
+		ns.SetFont(count, cfg["buff_counter_font"], cfg["buff_counter_size"], cfg["buff_counter_font_flag"])
+		count:SetDrawLayer("OVERLAY")
+		count:ClearAllPoints()
+		count:SetPoint(cfg["buff_counter_anchor"], button.Icon, cfg["buff_counter_posx"], cfg["buff_counter_posy"])
+	end
+end
+
+local function styleButton(button, isDebuff)
+	if not button.Icon then return end
+	if not button.lolzenStyled then
+		button.lolzenStyled = true
+		button.Icon:SetTexCoord(0.1, 0.9, 0.1, 0.9)
+		if button.UpdateDuration then
+			hooksecurefunc(button, "UpdateDuration", updateDuration)
+		end
+	end
+	styleText(button)
+	styleBorder(button, isDebuff)
+end
+
+local function styleContainer(container, auras)
+	local isDebuff = containers[container]
+	if auras then
+		for i = 1, #auras do
+			local aura = auras[i]
+			if aura and not aura.lolzenStyled then
+				styleButton(aura, isDebuff)
 			end
 		end
+	end
+end
 
-		ns.SetBuffDebuffTexture = function()
-			for _, button in ipairs({ DebuffFrame.AuraContainer:GetChildren() }) do
-				if not button then return end
+local function forEachButton(func)
+	for container, isDebuff in pairs(containers) do
+		local children = {container:GetChildren()}
+		for i = 1, #children do
+			func(children[i], isDebuff)
+		end
+	end
+end
 
-				if button.DebuffBorder then
-					button.DebuffBorder:SetParent(button)
-					button.DebuffBorder:SetTexture(LBT:Fetch("debuff", LolzenUIcfg.buffs["buff_debuff_texture"]))
-					button.DebuffBorder:SetPoint("TOPLEFT", button, "TOPLEFT", -2, 2)
-					button.DebuffBorder:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 2, 7)
-					button.DebuffBorder:SetTexCoord(0, 1, 0, 1)
-				end
+local function refreshAll()
+	forEachButton(styleButton)
+end
+
+local function applyVisibility()
+	local collapse = BuffFrame and BuffFrame.CollapseAndExpandButton
+	if collapse then
+		local hide = cfg["buff_hide_collapse"]
+		collapse:SetAlpha(hide and 0 or 1)
+		collapse:EnableMouse(not hide)
+	end
+	if DebuffFrame then
+		-- private auras are shown by Blizzard (important boss mechanics), only the anchors are hidden
+		for _, key in ipairs({"privateAuraAnchor1", "privateAuraAnchor2"}) do
+			local anchor = DebuffFrame[key]
+			if anchor then
+				anchor:SetAlpha(cfg["buff_hide_private_anchors"] and 0 or 1)
 			end
 		end
+	end
+end
 
-		ns.SetBuffDurationPosition = function()
-			for _, button in ipairs({ BuffFrame.AuraContainer:GetChildren() }) do
-				if not button then return end
+-- kept for compatibility with old option callbacks
+ns.SetBuffAuraTexture = refreshAll
+ns.SetBuffDebuffTexture = refreshAll
+ns.SetBuffDurationPosition = refreshAll
+ns.SetBuffDurationFont = refreshAll
+ns.SetBuffCounterPosition = refreshAll
+ns.SetBuffCounterFont = refreshAll
 
-				button.Duration:ClearAllPoints()
-				button.Duration:SetPoint(LolzenUIcfg.buffs["buff_duration_anchor1"], button, LolzenUIcfg.buffs["buff_duration_anchor2"], LolzenUIcfg.buffs["buff_duration_posx"], LolzenUIcfg.buffs["buff_duration_posy"])
-			end
-			for _, button in ipairs({ DebuffFrame.AuraContainer:GetChildren() }) do
-				if not button then return end
+ns.OnInit("buffs", function()
+	cfg = LolzenUIcfg.buffs
 
-				button.Duration:ClearAllPoints()
-				button.Duration:SetPoint(LolzenUIcfg.buffs["buff_duration_anchor1"], button, LolzenUIcfg.buffs["buff_duration_anchor2"], LolzenUIcfg.buffs["buff_duration_posx"], LolzenUIcfg.buffs["buff_duration_posy"])
-			end
+	local options = ns.Options.New("buffs", function() return LolzenUIcfg.buffs end, ns.defaults.buffs, function()
+		refreshAll()
+		applyVisibility()
+	end)
+	options:Header(L["buff_duration_header"])
+	options:Toggle("buff_duration_detailed", L["buff_detailed_duration_text"])
+	options:FontGroup("buff_duration_font")
+	options:Anchor("buff_duration_anchor1", L["anchor"])
+	options:Anchor("buff_duration_anchor2", L["parent"])
+	options:Range("buff_duration_posx", L["PosX"], -50, 50, 1)
+	options:Range("buff_duration_posy", L["PosY"], -50, 50, 1)
+	options:Header(L["buff_counter_header"])
+	options:Font("buff_counter_font")
+	options:Range("buff_counter_size", L["size"], 4, 40, 1)
+	options:Flag("buff_counter_font_flag")
+	options:PointGroup("buff_counter_anchor", "buff_counter_posx", "buff_counter_posy", nil, 50)
+	options:Header(L["border"])
+	options:ButtonTexture("buff_aura_texture", L["buff_and_tempench_texture"], "buff")
+	options:ButtonTexture("buff_debuff_texture", L["debuff_texture"], "debuff")
+	options:Toggle("buff_hide_collapse", L["Hide the collapse button"])
+	options:Toggle("buff_hide_private_anchors", L["Hide the private aura anchors"])
+
+	if not ns.EditMode:AddSystemSettings({"AuraFrame", "BuffFrame", "Auras"}, options) then
+		ns.SettingsPanel:AddCategory("buffs", options)
+	end
+end)
+
+ns.OnLogin("buffs", function()
+	if BuffFrame and BuffFrame.AuraContainer then
+		containers[BuffFrame.AuraContainer] = false
+	end
+	if DebuffFrame and DebuffFrame.AuraContainer then
+		containers[DebuffFrame.AuraContainer] = true
+	end
+	for container in pairs(containers) do
+		if container.UpdateGridLayout then
+			hooksecurefunc(container, "UpdateGridLayout", styleContainer)
 		end
-
-		ns.SetBuffDurationFont = function()
-			for _, button in ipairs({ BuffFrame.AuraContainer:GetChildren() }) do
-				if not button then return end
-
-				button.Duration:SetFont(LSM:Fetch("font", LolzenUIcfg.buffs["buff_duration_font"]), LolzenUIcfg.buffs["buff_duration_font_size"], LolzenUIcfg.buffs["buff_duration_font_flag"])
-			end
-			for _, button in ipairs({ DebuffFrame.AuraContainer:GetChildren() }) do
-				if not button then return end
-
-				button.Duration:SetFont(LSM:Fetch("font", LolzenUIcfg.buffs["buff_duration_font"]), LolzenUIcfg.buffs["buff_duration_font_size"], LolzenUIcfg.buffs["buff_duration_font_flag"])
-			end
-		end
-
-		ns.SetBuffCounterPosition = function()
-			for _, button in ipairs({ BuffFrame.AuraContainer:GetChildren() }) do
-				if not button then return end
-
-				button.Count:ClearAllPoints()
-				button.Count:SetPoint(LolzenUIcfg.buffs["buff_counter_anchor"], button, LolzenUIcfg.buffs["buff_counter_posx"], LolzenUIcfg.buffs["buff_counter_posy"])
-			end
-			for _, button in ipairs({ DebuffFrame.AuraContainer:GetChildren() }) do
-				if not button then return end
-
-				button.Count:ClearAllPoints()
-				button.Count:SetPoint(LolzenUIcfg.buffs["buff_counter_anchor"], button, LolzenUIcfg.buffs["buff_counter_posx"], LolzenUIcfg.buffs["buff_counter_posy"])
-			end
-		end
-
-		ns.SetBuffCounterFont = function()
-			for _, button in ipairs({ BuffFrame.AuraContainer:GetChildren() }) do
-				if not button then return end
-
-				button.Count:SetFont(LSM:Fetch("font", LolzenUIcfg.buffs["buff_counter_font"]), LolzenUIcfg.buffs["buff_counter_size"], LolzenUIcfg.buffs["buff_counter_font_flag"])
-			end
-			for _, button in ipairs({ DebuffFrame.AuraContainer:GetChildren() }) do
-				if not button then return end
-
-				button.Count:SetFont(LSM:Fetch("font", LolzenUIcfg.buffs["buff_counter_font"]), LolzenUIcfg.buffs["buff_counter_size"], LolzenUIcfg.buffs["buff_counter_font_flag"])
-			end
-		end
+	end
+	refreshAll()
+	applyVisibility()
 end)

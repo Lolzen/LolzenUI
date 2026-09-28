@@ -1,4 +1,5 @@
 --// tooltip // --
+-- The default tooltip position is handled by the Edit Mode ("HUD Tooltip").
 
 local _, ns = ...
 local L = ns.L
@@ -6,621 +7,415 @@ local LSM = LibStub("LibSharedMedia-3.0")
 
 ns.RegisterModule("tooltip", L["desc_tooltip"], true)
 
--- Cache frequently used globals and functions for better performance
-local UnitExists, UnitName, UnitClass, UnitRace, UnitLevel = UnitExists, UnitName, UnitClass, UnitRace, UnitLevel
-local UnitIsPlayer, UnitIsPVP, UnitIsAFK, UnitIsDND, UnitIsConnected = UnitIsPlayer, UnitIsPVP, UnitIsAFK, UnitIsDND, UnitIsConnected
-local UnitReaction, UnitClassification, UnitCreatureType = UnitReaction, UnitClassification, UnitCreatureType
-local UnitFactionGroup, UnitIsInMyGuild, UnitIsFriend = UnitFactionGroup, UnitIsInMyGuild, UnitIsFriend
-local GetGuildInfo, GetRaidTargetIndex, GetZonePVPInfo = GetGuildInfo, GetRaidTargetIndex, GetZonePVPInfo
-local GetItemQualityColor, GetQuestDifficultyColor = C_Item.GetItemQualityColor, GetQuestDifficultyColor
-local GetSpecializationInfoByID, GetInspectSpecialization = GetSpecializationInfoByID, GetInspectSpecialization
-local RAID_CLASS_COLORS, FACTION_BAR_COLORS = RAID_CLASS_COLORS, FACTION_BAR_COLORS
-local string_format, string_gsub, string_sub, string_lower = string.format, string.gsub, string.sub, string.lower
-local select, unpack, type, pairs = select, unpack, type, pairs
+local format = string.format
+local cfg
+local skinned = {}
+local factionBG, raidIcon
+local targetWatcher
 
--- Safe function to get tooltip line text
-local function getTooltipLineText(lineNum)
-	local line = _G["GameTooltipTextLeft" .. lineNum]
-	return line and line:GetText() or nil
-end
+local MOB_TYPE = {
+	normal = "",
+	worldboss = " Boss",
+	rareelite = " + Rare",
+	rare = " Rare",
+	elite = " +",
+	trivial = " Trivial",
+	minus = " -",
+}
 
--- Safe function to set tooltip line text
-local function setTooltipLineText(lineNum, text)
-	local line = _G["GameTooltipTextLeft" .. lineNum]
-	if line then
-		line:SetText(text)
+local FACTION_ICONS = {
+	Alliance = "Interface\\Timer\\Alliance-Logo",
+	Horde = "Interface\\Timer\\Horde-Logo",
+}
+
+--[[ skin ]]-------------------------------------------------------------------
+
+local function setBorderColor(tooltip, r, g, b)
+	local outline = tooltip.LolzenOutline
+	if cfg["tip_outline"] and outline then
+		outline:SetColor(r, g, b)
+	elseif tooltip.SetBackdropBorderColor then
+		tooltip:SetBackdropBorderColor(r, g, b)
 	end
 end
 
--- Safe function to set tooltip line color
-local function setTooltipLineColor(lineNum, r, g, b)
-	local line = _G["GameTooltipTextLeft" .. lineNum]
-	if line and r and g and b then
-		line:SetTextColor(r, g, b)
+local function resetBorder(tooltip)
+	if not skinned[tooltip] then return end
+	tooltip:SetBackdropColor(0, 0, 0, 1)
+	if cfg["tip_outline"] and tooltip.LolzenOutline then
+		tooltip.LolzenOutline:ResetColor()
+	else
+		tooltip:SetBackdropBorderColor(1, 1, 1)
 	end
 end
 
--- Safe function to get/set right side tooltip text
-local function getTooltipRightText(lineNum)
-	local line = _G["GameTooltipTextRight" .. lineNum]
-	return line and line:GetText() or nil
+local function applySkin(tooltip)
+	if not skinned[tooltip] then
+		skinned[tooltip] = true
+		if not tooltip.SetBackdrop then
+			Mixin(tooltip, BackdropTemplateMixin)
+			tooltip:HookScript("OnSizeChanged", tooltip.OnBackdropSizeChanged)
+		end
+		hooksecurefunc(tooltip, "SetOwner", resetBorder)
+	end
+
+	local useOutline = cfg["tip_outline"]
+	tooltip:SetBackdrop({
+		bgFile = "Interface\\Buttons\\WHITE8x8",
+		edgeFile = not useOutline and LSM:Fetch("border", cfg["tip_border"]) or nil,
+		tileEdge = true,
+		edgeSize = 16,
+		insets = {left = 3, right = 3, top = 3, bottom = 3},
+	})
+	if useOutline then
+		ns.Outline.Create(tooltip, {size = 18, padding = 1})
+	end
+	if tooltip.LolzenOutline then
+		tooltip.LolzenOutline:SetShown(useOutline)
+	end
+	if tooltip.NineSlice then
+		tooltip.NineSlice:SetAlpha(0)
+	end
+	resetBorder(tooltip)
 end
 
-local function setTooltipRightText(lineNum, text)
-	local line = _G["GameTooltipTextRight" .. lineNum]
-	if line then
-		line:SetText(text)
-		line:Show()
+local function skinAll()
+	for _, name in ipairs({"GameTooltip", "ItemRefTooltip", "ShoppingTooltip1", "ShoppingTooltip2", "ItemRefShoppingTooltip1", "ItemRefShoppingTooltip2", "EmbeddedItemTooltip"}) do
+		local tooltip = _G[name]
+		if tooltip then
+			applySkin(tooltip)
+		end
+	end
+	GameTooltipStatusBar:SetStatusBarTexture(LSM:Fetch("statusbar", cfg["tip_healthbar_texture"]))
+end
+
+--[[ units ]]------------------------------------------------------------------
+
+local specIcons = {}
+local function buildSpecIcons()
+	for classID = 1, GetNumClasses() do
+		for specIndex = 1, GetNumSpecializationsForClassID(classID) do
+			local _, name, _, icon = GetSpecializationInfoForClassID(classID, specIndex)
+			if name and icon then
+				specIcons[name] = icon
+			end
+		end
 	end
 end
 
-local function hideTooltipRightText(lineNum)
-	local line = _G["GameTooltipTextRight" .. lineNum]
-	if line then
-		line:Hide()
-	end
+local function line(i)
+	return _G["GameTooltipTextLeft"..i]
 end
 
-local f = CreateFrame("Frame")
-f:RegisterEvent("ADDON_LOADED")
-f:SetScript("OnEvent", function(self, event, addon)
-	if addon == "LolzenUI" then
-		if LolzenUIcfg.modules["tooltip"] == false then return end
+-- the text of a tooltip line, nil if it isn't accessible (12.0 secret values)
+local function lineText(i)
+	local fontString = line(i)
+	local text = fontString and fontString:GetText()
+	if text == nil or ns.IsSecret(text) then return end
+	return text
+end
 
-		local tooltips = {
-			-- general tooltips
-			GameTooltip,
-			ItemRefTooltip,
-			-- shopping tooltips
-			ShoppingTooltip1,
-			ShoppingTooltip2,
-			ShoppingTooltip3,
-			--General
-			WorldMapTooltip,
-		--	EmbeddedItemTooltip,
-		--	ItemRefShoppingTooltip1,
-		--	ItemRefShoppingTooltip2,
-		}
+local function colorHex(r, g, b, text)
+	return format("|cff%02x%02x%02x%s|r", r * 255, g * 255, b * 255, text)
+end
 
-		--9.1.5 fix
-		for i=1, #tooltips do
-			if not tooltips[i].SetBackdrop then
-				Mixin(tooltips[i], BackdropTemplateMixin)
-			end
+local function classColor(unit)
+	local _, class = UnitClass(unit)
+	local color = class and RAID_CLASS_COLORS[class]
+	if color then
+		return color.r, color.g, color.b
+	end
+	return 0.5, 0.5, 0.5
+end
+
+local function reactionColor(unit)
+	local reaction = UnitReaction(unit, "player")
+	if not reaction then return 0.5, 0.5, 0.5 end
+	if ns.IsModuleEnabled("miscellaneous") and LolzenUIcfg.miscellaneous["misc_alternative_faction_colors"] then
+		local color = LolzenUIcfg.miscellaneous["misc_faction_colors"][reaction]
+		if color then
+			return color[1], color[2], color[3]
 		end
+	end
+	local color = FACTION_BAR_COLORS[reaction]
+	if color then
+		return color.r, color.g, color.b
+	end
+	return 0.5, 0.5, 0.5
+end
 
-		-- overwrite tooltip styles
-		local tt_style = {
-			bgFile = "Interface\\Buttons\\WHITE8x8",
-			edgeFile = LSM:Fetch("border", LolzenUIcfg.tooltip["tip_border"]),
-			tile = false,
-			tileEdge = true,
-			tileSize = 16,
-			edgeSize = 16,
-			insets = { left = 3, right = 3, top = 3, bottom = 3 },
+local function unitColor(unit)
+	if UnitIsPlayer(unit) then
+		return classColor(unit)
+	end
+	return reactionColor(unit)
+end
 
-			backdropBorderColor = CreateColor(1, 1, 1),
-			backdropColor = CreateColor(0, 0, 0),
-		}
+local function coloredLevel(unit)
+	local level = UnitLevel(unit)
+	if level == -1 then
+		return "|cffff0000??|r"
+	end
+	local color = GetQuestDifficultyColor(level)
+	return colorHex(color.r, color.g, color.b, level)
+end
 
-		-- customize the mobClassification
-		local mobType = {
-			["normal"] = "",
-			["worldboss"] = " Boss",
-			["rareelite"] = " + Rare",
-			["rare"] = " Rare",
-			["elite"] = " +",
-			["trivial"] = "Trivial",
-			["minus"] = " -",
-		}
+local function statusFlag(unit)
+	local key
+	if UnitIsAFK(unit) then
+		key = "tip_statusflag_afk"
+	elseif UnitIsDND(unit) then
+		key = "tip_statusflag_dnd"
+	elseif not UnitIsConnected(unit) then
+		key = "tip_statusflag_off"
+	else
+		return ""
+	end
+	local r, g, b = ns.RGB(cfg[key.."_color"])
+	return colorHex(r, g, b, cfg[key]).." "
+end
 
-		-- faction icons
-		local factionIcons = {
-			["Alliance"] = "Interface\\Timer\\Alliance-Logo",
-			["Horde"] = "Interface\\Timer\\Horde-Logo",
-		}
+local function pvpFlag(unit)
+	if not UnitIsPVP(unit) then return "" end
+	local _, instanceType = IsInInstance()
+	if instanceType == "pvp" or instanceType == "arena" or GetZonePVPInfo() == "combat" then
+		return ""
+	end
+	return "|cff00ff00(PvP)|r "
+end
 
-		-- faction icon
-		local factionbg = GameTooltip:CreateTexture("GameTooltFactionBackground", "BACKGROUND")
-		factionbg:SetSize(64, 64)
-		factionbg:SetPoint("RIGHT", GameTooltip, "TOPLEFT", 32, -4)
-		factionbg:SetDrawLayer("BACKGROUND", -8)
-
-		-- raidicon on the tooltip, because why not
-		local ricon = GameTooltip:CreateTexture("GameTooltipRaidIcon", "OVERLAY")
-		ricon:SetSize(18, 18)
-		ricon:SetPoint("TOP", GameTooltip, "TOP", 0, 5)
-
-		-- make the Healthbar sweet
-		GameTooltipStatusBar:ClearAllPoints()
-		GameTooltipStatusBar:SetPoint("BOTTOMLEFT", 5, 4)
-		GameTooltipStatusBar:SetPoint("BOTTOMRIGHT", -5, 4)
-		GameTooltipStatusBar:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.tooltip["tip_healthbar_texture"]))
-		GameTooltipStatusBar:SetStatusBarColor(0.3, 0.9, 0.3, 1)
-		GameTooltipStatusBar:SetHeight(2)
-		
-		-- Build spec name to icon lookup table
-		local specIconLookup = {}
-		local function buildSpecLookup()
-			for classID = 1, GetNumClasses() do
-				local _, classFile = GetClassInfo(classID)
-				if classFile then
-					local numSpecs = GetNumSpecializationsForClassID(classID)
-					for specIndex = 1, numSpecs do
-						local specID, name, _, icon = GetSpecializationInfoForClassID(classID, specIndex)
-						if name and icon then
-							-- Store both localized name and icon
-							specIconLookup[name] = icon
-						end
-					end
-				end
-			end
-		end
-		buildSpecLookup()
-		
-		-- return the unit which is mouseovered
-		local function getTooltipUnit()
-			-- Use modern tooltip data API
-			local tooltipData = GameTooltip:GetTooltipData()
-			if tooltipData and tooltipData.type == Enum.TooltipDataType.Unit then
-				return tooltipData.guid and UnitTokenFromGUID(tooltipData.guid) or nil
-			end
-			
-			-- Fallback to old method
-			local _, unit = GameTooltip:GetUnit()
-			return unit
-		end
-
-		-- return the unitClassColor values
-		local function getClassColor(unit)
-			if not unit or not UnitExists(unit) then return 0.5, 0.5, 0.5 end
-			
-			local _, classToken = UnitClass(unit)
-			if classToken then
-				local classColor = RAID_CLASS_COLORS[classToken]
-				if classColor then
-					return classColor.r, classColor.g, classColor.b
-				end
-			end
-			return 0.5, 0.5, 0.5 -- fallback gray
-		end
-
-		-- return the unitReactionColor values
-		local function getReactionColor(unit)
-			if not unit or not UnitExists(unit) then return 0.5, 0.5, 0.5 end
-			
-			local reaction = UnitReaction(unit, "player")
-			if not reaction then return 0.5, 0.5, 0.5 end
-			
-			if LolzenUIcfg.modules["miscellaneous"] and LolzenUIcfg.miscellaneous["misc_alternative_faction_colors"] then
-				local reactioncolor = LolzenUIcfg.miscellaneous["misc_faction_colors"][reaction]
-				if reactioncolor then
-					return reactioncolor[1], reactioncolor[2], reactioncolor[3]
-				end
-			end
-			
-			local reactioncolor = FACTION_BAR_COLORS[reaction]
-			if reactioncolor then
-				return reactioncolor.r, reactioncolor.g, reactioncolor.b
-			end
-			
-			return 0.5, 0.5, 0.5 -- fallback
-		end
-
-		-- return hex value of color values and the unitname
-		local function getColorHexUnit(unit, r, g, b)
-			if not unit or not UnitExists(unit) then return "" end
-			
-			local unitName = UnitName(unit)
-			if not unitName then return "" end
-			
-			if r and g and b then
-				return string_format("|cff%02x%02x%02x%s|r", r*255, g*255, b*255, unitName)
+local function updateTarget(unit)
+	local right = _G["GameTooltipTextRight1"]
+	local target = unit.."target"
+	if cfg["tip_show_target"] and UnitExists(target) then
+		local text
+		if UnitIsUnit(target, "player") then
+			text = "|cffffffff[YOU]|r"
+		else
+			local name = UnitName(target)
+			if ns.IsSecret(name) then
+				text = name
 			else
-				return string_format("|cff888888%s|r", unitName)
+				local r, g, b = unitColor(target)
+				text = colorHex(r, g, b, name)
 			end
 		end
+		right:SetText("|cffffffff>>|r "..text)
+		right:Show()
+	else
+		right:SetText("")
+		right:Hide()
+	end
+	GameTooltip:AppendText("")
+end
 
-		-- return a questdifficulty inspired colored level
-		local function getColorizedLevel(unit)
-			if not unit or not UnitExists(unit) then return "" end
-			
-			local level = UnitLevel(unit)
-			if not level then return "" end
-			
-			if level == -1 then
-				return "|cffff0000??|r"
-			else
-				local diff = GetQuestDifficultyColor(level)
-				if diff then
-					return string_format("|cff%02x%02x%02x%d|r", diff.r*255, diff.g*255, diff.b*255, level)
-				else
-					return tostring(level)
-				end
-			end
-		end
-
-		-- return the unitclassification
-		local function getMobType(unit)
-			if not unit or not UnitExists(unit) then return "" end
-			
-			local classification = UnitClassification(unit)
-			return mobType[classification] or classification or ""
-		end
-
-		-- return the StatusFlag aka AFK, DND or offline
-		local function getStatusFlag(unit)
-			if not unit or not UnitExists(unit) then return "" end
-			
-			if UnitIsAFK(unit) then
-				local r, g, b = unpack(LolzenUIcfg.tooltip["tip_statusflag_afk_color"])
-				return ("|cff%02x%02x%02x%s ".."|r "):format(r*255, g*255, b*255, LolzenUIcfg.tooltip["tip_statusflag_afk"])
-			elseif UnitIsDND(unit) then
-				local r, g, b = unpack(LolzenUIcfg.tooltip["tip_statusflag_dnd_color"])
-				return ("|cff%02x%02x%02x%s ".."|r "):format(r*255, g*255, b*255, LolzenUIcfg.tooltip["tip_statusflag_dnd"])
-			elseif not UnitIsConnected(unit) then
-				local r, g, b = unpack(LolzenUIcfg.tooltip["tip_statusflag_off_color"])
-				return ("|cff%02x%02x%02x%s ".."|r "):format(r*255, g*255, b*255, LolzenUIcfg.tooltip["tip_statusflag_off"])
-			end
-			return "" 
-		end
-
-		-- colorize tooltipBorder accordingly to itemQuality
-		local function colorItemQuality(self)
-			if not self or not self.SetBackdrop then 
-				Mixin(self, BackdropTemplateMixin) 
-			end
-			
-			local tooltipData = self:GetTooltipData()
-			if tooltipData and tooltipData.type == Enum.TooltipDataType.Item then
-				local itemID = tooltipData.id
-				if itemID then
-					local itemQuality = C_Item.GetItemQualityByID(itemID)
-					if itemQuality then
-						local r, g, b = GetItemQualityColor(itemQuality)
-						if r and g and b then
-							self:SetBackdropBorderColor(r, g, b)
-						end
-					end
-				end
-			end
-		end
-
-		-- colorize tooltipborder accordingly to Azerite Essence rank
-		local function colorEssenceQuality(self)
-			if not self then return end
-			
-			local firstLineText = getTooltipLineText(1)
-			if not firstLineText then return end
-			
-			local selectedEssenceRank = string.gsub(firstLineText, "[%a%p%s]", "")
-			local rankNum = tonumber(selectedEssenceRank)
-			if rankNum then
-				local r, g, b = GetItemQualityColor(rankNum + 1)
-				if r and g and b then
-					self:SetBackdropBorderColor(r, g, b)
-				end
-			end
-		end
-
-		-- colorize tooltipborder accordingly to Azerite EssenceSlot rank
-		local function colorEssenceSlotQuality(self)
-			if not self or not C_AzeriteEssence then return end
-			
-			local firstLineText = getTooltipLineText(1)
-			if not firstLineText then return end
-			
-			local selectedEssenceName = string.gsub(firstLineText, " %b()", "")
-			local essences = C_AzeriteEssence.GetEssences()
-			if not essences or type(essences) ~= "table" then return end
-			
-			for _, slot in pairs(essences) do
-				local essence = C_AzeriteEssence.GetEssenceInfo(slot.ID)
-				if essence and selectedEssenceName == essence.name then
-					local r, g, b = GetItemQualityColor(essence.rank + 1)
-					if r and g and b then
-						self:SetBackdropBorderColor(r, g, b)
-					end
-				end
-			end
-		end
-
-		--- Add spec icon based on text matching
-local function addSpecIconByText()
-	if not LolzenUIcfg.tooltip["tip_display_talents"] then return end
-	
-	local unit = getTooltipUnit()
-	if not unit or not UnitExists(unit) then return end
-	
-	local raceName = UnitRace(unit)
-	
-	for i = 1, GameTooltip:NumLines() do
-		local lineText = getTooltipLineText(i)
-		if lineText and not lineText:find("^" .. LEVEL) and not lineText:find("|T") then
-			-- Skip if line contains race name
-			if not raceName or not lineText:find(raceName) then
-				-- Check each spec name in our lookup table
-				for specName, icon in pairs(specIconLookup) do
-					if lineText:find(specName) then
-						-- Found a match! Add the icon
-						setTooltipLineText(i, string_format("|T%s:16:16:0:0|t %s", icon, lineText))
-						return -- Only add one icon per tooltip
-					end
+local function addSpecIcon(unit)
+	local race = UnitRace(unit)
+	for i = 2, GameTooltip:NumLines() do
+		local text = lineText(i)
+		if text and not text:find("|T", 1, true) and not (race and text:find(race, 1, true)) then
+			for name, icon in pairs(specIcons) do
+				if text:find(name, 1, true) then
+					line(i):SetFormattedText("|T%s:16:16:0:0|t %s", icon, text)
+					return
 				end
 			end
 		end
 	end
 end
 
-		-- return the alternative PvP flag
-		local function getPvPflag(unit)
-			if not unit or not UnitExists(unit) or not UnitIsPVP(unit) then return "" end
-			
-			local _, instanceType = IsInInstance()
-			if instanceType == "pvp" or instanceType == "arena" or GetZonePVPInfo() == "combat" then
-				return ""
-			end
-			
-			return "|cff00ff00(PvP)|r "
+local function modifyUnit(tooltip, unit)
+	-- the tooltip can switch from one unit to another without being hidden
+	raidIcon:SetTexture(nil)
+	factionBG:SetTexture(nil)
+
+	local name = UnitName(unit)
+	if ns.IsSecret(name) then return end
+	local isPlayer = UnitIsPlayer(unit)
+	local r, g, b = unitColor(unit)
+	setBorderColor(tooltip, r, g, b)
+
+	if isPlayer then
+		line(1):SetText(pvpFlag(unit)..statusFlag(unit)..colorHex(r, g, b, name))
+
+		-- guild name
+		local guild = GetGuildInfo(unit)
+		if guild and (cfg["tip_use_guild_color_globally"] or UnitIsInMyGuild(unit)) then
+			line(2):SetTextColor(ns.RGB(cfg["tip_own_guild_color"]))
 		end
-		
-		-- return the target of the mouseovetarget on the tooltip
-		local function getUnitTarget(unit)
-			if not unit or not UnitExists(unit .. "target") then return "" end
-			
-			if UnitIsPlayer(unit .. "target") then
-				if UnitName(unit .. "target") == UnitName("player") then
-					return "|cffffffff[YOU]|r"
-				else
-					return getColorHexUnit(unit .. "target", getClassColor(unit .. "target"))
-				end
+	else
+		line(1):SetText(pvpFlag(unit)..colorHex(r, g, b, name))
+	end
+
+	-- level line
+	for i = 2, GameTooltip:NumLines() do
+		local text = lineText(i)
+		if text and text:find(LEVEL, 1, true) == 1 then
+			if isPlayer then
+				line(i):SetText(("%s %s %s"):format(coloredLevel(unit), UnitRace(unit) or "", UnitClass(unit) or ""))
 			else
-				return getColorHexUnit(unit .. "target", getReactionColor(unit .. "target"))
+				line(i):SetText(("%s%s %s"):format(coloredLevel(unit), MOB_TYPE[UnitClassification(unit)] or "", UnitCreatureType(unit) or ""))
 			end
+		elseif text == PVP_ENABLED then
+			line(i):SetText("")
 		end
+	end
 
-		-- function which can be called to show/hide the unit's target
-		local function showUT(unit)
-			if unit and UnitExists(unit .. "target") then
-				setTooltipRightText(1, "|cffffffff>>|r" .. getUnitTarget(unit))
-				GameTooltip:AppendText("")
-			else
-				hideTooltipRightText(1)
-				GameTooltip:AppendText("")
-			end
+	if isPlayer and cfg["tip_display_talents"] then
+		addSpecIcon(unit)
+	end
+
+	if cfg["tip_show_raidmark"] then
+		local index = GetRaidTargetIndex(unit)
+		if index and not ns.IsSecret(index) then
+			raidIcon:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcon_"..index)
 		end
+	end
+	if cfg["tip_show_factionicons"] then
+		local faction = UnitFactionGroup(unit)
+		factionBG:SetTexture(faction and FACTION_ICONS[faction])
+	end
 
-		-- general tooltip modifications
-		local function modifyTooltip(tooltip, tooltipData)
-			local unit = getTooltipUnit()
-			if not unit or not UnitExists(unit) then return end
+	updateTarget(unit)
+end
 
-			-- Safe check for self parameter
-			local self = tooltip or GameTooltip
-			if not self then return end
+local function onUnitTooltip(tooltip)
+	if tooltip ~= GameTooltip then return end
+	local _, unit = tooltip:GetUnit()
+	if not unit or ns.IsSecret(unit) then return end
+	-- restricted (secret) unit information raises errors; keep the default tooltip in that case
+	pcall(modifyUnit, tooltip, unit)
+	targetWatcher.unit = unit
+	targetWatcher:RegisterEvent("UNIT_TARGET")
+end
 
-			-- colorize TooltipBorder accordingly to classColor or UnitReaction
-			if UnitIsPlayer(unit) then
-				-- colorize the tooltip border with classcolor
-				local r, g, b = getClassColor(unit)
-				if r and g and b then
-					self:SetBackdropBorderColor(r, g, b)
-				end
-				
-				-- colorize the unit's name and add the alternative PvP flag
-				local coloredName = getColorHexUnit(unit, r, g, b)
-				local statusFlag = getStatusFlag(unit)
-				local pvpFlag = getPvPflag(unit)
-				
-				setTooltipLineText(1, pvpFlag .. statusFlag .. coloredName)
-				
-				-- colorize the guild name if it's the same as the Player's
-				-- or color any guild if the option is set
-				if GetGuildInfo(unit) then
-					local secondLineText = getTooltipLineText(2)
-					if secondLineText then
-						if UnitIsInMyGuild(unit) and LolzenUIcfg.tooltip["tip_use_guild_color_globally"] == false then
-							if secondLineText:find("^" .. GetGuildInfo("player")) then
-								setTooltipLineColor(2, unpack(LolzenUIcfg.tooltip["tip_own_guild_color"]))
-							end
-						elseif LolzenUIcfg.tooltip["tip_use_guild_color_globally"] == true then
-							setTooltipLineColor(2, unpack(LolzenUIcfg.tooltip["tip_own_guild_color"]))
-						end
-					end
-				end
+--[[ items & spells ]]---------------------------------------------------------
 
-				-- alter the appearance of level, race & class
-				for i = 1, GameTooltip:NumLines(), 1 do
-					local lineText = getTooltipLineText(i)
-					if lineText and lineText:find("^" .. LEVEL) then
-						local raceText = UnitRace(unit) or ""
-						local classText = UnitClass(unit) or ""
-						setTooltipLineText(i, getColorizedLevel(unit) .. " " .. raceText .. " " .. classText)
-					end
-				end
-				
-				-- Add spec icon by matching text
-				addSpecIconByText()
-			else
-				-- colorize the tooltip border with unitreaction
-				local r, g, b = getReactionColor(unit)
-				if r and g and b then
-					self:SetBackdropBorderColor(r, g, b)
-				end
-				
-				-- colorize the unit's name and add the alternative PvP flag
-				setTooltipLineText(1, getPvPflag(unit) .. getColorHexUnit(unit, getReactionColor(unit)))
-				
-				-- alter the appearance of level, race & class
-				for i = 1, GameTooltip:NumLines(), 1 do
-					local lineText = getTooltipLineText(i)
-					if lineText and lineText:find("^" .. LEVEL) then
-						local creatureType = UnitCreatureType(unit) or ""
-						setTooltipLineText(i, getColorizedLevel(unit) .. getMobType(unit) .. " " .. creatureType)
-					end
-				end
-			end
+local function setTitleIcon(tooltip, icon)
+	local title = _G[tooltip:GetName().."TextLeft1"]
+	local text = title and title:GetText()
+	if not text or ns.IsSecret(text) or text:find("|T", 1, true) then return end
+	title:SetFormattedText("|T%s:16:16:0:0|t %s", icon, text)
+end
 
-			-- hide the PvP line
-			if UnitIsPVP(unit) then
-				for i = 2, GameTooltip:NumLines(), 1 do
-					local lineText = getTooltipLineText(i)
-					if lineText and lineText:find(PVP_ENABLED) then
-						setTooltipLineText(i, nil)
-					end
-				end
-			end
+local function addID(tooltip, label, id)
+	if not cfg["tip_show_ids"] or not id or ns.IsSecret(id) then return end
+	tooltip:AddLine(("|cff888888%s:|r |cffffffff%d|r"):format(label, id))
+	tooltip:Show()
+end
 
-			-- set the raidIcon on the tooltip or hide it
-			if LolzenUIcfg.tooltip["tip_show_raidmark"] == true then
-				local raidTargetIndex = GetRaidTargetIndex(unit)
-				if raidTargetIndex then
-					ricon:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcon_" .. raidTargetIndex)
-				end
-			end
-
-			-- show a background texture of the faction
-			if LolzenUIcfg.tooltip["tip_show_factionicons"] == true then
-				local factionGroup = UnitFactionGroup(unit)
-				if factionGroup and factionIcons[factionGroup] then
-					factionbg:SetTexture(factionIcons[factionGroup])
-				end
-			end
-			
-			-- call the target of target function to get the target from the mouseover unit
-			showUT(unit)
+local function onItemTooltip(tooltip, data)
+	if not data or not data.id or not tooltip.GetName then return end
+	local quality = C_Item.GetItemQualityByID(data.id)
+	if quality then
+		setBorderColor(tooltip, C_Item.GetItemQualityColor(quality))
+	end
+	if cfg["tip_show_icons"] then
+		local icon = C_Item.GetItemIconByID(data.id)
+		if icon then
+			setTitleIcon(tooltip, icon)
 		end
+	end
+	addID(tooltip, L["Item ID"], data.id)
+end
 
-		-- [hooks and scripts]
-		-- anchor
-		hooksecurefunc("GameTooltip_SetDefaultAnchor", function(tooltip, parent)
-			if parent == "ANCHOR_CURSOR" then return end
-			-- fix 8.2 out of screen bug (thanks oUF)
-			if not pcall(tooltip.GetCenter, tooltip) then
-				tooltip:SetOwner(parent, "ANCHOR_CURSOR")
-			else
-				tooltip:ClearAllPoints()
-				tooltip:SetPoint(LolzenUIcfg.tooltip["tip_anchor1"], UIParent, LolzenUIcfg.tooltip["tip_anchor2"], LolzenUIcfg.tooltip["tip_posx"], LolzenUIcfg.tooltip["tip_posy"])
+local function onSpellTooltip(tooltip, data)
+	if not data or not data.id or not tooltip.GetName then return end
+	if cfg["tip_show_icons"] then
+		local icon = C_Spell.GetSpellTexture(data.id)
+		if icon then
+			setTitleIcon(tooltip, icon)
+		end
+	end
+	addID(tooltip, L["Spell ID"], data.id)
+end
+
+--[[ init ]]-------------------------------------------------------------------
+
+ns.setTTBorder = skinAll
+ns.setTTHBTexture = skinAll
+
+ns.OnInit("tooltip", function()
+	cfg = LolzenUIcfg.tooltip
+	buildSpecIcons()
+
+	factionBG = GameTooltip:CreateTexture(nil, "BACKGROUND", nil, -8)
+	factionBG:SetSize(64, 64)
+	factionBG:SetPoint("RIGHT", GameTooltip, "TOPLEFT", 32, -4)
+
+	raidIcon = GameTooltip:CreateTexture(nil, "OVERLAY")
+	raidIcon:SetSize(18, 18)
+	raidIcon:SetPoint("TOP", GameTooltip, "TOP", 0, 5)
+
+	GameTooltipStatusBar:ClearAllPoints()
+	GameTooltipStatusBar:SetPoint("BOTTOMLEFT", 5, 4)
+	GameTooltipStatusBar:SetPoint("BOTTOMRIGHT", -5, 4)
+	GameTooltipStatusBar:SetStatusBarColor(0.3, 0.9, 0.3, 1)
+	GameTooltipStatusBar:SetHeight(2)
+
+	skinAll()
+	if SharedTooltip_SetBackdropStyle then
+		-- Blizzard re-applies its own style on some tooltips
+		hooksecurefunc("SharedTooltip_SetBackdropStyle", function(tooltip)
+			if skinned[tooltip] and tooltip.NineSlice then
+				tooltip.NineSlice:SetAlpha(0)
 			end
 		end)
-
-		-- styling for units
-		TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Unit, modifyTooltip)
-
-		-- Azerite Essences
-		if C_AzeriteEssence then
-			hooksecurefunc(GameTooltip, "SetAzeriteEssence", colorEssenceQuality)
-			hooksecurefunc(GameTooltip, "SetAzeriteEssenceSlot", colorEssenceSlotQuality)
-			hooksecurefunc("SharedTooltip_SetBackdropStyle", colorEssenceSlotQuality)
-		end
-
-		-- clear textures when the tooltip is hidden
-		GameTooltip:HookScript("OnHide", function(self)
-			if LolzenUIcfg.tooltip["tip_show_raidmark"] == true then
-				if ricon:GetTexture() ~= nil then
-					ricon:SetTexture(nil)
-				end
-			end
-			if LolzenUIcfg.tooltip["tip_show_factionicons"] == true then
-				if factionbg:GetTexture() ~= nil then
-					factionbg:SetTexture(nil)
-				end
-			end
-		end)
-
-		-- set the background color
-		local function colorBG(self)
-			if not self then return end
-			self:SetBackdropColor(0, 0, 0, 1)
-			self:SetBackdropBorderColor(1, 1, 1, 1)
-			if self.NineSlice then
-				self.NineSlice:SetAlpha(0)
-			end
-		end
-
-		-- add icon to the tooltip (original code taken from Tipachu by Tuller)
-		local function setTooltipIcon(self, icon)
-			if not self or not icon then return end
-			
-			local title = _G[self:GetName() .. 'TextLeft1']
-			if title then
-				local currentText = title:GetText()
-				if currentText and not currentText:find("|T") then -- Don't add icon if already present
-					title:SetFormattedText('|T%s:16:16:0:0|t %s', icon, currentText)
-				end
-			end
-		end
-
-		local function setTTIconItem(tooltip, tooltipData)
-			if not tooltip or not tooltipData then return end
-			
-			if tooltipData.type == Enum.TooltipDataType.Item and tooltipData.id then
-				local icon = C_Item.GetItemIconByID(tooltipData.id)
-				if icon then
-					setTooltipIcon(tooltip, icon)
-				end
-			end
-		end
-
-		local function setTTIconSpell(tooltip, tooltipData)
-			if not tooltip or not tooltipData then return end
-			
-			if tooltipData.type == Enum.TooltipDataType.Spell and tooltipData.id then
-				local icon = C_Spell.GetSpellTexture(tooltipData.id)
-				if icon then
-					setTooltipIcon(tooltip, icon)
-				end
-			end
-		end
-
-		for i=1, #tooltips, 1 do
-			if tooltips[i] then
-				tooltips[i]:SetBackdrop(tt_style)
-				hooksecurefunc(tooltips[i], "SetOwner", colorBG)
-			end
-		end
-
-		-- also modify more tooltip types
-		TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Unit, modifyTooltip)
-		TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, colorItemQuality)
-		TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, setTTIconItem)
-		TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Spell, setTTIconSpell)
-
-		-- update target of mouseovertarget when UNIT_TARGET was fired (the target is changed)
-		function GameTooltip:UNIT_TARGET()
-			showUT(getTooltipUnit())
-		end
-
-		-- register the tooltip with UNIT_TARGET event, which fires when a unit switches the target
-		GameTooltip:RegisterEvent("UNIT_TARGET")
-		GameTooltip:SetScript("OnEvent", function(self, event, ...) 
-			if not self[event] then return end 
-			self[event](self, event, ...) 
-		end)
-
-		ns.setTTBorder = function()
-			-- reapply the tooltip "skin"
-			tt_style = {
-				bgFile = "Interface\\Buttons\\WHITE8x8",
-				edgeFile = LSM:Fetch("border", LolzenUIcfg.tooltip["tip_border"]),
-				tile = false,
-				tileEdge = true,
-				tileSize = 16,
-				edgeSize = 16,
-				insets = { left = 3, right = 3, top = 3, bottom = 3 },
-
-				backdropBorderColor = CreateColor(1, 1, 1),
-				backdropColor = CreateColor(0, 0, 0),
-			}
-			for i=1, #tooltips, 1 do
-				if tooltips[i] then
-					tooltips[i]:SetBackdrop(tt_style)
-				end
-			end
-		end
-
-		ns.setTTHBTexture = function()
-			GameTooltipStatusBar:SetStatusBarTexture(LSM:Fetch("statusbar", LolzenUIcfg.tooltip["tip_healthbar_texture"]))
-		end
 	end
+
+	-- update the target of the unit while the tooltip is shown
+	targetWatcher = CreateFrame("Frame")
+	targetWatcher:SetScript("OnEvent", function(self, _, unit)
+		if unit == self.unit and GameTooltip:IsShown() then
+			pcall(updateTarget, unit)
+		end
+	end)
+
+	GameTooltip:HookScript("OnHide", function()
+		raidIcon:SetTexture(nil)
+		factionBG:SetTexture(nil)
+		targetWatcher:UnregisterEvent("UNIT_TARGET")
+	end)
+
+	hooksecurefunc("GameTooltip_SetDefaultAnchor", function(tooltip, parent)
+		if cfg["tip_anchor_cursor"] and tooltip == GameTooltip then
+			tooltip:SetOwner(parent, "ANCHOR_CURSOR")
+		end
+	end)
+
+	TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Unit, onUnitTooltip)
+	TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, onItemTooltip)
+	TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Spell, onSpellTooltip)
+
+	-- look: attached to the "HUD Tooltip" dialog in the Edit Mode
+	local look = ns.Options.New("tooltip_look", function() return LolzenUIcfg.tooltip end, ns.defaults.tooltip, skinAll)
+	look:Header("LolzenUI")
+	look:Toggle("tip_anchor_cursor", L["Anchor at the cursor"])
+	look:Toggle("tip_outline", L["Use outline"])
+	look:Media("tip_border", L["border"], "border"):SetDisabled(function() return cfg["tip_outline"] end)
+	look:Media("tip_healthbar_texture", L["tt_healthbar_header"], "statusbar")
+	if not ns.EditMode:AddSystemSettings("HudTooltip", look) then
+		ns.SettingsPanel:AddCategory("tooltip_look", look)
+	end
+
+	-- content: settings panel
+	local options = ns.Options.New("tooltip", function() return LolzenUIcfg.tooltip end, ns.defaults.tooltip)
+	options:Header(L["show"])
+	options:Toggle("tip_show_factionicons", L["tt_show_factionicons"])
+	options:Toggle("tip_show_raidmark", L["show_raidmarks"])
+	options:Toggle("tip_display_talents", L["tt_show_talents"])
+	options:Toggle("tip_show_target", L["Show the target of the unit"])
+	options:Toggle("tip_show_icons", L["Show item and spell icons"])
+	options:Toggle("tip_show_ids", L["Show item and spell IDs"])
+	options:Header(L["tt_flags_header"])
+	options:Text("tip_statusflag_afk", L["afk_flag"])
+	options:Color("tip_statusflag_afk_color", L["afk_flag"])
+	options:Text("tip_statusflag_dnd", L["dnd_flag"])
+	options:Color("tip_statusflag_dnd_color", L["dnd_flag"])
+	options:Text("tip_statusflag_off", L["tt_offline_flag"])
+	options:Color("tip_statusflag_off_color", L["tt_offline_flag"])
+	options:Header(L["tt_player_guild_header"])
+	options:Color("tip_own_guild_color", L["color"])
+	options:Toggle("tip_use_guild_color_globally", L["tt_use_guild_color_globally"])
+	ns.SettingsPanel:AddCategory("tooltip", options, true)
 end)
