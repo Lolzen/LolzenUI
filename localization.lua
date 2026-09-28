@@ -1,4 +1,4 @@
-﻿--// localization //--
+--// localization //--
 -- https://wow.gamepedia.com/Localizing_an_addon
 
 local addon, ns = ...

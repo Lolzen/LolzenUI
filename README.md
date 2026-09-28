@@ -6,6 +6,13 @@ This is my personal User Interface for World of Warcraft.
 It is a compilation of different utilities for either information, feature, ease-of-life addition or anything of that sort.
 
 ------
+### Configuration
+- **Edit Mode** (`Esc -> Edit Mode` or `/lolzen edit`): every LolzenUI frame (unit frames, castbars, xp/artifact bar, clock, info bar, buffwatcher) can be moved there. Selecting a frame shows its options right next to it. Options for Blizzard frames skinned by LolzenUI (action bars, buffs, minimap, chat, objective tracker, tooltip, cooldown manager) are attached to their Edit Mode dialogs.
+- **Settings** (`Esc -> Options -> AddOns -> LolzenUI` or `/lolzen`): the module list and all options which don't belong to a frame (chat behaviour, tooltip content, item level, fonts, nameplates, pull count, ...).
+
+The separate **LolzenUI_Options** addon is no longer needed and can be deleted.
+
+------
 ### embedded Libs:
 **CallbackHandler-1.0**
 
@@ -23,13 +30,13 @@ Dependency for LibSharedMedia.
 
 The Unitframes and Nameplates integrated make use of oUF.
 
-**oUF_CombatFade**
+**LibEditMode**
 
-Plugin for oUF based on oUF's range element. Gives a minimal config to fade Unitframes depending on being in combat or out of combat. Alpha values and affected elements are configurable.
+Integrates LolzenUI's frames and options into Blizzard's Edit Mode. https://github.com/p3lim-wow/LibEditMode
 
-**oUF_MovableFrames**
+**LibButtonTexture-1.0**
 
-Plugin for oUF from haste. enables /omf to easily move unitframes around. http://www.wowinterface.com/downloads/fileinfo.php?id=15425&so=DESC&page=5#info
+Button and aura border textures, based on LibSharedMedia.
 
 ------
 ### Some AddOn Suggestions to complement LolzenUI:
@@ -38,7 +45,6 @@ Plugin for oUF from haste. enables /omf to easily move unitframes around. http:/
 - ChatLootIcons
 - ConvertRatings
 - Doom_CooldownPulse
-- EasyDeleteConfirm
 - GnomishAuctionShrinker
 - GnomishVendorShrinker
 - HideTalkingHead

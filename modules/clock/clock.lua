@@ -2,234 +2,189 @@
 
 local _, ns = ...
 local L = ns.L
-local LSM = LibStub("LibSharedMedia-3.0")
 
 ns.RegisterModule("clock", L["desc_clock"], true)
 
-local function getUSDayFormat(day)
-	local day = tonumber(day)
-			if day == 1 then
-				return "st"
-			elseif day == 2 then
-				return "nd"
-			elseif day == 3 then
-				return "rd"
-			else
-				return "th"
-			end
-		end
-		
+local cfg
+local clockFrame, text, seconds
+local lastTime, lastSeconds
+
+local function getUSDaySuffix(day)
+	if day == 1 or day == 21 or day == 31 then
+		return "st"
+	elseif day == 2 or day == 22 then
+		return "nd"
+	elseif day == 3 or day == 23 then
+		return "rd"
+	end
+	return "th"
+end
+
 local function getDate()
-	local cdate = C_DateAndTime.GetCurrentCalendarTime()
-	if LolzenUIcfg.clock["clock_dateformat"] == "US" then
-		return CALENDAR_WEEKDAY_NAMES[cdate.weekday]..", "..CALENDAR_FULLDATE_MONTH_NAMES[cdate.month].." "..cdate.monthDay..getUSDayFormat(cdate.monthDay).." "..cdate.year
+	local date = C_DateAndTime.GetCurrentCalendarTime()
+	local weekday = CALENDAR_WEEKDAY_NAMES[date.weekday]
+	local month = CALENDAR_FULLDATE_MONTH_NAMES[date.month]
+	if cfg["clock_dateformat"] == "US" then
+		return ("%s, %s %d%s %d"):format(weekday, month, date.monthDay, getUSDaySuffix(date.monthDay), date.year)
+	end
+	return ("%s, %d. %s %d"):format(weekday, date.monthDay, month, date.year)
+end
+
+local function updateTime()
+	local us = cfg["clock_dateformat"] == "US"
+	local time = date(us and "%I|cffffffff.|r%M" or "%H|cffffffff.|r%M")
+	if time ~= lastTime then
+		lastTime = time
+		text:SetText(time)
+	end
+
+	local sec
+	if cfg["clock_seconds_enabled"] then
+		sec = us and date("%S %p") or date("%S")
 	else
-		return CALENDAR_WEEKDAY_NAMES[cdate.weekday]..", "..cdate.monthDay..". "..CALENDAR_FULLDATE_MONTH_NAMES[cdate.month].." "..cdate.year
+		sec = us and date("%p") or ""
+	end
+	if sec ~= lastSeconds then
+		lastSeconds = sec
+		seconds:SetText(sec)
 	end
 end
 
-local f = CreateFrame("Frame")
-f:RegisterEvent("ADDON_LOADED")
-f:SetScript("OnEvent", function(self, event, addon)
-	if addon == "LolzenUI" then
-		if LolzenUIcfg.modules["clock"] == false then return end
+local function applyStyle()
+	ns.SetFont(text, cfg["clock_font"], cfg["clock_font_size"], cfg["clock_font_flag"])
+	text:SetTextColor(ns.RGB(cfg["clock_color"]))
+	ns.SetFont(seconds, cfg["clock_font_seconds"], cfg["clock_seconds_font_size"], cfg["clock_seconds_font_flag"])
+	seconds:SetTextColor(ns.RGB(cfg["clock_seconds_color"]))
+	lastTime, lastSeconds = nil, nil
+	updateTime()
+	clockFrame:SetSize(math.max(20, text:GetStringWidth() + seconds:GetStringWidth()), math.max(10, text:GetStringHeight()))
+end
 
-		local function Addoncompare(a, b)
-			return a.memory > b.memory
-		end
+--[[ tooltip ]]----------------------------------------------------------------
 
-		local function Memory(v)
-			if (v > 1000) then
-				return string.format("%.2f mb", v / 1000)
-			else
-				return string.format("%.1f kb", v)
-			end
-		end
+local function formatMemory(kb)
+	if kb > 1000 then
+		return ("%.2f mb"):format(kb / 1000)
+	end
+	return ("%.1f kb"):format(kb)
+end
 
-		local function ColorGradient(perc, ...)
-			if (perc > 1) then
-				local r, g, b = select(select('#', ...) - 2, ...)
-				return r, g, b
-			elseif (perc < 0) then
-				local r, g, b = ...
-				return r, g, b
-			end
+local function gradient(perc)
+	-- green -> yellow -> red
+	perc = math.max(0, math.min(1, perc))
+	if perc < 0.5 then
+		return perc * 2, 1, 0
+	end
+	return 1, (1 - perc) * 2, 0
+end
 
-			local num = select('#', ...) / 3
+local function latencyColor(ms)
+	if ms < 100 then return 0, 1, 0 end
+	if ms < 300 then return 1, 1, 0 end
+	return 1, 0, 0
+end
 
-			local segment, relperc = math.modf(perc*(num-1))
-			local r1, g1, b1, r2, g2, b2 = select((segment*3)+1, ...)
+local function framerateColor(fps)
+	if fps < 10 then return 1, 0, 0 end
+	if fps < 30 then return 1, 1, 0 end
+	return 0, 1, 0
+end
 
-			return r1 + (r2-r1)*relperc, g1 + (g2-g1)*relperc, b1 + (b2-b1)*relperc
-		end
+-- reused between tooltip updates to avoid creating garbage on every hover
+local entries = {}
+local function sortByMemory(a, b)
+	return a.memory > b.memory
+end
 
-		local function ColorizeLatency(v)
-			if (v < 100) then
-				return {r = 0, g = 1, b = 0}
-			elseif (v < 300) then
-				return {r = 1, g = 1, b = 0}
-			else
-				return {r = 1, g = 0, b = 0}
-			end
-		end
+local function onEnter(self)
+	local r, g, b = ns.RGB(cfg["clock_color"])
+	GameTooltip:SetOwner(self, "ANCHOR_BOTTOMLEFT")
+	GameTooltip:AddLine(getDate(), 1, 1, 1)
 
-		local function ColorizeFramerate(v)
-			if (v < 10) then
-				return {r = 1, g = 0, b = 0}
-			elseif (v < 30) then
-				return {r = 1, g = 1, b = 0}
-			else
-				return {r = 0, g = 1, b = 0}
-			end
-		end
+	local fps = GetFramerate()
+	local latency = select(4, GetNetStats())
+	GameTooltip:AddDoubleLine(L["Framerate:"], ("%.1f fps"):format(fps), r, g, b, framerateColor(fps))
+	GameTooltip:AddDoubleLine(L["Latency:"], ("%d ms"):format(latency), r, g, b, latencyColor(latency))
+	GameTooltip:AddLine(" ")
+	GameTooltip:AddLine(ADDONS..":", r, g, b)
 
-		local clockFrame = CreateFrame("Button", "clock", UIParent)
-		clockFrame:SetPoint(LolzenUIcfg.clock["clock_anchor1"], UIParent, LolzenUIcfg.clock["clock_anchor2"], LolzenUIcfg.clock["clock_posx"], LolzenUIcfg.clock["clock_posy"])
-		clockFrame:SetHeight(10)
-		clockFrame:SetWidth(80)
-		clockFrame:SetFrameStrata("HIGH")
-
-		local text = clockFrame:CreateFontString(nil, "ARTWORK")
-		text:SetPoint("LEFT", clockFrame)
-		text:SetFont(LSM:Fetch("font", LolzenUIcfg.clock["clock_font"]), LolzenUIcfg.clock["clock_font_size"], LolzenUIcfg.clock["clock_font_flag"])
-		text:SetShadowOffset(1, -1)
-		text:SetTextColor(unpack(LolzenUIcfg.clock["clock_color"]))
-
-		local seconds = clockFrame:CreateFontString(nil, "ARTWORK")
-		seconds:SetPoint("TOPLEFT", text, "TOPRIGHT", -2, 0)
-		seconds:SetFont(LSM:Fetch("font", LolzenUIcfg.clock["clock_font_seconds"]), LolzenUIcfg.clock["clock_seconds_font_size"], LolzenUIcfg.clock["clock_seconds_font_flag"])
-		seconds:SetShadowOffset(1, -1)
-		seconds:SetTextColor(unpack(LolzenUIcfg.clock["clock_seconds_color"]))
-
-		local function setTime()
-			if LolzenUIcfg.clock["clock_dateformat"] == "US" then
-				if tonumber(date("%H")) > 12 then
-					local pm = tonumber(date("%H")) - 12
-					if pm < 10 then
-						pm = tonumber("0")..tonumber(date("%H")) - 12
-					else
-						pm = tonumber(date("%H")) - 12
-					end
-					text:SetText(pm.."|c00ffffff\46|r"..date("%M|c00ffffff|r"))
-				else
-					text:SetText(date("%H|c00ffffff\46|r%M|c00ffffff|r"))
-				end
-			else
-				text:SetText(date("%H|c00ffffff\46|r%M|c00ffffff|r"))
-			end
-			if LolzenUIcfg.clock["clock_seconds_enabled"] == true then
-				if LolzenUIcfg.clock["clock_dateformat"] == "US" then
-					if tonumber(date("%H")) > 12 then
-						seconds:SetText(date("%S").." PM")
-					else
-						seconds:SetText(date("%S").." AM")
-					end
-				else
-					seconds:SetText(date("%S"))
-				end
-			else
-				if LolzenUIcfg.clock["clock_dateformat"] == "US" then
-					if tonumber(date("%H")) > 12 then
-						seconds:SetText("PM")
-					else
-						seconds:SetText("AM")
-					end
-				else
-					seconds:SetText(nil)
-				end
-			end
-			C_Timer.After(1, setTime)
-		end
-		setTime()
-
-		clockFrame:SetScript("OnEnter", function()
-			GameTooltip:SetOwner(clockFrame, "ANCHOR_TOPLEFT", 2, 5)
-			collectgarbage()
-
-			local memory, i, addons, total, entry, total, isLoD, state
-			local latencycolor = ColorizeLatency(select(3, GetNetStats()))
-			local fpscolor = ColorizeFramerate(GetFramerate())
-
-			GameTooltip:AddLine(getDate(), 1, 1, 1)
-			GameTooltip:AddDoubleLine("Framerate:", format("%.1f fps", GetFramerate()), LolzenUIcfg.clock["clock_color"].r, LolzenUIcfg.clock["clock_color"].g, LolzenUIcfg.clock["clock_color"].b, fpscolor.r, fpscolor.g, fpscolor.b)
-			GameTooltip:AddDoubleLine("Latency:", format("%d ms", select(3, GetNetStats())), LolzenUIcfg.clock["clock_color"].r, LolzenUIcfg.clock["clock_color"].g, LolzenUIcfg.clock["clock_color"].b, latencycolor.r, latencycolor.g, latencycolor.b)
-			GameTooltip:AddLine(" ")
-			GameTooltip:AddLine("AddOns:", unpack(LolzenUIcfg.clock["clock_color"]))
-
-			addons = {}
-			total = 0
-			UpdateAddOnMemoryUsage()
-			for i = 1, C_AddOns.GetNumAddOns(), 1 do
-				if GetAddOnMemoryUsage(i) == 0 then
-					isLoD = C_AddOns.IsAddOnLoadOnDemand(i)
-					memory = GetAddOnMemoryUsage(i)
-					if isLoD then
-						state = "LoD"
-					else
-						state = "Disabled"
-					end
-				else
-					state = "Enabled"
-				end
-				memory = GetAddOnMemoryUsage(i)
-					entry = {
-						name = C_AddOns.GetAddOnInfo(i),
-						memory = memory,
-						state = state,
-					}
-					table.insert(addons, entry)
-					total = total + memory
-			end
-
-			table.sort(addons, Addoncompare)
-
-			for _, entry in pairs(addons) do
-				local gradientr, gradientg, gradientb = ColorGradient((entry.memory*10 / total), 0, 1, 0, 1, 1, 0, 1, 0, 0)
-				if entry.memory > 0 then
-					GameTooltip:AddDoubleLine(entry.name, Memory(entry.memory), 1, 1, 1, gradientr, gradientg, gradientb)
-				else
-					GameTooltip:AddDoubleLine(entry.name, entry.state, 0.55, 0.55, 0.55, 1, 1, 1, 1)
-				end
-			end  
-			local cr, cg, cb = ColorGradient((entry.memory / 800), 0, 1, 0, 1, 1, 0, 1, 0, 0) 
-			GameTooltip:AddLine(" ")
-			GameTooltip:AddDoubleLine("Total", Memory(total), LolzenUIcfg.clock["clock_color"].r, LolzenUIcfg.clock["clock_color"].g, LolzenUIcfg.clock["clock_color"].b, cr, cg, cb)
-			GameTooltip:Show()
-		end)
-
-		clockFrame:SetScript("OnLeave", function() 
-			GameTooltip:Hide() 
-		end)
-
-		clockFrame:SetScript("OnClick", function()
-			UpdateAddOnMemoryUsage()
-			local memBefore = gcinfo()
-			collectgarbage()
-			UpdateAddOnMemoryUsage()
-			local memAfter = gcinfo()
-			DEFAULT_CHAT_FRAME:AddMessage("Memory cleaned: |cff00FF00"..Memory(memBefore - memAfter))
-		end)
-
-		ns.SetClockFont = function()
-			text:SetFont(LSM:Fetch("font", LolzenUIcfg.clock["clock_font"]), LolzenUIcfg.clock["clock_font_size"], LolzenUIcfg.clock["clock_font_flag"])
-			
-		end
-
-		ns.SetClockFontColor = function()
-			text:SetTextColor(unpack(LolzenUIcfg.clock["clock_color"]))
-		end
-
-		ns.SetClockFontSeconds = function()
-			seconds:SetFont(LSM:Fetch("font", LolzenUIcfg.clock["clock_font_seconds"]), LolzenUIcfg.clock["clock_seconds_font_size"], LolzenUIcfg.clock["clock_seconds_font_flag"])
-		end
-
-		ns.SetClockFontSecondsColor = function()
-			seconds:SetTextColor(unpack(LolzenUIcfg.clock["clock_seconds_color"]))
-		end
-
-		ns.SetClockPosition = function()
-			clockFrame:ClearAllPoints()
-			clockFrame:SetPoint(LolzenUIcfg.clock["clock_anchor1"], UIParent, LolzenUIcfg.clock["clock_anchor2"], LolzenUIcfg.clock["clock_posx"], LolzenUIcfg.clock["clock_posy"])
+	UpdateAddOnMemoryUsage()
+	local total, count = 0, 0
+	for i = 1, C_AddOns.GetNumAddOns() do
+		if C_AddOns.IsAddOnLoaded(i) then
+			count = count + 1
+			local entry = entries[count] or {}
+			entries[count] = entry
+			entry.name = C_AddOns.GetAddOnInfo(i)
+			entry.memory = GetAddOnMemoryUsage(i)
+			total = total + entry.memory
 		end
 	end
+	for i = count + 1, #entries do
+		entries[i] = nil
+	end
+	table.sort(entries, sortByMemory)
+
+	local highest = entries[1] and entries[1].memory or 1
+	for i = 1, count do
+		local entry = entries[i]
+		GameTooltip:AddDoubleLine(entry.name, formatMemory(entry.memory), 1, 1, 1, gradient(entry.memory / highest))
+	end
+	GameTooltip:AddLine(" ")
+	GameTooltip:AddDoubleLine(TOTAL, formatMemory(total), r, g, b, 1, 1, 1)
+	GameTooltip:Show()
+end
+
+local function onClick()
+	UpdateAddOnMemoryUsage()
+	local before = collectgarbage("count")
+	collectgarbage()
+	local after = collectgarbage("count")
+	ns.Print(L["Memory cleaned:"].." |cff00ff00"..formatMemory(before - after).."|r")
+end
+
+--[[ init ]]-------------------------------------------------------------------
+
+ns.OnInit("clock", function()
+	cfg = LolzenUIcfg.clock
+
+	clockFrame = CreateFrame("Button", "LolzenUI_Clock", UIParent)
+	clockFrame:SetFrameStrata("HIGH")
+	clockFrame:SetScript("OnEnter", onEnter)
+	clockFrame:SetScript("OnLeave", GameTooltip_Hide)
+	clockFrame:SetScript("OnClick", onClick)
+
+	text = clockFrame:CreateFontString(nil, "ARTWORK")
+	text:SetPoint("LEFT", clockFrame)
+	text:SetShadowOffset(1, -1)
+
+	seconds = clockFrame:CreateFontString(nil, "ARTWORK")
+	seconds:SetPoint("TOPLEFT", text, "TOPRIGHT", -2, 0)
+	seconds:SetShadowOffset(1, -1)
+
+	applyStyle()
+	C_Timer.NewTicker(1, updateTime)
+
+	local options = ns.Options.New("clock", function() return LolzenUIcfg.clock end, ns.defaults.clock, applyStyle)
+	options:Header(L["clock_hours_and_minutes_header"])
+	options:FontGroup("clock_font", nil, "clock_font_size", "clock_font_flag")
+	options:Color("clock_color", L["color"])
+	options:Select("clock_dateformat", L["clock_date"], ns.Options.ListValues({"EU", "US"}))
+	options:Header(L["clock_seconds_header"])
+	options:Toggle("clock_seconds_enabled", L["clock_seconds_enabled"])
+	options:FontGroup("clock_font_seconds", nil, "clock_seconds_font_size", "clock_seconds_font_flag")
+	options:Color("clock_seconds_color", L["color"])
+
+	ns.EditMode:AddFrame(clockFrame, {
+		name = L["LolzenUI: Clock"],
+		pos = {
+			db = function() return LolzenUIcfg.clock end,
+			point = "clock_anchor1",
+			rel = "clock_anchor2",
+			x = "clock_posx",
+			y = "clock_posy",
+		},
+		defaults = ns.defaults.clock,
+		options = options,
+	})
 end)

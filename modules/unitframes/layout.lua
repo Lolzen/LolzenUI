@@ -1,387 +1,478 @@
+--// unitframes: layout //--
+-- Spawns the frames, places them in Edit Mode holders and builds their options.
+
 local _, ns = ...
 local L = ns.L
-local LSM = LibStub("LibSharedMedia-3.0")
 local oUF = ns.oUF
+local UF = ns.UF
+local EM = ns.EditMode
 
 ns.RegisterModule("unitframes", L["desc_unitframes"], true)
 
-local f = CreateFrame("Frame")
-f:RegisterEvent("ADDON_LOADED")
-f:SetScript("OnEvent", function(self, event, addon)
-	if addon == "LolzenUI" then
-		if LolzenUIcfg.modules["unitframes"] == false then return end
+local UNITS = {"player", "target", "targettarget", "focus", "pet", "boss", "arena", "party", "raid"}
+local NUM_BOSS, NUM_ARENA = 5, 3
+local RAID_ROW_SPACING = 5
 
-		local UnitSpecific = {
-			player = ns.SetupPlayer,
-			target = ns.SetupTarget,
-			targettarget = ns.SetupTargetTarget,
-			party = ns.SetupParty,
-			raid = ns.SetupRaid,
-			pet = ns.SetupPet,
-			boss = ns.SetupBoss,
-			focus = ns.SetupFocus,
-			arena = ns.SetupArena,
-		}
+local NAMES = {
+	player = "sub_panel_unitframes_player",
+	target = "sub_panel_unitframes_target",
+	targettarget = "sub_panel_unitframes_targettarget",
+	focus = "sub_panel_unitframes_focus",
+	pet = "sub_panel_unitframes_pet",
+	boss = "sub_panel_unitframes_boss",
+	arena = "sub_panel_unitframes_arena",
+	party = "sub_panel_unitframes_party",
+	raid = "sub_panel_unitframes_raid",
+}
 
-		-- A small helper to change the style into a unit specific, if it exists.
-		local spawnHelper = function(self, unit, ...)
-			if unit:match("nameplate") then return end
-			if(UnitSpecific[unit]) then
-				self:SetActiveStyle('Lolzen - ' .. unit:gsub("^%l", string.upper))
-			elseif(UnitSpecific[unit:match('%D+')]) then -- boss1 -> boss
-				self:SetActiveStyle('Lolzen - ' .. unit:match('%D+'):gsub("^%l", string.upper))
+-- frame names are kept from older versions (they were used by oUF_MovableFrames)
+local FRAME_NAMES = {
+	player = "oUF_LolzenPlayer",
+	target = "oUF_LolzenTarget",
+	targettarget = "oUF_LolzenTargetTarget",
+	focus = "oUF_LolzenFocus",
+	pet = "oUF_LolzenPet",
+	boss = "oUF_LolzenBoss",
+	arena = "oUF_LolzenArena",
+	party = "oUF_LolzenParty",
+	raid = "oUF_LolzenRaid",
+}
+
+local frames = {}
+local holders = {}
+local headers = {}
+
+local function db(key)
+	return LolzenUIcfg.unitframes[key]
+end
+
+local function value(key, name)
+	return db(key)["uf_"..key.."_"..name]
+end
+
+--[[ holders ]]----------------------------------------------------------------
+
+local function holderSize(key)
+	local width, height = value(key, "width"), value(key, "height")
+	local spacing = value(key, "spacing")
+	if key == "boss" then
+		return width, NUM_BOSS * height + (NUM_BOSS - 1) * spacing
+	elseif key == "arena" then
+		return width, NUM_ARENA * height + (NUM_ARENA - 1) * spacing
+	elseif key == "party" then
+		return 5 * width + 4 * spacing, height
+	elseif key == "raid" then
+		return 8 * width + 7 * spacing, 5 * height + 4 * RAID_ROW_SPACING
+	end
+	return width, height
+end
+
+-- places the (secure) frames inside their holder; only possible out of combat
+local function layoutFrames(key)
+	local holder = holders[key]
+	holder:SetSize(holderSize(key))
+	local list = frames[key]
+	if key == "boss" or key == "arena" then
+		local step = value(key, "height") + value(key, "spacing")
+		for i, frame in ipairs(list) do
+			frame:ClearAllPoints()
+			if key == "boss" then
+				-- boss frames grow upwards
+				frame:SetPoint("BOTTOM", holder, "BOTTOM", 0, (i - 1) * step)
 			else
-				self:SetActiveStyle'Lolzen'
+				frame:SetPoint("TOP", holder, "TOP", 0, -(i - 1) * step)
 			end
-			local object = self:Spawn(unit)
-			object:SetPoint(...)
-			return object
 		end
-
-		oUF:RegisterStyle("Lolzen", ns.shared)
-		for unit,layout in next, UnitSpecific do
-			-- Capitalize the unit name, so it looks better.
-			oUF:RegisterStyle('Lolzen - ' .. unit:gsub("^%l", string.upper), layout)
+	elseif headers[key] then
+		local header = headers[key]
+		header:SetAttribute("oUF-initialConfigFunction", ("self:SetWidth(%d); self:SetHeight(%d)"):format(value(key, "width"), value(key, "height")))
+		if key == "party" then
+			header:SetAttribute("xOffset", value(key, "spacing"))
+		else
+			header:SetAttribute("columnSpacing", value(key, "spacing"))
 		end
+	elseif list and list[1] then
+		list[1]:ClearAllPoints()
+		list[1]:SetPoint("CENTER", holder)
+	end
+end
 
-		-- Hide the standard raid frames
-		if LolzenUIcfg.unitframes.raid["uf_raid_enabled"] == true then
-			RegisterStateDriver(CompactRaidFrameManager, 'visibility', 'hide')
-			RegisterStateDriver(CompactRaidFrameContainer, 'visibility', 'hide')
+--[[ refresh ]]----------------------------------------------------------------
+
+local function refresh(key)
+	for _, frame in ipairs(frames[key] or {}) do
+		UF.Apply(frame)
+		if frame.unit then
+			frame:UpdateAllElements("RefreshUnit")
 		end
+	end
+	ns.RunOutOfCombat(function() layoutFrames(key) end)
+end
 
-		oUF:Factory(function(self)
-			spawnHelper(self, "player", "CENTER", -250, -200)
-			spawnHelper(self, "target", "CENTER", 250, -200)
-			spawnHelper(self, "targettarget", "CENTER", 300, -177)
-			spawnHelper(self, "focus", "CENTER", -250, -230)
-			spawnHelper(self, "pet", "CENTER", -300, -177)
+local function refreshAll()
+	UF.ApplyColors()
+	for _, key in ipairs(UNITS) do
+		if holders[key] then
+			refresh(key)
+		end
+	end
+	UF.UpdateAllFades()
+end
+UF.RefreshAll = refreshAll
 
-			for i=1, MAX_BOSS_FRAMES do
-				spawnHelper(self, "boss" .. i, "CENTER", 0, -200 - LolzenUIcfg.unitframes.boss["uf_boss_height"] + (LolzenUIcfg.unitframes.boss["uf_boss_height"] * i) - 30 + (30 * i))
-			end
+-- compatibility with the old option callbacks
+ns.SetUFTagUpdate = refreshAll
+ns.SetUFTexture = refreshAll
+ns.SetUFBorder = refreshAll
 
-			for i=1, MAX_ARENA_FRAMES or 5 do
-				spawnHelper(self, "arena" .. i, "CENTER", 0, -200 + LolzenUIcfg.unitframes.arena["uf_arena_height"] - (LolzenUIcfg.unitframes.arena["uf_arena_height"] * i) + 30 - (30 * i))
-			end
+--[[ Edit Mode preview ]]------------------------------------------------------
 
-			self:SetActiveStyle("Lolzen - Party")
-			local party = self:SpawnHeader(
-				nil, nil, 'party',
-				'showParty', LolzenUIcfg.unitframes.party["uf_party_enabled"],
-				'showPlayer', LolzenUIcfg.unitframes.party["uf_party_enabled"],
-				'xOffset', 7,
-				'yOffset', 0,
-				'oUF-initialConfigFunction', [[
-					self:SetHeight(19)
-					self:SetWidth(70)
-				]],
-				'maxColumns', 5,
-				'unitsperColumn', 1,
-				'columnSpacing', 7,
-				'columnAnchorPoint', 'RIGHT'
-			)
-			party:SetPoint("BOTTOM", UIParent, 0, 140)
+-- frames of units which usually don't exist show the player while the Edit Mode is open
+local PREVIEW = {target = true, targettarget = true, focus = true, pet = true, boss = true, arena = true}
+local previewActive = false
 
-			ns.ToggleOUFParty = function()
-				party:SetAttribute('showParty', LolzenUIcfg.unitframes.party["uf_party_enabled"])
-				party:SetAttribute('showPlayer', LolzenUIcfg.unitframes.party["uf_party_enabled"])
-				if LolzenUIcfg.unitframes.party["uf_party_enabled"] == true then
-					for i=1, 4 do
-						ns.oUF:DisableBlizzard("party"..i)
-					end
-				else
-					--reenable default blizzard partyframes
-					PartyMemberFrame_OnLoad(PartyMemberFrame1)
-					PartyMemberFrame_OnLoad(PartyMemberFrame2)
-					PartyMemberFrame_OnLoad(PartyMemberFrame3)
-					PartyMemberFrame_OnLoad(PartyMemberFrame4)
-					PartyMemberFrame1:SetParent(UIParent)
-					PartyMemberFrame2:SetParent(UIParent)
-					PartyMemberFrame3:SetParent(UIParent)
-					PartyMemberFrame4:SetParent(UIParent)
-				end	
-			end
+local function startPreview()
+	if previewActive or InCombatLockdown() then return end
+	previewActive = true
+	for key in pairs(PREVIEW) do
+		for _, frame in ipairs(frames[key] or {}) do
+			frame.lolzenUnit = frame.lolzenUnit or frame:GetAttribute("unit")
+			UnregisterUnitWatch(frame)
+			frame:SetAttribute("unit", "player")
+			frame:Show()
+		end
+	end
+	UF.UpdateAllFades()
+end
 
-			ns.SetUFPartySize = function()
-				for k,v in ipairs(party) do
-					v:SetSize(LolzenUIcfg.unitframes.party["uf_party_width"], LolzenUIcfg.unitframes.party["uf_party_height"])
-				end
-			end
-
-			ns.SetUFPartyOwnFont = function()
-				if LolzenUIcfg.unitframes.party["uf_party_use_own_hp_font_settings"] == true then
-					for k,v in ipairs(party) do
-						v.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.party["uf_party_hp_font"]), LolzenUIcfg.unitframes.party["uf_party_hp_font_size"], LolzenUIcfg.unitframes.party["uf_party_hp_font_flag"])
-						v.Health.value:ClearAllPoints()
-						v.Health.value:SetPoint(LolzenUIcfg.unitframes.party["uf_party_hp_anchor"], LolzenUIcfg.unitframes.party["uf_party_hp_posx"], LolzenUIcfg.unitframes.party["uf_party_hp_posy"])
-					end
-				else
-					for k,v in ipairs(party) do
-						v.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.general["uf_general_hp_font"]), LolzenUIcfg.unitframes.general["uf_general_hp_font_size"], LolzenUIcfg.unitframes.general["uf_general_hp_font_flag"])
-						v.Health.value:ClearAllPoints()
-						v.Health.value:SetPoint(LolzenUIcfg.unitframes.general["uf_general_hp_anchor"], LolzenUIcfg.unitframes.general["uf_general_hp_posx"], LolzenUIcfg.unitframes.general["uf_general_hp_posy"])
-					end
-				end
-			end
-
-			ns.SetUFPartyHPPos = function()
-				if LolzenUIcfg.unitframes.party["uf_party_use_own_hp_font_settings"] == true then
-					for k,v in ipairs(party) do
-						v.Health.value:ClearAllPoints()
-						v.Health.value:SetPoint(LolzenUIcfg.unitframes.party["uf_party_hp_anchor"], LolzenUIcfg.unitframes.party["uf_party_hp_posx"], LolzenUIcfg.unitframes.party["uf_party_hp_posy"])
-					end
-				end
-			end
-
-			ns.SetUFPartyHPFont = function()
-				if LolzenUIcfg.unitframes.party["uf_party_use_own_hp_font_settings"] == true then
-					for k,v in ipairs(party) do
-						v.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.party["uf_party_hp_font"]), LolzenUIcfg.unitframes.party["uf_party_hp_font_size"], LolzenUIcfg.unitframes.party["uf_party_hp_font_flag"])
-					end
-				end
-			end
-
-			ns.SetUFPartyShowRoleIndicator = function()
-				if LolzenUIcfg.unitframes.party["uf_party_showroleindicator"] == true then
-					for k,v in ipairs(party) do
-						v.GroupRoleIndicator:Show()
-					end
-				else
-					for k,v in ipairs(party) do
-						v.GroupRoleIndicator:Hide()
-					end
-				end
-			end
-
-			ns.SetUFPartyRoleIndicatorSize = function()
-				for k,v in ipairs(party) do
-					v.GroupRoleIndicator:SetSize(LolzenUIcfg.unitframes.party["uf_party_ri_size"], LolzenUIcfg.unitframes.party["uf_party_ri_size"])
-				end
-			end
-
-			ns.SetUFPartyRoleIndicatorPos = function()
-				for k,v in ipairs(party) do
-					v.GroupRoleIndicator:ClearAllPoints()
-					v.GroupRoleIndicator:SetPoint(LolzenUIcfg.unitframes.party["uf_party_ri_anchor"], v.Health, LolzenUIcfg.unitframes.party["uf_party_ri_posx"], LolzenUIcfg.unitframes.party["uf_party_ri_posy"])
-				end
-			end
-
-			ns.SetUFPartyReadyCheckIndicatorSize = function()
-				for k,v in ipairs(party) do
-					v.ReadyCheckIndicator:SetSize(LolzenUIcfg.unitframes.party["uf_party_rc_size"], LolzenUIcfg.unitframes.party["uf_party_rc_size"])
-				end
-			end
-
-			ns.SetUFPartyReadyCheckIndicatorPos = function()
-				for k,v in ipairs(party) do
-					v.ReadyCheckIndicator:ClearAllPoints()
-					v.ReadyCheckIndicator:SetPoint(LolzenUIcfg.unitframes.party["uf_party_rc_anchor"], v.Health, LolzenUIcfg.unitframes.party["uf_party_rc_posx"], LolzenUIcfg.unitframes.party["uf_party_rc_posy"])
-				end
-			end
-
-			ns.SetUFPartyReachIndicatorToggle = function()
-				for k,v in ipairs(party) do
-					if LolzenUIcfg.unitframes.general["uf_fade_outofreach"] == true then
-						v:EnableElement("Range")
-					else
-						v:DisableElement("Range")
-					end
-				end
-			end
-
-			ns.SetUFPartyReachIndicatorAlpha = function()
-				for k,v in ipairs(party) do
-					if LolzenUIcfg.unitframes.general["uf_fade_outofreach"] == true then
-						v.Range.outsideAlpha = LolzenUIcfg.unitframes.general["uf_fade_outofreach_alpha"]
-					end
-				end
-			end
-
-			self:SetActiveStyle("Lolzen - Raid")
-			local raid = self:SpawnHeader(
-				nil, nil, 'raid',
-				'showPlayer', LolzenUIcfg.unitframes.raid["uf_raid_enabled"],
-				'showSolo', false,
-				'showParty', false,
-				'showRaid', LolzenUIcfg.unitframes.raid["uf_raid_enabled"],
-				'xoffset', 7,
-				'yOffset', -5,
-				'oUF-initialConfigFunction', [[
-					self:SetHeight(19)
-					self:SetWidth(50)
-				]],
-				'groupFilter', '1,2,3,4,5,6,7,8',
-				'groupingOrder', '1,2,3,4,5,6,7,8',
-				'sortMethod', 'GROUP',
-				'groupBy', 'GROUP',
-				'maxColumns', 8,
-				'unitsPerColumn', 5,
-				'columnSpacing', 7,
-				'columnAnchorPoint', "RIGHT"
-			)
-			raid:SetPoint("LEFT", UIParent, 20, 0)
-
-			ns.ToggleOUFRaid = function()
-				raid:SetAttribute('showRaid', LolzenUIcfg.unitframes.raid["uf_raid_enabled"])
-				raid:SetAttribute('showPlayer', LolzenUIcfg.unitframes.raid["uf_raid_enabled"])
-				if LolzenUIcfg.unitframes.raid["uf_raid_enabled"] == true then
-					RegisterStateDriver(CompactRaidFrameManager, 'visibility', 'hide')
-					RegisterStateDriver(CompactRaidFrameContainer, 'visibility', 'hide')
-				else
-					--reenable default blizzard raidframes
-					RegisterStateDriver(CompactRaidFrameManager, 'visibility', 'show')
-					RegisterStateDriver(CompactRaidFrameContainer, 'visibility', 'show')
-				end	
-			end
-
-			ns.SetUFRaidSize = function()
-				for k,v in ipairs(raid) do
-					v:SetSize(LolzenUIcfg.unitframes.raid["uf_raid_width"], LolzenUIcfg.unitframes.raid["uf_raid_height"])
-				end
-			end
-
-			ns.SetUFRaidOwnFont = function()
-				if LolzenUIcfg.unitframes.raid["uf_raid_use_own_hp_font_settings"] == true then
-					for k,v in ipairs(raid) do
-						v.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.raid["uf_raid_hp_font"]), LolzenUIcfg.unitframes.raid["uf_raid_hp_font_size"], LolzenUIcfg.unitframes.raid["uf_raid_hp_font_flag"])
-						v.Health.value:ClearAllPoints()
-						v.Health.value:SetPoint(LolzenUIcfg.unitframes.raid["uf_raid_hp_anchor"], LolzenUIcfg.unitframes.raid["uf_raid_hp_posx"], LolzenUIcfg.unitframes.raid["uf_raid_hp_posy"])
-					end
-				else
-					for k,v in ipairs(raid) do
-						v.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.general["uf_general_hp_font"]), LolzenUIcfg.unitframes.general["uf_general_hp_font_size"], LolzenUIcfg.unitframes.general["uf_general_hp_font_flag"])
-						v.Health.value:ClearAllPoints()
-						v.Health.value:SetPoint(LolzenUIcfg.unitframes.general["uf_general_hp_anchor"], LolzenUIcfg.unitframes.general["uf_general_hp_posx"], LolzenUIcfg.unitframes.general["uf_general_hp_posy"])
-					end
-				end
-			end
-
-			ns.SetUFRaidHPPos = function()
-				if LolzenUIcfg.unitframes.raid["uf_raid_use_own_hp_font_settings"] == true then
-					for k,v in ipairs(raid) do
-						v.Health.value:ClearAllPoints()
-						v.Health.value:SetPoint(LolzenUIcfg.unitframes.raid["uf_raid_hp_anchor"], LolzenUIcfg.unitframes.raid["uf_raid_hp_posx"], LolzenUIcfg.unitframes.raid["uf_raid_hp_posy"])
-					end
-				end
-			end
-
-			ns.SetUFRaidHPFont = function()
-				if LolzenUIcfg.unitframes.raid["uf_raid_use_own_hp_font_settings"] == true then
-					for k,v in ipairs(raid) do
-						v.Health.value:SetFont(LSM:Fetch("font", LolzenUIcfg.unitframes.raid["uf_raid_hp_font"]), LolzenUIcfg.unitframes.raid["uf_raid_hp_font_size"], LolzenUIcfg.unitframes.raid["uf_raid_hp_font_flag"])
-					end
-				end
-			end
-
-			ns.SetUFRaidShowRoleIndicator = function()
-				if LolzenUIcfg.unitframes.raid["uf_raid_showroleindicator"] == true then
-					for k,v in ipairs(raid) do
-						v.GroupRoleIndicator:Show()
-					end
-				else
-					for k,v in ipairs(raid) do
-						v.GroupRoleIndicator:Hide()
-					end
-				end
-			end
-
-			ns.SetUFRaidRoleIndicatorSize = function()
-				for k,v in ipairs(raid) do
-					v.GroupRoleIndicator:SetSize(LolzenUIcfg.unitframes.raid["uf_raid_ri_size"], LolzenUIcfg.unitframes.raid["uf_raid_ri_size"])
-				end
-			end
-
-			ns.SetUFRaidRoleIndicatorPos = function()
-				for k,v in ipairs(raid) do
-					v.GroupRoleIndicator:ClearAllPoints()
-					v.GroupRoleIndicator:SetPoint(LolzenUIcfg.unitframes.raid["uf_raid_ri_anchor"], v.Health, LolzenUIcfg.unitframes.raid["uf_raid_ri_posx"], LolzenUIcfg.unitframes.raid["uf_raid_ri_posy"])
-				end
-			end
-
-			ns.SetUFRaidReadyCheckIndicatorSize = function()
-				for k,v in ipairs(raid) do
-					v.ReadyCheckIndicator:SetSize(LolzenUIcfg.unitframes.raid["uf_raid_rc_size"], LolzenUIcfg.unitframes.raid["uf_raid_rc_size"])
-				end
-			end
-
-			ns.SetUFRaidReadyCheckIndicatorPos = function()
-				for k,v in ipairs(raid) do
-					v.ReadyCheckIndicator:ClearAllPoints()
-					v.ReadyCheckIndicator:SetPoint(LolzenUIcfg.unitframes.raid["uf_raid_rc_anchor"], v.Health, LolzenUIcfg.unitframes.raid["uf_raid_rc_posx"], LolzenUIcfg.unitframes.raid["uf_raid_rc_posy"])
-				end
-			end
-
-			ns.SetUFRaidReachIndicatorToggle = function()
-				for k,v in ipairs(raid) do
-					if LolzenUIcfg.unitframes.general["uf_fade_outofreach"] == true then
-						v:EnableElement("Range")
-					else
-						v:DisableElement("Range")
-					end
-				end
-			end
-
-			ns.SetUFRaidReachIndicatorAlpha = function()
-				for k,v in ipairs(raid) do
-					if LolzenUIcfg.unitframes.general["uf_fade_outofreach"] == true then
-						v.Range.outsideAlpha = LolzenUIcfg.unitframes.general["uf_fade_outofreach_alpha"]
-					end
-				end
-			end
-		end)
-
-		-- configuring boss and arenaframes is not an easy task and simply not possible during combat
-		-- so we spoof the player as placeholder to make configuring these possible
-		hooksecurefunc("InterfaceOptionsListButton_OnClick", function(self, button)
-			if self.element:GetName() == "unitframe_bosspanel" then
-				for k, v in next, oUF.objects do
-					if v.unit == "boss1" or v.unit == "boss2" or v.unit == "boss3" or v.unit == "boss4" or v.unit == "boss5" then
-						v.origUnit = v.unit
-						v.unit = 'player'
-						v:Disable()
-						v:Show()
-					end
-				end
-			else
-				for k, v in next, oUF.objects do
-					if v.origUnit and v.origUnit ~= nil and v.unit == "player" then
-						if v.origUnit == "boss1" or v.origUnit == "boss2" or v.origUnit == "boss3" or v.origUnit == "boss4" or v.origUnit == "boss5" then
-							v.unit = v.origUnit
-							v:Enable()
-						end
-					end
-				end
-			end
-			if self.element:GetName() == "unitframe_arenapanel" then
-				for k, v in next, oUF.objects do
-					if v.unit == "arena1" or v.unit == "arena2" or v.unit == "arena3" then
-						v.origUnit = v.unit
-						v.unit = 'player'
-						v:Disable()
-						v:Show()
-					end
-				end
-			else
-				for k, v in next, oUF.objects do
-					if v.origUnit and v.origUnit ~= nil and v.unit == "player" then
-						if v.origUnit == "arena1" or v.origUnit == "arena2" or v.origUnit == "arena3" then
-							v.unit = v.origUnit
-							v:Enable()
-						end
-					end
-				end
-			end
-		end)
-
-		-- restore the original unit when the panel is closed
-		ns.UFrestoreOriginalUnit = function()
-			for k, v in next, oUF.objects do
-				if v.origUnit and v.origUnit ~= nil then
-					v.unit = v.origUnit
-					v:Enable()
-				end
+local function stopPreview()
+	if not previewActive then return end
+	previewActive = false
+	for key in pairs(PREVIEW) do
+		for _, frame in ipairs(frames[key] or {}) do
+			if frame.lolzenUnit then
+				frame:SetAttribute("unit", frame.lolzenUnit)
+				RegisterUnitWatch(frame)
 			end
 		end
 	end
+	UF.UpdateAllFades()
+end
+
+--[[ style & spawn ]]----------------------------------------------------------
+
+local function createStyle(key)
+	return function(frame, unit)
+		frame.unitKey = key
+		frame.lolzenHeaderChild = key == "party" or key == "raid"
+		frames[key] = frames[key] or {}
+		table.insert(frames[key], frame)
+
+		UF.Build(frame, unit)
+		if UF.features[key].standaloneCastbar then
+			frame.castbarHolder = holders[key.."_castbar"]
+		end
+		UF.Apply(frame, true)
+	end
+end
+
+local function spawnSingle(self, key, unit, name)
+	self:SetActiveStyle("Lolzen - "..key)
+	return self:Spawn(unit, name)
+end
+
+local function spawnHeaders(self)
+	local party = db("party")
+	if party["uf_party_enabled"] then
+		self:SetActiveStyle("Lolzen - party")
+		local header = self:SpawnHeader(FRAME_NAMES.party, nil,
+			"showParty", true,
+			"showPlayer", true,
+			"point", "LEFT",
+			"xOffset", party["uf_party_spacing"],
+			"yOffset", 0,
+			"oUF-initialConfigFunction", ("self:SetWidth(%d); self:SetHeight(%d)"):format(party["uf_party_width"], party["uf_party_height"])
+		)
+		header:SetVisibility("party")
+		header:SetPoint("BOTTOM", holders.party, "BOTTOM")
+		headers.party = header
+	end
+
+	local raid = db("raid")
+	if raid["uf_raid_enabled"] then
+		self:SetActiveStyle("Lolzen - raid")
+		local header = self:SpawnHeader(FRAME_NAMES.raid, nil,
+			"showRaid", true,
+			"showPlayer", true,
+			"point", "TOP",
+			"yOffset", -RAID_ROW_SPACING,
+			"groupFilter", "1,2,3,4,5,6,7,8",
+			"groupingOrder", "1,2,3,4,5,6,7,8",
+			"groupBy", "GROUP",
+			"maxColumns", 8,
+			"unitsPerColumn", 5,
+			"columnSpacing", raid["uf_raid_spacing"],
+			"columnAnchorPoint", "LEFT",
+			"oUF-initialConfigFunction", ("self:SetWidth(%d); self:SetHeight(%d)"):format(raid["uf_raid_width"], raid["uf_raid_height"])
+		)
+		header:SetVisibility("raid")
+		header:SetPoint("TOPLEFT", holders.raid, "TOPLEFT")
+		headers.raid = header
+
+		-- hide the default raid frames
+		for _, frame in ipairs({CompactRaidFrameManager, CompactRaidFrameContainer}) do
+			pcall(RegisterStateDriver, frame, "visibility", "hide")
+		end
+	end
+end
+
+local function spawn(self)
+	for _, key in ipairs({"player", "target", "targettarget", "focus", "pet"}) do
+		frames[key] = frames[key] or {}
+		spawnSingle(self, key, key, FRAME_NAMES[key])
+	end
+	for i = 1, NUM_BOSS do
+		spawnSingle(self, "boss", "boss"..i, FRAME_NAMES.boss..i)
+	end
+	for i = 1, NUM_ARENA do
+		spawnSingle(self, "arena", "arena"..i, FRAME_NAMES.arena..i)
+	end
+	spawnHeaders(self)
+
+	for _, key in ipairs(UNITS) do
+		frames[key] = frames[key] or {}
+		layoutFrames(key)
+		for _, frame in ipairs(frames[key]) do
+			UF.ApplyIndicators(frame)
+		end
+	end
+end
+
+--[[ options ]]----------------------------------------------------------------
+
+local ANCHOR_VALUES = {"hp", "self"}
+
+local function buildUnitOptions(key)
+	local features = UF.features[key]
+	local prefix = "uf_"..key.."_"
+	local cfg = db(key)
+	local options = ns.Options.New("uf_"..key, function() return db(key) end, ns.defaults.unitframes[key], function() refresh(key) end)
+	local function k(name) return prefix..name end
+	local notOwnFont = function() return not cfg[k("use_own_hp_font_settings")] end
+
+	options:Header(L["Size"])
+	options:Range(k("width"), L["width"], 20, 600, 1)
+	options:Range(k("height"), L["height"], 4, 100, 1)
+	if cfg[k("spacing")] then
+		options:Range(k("spacing"), L["spacing"], 0, 100, 1)
+	end
+	if key == "party" or key == "raid" then
+		options:Toggle(k("enabled"), L[key == "party" and "sub_panel_unitframes_party_use_LolzenUI" or "sub_panel_unitframes_raid_use_LolzenUI"], ns.AskReload)
+	end
+
+	options:Header(L["uf_healthpoints"])
+	options:Toggle(k("use_own_hp_font_settings"), L["uf_healthpoints_overwrite_global_settings"])
+	options:Font(k("hp_font")):SetDisabled(notOwnFont)
+	options:Range(k("hp_font_size"), L["size"], 4, 40, 1):SetDisabled(notOwnFont)
+	options:Flag(k("hp_font_flag")):SetDisabled(notOwnFont)
+	options:Anchor(k("hp_anchor")):SetDisabled(notOwnFont)
+	options:Range(k("hp_posx"), L["PosX"], -100, 100, 1):SetDisabled(notOwnFont)
+	options:Range(k("hp_posy"), L["PosY"], -100, 100, 1):SetDisabled(notOwnFont)
+
+	if features.power then
+		options:Header(L["uf_powerpoints"])
+		if key == "boss" then
+			options:Toggle(k("show_power"), L["sub_panel_unitframes_boss_show_power"])
+		end
+		options:FontGroup(k("pp_font"))
+		options:Select(k("pp_parent"), L["parent"], ns.Options.ListValues(ANCHOR_VALUES, {hp = L["uf_healthpoints"], self = L["frame"]}))
+		options:Anchor(k("pp_anchor"), L["anchor"])
+		options:Anchor(k("pp_anchor2"), L["parent"])
+		options:Range(k("pp_posx"), L["PosX"], -100, 100, 1)
+		options:Range(k("pp_posy"), L["PosY"], -100, 100, 1)
+	end
+
+	if features.auras then
+		options:Header(L["auras"])
+		options:Select(k("aura_show_type"), L["show"], ns.Options.ListValues({"Buffs", "Debuffs", "Both", "None"}))
+		options:Range(k("aura_maxnum"), L["show_max_0_to_40"], 0, 40, 1)
+		options:Range(k("aura_size"), L["size"], 8, 64, 1)
+		options:Range(k("aura_spacing"), L["spacing"], 0, 20, 1)
+		options:Anchor(k("aura_anchor1"), L["anchor"])
+		options:Anchor(k("aura_anchor2"), L["parent"])
+		options:Range(k("aura_posx"), L["PosX"], -200, 200, 1)
+		options:Range(k("aura_posy"), L["PosY"], -200, 200, 1)
+		options:Select(k("aura_growth_x"), L["growth_x"], ns.Options.ListValues({"LEFT", "RIGHT"}))
+		options:Select(k("aura_growth_y"), L["growth_y"], ns.Options.ListValues({"UP", "DOWN"}))
+		options:Toggle(k("aura_show_only_player"), L["show_only_player_auras"])
+		options:Toggle(k("aura_desature_nonplayer_auras"), L["desature_auras_not_by_player"])
+	end
+
+	if features.castbar then
+		local notStandalone = function() return not cfg[k("cb_standalone")] end
+		options:Header(L["uf_castbar"])
+		if features.standaloneCastbar then
+			options:Toggle(k("cb_standalone"), L["uf_use_standalone_castbar"])
+			options:Range(k("cb_width"), L["width"], 20, 600, 1):SetDisabled(notStandalone)
+			options:Range(k("cb_height"), L["height"], 4, 100, 1):SetDisabled(notStandalone)
+		end
+		options:Color(k("cb_color"), L["color"])
+		options:Range(k("cb_alpha"), L["alpha"], 0, 1, 0.05)
+		options:Toggle(k("cb_icon_cut"), L["uf_trim_castbar_icon"])
+		options:Range(k("cb_icon_size"), L["icon"].." "..L["size"], 4, 100, 1)
+		options:Anchor(k("cb_icon_anchor1"), L["icon"].." "..L["anchor"])
+		options:Anchor(k("cb_icon_anchor2"), L["icon"].." "..L["parent"])
+		options:Range(k("cb_icon_posx"), L["icon"].." "..L["PosX"], -200, 200, 1)
+		options:Range(k("cb_icon_posy"), L["icon"].." "..L["PosY"], -200, 200, 1)
+		options:Header(L["uf_time_and_spellname_header"])
+		options:FontGroup(k("cb_font"))
+		options:Color(k("cb_font_color"), L["color"])
+		options:Anchor(k("cb_time_anchor1"), L["time"].." "..L["anchor"])
+		options:Anchor(k("cb_time_anchor2"), L["time"].." "..L["parent"])
+		options:Range(k("cb_time_posx"), L["time"].." "..L["PosX"], -200, 200, 1)
+		options:Range(k("cb_time_posy"), L["time"].." "..L["PosY"], -200, 200, 1)
+		options:Anchor(k("cb_text_anchor1"), L["text"].." "..L["anchor"])
+		options:Anchor(k("cb_text_anchor2"), L["text"].." "..L["parent"])
+		options:Range(k("cb_text_posx"), L["text"].." "..L["PosX"], -200, 200, 1)
+		options:Range(k("cb_text_posy"), L["text"].." "..L["PosY"], -200, 200, 1)
+	end
+
+	if features.classpower then
+		options:Header(L["sub_panel_unitframes_player_classpower_and_runes_header"])
+		options:Media(k("classpower_border"), L["border"], "border")
+		options:Range(k("classpower_spacing"), L["spacing"], 0, 20, 1)
+		options:Anchor(k("classpower_anchor1"), L["anchor"])
+		options:Anchor(k("classpower_anchor2"), L["parent"])
+		options:Range(k("classpower_posx"), L["PosX"], -100, 100, 1)
+		options:Range(k("classpower_posy"), L["PosY"], -100, 100, 1)
+	end
+
+	if features.resting then
+		options:Header(L["uf_restingindicator_header"])
+		options:Toggle(k("show_restingindicator"), L["uf_show_restingindicator"])
+		options:Range(k("resting_size"), L["size"], 4, 64, 1)
+		options:PointGroup(k("resting_anchor"), k("resting_posx"), k("resting_posy"), nil, 50)
+	end
+
+	if features.role then
+		options:Header(L["uf_roleindicator_header"])
+		options:Toggle(k("showroleindicator"), L["uf_show_roleindicator"])
+		options:Range(k("ri_size"), L["size"], 4, 64, 1)
+		options:PointGroup(k("ri_anchor"), k("ri_posx"), k("ri_posy"), nil, 50)
+	end
+
+	if features.readycheck then
+		options:Header(L["uf_readycheckindicator_header"])
+		options:Range(k("rc_size"), L["size"], 4, 64, 1)
+		options:PointGroup(k("rc_anchor"), k("rc_posx"), k("rc_posy"), nil, 50)
+	end
+
+	return options
+end
+
+local POWER_NAMES = {
+	[0] = "mana", [1] = "rage", [2] = "focus", [3] = "energy", [4] = "combopoints", [5] = "runes",
+	[6] = "runicpower", [7] = "soulshards", [8] = "lunarpower", [9] = "holypower", [11] = "maelstrom",
+	[12] = "chi", [13] = "insanity", [16] = "arcanecharges", [17] = "fury", [18] = "pain",
+}
+
+local function buildGeneralOptions()
+	local cfg = db("general")
+	local options = ns.Options.New("uf_general", function() return db("general") end, ns.defaults.unitframes.general, refreshAll)
+
+	options:Header(L["uf_healthpoints"])
+	options:Toggle("uf_use_sivalue", L["uf_general_use_short_values"])
+	options:Toggle("uf_use_dot_format", L["uf_general_use dot_divider"])
+	options:Toggle("uf_use_hp_percent", L["uf_general_use_hp_percent"])
+	options:Toggle("uf_use_val_and_perc", L["uf_general_use_both_value_and_percent"])
+	options:Toggle("uf_perc_first", L["uf_general_switch_value_and_percent_order"])
+	options:Text("uf_val_perc_divider", L["uf_general_hpdivider_text"])
+	options:Header(L["uf_general_hp_font_options"])
+	options:FontGroup("uf_general_hp_font")
+	options:PointGroup("uf_general_hp_anchor", "uf_general_hp_posx", "uf_general_hp_posy")
+
+	options:Header(L["texture"])
+	options:Media("uf_statusbar_texture", L["texture"], "statusbar")
+	options:Toggle("uf_outline", L["Use outline"])
+	options:Toggle("uf_outline_threat", L["Color the outline by threat"])
+	options:Media("uf_border", L["border"], "border"):SetDisabled(function() return cfg["uf_outline"] end)
+
+	options:Header(L["uf_general_combatfade"])
+	options:Toggle("uf_fade_combat", L["uf_general_combatfade"])
+	options:Range("uf_fade_combat_incombat", L["uf_general_combatfade_in_combat_alpha"], 0, 1, 0.05)
+	options:Range("uf_fade_combat_outofcombat", L["uf_general_combatfade_out_of_combat_alpha"], 0, 1, 0.05)
+	options:Toggle("uf_fade_outofreach", L["uf_general_fadout_out_of_reach"])
+	options:Range("uf_fade_outofreach_alpha", L["uf_general_fadout_out_of_reach_alpha"], 0, 1, 0.05)
+
+	options:Header(L["raidmarks"])
+	options:Range("uf_ri_size", L["size"], 4, 64, 1)
+	options:PointGroup("uf_ri_anchor", "uf_ri_posx", "uf_ri_posy", nil, 50)
+	options:Header(L["uf_general_leadindicator"])
+	options:Range("uf_lead_size", L["size"], 4, 64, 1)
+	options:PointGroup("uf_lead_anchor", "uf_lead_posx", "uf_lead_posy", nil, 50)
+
+	options:Header(L["sub_panel_unitframes_powercolors"])
+	local colors = LolzenUIcfg.unitframes.powercolors
+	for index, name in pairs(POWER_NAMES) do
+		local opt = options:Add({kind = "color", name = L["sub_panel_unitframes_powercolors_"..name], key = "powercolor"..index})
+		opt.Get = function() return colors[index] end
+		opt.Set = function(_, color)
+			colors[index] = color
+			refreshAll()
+		end
+	end
+
+	ns.SettingsPanel:AddCategory("unitframes", options, true)
+end
+
+--[[ init ]]-------------------------------------------------------------------
+
+ns.OnInit("unitframes", function()
+	UF.ApplyColors()
+
+	for _, key in ipairs(UNITS) do
+		oUF:RegisterStyle("Lolzen - "..key, createStyle(key))
+		local holder = EM.CreateHolder(FRAME_NAMES[key].."Holder", holderSize(key))
+		holders[key] = holder
+
+		local name = "LolzenUI: "..L[NAMES[key]]
+		EM:AddFrame(holder, {
+			name = name,
+			pos = {
+				db = function() return db(key) end,
+				point = "uf_"..key.."_anchor",
+				x = "uf_"..key.."_posx",
+				y = "uf_"..key.."_posy",
+			},
+			defaults = ns.defaults.unitframes[key],
+			options = buildUnitOptions(key),
+			category = "unitframes",
+		})
+
+		if UF.features[key].standaloneCastbar then
+			local castbarHolder = EM.CreateHolder(FRAME_NAMES[key].."CastbarHolder", value(key, "cb_width"), value(key, "cb_height"))
+			holders[key.."_castbar"] = castbarHolder
+			EM:AddFrame(castbarHolder, {
+				name = name..": "..L["uf_castbar"],
+				pos = {
+					db = function() return db(key) end,
+					point = "uf_"..key.."_cb_anchor1",
+					rel = "uf_"..key.."_cb_anchor2",
+					x = "uf_"..key.."_cb_posx",
+					y = "uf_"..key.."_cb_posy",
+				},
+				defaults = ns.defaults.unitframes[key],
+			})
+			castbarHolder:SetShown(value(key, "cb_standalone"))
+		end
+	end
+
+	buildGeneralOptions()
+
+	EM:RegisterCallback("enter", startPreview)
+	EM:RegisterCallback("exit", function()
+		ns.RunOutOfCombat(stopPreview)
+	end)
+
+	oUF:Factory(spawn)
 end)

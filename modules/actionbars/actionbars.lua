@@ -1,4 +1,6 @@
 --// actionbars //--
+-- Skins the action buttons. Positions and layout of the bars are handled by Blizzard's Edit Mode,
+-- the skin options are attached to the action bar dialog in the Edit Mode.
 
 local _, ns = ...
 local L = ns.L
@@ -6,254 +8,214 @@ local LBT = LibStub("LibButtonTexture-1.0")
 
 ns.RegisterModule("actionbars", L["desc_actionbars"], true)
 
--- Cache frequently used globals for better performance
-local _G = _G
-local CreateFrame = CreateFrame
-local NUM_ACTIONBAR_BUTTONS = NUM_ACTIONBAR_BUTTONS
-
--- Pre-cache actionbar button names to avoid repeated string concatenation
-local ACTIONBAR_BUTTONS = {
-	"ActionButton",              -- MainMenuBar (ActionButton1-12)
-	"MultiBarBottomLeftButton", 
+local BUTTON_PREFIXES = {
+	"ActionButton",
+	"MultiBarBottomLeftButton",
 	"MultiBarBottomRightButton",
 	"MultiBarLeftButton",
 	"MultiBarRightButton",
+	"MultiBar5Button",
+	"MultiBar6Button",
+	"MultiBar7Button",
 	"PetActionButton",
+	"StanceButton",
 	"OverrideActionBarButton",
 	"ExtraActionButton",
 }
 
--- Additional buttons that may need theming
-local ADDITIONAL_BUTTONS = {
-	"BonusActionButton",         -- Bonus action bar buttons
-}
+local cfg
+local buttons = {}
 
--- Cached texture fetching to reduce LibButtonTexture calls
-local cachedTextures = {}
-local function getCachedTexture(textureType, textureName)
-	local key = textureType .. "_" .. textureName
-	if not cachedTextures[key] then
-		cachedTextures[key] = LBT:Fetch(textureType, textureName)
-	end
-	return cachedTextures[key]
-end
+local function applyTextures(button)
+	local normal = cfg["actionbar_normal_texture"]
+	button:SetNormalTexture(LBT:Fetch("border", normal))
+	button:SetCheckedTexture(LBT:Fetch("checked", cfg["actionbar_checked_texture"]))
+	button:SetHighlightTexture(LBT:Fetch("hover", cfg["actionbar_hover_texture"]))
+	button:SetPushedTexture(LBT:Fetch("pushed", cfg["actionbar_pushed_texture"]))
 
--- Single frame for all events to reduce overhead
-local eventFrame = CreateFrame("Frame")
-eventFrame:RegisterEvent("ADDON_LOADED")
-eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
-eventFrame:RegisterEvent("PLAYER_LOGIN")  -- Additional event for MainMenuBar reliability
-
--- Optimized theme application function
-local function applyTheme(buttonName)
-	local button = _G[buttonName]
-	if not button then return end
-	
-	local icon = _G[buttonName.."Icon"]
-	local flash = _G[buttonName.."Flash"]
-	local cooldown = _G[buttonName.."Cooldown"]
-	local hotkey = _G[buttonName.."HotKey"]
-	local name = _G[buttonName.."Name"]
-	local floatingBG = _G[buttonName.."FloatingBG"]
-	local normalTexture = _G[buttonName.."NormalTexture"]
-	local pushedTexture = button.PushedTexture
-	local shine = _G[buttonName.."Shine"]
-	local autoCastable = _G[buttonName.."AutoCastable"]
-	
-	-- Icon positioning and cropping
-	if icon then
-		icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
-		icon:SetPoint("TOPLEFT", button, "TOPLEFT", 2, -2)
-		icon:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -2, 2)
-	end
-	
-	-- Apply textures using cached versions
+	local flash = button.Flash
 	if flash then
-		flash:SetTexture(getCachedTexture("flashing", LolzenUIcfg.actionbar["actionbar_flash_texture"]))
+		flash:SetTexture(LBT:Fetch("flashing", cfg["actionbar_flash_texture"]))
 	end
-	
-	button:SetNormalTexture(getCachedTexture("border", LolzenUIcfg.actionbar["actionbar_normal_texture"]))
-	button:SetCheckedTexture(getCachedTexture("checked", LolzenUIcfg.actionbar["actionbar_checked_texture"]))
-	button:SetHighlightTexture(getCachedTexture("hover", LolzenUIcfg.actionbar["actionbar_hover_texture"]))
-	button:SetPushedTexture(getCachedTexture("pushed", LolzenUIcfg.actionbar["actionbar_pushed_texture"]))
-	
-	-- Cooldown positioning
-	if cooldown then
-		cooldown:SetPoint("TOPLEFT", button, "TOPLEFT", 2, -2)
-		cooldown:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -2, 2)
-	end
-	
-	-- Keybind visibility
-	if hotkey then
-		hotkey:SetAlpha(LolzenUIcfg.actionbar["actionbar_show_keybinds"] and 1 or 0)
-	end
-	
-	-- Hide unwanted elements
-	if name then name:Hide() end
-	if floatingBG then floatingBG:Hide() end
-	
-	-- Normal texture positioning
+
+	local normalTexture = button:GetNormalTexture()
 	if normalTexture then
-		if LolzenUIcfg.actionbar["actionbar_normal_texture"] == "Blizzard QuickSlot2" and icon then
-			normalTexture:SetPoint("TOPLEFT", icon, "TOPLEFT", -14, 14)
-			normalTexture:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", 15, -15)
+		normalTexture:ClearAllPoints()
+		if normal == "Blizzard QuickSlot2" and button.icon then
+			normalTexture:SetPoint("TOPLEFT", button.icon, "TOPLEFT", -14, 14)
+			normalTexture:SetPoint("BOTTOMRIGHT", button.icon, "BOTTOMRIGHT", 15, -15)
 		else
 			normalTexture:SetAllPoints(button)
 		end
 	end
-	
-	-- Pushed texture positioning
-	if pushedTexture then
-		pushedTexture:SetAllPoints(button)
-	end
-	
-	-- Shine positioning
-	if shine then
-		shine:SetPoint("TOPLEFT", button, "TOPLEFT", 2, -2)
-		shine:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -2, 2)
-	end
-	
-	-- Hide AutoCastable (unresizable as of latest patches)
-	if autoCastable then
-		autoCastable:SetAlpha(0)
+
+	local pushed = button:GetPushedTexture()
+	if pushed then
+		pushed:SetAllPoints(button)
 	end
 end
 
--- Optimized function to apply theme to all buttons of a specific type
-local function applyThemeToButtonSet(buttonPrefix)
-	for i = 1, NUM_ACTIONBAR_BUTTONS do
-		local buttonName = buttonPrefix .. i
-		if _G[buttonName] then
-			applyTheme(buttonName)
+local function applyKeybind(button)
+	local hotkey = button.HotKey
+	if hotkey then
+		hotkey:SetAlpha(cfg["actionbar_show_keybinds"] and 1 or 0)
+	end
+end
+
+local function styleButton(button)
+	local icon = button.icon or button.Icon
+	if icon then
+		-- square icons instead of the rounded mask
+		if button.IconMask then
+			icon:RemoveMaskTexture(button.IconMask)
 		end
+		icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
+		icon:ClearAllPoints()
+		icon:SetPoint("TOPLEFT", button, "TOPLEFT", 2, -2)
+		icon:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -2, 2)
+	end
+
+	local cooldown = button.cooldown or button.Cooldown
+	if cooldown then
+		cooldown:ClearAllPoints()
+		cooldown:SetPoint("TOPLEFT", button, "TOPLEFT", 2, -2)
+		cooldown:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -2, 2)
+	end
+
+	if button.Name then
+		button.Name:SetAlpha(0)
+	end
+	if button.FloatingBG then
+		button.FloatingBG:Hide()
+	end
+	if button.AutoCastable then
+		button.AutoCastable:SetAlpha(0)
+	end
+
+	applyTextures(button)
+	applyKeybind(button)
+end
+
+local function restyle(button)
+	-- Blizzard resets the button art on layout changes (e.g. in the Edit Mode)
+	applyTextures(button)
+end
+
+local function forEachButton(func)
+	for i = 1, #buttons do
+		func(buttons[i])
 	end
 end
 
--- Main initialization function
-local function initializeActionBars()
-	if not LolzenUIcfg or not LolzenUIcfg.modules["actionbars"] then 
-		return 
-	end
-	
-	-- Hide StatusTrackingBarManager with improved method
-	local statusManager = StatusTrackingBarManager
-	if statusManager then
-		statusManager:UnregisterAllEvents()
-		statusManager:Hide()
-		statusManager:SetScript("OnShow", statusManager.Hide)
-		-- Cache the hide function to prevent repeated calls
-		statusManager.show = statusManager.Hide
-	end
-	
-	-- Apply themes to all actionbar types
-	for _, buttonPrefix in ipairs(ACTIONBAR_BUTTONS) do
-		applyThemeToButtonSet(buttonPrefix)
-	end
-	
-	-- Apply themes to additional button types
-	for _, buttonPrefix in ipairs(ADDITIONAL_BUTTONS) do
-		applyThemeToButtonSet(buttonPrefix)
-	end
-	
-	-- Special handling for MainMenuBar to ensure it's properly themed
-	-- Force update ActionButtons after a short delay for reliability
-	C_Timer.After(0.1, function()
+local function collectButtons()
+	for _, prefix in ipairs(BUTTON_PREFIXES) do
 		for i = 1, NUM_ACTIONBAR_BUTTONS do
-			local buttonName = "ActionButton" .. i
-			if _G[buttonName] then
-				applyTheme(buttonName)
-			end
-		end
-	end)
-end
-
--- Event handler with reduced overhead
-eventFrame:SetScript("OnEvent", function(self, event, addon)
-	if event == "ADDON_LOADED" and addon == "LolzenUI" then
-		initializeActionBars()
-	elseif event == "PLAYER_LOGIN" then
-		-- Ensure MainMenuBar is properly themed after login
-		C_Timer.After(0.5, function()
-			for i = 1, NUM_ACTIONBAR_BUTTONS do
-				local buttonName = "ActionButton" .. i
-				if _G[buttonName] then
-					applyTheme(buttonName)
+			local button = _G[prefix..i]
+			if button and not button.lolzenStyled then
+				button.lolzenStyled = true
+				buttons[#buttons + 1] = button
+				styleButton(button)
+				if button.UpdateButtonArt then
+					hooksecurefunc(button, "UpdateButtonArt", restyle)
 				end
 			end
-		end)
+		end
+	end
+end
+
+--[[ fade out of combat ]]------------------------------------------------------
+
+local FADE_BARS = {
+	"MainMenuBar", "MainActionBar", "MultiBarBottomLeft", "MultiBarBottomRight",
+	"MultiBarRight", "MultiBarLeft", "MultiBar5", "MultiBar6", "MultiBar7",
+}
+local fadeBars = {}
+local fadeFrame
+
+local function updateFade()
+	local faded = cfg["actionbar_fade_ooc"] and not InCombatLockdown() and not ns.EditMode:IsActive()
+	local alpha = cfg["actionbar_fade_alpha"]
+	for bar in pairs(fadeBars) do
+		bar:SetAlpha((faded and not bar:IsMouseOver()) and alpha or 1)
+	end
+end
+
+local function onEnterBar(self)
+	local bar = fadeBars[self] and self or self:GetParent()
+	if fadeBars[bar] then
+		bar:SetAlpha(1)
+	end
+end
+
+local function onLeaveBar()
+	-- the mouse may have moved to another button of the same bar
+	C_Timer.After(0.1, updateFade)
+end
+
+local function setupFade()
+	if fadeFrame then
+		return updateFade()
+	end
+	fadeFrame = CreateFrame("Frame")
+	fadeFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
+	fadeFrame:RegisterEvent("PLAYER_REGEN_DISABLED")
+	fadeFrame:SetScript("OnEvent", updateFade)
+	ns.EditMode:RegisterCallback("enter", updateFade)
+	ns.EditMode:RegisterCallback("exit", updateFade)
+
+	for _, name in ipairs(FADE_BARS) do
+		local bar = _G[name]
+		if bar and not fadeBars[bar] then
+			fadeBars[bar] = true
+			bar:HookScript("OnEnter", onEnterBar)
+			bar:HookScript("OnLeave", onLeaveBar)
+		end
+	end
+	for i = 1, #buttons do
+		local button = buttons[i]
+		if fadeBars[button:GetParent()] then
+			button:HookScript("OnEnter", onEnterBar)
+			button:HookScript("OnLeave", onLeaveBar)
+		end
+	end
+	updateFade()
+end
+
+function ns.SetActionBarFade()
+	if cfg["actionbar_fade_ooc"] or fadeFrame then
+		setupFade()
+	end
+end
+
+function ns.SetActionBarTheme()
+	forEachButton(applyTextures)
+end
+
+function ns.SetActionBarKeyBindToggle()
+	forEachButton(applyKeybind)
+end
+
+ns.OnInit("actionbars", function()
+	cfg = LolzenUIcfg.actionbar
+
+	local options = ns.Options.New("actionbar", function() return LolzenUIcfg.actionbar end, ns.defaults.actionbar)
+	options:Header("LolzenUI")
+	options:Toggle("actionbar_show_keybinds", L["ab_keybinds"], ns.SetActionBarKeyBindToggle)
+	options:ButtonTexture("actionbar_normal_texture", L["ab_normaltexture"], "border", ns.SetActionBarTheme)
+	options:ButtonTexture("actionbar_flash_texture", L["ab_flashtexture"], "flashing", ns.SetActionBarTheme)
+	options:ButtonTexture("actionbar_checked_texture", L["ab_checkedtexture"], "checked", ns.SetActionBarTheme)
+	options:ButtonTexture("actionbar_hover_texture", L["ab_hovertexture"], "hover", ns.SetActionBarTheme)
+	options:ButtonTexture("actionbar_pushed_texture", L["ab_pushedtexture"], "pushed", ns.SetActionBarTheme)
+	options:Header(L["Fading"])
+	options:Toggle("actionbar_fade_ooc", L["Fade out of combat"], ns.SetActionBarFade):SetDesc(L["The bars fade out of combat and show up on mouseover."])
+	options:Range("actionbar_fade_alpha", L["alpha"], 0, 1, 0.05, ns.SetActionBarFade)
+
+	if not ns.EditMode:AddSystemSettings("ActionBar", options) then
+		ns.SettingsPanel:AddCategory("actionbars", options)
 	end
 end)
 
--- Optimized theme update function for settings changes
-function ns.SetActionBarTheme()
-	-- Clear texture cache when themes change
-	wipe(cachedTextures)
-	
-	-- Combine all button types for processing
-	local allButtonTypes = {}
-	for _, buttonPrefix in ipairs(ACTIONBAR_BUTTONS) do
-		table.insert(allButtonTypes, buttonPrefix)
-	end
-	for _, buttonPrefix in ipairs(ADDITIONAL_BUTTONS) do
-		table.insert(allButtonTypes, buttonPrefix)
-	end
-	
-	for _, buttonPrefix in ipairs(allButtonTypes) do
-		for i = 1, NUM_ACTIONBAR_BUTTONS do
-			local buttonName = buttonPrefix .. i
-			local button = _G[buttonName]
-			if button then
-				local flash = _G[buttonName.."Flash"]
-				local normalTexture = _G[buttonName.."NormalTexture"]
-				local icon = _G[buttonName.."Icon"]
-				
-				-- Update textures
-				if flash then
-					flash:SetTexture(getCachedTexture("flashing", LolzenUIcfg.actionbar["actionbar_flash_texture"]))
-				end
-				
-				button:SetNormalTexture(getCachedTexture("border", LolzenUIcfg.actionbar["actionbar_normal_texture"]))
-				button:SetCheckedTexture(getCachedTexture("checked", LolzenUIcfg.actionbar["actionbar_checked_texture"]))
-				button:SetHighlightTexture(getCachedTexture("hover", LolzenUIcfg.actionbar["actionbar_hover_texture"]))
-				button:SetPushedTexture(getCachedTexture("pushed", LolzenUIcfg.actionbar["actionbar_pushed_texture"]))
-				
-				-- Handle normal texture positioning for non-pet buttons
-				if buttonPrefix ~= "PetActionButton" and normalTexture then
-					if LolzenUIcfg.actionbar["actionbar_normal_texture"] == "Blizzard QuickSlot2" and icon then
-						normalTexture:SetPoint("TOPLEFT", icon, "TOPLEFT", -14, 14)
-						normalTexture:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", 15, -15)
-					else
-						normalTexture:SetAllPoints(button)
-					end
-				end
-			end
-		end
-	end
-end
-
--- Optimized keybind toggle function
-function ns.SetActionBarKeyBindToggle()
-	local showKeybinds = LolzenUIcfg.actionbar["actionbar_show_keybinds"]
-	local alpha = showKeybinds and 1 or 0
-	
-	-- Combine all button types for processing
-	local allButtonTypes = {}
-	for _, buttonPrefix in ipairs(ACTIONBAR_BUTTONS) do
-		table.insert(allButtonTypes, buttonPrefix)
-	end
-	for _, buttonPrefix in ipairs(ADDITIONAL_BUTTONS) do
-		table.insert(allButtonTypes, buttonPrefix)
-	end
-	
-	for _, buttonPrefix in ipairs(allButtonTypes) do
-		for i = 1, NUM_ACTIONBAR_BUTTONS do
-			local hotkey = _G[buttonPrefix .. i .. "HotKey"]
-			if hotkey then
-				hotkey:SetAlpha(alpha)
-			end
-		end
-	end
-end
-
--- Initialize on load
-initializeActionBars()
+ns.OnLogin("actionbars", function()
+	collectButtons()
+	ns.SetActionBarFade()
+end)

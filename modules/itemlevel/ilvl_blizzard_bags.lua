@@ -1,95 +1,79 @@
---// itemlevel on Blizzard's Bags and Bank// --
+--// itemlevel (Blizzard bags & bank) // --
 
 local _, ns = ...
-local LSM = LibStub("LibSharedMedia-3.0")
 
-local f = CreateFrame("Frame")
-f:RegisterEvent("ADDON_LOADED")
-f:SetScript("OnEvent", function(self, event, addon)
-	if addon == "LolzenUI" then
-		if LolzenUIcfg.modules["itemlevel"] == false then return end
-		if IsAddOnLoaded("Baggins") or IsAddOnLoaded("Bagnon") or IsAddOnLoaded("BaudBag") or IsAddOnLoaded("Combuctor") or IsAddOnLoaded("Inventorian") or IsAddOnLoaded("LiteBag") then return end
+local IL
+local containers = {}
 
-		local function getItemlvlBags(bagID, slotID)
-			local itemLink = GetContainerItemLink(bagID, slotID)
-			local item = Item:CreateFromBagAndSlot(bagID, slotID)
-			if item and IsEquippableItem(itemLink) then
-				return item:GetCurrentItemLevel()
-			end
+local function updateButton(button, bag, slot)
+	if IL.IsEnabled("ilvl_bags") then
+		IL.Set(button, IL.FromBagSlot(bag, slot))
+	else
+		IL.Set(button, nil)
+	end
+end
+
+local function updateContainer(frame)
+	if not frame:IsShown() then return end
+	if frame.EnumerateValidItems then
+		for _, button in frame:EnumerateValidItems() do
+			updateButton(button, button:GetBagID(), button:GetID())
 		end
-
-		local function getColorItemQualityBags(bagID, slotID)
-			local itemLink = GetContainerItemLink(bagID, slotID)
-			if itemLink then
-				local quality = select(3, GetItemInfo(itemLink))
-				if quality then
-					local r, g, b = GetItemQualityColor(quality)
-					return r, g, b
-				end
-			end
-		end
-
-		-- Bags & Bank (Blizzard)
-		local function updateBagSlotInfo(frame)
-			if not frame then return end
-			local bag = frame:GetID()
-			local name = frame:GetName()
-			local itemButton
-			local texture, itemCount, locked, quality, readable, _, _, isFiltered, noValue, itemID
-			for i=1, frame.size, 1 do
-				itemButton = _G[name.."Item"..i]
-				texture, itemCount, locked, quality, readable, _, _, isFiltered, noValue, itemID = GetContainerItemInfo(bag, itemButton:GetID())
-				if texture then
-					if not itemButton.str then
-						itemButton.str = itemButton:CreateFontString(nil, "OVERLAY")
-						itemButton.str:SetFont(LSM:Fetch("font", LolzenUIcfg.itemlevel["ilvl_font"]), LolzenUIcfg.itemlevel["ilvl_font_size"], LolzenUIcfg.itemlevel["ilvl_font_flag"])
-						itemButton.str:SetPoint(LolzenUIcfg.itemlevel["ilvl_anchor"], itemButton, LolzenUIcfg.itemlevel["ilvl_font_posx"], LolzenUIcfg.itemlevel["ilvl_font_posy"])
-						if LolzenUIcfg.itemlevel["ilvl_bags"] == true then
-							itemButton.str:SetText(getItemlvlBags(bag, itemButton:GetID()))
-						else
-							itemButton.str:SetText("")
-						end
-						if LolzenUIcfg.itemlevel["ilvl_use_itemquality_color"] == true then
-							itemButton.str:SetTextColor(getColorItemQualityBags(bag, itemButton:GetID()))
-						else
-							itemButton.str:SetTextColor(unpack(LolzenUIcfg.itemlevel["ilvl_font_color"]))
-						end
-					else
-						itemButton.str:SetFont(LSM:Fetch("font", LolzenUIcfg.itemlevel["ilvl_font"]), LolzenUIcfg.itemlevel["ilvl_font_size"], LolzenUIcfg.itemlevel["ilvl_font_flag"])
-						itemButton.str:ClearAllPoints()
-						itemButton.str:SetPoint(LolzenUIcfg.itemlevel["ilvl_anchor"], itemButton, LolzenUIcfg.itemlevel["ilvl_font_posx"], LolzenUIcfg.itemlevel["ilvl_font_posy"])
-						if LolzenUIcfg.itemlevel["ilvl_bags"] == true then
-							itemButton.str:SetText(getItemlvlBags(bag, itemButton:GetID()))
-						else
-							itemButton.str:SetText("")
-						end
-						if LolzenUIcfg.itemlevel["ilvl_use_itemquality_color"] == true then
-							itemButton.str:SetTextColor(getColorItemQualityBags(bag, itemButton:GetID()))
-						else
-							itemButton.str:SetTextColor(unpack(LolzenUIcfg.itemlevel["ilvl_font_color"]))
-						end
-					end
-				else
-					if itemButton.str then
-						itemButton.str:SetText(nil)
-					end
-				end
-			end
-		end
-		if LolzenUIcfg.itemlevel["ilvl_bags"] == true then
-			hooksecurefunc("ContainerFrame_Update", updateBagSlotInfo)
-			hooksecurefunc("BankFrameItemButton_Update", function(button)
-				if not button.isBag then
-					updateBagSlotInfo(BankFrame)
-				end
-			end)
-		end
-
-		ns.UpdateItemlevelBlizzBags = function()
-			updateBagSlotInfo(BankFrame)
-			for i=1, NUM_BAG_SLOTS+1 + NUM_BANKBAGSLOTS do
-				updateBagSlotInfo(_G["ContainerFrame"..i])
+	elseif frame.Items then
+		for _, button in ipairs(frame.Items) do
+			if button.GetBagID then
+				updateButton(button, button:GetBagID(), button:GetID())
 			end
 		end
 	end
+end
+
+-- 11.2+ bank panel
+local function updateBank()
+	local panel = BankPanel
+	if not panel or not panel:IsShown() or not panel.EnumerateValidItems then return end
+	for button in panel:EnumerateValidItems() do
+		local bag = (button.GetBankTabID and button:GetBankTabID()) or button.bankTabID
+		local slot = (button.GetContainerSlotID and button:GetContainerSlotID()) or button.containerSlotID
+		updateButton(button, bag, slot)
+	end
+end
+
+local function refresh()
+	for frame in pairs(containers) do
+		updateContainer(frame)
+	end
+	updateBank()
+end
+
+ns.OnLogin("itemlevel", function()
+	IL = ns.ItemLevel
+
+	local frames = {ContainerFrameCombinedBags}
+	for i = 1, (NUM_TOTAL_BAG_FRAMES or NUM_CONTAINER_FRAMES or 13) do
+		frames[#frames + 1] = _G["ContainerFrame"..i]
+	end
+	for _, frame in pairs(frames) do
+		if frame and not containers[frame] then
+			containers[frame] = true
+			-- the container frames update their buttons in UpdateItems
+			if frame.UpdateItems then
+				hooksecurefunc(frame, "UpdateItems", updateContainer)
+			end
+			frame:HookScript("OnShow", updateContainer)
+		end
+	end
+
+	if BankPanel then
+		BankPanel:HookScript("OnShow", function() C_Timer.After(0, updateBank) end)
+	end
+
+	local events = CreateFrame("Frame")
+	events:RegisterEvent("BAG_UPDATE_DELAYED")
+	events:RegisterEvent("BANKFRAME_OPENED")
+	pcall(events.RegisterEvent, events, "PLAYERBANKSLOTS_CHANGED")
+	-- the container frames are covered by the UpdateItems hook
+	events:SetScript("OnEvent", updateBank)
+
+	IL.RegisterRefresher(refresh)
 end)

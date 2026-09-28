@@ -1,4 +1,4 @@
-﻿--// config defaults //--
+--// config defaults //--
 
 local _, ns = ...
 local L = ns.L
@@ -12,6 +12,7 @@ defaultconfig.modules = {
 	["buffwatcher"] = true,
 	["chat"] = true,
 	["clock"] = true,
+	["cooldownviewer"] = true,
 	["fonts"] = true,
 	["itemlevel"] = true,
 	["inspect"] = true,
@@ -38,18 +39,8 @@ defaultconfig.actionbar = {
 	["actionbar_checked_texture"] = "LolzenUI Standard",
 	["actionbar_hover_texture"] = "LolzenUI Standard",
 	["actionbar_pushed_texture"] = "LolzenUI Standard",
-	["actionbar_mmb_posx"] = 0,
-	["actionbar_mmb_posy"] = 22,
-	["actionbar_mbbl_posx"] = 0,
-	["actionbar_mbbl_posy"] = 54,
-	["actionbar_mbbr_posx"] = 0,
-	["actionbar_mbbr_posy"] = 86,
-	["actionbar_mbl_posx"] = -34,
-	["actionbar_mbl_posy"] = 150,
-	["actionbar_mbr_posx"] = -2,
-	["actionbar_mbr_posy"] = 150,
-	["actionbar_petb_posx"] = 32,
-	["actionbar_petb_posy"] = 170,
+	["actionbar_fade_ooc"] = false,
+	["actionbar_fade_alpha"] = 0.15,
 }
 
 defaultconfig.artifactbar = {
@@ -75,23 +66,7 @@ defaultconfig.artifactbar = {
 	["artifactbar_text_posy"] = 8,
 }
 
---[[
-	["buff_spacing_horizontal"] = -3,
-	["buff_spacing_vertical"] = 0,
-	["buff_debuff_spacing_horizontal"] = -3,
-	["buff_debuffspacing_vertical"] = 0,
-	["buff_tempenchant_spacing_horizontal"] = -3,
-	["buff_tempenchant_vertical"] = 0,
-]]
 defaultconfig.buffs = {
-	["buff_size"] = 30,
-	["buff_debuff_size"] = 30,
-	["buff_tempenchant_size"] = 30,
-	["buff_anchor1"] = "TOPRIGHT",
-	["buff_parent"] = "Minimap",
-	["buff_anchor2"] = "TOPLEFT",
-	["buff_posx"] = -15,
-	["buff_posy"] = 2,
 	["buff_duration_anchor1"] = "CENTER",
 	["buff_duration_anchor2"] = "BOTTOM",
 	["buff_duration_posx"] = 0,
@@ -108,6 +83,8 @@ defaultconfig.buffs = {
 	["buff_counter_font_flag"] = "OUTLINE",
 	["buff_aura_texture"] = "LolzenUI Standard",
 	["buff_debuff_texture"] = "LolzenUI Standard",
+	["buff_hide_collapse"] = true,
+	["buff_hide_private_anchors"] = true,
 }
 
 defaultconfig.buffwatcher ={
@@ -116,6 +93,7 @@ defaultconfig.buffwatcher ={
 	["buffwatch_pos_y"] = -140,
 	["buffwatch_icon_size"] = 52,
 	["buffwatch_icon_spacing"] = 5,
+	["buffwatch_anchor"] = "CENTER",
 }
 
 defaultconfig.chat = {
@@ -145,12 +123,9 @@ defaultconfig.chat = {
 	["chat_sticky_whisper"] = false,
 	["chat_sticky_channel"] = true,
 	["chat_show_afkdnd_once"] = true,
-	["chat_posx"] = 8,
-	["chat_posy"] = 15,
-	["chat_anchor1"] = "BOTTOMLEFT",
-	["chat_anchor2"] = "BOTTOMLEFT",
 	["chat_strip_say_and_yell"] = true,
 	["chat_link_color"] = {51/255, 181/255, 229/255},
+	["chat_outline"] = true,
 }
 
 defaultconfig.clock = {
@@ -168,6 +143,15 @@ defaultconfig.clock = {
 	["clock_posx"] = -5,
 	["clock_posy"] = -9,
 	["clock_dateformat"] = "EU",
+}
+
+defaultconfig.cooldownviewer = {
+	["cdv_crop_icons"] = true,
+	["cdv_outline"] = true,
+	["cdv_font"] = "DroidSansBold",
+	["cdv_font_size"] = 12,
+	["cdv_font_flag"] = "OUTLINE",
+	["cdv_count_size"] = 11,
 }
 
 defaultconfig.fonts = {
@@ -199,14 +183,16 @@ defaultconfig.interruptannouncer = {
 
 defaultconfig.minimap = {
 	["minimap_square"] = true,
-	["minimap_anchor"] = "TOPRIGHT",
-	["minimap_posx"] = -15,
-	["minimap_posy"] = -40,
+	["minimap_outline"] = true,
+	["minimap_hide_zoom"] = true,
+	["minimap_hide_clock"] = true,
 }
 
 defaultconfig.miscellaneous = {
 	["misc_alternative_faction_colors"] = true,
 	["misc_hide_microbuttons"] = true,
+	["misc_hide_bagbar"] = true,
+	["misc_easy_delete"] = true,
 	["misc_faction_colors"] = {
 		[1] = {1, 0.2, 0.15},	-- Hated
 		[2] = {0.8, 0.3, 0.22},	-- Hostile		}
@@ -284,9 +270,6 @@ defaultconfig.nameplates = {
 }
 
 defaultconfig.objectivetracker = {
-	["objectivetracker_anchor"] = "TOPLEFT",
-	["objectivetracker_posx"] = 30,
-	["objectivetracker_posy"] = -30,
 	["objectivetracker_combatcollapse"] = true,
 	["objectivetracker_logincollapse"] = true,
 	["objectivetracker_dungeoncollapse"] = true,
@@ -306,6 +289,10 @@ defaultconfig.orderhallbar = {
 	["ohb_background_color"] = {0, 0, 0},
 	["ohb_background_alpha"] = 0.5,
 	["ohb_always_show"] = true,
+	["ohb_anchor"] = "TOP",
+	["ohb_posx"] = 0,
+	["ohb_posy"] = 0,
+	["ohb_height"] = 24,
 }
 
 defaultconfig.pullcount = {
@@ -331,6 +318,12 @@ defaultconfig.pullcount = {
 	["pull_filter_channel"] = true,
 }
 
+defaultconfig.style = {
+	["outline_color"] = {0.5, 0.5, 0.5},
+	["outline_shadow"] = true,
+	["outline_shadow_alpha"] = 1,
+}
+
 defaultconfig.tooltip = {
 	["tip_show_factionicons"] = true,
 	["tip_show_raidmark"] = true,
@@ -343,12 +336,13 @@ defaultconfig.tooltip = {
 	["tip_statusflag_dnd_color"] = {1, 1, 1},
 	["tip_statusflag_off"] = "(Off)",
 	["tip_statusflag_off_color"] = {1, 1, 1},
-	["tip_posx"] = -13,
-	["tip_posy"] = 43,
-	["tip_anchor1"] = "BOTTOMRIGHT",
-	["tip_anchor2"] = "BOTTOMRIGHT",
-	["tip_own_guild_color"] = {0, 5, 1},
+	["tip_own_guild_color"] = {0, 1, 1},
 	["tip_use_guild_color_globally"] = false,
+	["tip_outline"] = true,
+	["tip_show_ids"] = true,
+	["tip_show_icons"] = true,
+	["tip_show_target"] = true,
+	["tip_anchor_cursor"] = false,
 }
 
 defaultconfig.unitframes = {
@@ -380,8 +374,13 @@ defaultconfig.unitframes = {
 		["uf_fade_combat_incombat"] = 1,
 		["uf_fade_combat_outofcombat"] = 0.3,
 		["uf_border"] = "LolzenUI Standard",
+		["uf_outline"] = true,
+		["uf_outline_threat"] = true,
 	},
 	["player"] = {
+		["uf_player_anchor"] = "CENTER",
+		["uf_player_posx"] = -250,
+		["uf_player_posy"] = -200,
 		["uf_player_use_own_hp_font_settings"] = true,
 		["uf_player_hp_font"] = "DroidSansBold",
 		["uf_player_hp_font_size"] = 24,
@@ -439,6 +438,9 @@ defaultconfig.unitframes = {
 		["uf_player_resting_anchor"] = "LEFT",
 	},
 	["target"] = {
+		["uf_target_anchor"] = "CENTER",
+		["uf_target_posx"] = 250,
+		["uf_target_posy"] = -200,
 		["uf_target_use_own_hp_font_settings"] = true,
 		["uf_target_hp_font"] = "DroidSansBold",
 		["uf_target_hp_font_size"] = 24,
@@ -497,6 +499,9 @@ defaultconfig.unitframes = {
 		["uf_target_cb_font_color"] = {1, 1, 1},
 	},
 	["targettarget"] = {
+		["uf_targettarget_anchor"] = "CENTER",
+		["uf_targettarget_posx"] = 300,
+		["uf_targettarget_posy"] = -177,
 		["uf_targettarget_use_own_hp_font_settings"] = true,
 		["uf_targettarget_hp_font"] = "DroidSansBold",
 		["uf_targettarget_hp_font_size"] = 18,
@@ -508,6 +513,10 @@ defaultconfig.unitframes = {
 		["uf_targettarget_height"] = 18,
 	},
 	["party"] = {
+		["uf_party_anchor"] = "BOTTOM",
+		["uf_party_posx"] = 0,
+		["uf_party_posy"] = 140,
+		["uf_party_spacing"] = 7,
 		["uf_party_enabled"] = true,
 		["uf_party_use_own_hp_font_settings"] = true,
 		["uf_party_hp_font"] = "DroidSansBold",
@@ -529,6 +538,10 @@ defaultconfig.unitframes = {
 		["uf_party_rc_anchor"] = "LEFT",
 	},
 	["raid"] = {
+		["uf_raid_anchor"] = "LEFT",
+		["uf_raid_posx"] = 20,
+		["uf_raid_posy"] = 0,
+		["uf_raid_spacing"] = 7,
 		["uf_raid_enabled"] = true,
 		["uf_raid_use_own_hp_font_settings"] = true,
 		["uf_raid_hp_font"] = "DroidSansBold",
@@ -550,6 +563,9 @@ defaultconfig.unitframes = {
 		["uf_raid_rc_anchor"] = "LEFT",
 	},
 	["pet"] = {
+		["uf_pet_anchor"] = "CENTER",
+		["uf_pet_posx"] = -300,
+		["uf_pet_posy"] = -177,
 		["uf_pet_use_own_hp_font_settings"] = true,
 		["uf_pet_hp_font"] = "DroidSansBold",
 		["uf_pet_hp_font_size"] = 18,
@@ -581,6 +597,10 @@ defaultconfig.unitframes = {
 		["uf_pet_cb_font_color"] = {1, 1, 1},
 	},
 	["boss"] = {
+		["uf_boss_anchor"] = "CENTER",
+		["uf_boss_posx"] = 0,
+		["uf_boss_posy"] = -118,
+		["uf_boss_spacing"] = 30,
 		["uf_boss_width"] = 160,
 		["uf_boss_height"] = 11,
 		["uf_boss_show_power"] = false,
@@ -633,6 +653,9 @@ defaultconfig.unitframes = {
 		["uf_boss_cb_font_color"] = {1, 1, 1},
 	},
 	["focus"] = {
+		["uf_focus_anchor"] = "CENTER",
+		["uf_focus_posx"] = -250,
+		["uf_focus_posy"] = -230,
 		["uf_focus_use_own_hp_font_settings"] = true,
 		["uf_focus_hp_font"] = "DroidSansBold",
 		["uf_focus_hp_font_size"] = 18,
@@ -684,6 +707,10 @@ defaultconfig.unitframes = {
 		["uf_focus_cb_font_color"] = {1, 1, 1},
 	},
 	["arena"] = {
+		["uf_arena_anchor"] = "CENTER",
+		["uf_arena_posx"] = 0,
+		["uf_arena_posy"] = -241,
+		["uf_arena_spacing"] = 30,
 		["uf_arena_use_own_hp_font_settings"] = true,
 		["uf_arena_hp_font"] = "DroidSansBold",
 		["uf_arena_hp_font_size"] = 18,
@@ -759,7 +786,7 @@ defaultconfig.worldmap = {
 	["worldmap_coordinates"] = true,
 	["worldmap_title_color"] = {51/255, 181/255, 229/255},
 	["worldmap_save_position"] = true,
-	["worldmap_saved_position"] = {"BOTTOM", UIParent, "BOTTOM", 0, 320}
+	["worldmap_saved_position"] = {"BOTTOM", "BOTTOM", 0, 320},
 }
 
 defaultconfig.xpbar = {
@@ -788,269 +815,111 @@ defaultconfig.xpbar = {
 	["xpbar_text_posy"] = 8,
 }
 
-local OMFdefault = {
-	["Lolzen - Player"] = {
-		["oUF_LolzenPlayer"] = "CENTERUIParent-250-2001.000",
-	},
-	["Lolzen - Target"] = {
-		["oUF_LolzenTarget"] = "CENTERUIParent250-2001.000",
-	},
-	["Lolzen - Targettarget"] = {
-		["oUF_LolzenTargetTarget"] = "CENTERUIParent300-1771.000",
-	},
-	["Lolzen - Party"] = {
-		["oUF_LolzenParty"] = "BOTTOMUIParent01401.000",
-	},
-	["Lolzen - Raid"] = {
-		["oUF_LolzenRaid"] = "LEFTUIParent2001.000",
-	},
-	["Lolzen - Pet"] = {
-		["oUF_LolzenPet"] = "CENTERUIParent-300-1771.000",
-	},
-	["Lolzen - Boss"] = {
-		["oUF_LolzenBoss1"] = "CENTERUIParent0-2001.000",
-		["oUF_LolzenBoss2"] = "CENTERUIParent0-1591.000",
-		["oUF_LolzenBoss3"] = "CENTERUIParent0-1181.000",
-		["oUF_LolzenBoss4"] = "CENTERUIParent0-771.000",
-		["oUF_LolzenBoss5"] = "CENTERUIParent0-361.000",
-	},
-	["Lolzen - Focus"] = {
-		["oUF_LolzenFocus"] = "CENTERUIParent-250-2301.000",
-	},
-	["Lolzen - Arena"] = {
-		["oUF_LolzenArena1"] = "CENTERUIParent0-2001.000",
-		["oUF_LolzenArena2"] = "CENTERUIParent0-2411.000",
-		["oUF_LolzenArena3"] = "CENTERUIParent0-2821.000",
-	},
-	["__INITIAL"] = {
-		["Lolzen - Player"] = {
-			["oUF_LolzenPlayer"] = "CENTERUIParent-250-2001.000",
-		},
-		["Lolzen - Target"] = {
-			["oUF_LolzenTarget"] = "CENTERUIParent250-2001.000",
-		},
-		["Lolzen - Targettarget"] = {
-			["oUF_LolzenTargetTarget"] = "CENTERUIParent300-1771.000",
-		},
-		["Lolzen - Party"] = {
-			["oUF_LolzenParty"] = "BOTTOMUIParent01401.000",
-		},
-		["Lolzen - Raid"] = {
-			["oUF_LolzenRaid"] = "LEFTUIParent2001.000",
-		},
-		["Lolzen - Pet"] = {
-			["oUF_LolzenPet"] = "CENTERUIParent-300-1771.000",
-		},
-		["Lolzen - Boss"] = {
-			["oUF_LolzenBoss1"] = "CENTERUIParent0-2001.000",
-			["oUF_LolzenBoss2"] = "CENTERUIParent0-1591.000",
-			["oUF_LolzenBoss3"] = "CENTERUIParent0-1181.000",
-			["oUF_LolzenBoss4"] = "CENTERUIParent0-771.000",
-			["oUF_LolzenBoss5"] = "CENTERUIParent0-361.000",
-		},
-		["Lolzen - Focus"] = {
-			["oUF_LolzenFocus"] = "CENTERUIParent-250-2301.000",
-		},
-		["Lolzen - Arena"] = {
-			["oUF_LolzenArena1"] = "CENTERUIParent0-2001.000",
-			["oUF_LolzenArena2"] = "CENTERUIParent0-2411.000",
-			["oUF_LolzenArena3"] = "CENTERUIParent0-2821.000",
-		},
-	},
+-- make the defaults globally available
+ns.defaults = defaultconfig
+_G["LolzenUIdefaultcfg"] = defaultconfig
+
+--[[ Saved variables ]]--------------------------------------------------------
+
+-- Tables where the user adds entries (lists, per character data, ...): never prune those.
+local dynamicTables = {
+	buffwatchlist = true,
+	powercolors = true,
+	misc_faction_colors = true,
 }
 
--- make the defaults globally available
-_G["LolzenUIdefaultcfg"] = defaultconfig
-_G["LolzenUIOMFdefaultcfg"] = OMFdefault
-
--- // Data Migration // --	
---[[	
-	At the time of writing Live Patch is 8.2.5 on Nov 28th 2019.	
-	I will leave his codeblock in until 9.0 (Shadowlands prepatch) is live.	
-	Then i will remove it and hope every active user has already updated to a newer version.	
-]]--	
-
- -- Make sure upgrading to new Saved Variables structure is seamingless while not overwriting user's settings	
--- Copy over old data into temporary tables, wipe the saved variables clean and copy from temporary tables back
-local function migrateActionBarData()
-	local tempActionBar = {
-		["actionbar_show_keybinds"] = LolzenUIcfg.actionbar["actionbar_show_keybinds"],
-		["actionbar_button_spacing"] = LolzenUIcfg.actionbar["actionbar_button_spacing"],
-		["actionbar_button_size"] = LolzenUIcfg.actionbar["actionbar_button_size"],
-		["actionbar_normal_texture"] = "LolzenUI Standard",
-		["actionbar_flash_texture"] = "LolzenUI Standard",
-		["actionbar_checked_texture"] = "LolzenUI Standard",
-		["actionbar_hover_texture"] = "LolzenUI Standard",
-		["actionbar_pushed_texture"] = "LolzenUI Standard",
-		["actionbar_mmb_posx"] = LolzenUIcfg.actionbar["actionbar_mmb_posx"],
-		["actionbar_mmb_posy"] = LolzenUIcfg.actionbar["actionbar_mmb_posy"],
-		["actionbar_mbbl_posx"] = LolzenUIcfg.actionbar["actionbar_mbbl_posx"],
-		["actionbar_mbbl_posy"] = LolzenUIcfg.actionbar["actionbar_mbbl_posy"],
-		["actionbar_mbbr_posx"] = LolzenUIcfg.actionbar["actionbar_mbbr_posx"],
-		["actionbar_mbbr_posy"] = LolzenUIcfg.actionbar["actionbar_mbbr_posy"],
-		["actionbar_mbl_posx"] = LolzenUIcfg.actionbar["actionbar_mbl_posx"],
-		["actionbar_mbl_posy"] = LolzenUIcfg.actionbar["actionbar_mbl_posy"],
-		["actionbar_mbr_posx"] = LolzenUIcfg.actionbar["actionbar_mbr_posx"],
-		["actionbar_mbr_posy"] = LolzenUIcfg.actionbar["actionbar_mbr_posy"],
-		["actionbar_petb_posx"] = LolzenUIcfg.actionbar["actionbar_petb_posx"],
-		["actionbar_petb_posy"] = LolzenUIcfg.actionbar["actionbar_petb_posy"],
-	}	
-	table.wipe(LolzenUIcfg.actionbar)	
-	LolzenUIcfg.actionbar = tempActionBar
+local function isList(tbl)
+	return next(tbl) == nil or tbl[1] ~= nil or tbl[0] ~= nil
 end
 
-local function migrateBuffData()
-	local tempBuff = {
-		["buff_size"] = LolzenUIcfg.buffs["buff_size"],
-		["buff_debuff_size"] = LolzenUIcfg.buffs["buff_debuff_size"],
-		["buff_tempenchant_size"] = LolzenUIcfg.buffs["buff_tempenchant_size"],
-		["buff_anchor1"] = LolzenUIcfg.buffs["buff_anchor1"],
-		["buff_parent"] = LolzenUIcfg.buffs["buff_parent"],
-		["buff_anchor2"] = LolzenUIcfg.buffs["buff_anchor2"],
-		["buff_posx"] = LolzenUIcfg.buffs["buff_posx"],
-		["buff_posy"] = LolzenUIcfg.buffs["buff_posy"],
-		["buff_duration_anchor1"] = LolzenUIcfg.buffs["buff_duration_anchor1"],
-		["buff_duration_anchor2"] = LolzenUIcfg.buffs["buff_duration_anchor2"],
-		["buff_duration_posx"] = LolzenUIcfg.buffs["buff_duration_posx"],
-		["buff_duration_posy"] = LolzenUIcfg.buffs["buff_duration_posy"],
-		["buff_duration_detailed"] = LolzenUIcfg.buffs["buff_duration_detailed"],
-		["buff_duration_font"] = LolzenUIcfg.buffs["buff_duration_font"],
-		["buff_duration_font_size"] = LolzenUIcfg.buffs["buff_duration_font_size"],
-		["buff_duration_font_flag"] = LolzenUIcfg.buffs["buff_duration_font_flag"],
-		["buff_counter_anchor"] = LolzenUIcfg.buffs["buff_counter_anchor"],
-		["buff_counter_posx"] = LolzenUIcfg.buffs["buff_counter_posx"],
-		["buff_counter_posy"] = LolzenUIcfg.buffs["buff_counter_posy"],
-		["buff_counter_font"] = LolzenUIcfg.buffs["buff_counter_font"],
-		["buff_counter_size"] = LolzenUIcfg.buffs["buff_counter_size"],
-		["buff_counter_font_flag"] = LolzenUIcfg.buffs["buff_counter_font_flag"],
-		["buff_aura_texture"] = "LolzenUI Standard",
-		["buff_debuff_texture"] = "LolzenUI Standard",
-	}	
-	table.wipe(LolzenUIcfg.buffs)	
-	LolzenUIcfg.buffs = tempBuff
-end
-
-local function migratePullCountData()
-	local tempPullCount = {
-		["pull_count_range"] = LolzenUIcfg.pullcount["pull_count_range"],
-		["pull_msg_count"] = LolzenUIcfg.pullcount["pull_msg_count"],
-		["pull_msg_now"] = LolzenUIcfg.pullcount["pull_msg_now"],
-		["pull_sound_1"] = "UT2004_female: one",
-		["pull_sound_2"] = "UT2004_female: two",
-		["pull_sound_3"] = "UT2004_female: three",
-		["pull_sound_4"] = "UT2004_female: four",
-		["pull_sound_5"] = "UT2004_female: five",
-		["pull_sound_6"] = "UT2004_female: six",
-		["pull_sound_7"] = "UT2004_female: seven",
-		["pull_sound_8"] = "UT2004_female: eight",
-		["pull_sound_9"] = "UT2004_female: nine",
-		["pull_sound_10"] = "UT2004_female: ten",
-		["pull_sound_pull"] = "UT2004_female: Play",
-		["pull_sound_abort"] = "UT2004_female: Denied",
-		["pull_filter_guild"] = LolzenUIcfg.pullcount["pull_filter_guild"],
-		["pull_filter_party"] = LolzenUIcfg.pullcount["pull_filter_party"],
-		["pull_filter_instance"] = LolzenUIcfg.pullcount["pull_filter_instance"],
-		["pull_filter_say"] = LolzenUIcfg.pullcount["pull_filter_say"],
-		["pull_filter_channel"] = LolzenUIcfg.pullcount["pull_filter_channel"],
-	}
-	table.wipe(LolzenUIcfg.pullcount)	
-	LolzenUIcfg.pullcount = tempPullCount
-end
-
--- // check default config and update if necessary // --
-local function updateDB(module)
-	local expansion, major, minor, revision = tonumber(strsub(LolzenUIcfg.version, 1, 1)), tonumber(strsub(LolzenUIcfg.version, 3, 3)), tonumber(strsub(LolzenUIcfg.version, 5, 5)), tonumber(strsub(LolzenUIcfg.version, 8))
-	for k, v in pairs(defaultconfig[module]) do
-		-- check if updating Save Variables is needed, based on stored LolzenUI version	
-		-- In revision 4 of 8.2.5 actionbar texturepaths have been changed, so we check up to version 9.0 for data migration	
-		if expansion == 8 then
-			if module == "actionbar" then 
-				if LolzenUIcfg.actionbar["actionbar_normal_texture"] == "gloss" then
-					migrateActionBarData()
-				end
-			elseif module == "buffs" then
-				if LolzenUIcfg.buffs["buff_aura_texture"] == "auraborder" then
-					migrateBuffData()
-				end
-			elseif module == "pullcount" then
-				if LolzenUIcfg.pullcount["pull_sound_1"] == "one.mp3" then
-					migratePullCountData()
-				end
-			end
-		end
-		if not LolzenUIcfg[module][k] and v ~= nil then
-			if type(v) == "boolean" then
-				if v == true and LolzenUIcfg[module][k] == nil then
-					LolzenUIcfg[module][k] = true
-				elseif v == false and LolzenUIcfg[module][k] == nil then
-					LolzenUIcfg[module][k] = false
-				end
-			else
-				LolzenUIcfg[module][k] = v
-			end
-		elseif LolzenUIcfg[module][k] and v ~= nil then
-			if type(v) == "table" then
-				for a, b in pairs(v) do
-					if a and b then		
-						-- handle the case tables in tables are present, but new defaults are available
-						if not LolzenUIcfg[module][k][a] then
-							if type(b) == "boolean" then
-								if b == true and LolzenUIcfg[module][k][a] == nil then
-									LolzenUIcfg[module][k][a] = true
-								elseif b == false and LolzenUIcfg[module][k][a] == nil then
-									LolzenUIcfg[module][k][a] = false
-								end
-							else
-								LolzenUIcfg[module][k][a] = b
-							end
-						end
-					end
-				end
-			end
+-- copy missing defaults into the saved variables (never overwrite existing values)
+local function mergeDefaults(db, defaults)
+	for key, value in pairs(defaults) do
+		if db[key] == nil then
+			db[key] = ns.DeepCopy(value)
+		elseif type(value) == "table" and type(db[key]) == "table" and not dynamicTables[key] then
+			mergeDefaults(db[key], value)
 		end
 	end
 end
 
-local f = CreateFrame("Frame")
-f:SetScript("OnEvent", function(self, event, addon)
-	if addon == "LolzenUI" then
-		-- create new defaults on first login
-		if LolzenUIcfg == nil then
-			LolzenUIcfg = defaultconfig
-			-- store LolzenUI version in SV
-			LolzenUIcfg.version = C_AddOns.GetAddOnMetadata("LolzenUI", "version")
-		else
-			-- update saved variables upon finding new entries
-			for k, v in pairs(defaultconfig) do
-				if not LolzenUIcfg[k] then
-					LolzenUIcfg[k] = v
-				else
-					-- update LolzenUIcfg.version if necessary
-					if LolzenUIcfg.version ~= C_AddOns.GetAddOnMetadata("LolzenUI", "version") then
-						LolzenUIcfg.version = C_AddOns.GetAddOnMetadata("LolzenUI", "version")
-					end
-					updateDB(k)
-				end
-			end
+-- remove settings which don't exist anymore, so the saved variables don't accumulate garbage
+local function pruneObsolete(db, defaults)
+	for key, value in pairs(db) do
+		local default = defaults[key]
+		if default == nil then
+			db[key] = nil
+		elseif type(default) == "table" and type(value) == "table" and not dynamicTables[key] and not isList(default) then
+			pruneObsolete(value, default)
 		end
-		if LolzenUIcfgOMF == nil then
-			LolzenUIcfgOMF = OMFdefault
-		else
-			-- update saved variables upon finding new entries
-			for k, v in pairs(OMFdefault) do
-				if not LolzenUIcfgOMF[k] then
-					LolzenUIcfgOMF[k] = v
-				else
-					if k == "__INITIAL" then
-						for a, b in pairs(v) do
-							if not LolzenUIcfgOMF[k][a] then
-								LolzenUIcfgOMF[k][a] = b
-							end
-						end
-					end
-				end
+	end
+end
+
+-- oUF_MovableFrames stored positions as "POINT\031PARENT\031X\031Y\031SCALE"
+local omfFrames = {
+	player = {"Lolzen - Player", "oUF_LolzenPlayer"},
+	target = {"Lolzen - Target", "oUF_LolzenTarget"},
+	targettarget = {"Lolzen - Targettarget", "oUF_LolzenTargetTarget"},
+	focus = {"Lolzen - Focus", "oUF_LolzenFocus"},
+	pet = {"Lolzen - Pet", "oUF_LolzenPet"},
+	party = {"Lolzen - Party", "oUF_LolzenParty"},
+	raid = {"Lolzen - Raid", "oUF_LolzenRaid"},
+}
+
+local function migrateMovableFrames()
+	if type(LolzenUIcfgOMF) ~= "table" then return end
+	for unit, info in pairs(omfFrames) do
+		local style = LolzenUIcfgOMF[info[1]]
+		local data = type(style) == "table" and style[info[2]]
+		if type(data) == "string" then
+			local point, _, x, y = strsplit("\031", data)
+			x, y = tonumber(x), tonumber(y)
+			local db = LolzenUIcfg.unitframes[unit]
+			if point and x and y and db then
+				db["uf_"..unit.."_anchor"] = point
+				db["uf_"..unit.."_posx"] = x
+				db["uf_"..unit.."_posy"] = y
 			end
 		end
 	end
-end)
-f:RegisterEvent("ADDON_LOADED")
+	-- the data is migrated, don't keep it around
+	LolzenUIcfgOMF = nil
+end
+
+local function migrate()
+	-- the old worldmap position contained a reference to UIParent, which bloated the saved variables
+	local wm = LolzenUIcfg.worldmap
+	if wm and type(wm["worldmap_saved_position"]) == "table" then
+		local pos = wm["worldmap_saved_position"]
+		if #pos == 5 or type(pos[2]) == "table" then
+			wm["worldmap_saved_position"] = {pos[1], pos[3], tonumber(pos[4]) or 0, tonumber(pos[5]) or 320}
+		end
+	end
+
+	-- the default guild color was {0, 5, 1}, which renders as {0, 1, 1}
+	local tip = LolzenUIcfg.tooltip
+	if tip and type(tip["tip_own_guild_color"]) == "table" and tip["tip_own_guild_color"][2] == 5 then
+		tip["tip_own_guild_color"][2] = 1
+	end
+
+	migrateMovableFrames()
+end
+
+function ns.InitDB()
+	if type(LolzenUIcfg) ~= "table" then
+		LolzenUIcfg = {}
+	end
+
+	mergeDefaults(LolzenUIcfg, defaultconfig)
+	migrate()
+
+	-- only prune the module tables, custom modules may store their own tables on the top level
+	-- (the module list may contain entries of custom modules, so leave it alone)
+	for module, defaults in pairs(defaultconfig) do
+		if module ~= "modules" and type(LolzenUIcfg[module]) == "table" then
+			pruneObsolete(LolzenUIcfg[module], defaults)
+		end
+	end
+
+	LolzenUIcfg.version = C_AddOns.GetAddOnMetadata("LolzenUI", "Version")
+end
