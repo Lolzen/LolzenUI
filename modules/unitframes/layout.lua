@@ -66,22 +66,22 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 
 			self:SetActiveStyle("Lolzen - Party")
-			local party = self:SpawnHeader(
-				nil, nil, 'party',
-				'showParty', LolzenUIcfg.unitframes.party["uf_party_enabled"],
-				'showPlayer', LolzenUIcfg.unitframes.party["uf_party_enabled"],
-				'xOffset', 7,
-				'yOffset', 0,
-				'oUF-initialConfigFunction', [[
-					self:SetHeight(19)
-					self:SetWidth(70)
-				]],
-				'maxColumns', 5,
-				'unitsperColumn', 1,
-				'columnSpacing', 7,
-				'columnAnchorPoint', 'RIGHT'
-			)
-			party:SetPoint("BOTTOM", UIParent, 0, 140)
+		--	local party = self:SpawnHeader(
+		--		nil, nil, 'party',
+		--		'showParty', LolzenUIcfg.unitframes.party["uf_party_enabled"],
+		--		'showPlayer', LolzenUIcfg.unitframes.party["uf_party_enabled"],
+		--		'xOffset', 7,
+		--		'yOffset', 0,
+		--		'oUF-initialConfigFunction', [[
+		--			self:SetHeight(19)
+		--			self:SetWidth(70)
+		--		]],
+		--		'maxColumns', 5,
+		--		'unitsperColumn', 1,
+		--		'columnSpacing', 7,
+		--		'columnAnchorPoint', 'RIGHT'
+		--	)
+		--	party:SetPoint("BOTTOM", UIParent, 0, 140)
 
 			ns.ToggleOUFParty = function()
 				party:SetAttribute('showParty', LolzenUIcfg.unitframes.party["uf_party_enabled"])
@@ -199,28 +199,28 @@ f:SetScript("OnEvent", function(self, event, addon)
 			end
 
 			self:SetActiveStyle("Lolzen - Raid")
-			local raid = self:SpawnHeader(
-				nil, nil, 'raid',
-				'showPlayer', LolzenUIcfg.unitframes.raid["uf_raid_enabled"],
-				'showSolo', false,
-				'showParty', false,
-				'showRaid', LolzenUIcfg.unitframes.raid["uf_raid_enabled"],
-				'xoffset', 7,
-				'yOffset', -5,
-				'oUF-initialConfigFunction', [[
-					self:SetHeight(19)
-					self:SetWidth(50)
-				]],
-				'groupFilter', '1,2,3,4,5,6,7,8',
-				'groupingOrder', '1,2,3,4,5,6,7,8',
-				'sortMethod', 'GROUP',
-				'groupBy', 'GROUP',
-				'maxColumns', 8,
-				'unitsPerColumn', 5,
-				'columnSpacing', 7,
-				'columnAnchorPoint', "RIGHT"
-			)
-			raid:SetPoint("LEFT", UIParent, 20, 0)
+		--	local raid = self:SpawnHeader(
+		--		nil, nil, 'raid',
+		--		'showPlayer', LolzenUIcfg.unitframes.raid["uf_raid_enabled"],
+		--		'showSolo', false,
+		--		'showParty', false,
+		--		'showRaid', LolzenUIcfg.unitframes.raid["uf_raid_enabled"],
+		--		'xoffset', 7,
+		--		'yOffset', -5,
+		--		'oUF-initialConfigFunction', [[
+		--			self:SetHeight(19)
+		--			self:SetWidth(50)
+		--		]],
+		--		'groupFilter', '1,2,3,4,5,6,7,8',
+		--		'groupingOrder', '1,2,3,4,5,6,7,8',
+		--		'sortMethod', 'GROUP',
+		--		'groupBy', 'GROUP',
+		--		'maxColumns', 8,
+		--		'unitsPerColumn', 5,
+		--		'columnSpacing', 7,
+		--		'columnAnchorPoint', "RIGHT"
+		--	)
+		--	raid:SetPoint("LEFT", UIParent, 20, 0)
 
 			ns.ToggleOUFRaid = function()
 				raid:SetAttribute('showRaid', LolzenUIcfg.unitframes.raid["uf_raid_enabled"])
@@ -333,7 +333,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		-- configuring boss and arenaframes is not an easy task and simply not possible during combat
 		-- so we spoof the player as placeholder to make configuring these possible
-		hooksecurefunc("InterfaceOptionsListButton_OnClick", function(self, button)
+		--[[hooksecurefunc("InterfaceOptionsListButton_OnClick", function(self, button)
 			if self.element:GetName() == "unitframe_bosspanel" then
 				for k, v in next, oUF.objects do
 					if v.unit == "boss1" or v.unit == "boss2" or v.unit == "boss3" or v.unit == "boss4" or v.unit == "boss5" then
@@ -383,5 +383,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 				end
 			end
 		end
+			]]
 	end
 end)

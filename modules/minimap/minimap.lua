@@ -5,16 +5,6 @@ local L = ns.L
 
 ns.RegisterModule("minimap", L["desc_minimap"], true)
 
-local frames = {
-	MinimapZoomIn,
-	MinimapZoomOut,
-	MinimapToggleButton,
-	MinimapBorderTop,
-	MiniMapWorldMapButton,
-	MinimapBorder,
-	GameTimeFrame,
-}
-
 local function setMiniMapShape()
 	if LolzenUIcfg.minimap["minimap_square"] == true then
 		if not Minimap.overlay then
@@ -30,8 +20,16 @@ local function setMiniMapShape()
 
 		Minimap:SetMaskTexture("Interface\\AddOns\\LolzenUI\\media\\Mask")
 
-		MiniMapMailFrame:ClearAllPoints()
-		MiniMapMailFrame:SetPoint("TOPLEFT", 5, -5)
+		MinimapCompassTexture:SetAlpha(0)
+
+--		MinimapCluster.TrackingFrame:ClearAllPoints()
+--		MinimapCluster.TrackingFrame:SetPoint("BOTTOMRIGHT", Minimap, -5, 5)
+		
+		--BorderTop, IndicatorFrame, InstanceDifficulty, MinimapContainer
+
+--		MinimapCluster.MailFrame:ClearAllPoints()
+--		MinimapCluster.MailFrame:SetPoint("TOPLEFT", Minimap, 5, -5)
+
 		Minimap.CalFrame:ClearAllPoints()
 		Minimap.CalFrame:SetPoint("BOTTOMLEFT", Minimap, 15, 5)
 	else
@@ -42,19 +40,20 @@ local function setMiniMapShape()
 		Minimap.overlay:SetTexture("Interface\\Minimap\\UI-QuestBlob-MinimapRing")
 		Minimap.overlay:ClearAllPoints()
 		Minimap.overlay:SetAllPoints(Minimap)
+		
+		MinimapCompassTexture:SetAlpha(1)
 
 		Minimap:SetMaskTexture(186178) -- Credits to Simpy, see https://git.tukui.org/elvui/elvui/-/commit/b0190888fc105225df7e29a46c12f19825977827
 
-		MiniMapMailFrame:ClearAllPoints()
-		MiniMapMailFrame:SetPoint("TOP", 0, -5)
+--		MinimapCluster.TrackingFrame:ClearAllPoints()
+--		MinimapCluster.TrackingFrame:SetPoint("TOP", Minimap, 15, -10)
+
+--		MinimapCluster.MailFrame:ClearAllPoints()
+--		MinimapCluster.MailFrame:SetPoint("TOP", Minimap, 0, -5)
+
 		Minimap.CalFrame:ClearAllPoints()
 		Minimap.CalFrame:SetPoint("BOTTOM", Minimap, 0, 5)
 	end
-end
-
-local function setMiniMapPosition()
-	Minimap:ClearAllPoints()
-	Minimap:SetPoint(LolzenUIcfg.minimap["minimap_anchor"], OrderHallClassBar, LolzenUIcfg.minimap["minimap_posx"], LolzenUIcfg.minimap["minimap_posy"])
 end
 
 local function modifyMinimap()
@@ -68,26 +67,35 @@ local function modifyMinimap()
 		end
 	end)
 
-	MiniMapTrackingButtonBorder:Hide()
-	MiniMapTrackingBackground:Hide()
-	MiniMapTracking:SetParent(Minimap)
-	MiniMapTracking:ClearAllPoints()
-	MiniMapTrackingIcon:SetTexCoord(0.065,0.935,0.065,0.935)
-	MiniMapTracking:SetPoint("BOTTOMRIGHT", -5, 0)
-
-	MiniMapMailBorder:Hide()
-	MiniMapMailFrame:SetParent(Minimap)
-	MiniMapMailFrame:ClearAllPoints()
 	MiniMapMailIcon:SetTexture("Interface/Minimap/Tracking/Mailbox")
 
-	QueueStatusMinimapButtonBorder:Hide()
-	QueueStatusMinimapButton:SetParent(Minimap)
-	QueueStatusMinimapButton:ClearAllPoints()
-	QueueStatusMinimapButton:SetPoint("TOPRIGHT", -5, -5)
+	MinimapCluster.BorderTop:Hide()
+
+--	QueueStatusMinimapButtonBorder:Hide()
+--	QueueStatusMinimapButton:SetParent(Minimap)
+--	QueueStatusMinimapButton:ClearAllPoints()
+--	QueueStatusMinimapButton:SetPoint("TOPRIGHT", -5, -5)
 --	if LolzenUIcfg.minimap["minimap_square"] == false then
-		QueueStatusMinimapButton:SetFrameStrata("HIGH")
+--		QueueStatusMinimapButton:SetFrameStrata("HIGH")
 --	end
 
+--	QueueStatusButton:SetParent(Minimap)
+--	QueueStatusButton:ClearAllPoints()
+	
+	--QueueStatusButton:SetPoint("BOTTOMRIGHT", Minimap, -7, 7)
+	QueueStatusButton:SetScale(0.75)
+
+	
+	-- Move QueueStatus icon
+	local function MoveQSB()
+	UIParent.ClearAllPoints(QueueStatusButton)
+	UIParent.SetPoint(QueueStatusButton, "BOTTOMRIGHT", Minimap, -7, 7)
+end
+MoveQSB()
+hooksecurefunc(QueueStatusButton, "SetPoint", MoveQSB)
+
+	--QueueStatusButton:SetScale(0.5)
+	
 	-- let's make our own CalendarFrame =]
 	-- C_DateAndTime.GetCurrentCalendarTime() is unreliable on login and returns nil untin a /reload
 	-- keep it here in case this changes tho
@@ -108,10 +116,18 @@ local function modifyMinimap()
 	--CalFont:SetText(date.monthDay)
 	CalFont:SetText(day)
 
+	Minimap.CalFrame:SetScript("OnEnter", function()
+		CalFont:SetTextColor(1,0.7,0)
+	end)
+
+	Minimap.CalFrame:SetScript("OnLeave", function()
+		CalFont:SetTextColor(1,1,1)
+	end)
+
 	--Now we want to click the numbers to open the calendarframe, don't we?
 	Minimap.CalFrame:SetScript("OnClick", function()
 		if not CalendarFrame then
-			LoadAddOn("Blizzard_Calendar")
+			C_AddOns.LoadAddOn("Blizzard_Calendar")
 			ShowUIPanel(CalendarFrame)
 		else
 			ShowUIPanel(CalendarFrame)
@@ -121,18 +137,24 @@ local function modifyMinimap()
 	-- Clean up
 	MinimapZoneText:Hide()
 
-	MinimapNorthTag:Hide()
-	MinimapNorthTag:SetAlpha(0)
+	MinimapCluster.Tracking.Button:SetScale(Minimap:GetScale()*1.15)
+	MinimapCluster.Tracking.Button:SetPoint("TOPLEFT", Minimap, 7, -7)
+	MinimapCluster.Tracking.Background:Hide()
+
+	AddonCompartmentFrame:ClearAllPoints()
+	AddonCompartmentFrame:SetPoint("TOPRIGHT", Minimap, -7, -7)
 
 	TimeManagerClockButton:Hide()
 
-	GarrisonLandingPageMinimapButton:HookScript("OnShow", function() GarrisonLandingPageMinimapButton:Hide() end)
-	GarrisonLandingPageMinimapButton.IsShown = function() return true end
+	ExpansionLandingPageMinimapButton:HookScript("OnShow", function() ExpansionLandingPageMinimapButton:Hide() end)
+	ExpansionLandingPageMinimapButton.IsShown = function() return true end
 
-	for _, frame in pairs(frames) do
-		frame:Hide()
-	end
-	frames = nil
+	Minimap.ZoomIn:HookScript("OnShow", function() Minimap.ZoomIn:Hide() end)
+	Minimap.ZoomIn.IsShown = function() return true end
+	Minimap.ZoomOut:HookScript("OnShow", function() Minimap.ZoomOut:Hide() end)
+	Minimap.ZoomOut.IsShown = function() return true end
+
+	GameTimeFrame:Hide()
 end
 
 local f = CreateFrame("Frame")
@@ -140,15 +162,10 @@ f:RegisterEvent("PLAYER_LOGIN")
 f:SetScript("OnEvent", function(self, event, addon)
 	if LolzenUIcfg.modules["minimap"] == false then Minimap:SetMaskTexture(186178); return end
 
-	setMiniMapPosition()
 	modifyMinimap()
 	setMiniMapShape()
 
 	ns.setMiniMapShape = function()
 		setMiniMapShape()
-	end
-
-	ns.setMiniMapPosition = function()
-		setMiniMapPosition()
 	end
 end)

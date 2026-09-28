@@ -3,22 +3,69 @@ local LSM = LibStub("LibSharedMedia-3.0")
 local oUF = ns.oUF
 
 ns.shared = function(self, unit)
-	self.colors.power["MANA"] = LolzenUIcfg.unitframes.powercolors[0]
-	self.colors.power["RAGE"] = LolzenUIcfg.unitframes.powercolors[1]
-	self.colors.power["FOCUS"] = LolzenUIcfg.unitframes.powercolors[2]
-	self.colors.power["ENERGY"] = LolzenUIcfg.unitframes.powercolors[3]
-	self.colors.power["COMBO_POINTS"] = LolzenUIcfg.unitframes.powercolors[4]
-	self.colors.power["RUNES"] = LolzenUIcfg.unitframes.powercolors[5]
-	self.colors.power["RUNIC_POWER"] = LolzenUIcfg.unitframes.powercolors[6]
-	self.colors.power["SOUL_SHARDS"] = LolzenUIcfg.unitframes.powercolors[7]
-	self.colors.power["LUNAR_POWER"] = LolzenUIcfg.unitframes.powercolors[8]
-	self.colors.power["HOLY_POWER"] = LolzenUIcfg.unitframes.powercolors[9]
-	self.colors.power["MAELSTROM"] = LolzenUIcfg.unitframes.powercolors[11]
-	self.colors.power["CHI"] = LolzenUIcfg.unitframes.powercolors[12]
-	self.colors.power["INSANITY"] = LolzenUIcfg.unitframes.powercolors[13]
-	self.colors.power["ARCANE_CHARGES"] = LolzenUIcfg.unitframes.powercolors[16]
-	self.colors.power["FURY"] = LolzenUIcfg.unitframes.powercolors[17]
-	self.colors.power["PAIN"] = LolzenUIcfg.unitframes.powercolors[18]
+	local function SetupPowerColors(oUF)
+	-- Convert config colors to ColorMixin objects
+	local function ToColorObject(colorTable)
+		if type(colorTable) == "table" then
+			local r = colorTable[1] or colorTable.r or 1
+			local g = colorTable[2] or colorTable.g or 1
+			local b = colorTable[3] or colorTable.b or 1
+			local a = colorTable[4] or colorTable.a or 1
+			return CreateColor(r, g, b, a)
+		end
+		return CreateColor(1, 1, 1, 1)
+	end
+	
+	-- Map old power type indices to new Enum.PowerType values
+	oUF.colors.power[Enum.PowerType.Mana] = ToColorObject(LolzenUIcfg.unitframes.powercolors[0])
+	oUF.colors.power[Enum.PowerType.Rage] = ToColorObject(LolzenUIcfg.unitframes.powercolors[1])
+	oUF.colors.power[Enum.PowerType.Focus] = ToColorObject(LolzenUIcfg.unitframes.powercolors[2])
+	oUF.colors.power[Enum.PowerType.Energy] = ToColorObject(LolzenUIcfg.unitframes.powercolors[3])
+	oUF.colors.power[Enum.PowerType.ComboPoints] = ToColorObject(LolzenUIcfg.unitframes.powercolors[4])
+	oUF.colors.power[Enum.PowerType.Runes] = ToColorObject(LolzenUIcfg.unitframes.powercolors[5])
+	oUF.colors.power[Enum.PowerType.RunicPower] = ToColorObject(LolzenUIcfg.unitframes.powercolors[6])
+	oUF.colors.power[Enum.PowerType.SoulShards] = ToColorObject(LolzenUIcfg.unitframes.powercolors[7])
+	oUF.colors.power[Enum.PowerType.LunarPower] = ToColorObject(LolzenUIcfg.unitframes.powercolors[8])
+	oUF.colors.power[Enum.PowerType.HolyPower] = ToColorObject(LolzenUIcfg.unitframes.powercolors[9])
+	oUF.colors.power[Enum.PowerType.Maelstrom] = ToColorObject(LolzenUIcfg.unitframes.powercolors[11])
+	oUF.colors.power[Enum.PowerType.Chi] = ToColorObject(LolzenUIcfg.unitframes.powercolors[12])
+	oUF.colors.power[Enum.PowerType.Insanity] = ToColorObject(LolzenUIcfg.unitframes.powercolors[13])
+	oUF.colors.power[Enum.PowerType.ArcaneCharges] = ToColorObject(LolzenUIcfg.unitframes.powercolors[16])
+	oUF.colors.power[Enum.PowerType.Fury] = ToColorObject(LolzenUIcfg.unitframes.powercolors[17])
+	oUF.colors.power[Enum.PowerType.Pain] = ToColorObject(LolzenUIcfg.unitframes.powercolors[18])
+	
+	-- Also set up backward compatibility with string keys if needed
+	-- This allows old code to still work
+	oUF.colors.power["MANA"] = oUF.colors.power[Enum.PowerType.Mana]
+	oUF.colors.power["RAGE"] = oUF.colors.power[Enum.PowerType.Rage]
+	oUF.colors.power["FOCUS"] = oUF.colors.power[Enum.PowerType.Focus]
+	oUF.colors.power["ENERGY"] = oUF.colors.power[Enum.PowerType.Energy]
+	oUF.colors.power["COMBO_POINTS"] = oUF.colors.power[Enum.PowerType.ComboPoints]
+	oUF.colors.power["RUNES"] = oUF.colors.power[Enum.PowerType.Runes]
+	oUF.colors.power["RUNIC_POWER"] = oUF.colors.power[Enum.PowerType.RunicPower]
+	oUF.colors.power["SOUL_SHARDS"] = oUF.colors.power[Enum.PowerType.SoulShards]
+	oUF.colors.power["LUNAR_POWER"] = oUF.colors.power[Enum.PowerType.LunarPower]
+	oUF.colors.power["HOLY_POWER"] = oUF.colors.power[Enum.PowerType.HolyPower]
+	oUF.colors.power["MAELSTROM"] = oUF.colors.power[Enum.PowerType.Maelstrom]
+	oUF.colors.power["CHI"] = oUF.colors.power[Enum.PowerType.Chi]
+	oUF.colors.power["INSANITY"] = oUF.colors.power[Enum.PowerType.Insanity]
+	oUF.colors.power["ARCANE_CHARGES"] = oUF.colors.power[Enum.PowerType.ArcaneCharges]
+	oUF.colors.power["FURY"] = oUF.colors.power[Enum.PowerType.Fury]
+	oUF.colors.power["PAIN"] = oUF.colors.power[Enum.PowerType.Pain]
+
+	-- Backward compatibility with string keys
+oUF.colors.reaction["HATED"]      = oUF.colors.reaction[1]
+oUF.colors.reaction["HOSTILE"]    = oUF.colors.reaction[2]
+oUF.colors.reaction["UNFRIENDLY"] = oUF.colors.reaction[3]
+oUF.colors.reaction["NEUTRAL"]    = oUF.colors.reaction[4]
+oUF.colors.reaction["FRIENDLY"]   = oUF.colors.reaction[5]
+oUF.colors.reaction["HONORED"]    = oUF.colors.reaction[6]
+oUF.colors.reaction["REVERED"]    = oUF.colors.reaction[7]
+oUF.colors.reaction["EXALTED"]    = oUF.colors.reaction[8]
+end
+
+-- Call this function after oUF is loaded
+SetupPowerColors(oUF)
 
 	-- use custom reaction colors
 	if LolzenUIcfg.modules["miscellaneous"] == true and LolzenUIcfg.miscellaneous["misc_alternative_faction_colors"] == true then

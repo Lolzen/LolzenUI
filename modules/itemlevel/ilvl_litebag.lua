@@ -8,10 +8,10 @@ f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, addon)
 	if addon == "LolzenUI" then
 		if LolzenUIcfg.modules["itemlevel"] == false then return end
-		if not IsAddOnLoaded("LiteBag") then return end
+		if not C_AddOns.IsAddOnLoaded("LiteBag") then return end
 
 		local function getItemlvlBags(bagID, slotID)
-			local itemLink = GetContainerItemLink(bagID, slotID)
+			local itemLink = C_Container.GetContainerItemLink(bagID, slotID)
 			local item = Item:CreateFromBagAndSlot(bagID, slotID)
 			if item and IsEquippableItem(itemLink) then
 				return item:GetCurrentItemLevel()
@@ -19,7 +19,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 
 		local function getColorItemQualityBags(bagID, slotID)
-			local itemLink = GetContainerItemLink(bagID, slotID)
+			local itemLink = C_Container.GetContainerItemLink(bagID, slotID)
 			if itemLink then
 				local quality = select(3, GetItemInfo(itemLink))
 				if quality then
@@ -30,7 +30,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 		end
 
 		local function getCorruptedItem(bagID, slotID)
-			local itemLink = GetContainerItemLink(bagID, slotID)
+			local itemLink = C_Container.GetContainerItemLink(bagID, slotID)
 			local item = Item:CreateFromBagAndSlot(bagID, slotID)
 			if itemLink then
 				if item and IsEquippableItem(itemLink) and IsCorruptedItem(itemLink) then

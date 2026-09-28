@@ -59,21 +59,29 @@ f:SetScript("OnEvent", function(self, event, addon)
 			local i = frame:GetID()
 
 			if(not frame.Fane) then
-				frame.leftTexture:Hide()
-				frame.middleTexture:Hide()
-				frame.rightTexture:Hide()
+				frame.ActiveLeft:Hide()
+				frame.HighlightLeft:Hide()
+				frame.Left:Hide()
 
-				frame.leftSelectedTexture:Hide()
-				frame.middleSelectedTexture:Hide()
-				frame.rightSelectedTexture:Hide()
+				frame.ActiveMiddle:Hide()
+				frame.HighlightMiddle:Hide()
+				frame.Middle:Hide()
 
-				frame.leftSelectedTexture.Show = frame.leftSelectedTexture.Hide
-				frame.middleSelectedTexture.Show = frame.middleSelectedTexture.Hide
-				frame.rightSelectedTexture.Show = frame.rightSelectedTexture.Hide
+				frame.ActiveRight:Hide()
+				frame.HighlightRight:Hide()
+				frame.Right:Hide()
+	
+				frame.ActiveRight.Show = frame.ActiveRight.Hide
+				frame.HighlightRight.Show = frame.HighlightRight.Hide
+				frame.Right.Show = frame.Right.Hide
 
-				frame.leftHighlightTexture:Hide()
-				frame.middleHighlightTexture:Hide()
-				frame.rightHighlightTexture:Hide()
+				frame.ActiveMiddle.Show = frame.ActiveMiddle.Hide
+				frame.HighlightMiddle.Show = frame.HighlightMiddle.Hide
+				frame.Middle.Show = frame.Middle.Hide
+
+				frame.ActiveLeft.Show = frame.ActiveLeft.Hide
+				frame.HighlightLeft.Show = frame.HighlightLeft.Hide
+				frame.Left.Show = frame.Left.Hide
 
 				frame:HookScript('OnEnter', OnEnter)
 				frame:HookScript('OnLeave', OnLeave)

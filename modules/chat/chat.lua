@@ -155,7 +155,6 @@ f:SetScript("OnEvent", function(self, event, addon)
 			local eb = _G["ChatFrame"..i.."EditBox"]
 			local s2bb = cf["ScrollToBottomButton"]
 			local sb = cf["ScrollBar"]
-			local tt =_G["ChatFrame"..i.."ThumbTexture"]
 
 			-- hide editbox textures and chat textures
 			for k, v in pairs(editboxTextures) do
@@ -200,14 +199,13 @@ f:SetScript("OnEvent", function(self, event, addon)
 			ChatFrameToggleVoiceMuteButton:Hide()
 			ChatFrameToggleVoiceMuteButton.Show = function() end
 
-			tt:Hide()
-			tt.Show = function() end
-
 			s2bb:Hide()
 			s2bb.Show = function() end
 
 			sb:Hide()
 			sb.Show = function() end
+			sb.Back.Texture:Hide()
+			sb.Forward.Texture:Hide()
 
 			-- move editbox above the chat
 			eb:ClearAllPoints()
@@ -338,11 +336,11 @@ f:SetScript("OnEvent", function(self, event, addon)
 			LolzenUIcfg.chat["chat_timestamp"] = false
 		end
 
-		hooksecurefunc("InterfaceOptionsSocialPanelTimestamps_OnClick", function(self)
-			if GetCVar("showTimestamps") ~= "none" then
-				LolzenUIcfg.chat["chat_timestamp"] = false
-			end
-		end)
+--		hooksecurefunc("InterfaceOptionsSocialPanelTimestamps_OnClick", function(self)
+--			if GetCVar("showTimestamps") ~= "none" then
+--				LolzenUIcfg.chat["chat_timestamp"] = false
+--			end
+--		end)
 
 		ns.SetChatFading = function()
 			for i=1, NUM_CHAT_WINDOWS do

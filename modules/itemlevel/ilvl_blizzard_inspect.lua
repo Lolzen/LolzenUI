@@ -10,12 +10,12 @@ f:SetScript("OnEvent", function(self, event, addon)
 		if LolzenUIcfg.modules["itemlevel"] == false then return end
 
 		-- Load Blizz InspectUI
-		LoadAddOn("Blizzard_InspectUI")
+		C_AddOns.LoadAddOn("Blizzard_InspectUI")
 
 		local eF = CreateFrame("Frame")
 		eF:RegisterEvent("INSPECT_READY")
 
-		local scantt = CreateFrame("GameTooltip", "ILvLScanToolTip", UIParent, "GameTooltipTemplate")
+		--local scantt = CreateFrame("GameTooltip", "ILvLScanToolTip", UIParent, "GameTooltipTemplate")
 
 		local slots = {
 			"Head", -- 1
@@ -40,19 +40,28 @@ f:SetScript("OnEvent", function(self, event, addon)
 
 		-- tooltipscanning from LibItemInfo
 		local pattern = gsub(ITEM_LEVEL, "%%d", "(%%d+)")
-		local function getItemlvl(unit, slotIndex)
+--[[		local function getItemlvl(unit, slotIndex)
+			local tooltipData = C_TooltipInfo.GetUnit("player")
+			TooltipUtil.SurfaceArgs(tooltipData)
+			--TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, colorItemQuality)
+			for _, line in ipairs(tooltipData.lines) do
+			--print("Unit Name: ", tooltipData.lines[1].leftText)
+				--TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, colorItemQuality)
+			end
+			-----OLD BELOW
+				--TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, colorItemQuality)
 			if slotIndex == 18 then
 				slotIndex = 19
 			end
 			if unit and UnitExists(unit) then
-				scantt:SetOwner(UIParent, "ANCHOR_NONE")
-				scantt:SetInventoryItem(unit, slotIndex)
+				--scantt:SetOwner(UIParent, "ANCHOR_NONE")
+				--we:SetInventoryItem(unit, slotIndex)
 			
 				local itemLink = GetInventoryItemLink(unit, slotIndex)
 				
 				local tooltipLevel
 				for i=2, 5 do
-					tooltipLevel = string.match(_G[scantt:GetName().."TextLeft"..i]:GetText() or "", pattern)
+		--			tooltipLevel = string.match(_G[scantt:GetName().."TextLeft"..i]:GetText() or "", pattern)
 					if tooltipLevel then
 						break
 					end
@@ -64,6 +73,18 @@ f:SetScript("OnEvent", function(self, event, addon)
 --						return item:GetCurrentItemLevel()
 --					end
 --				end
+			end
+		end
+]]
+		local function getItemlvl(unit, slotIndex)
+			if slotIndex == 18 then
+				slotIndex = 19
+			end
+			if unit and UnitExists(unit) then
+				local item = Item:CreateFromEquipmentSlot(slotIndex)
+				if item then
+					return item:GetCurrentItemLevel()
+				end
 			end
 		end
 
@@ -106,6 +127,7 @@ f:SetScript("OnEvent", function(self, event, addon)
 							s.str:SetTextColor(unpack(LolzenUIcfg.itemlevel["ilvl_font_color"]))
 						end
 					end
+					--InspectPaperDollItemSlotButton_OnEnter(self)
 				end
 			end
 		end
